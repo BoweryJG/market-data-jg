@@ -1,5 +1,26 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { Box, Paper, Typography, Chip, IconButton, Slider, Tooltip, useTheme } from '@mui/material';
+import { 
+  Box, 
+  Paper, 
+  Typography, 
+  Chip, 
+  IconButton, 
+  Slider, 
+  Tooltip, 
+  useTheme,
+  Card,
+  CardContent,
+  Button,
+  Stack,
+  Divider,
+  CircularProgress,
+  Alert,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  LinearProgress
+} from '@mui/material';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { 
   PlayArrow, 
@@ -10,47 +31,51 @@ import {
   Timeline,
   Insights,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  AutoAwesome,
+  AttachMoney,
+  Speed,
+  Groups,
+  Campaign,
+  Schedule,
+  Analytics,
+  Lightbulb,
+  Warning
 } from '@mui/icons-material';
-// import { categoryMapping } from '../Dashboard/CategoryMapping';
-import { supabase } from '../../services/supabaseClient';
+import { galaxyDataService, CategoryAggregate, SalesOpportunity, MarketSignal } from '../../services/galaxyDataService';
 import ParticleField from './ParticleField';
 import CategorySphere from './CategorySphere';
 import ConnectionLines from './ConnectionLines';
 import DataRipple from './DataRipple';
 
-interface CategoryData {
-  id: string;
-  name: string;
-  market_size_usd_millions: number;
-  avg_growth_rate: number;
-  innovation_score: number;
-  trend_direction: 'up' | 'down' | 'stable';
+interface EnhancedCategoryData extends CategoryAggregate {
   position: { x: number; y: number; z: number };
   velocity: { x: number; y: number };
   color: string;
-  subcategories?: CategoryData[];
 }
 
 const MarketGalaxyMap: React.FC = () => {
   const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [categories, setCategories] = useState<CategoryData[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<EnhancedCategoryData[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<EnhancedCategoryData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState({ x: -20, y: 0 });
   const [isPlaying, setIsPlaying] = useState(true);
   const [timeScale, setTimeScale] = useState(1);
   const [showConnections, setShowConnections] = useState(true);
   const [ripples, setRipples] = useState<Array<{ id: string; x: number; y: number }>>([]);
+  const [industryFilter, setIndustryFilter] = useState<'all' | 'dental' | 'aesthetic'>('all');
   const controls = useAnimation();
 
   // Calculate category positions in orbital pattern
   const calculateOrbitalPosition = (index: number, total: number, marketSize: number) => {
     const angle = (index / total) * Math.PI * 2;
     const baseRadius = 300;
-    const radius = baseRadius + (marketSize / 1000) * 50; // Larger markets orbit further
-    const height = Math.sin(index * 0.5) * 50; // Varying heights for depth
+    const radius = baseRadius + (marketSize / 100) * 30; // Adjusted for real market sizes
+    const height = Math.sin(index * 0.5) * 50;
     
     return {
       x: Math.cos(angle) * radius,
@@ -59,83 +84,49 @@ const MarketGalaxyMap: React.FC = () => {
     };
   };
 
-  // Demo data for visualization
-  const demoCategories: CategoryData[] = [
-    { id: '1', name: 'Dental Implants', market_size_usd_millions: 4500, avg_growth_rate: 12.5, innovation_score: 85, trend_direction: 'up' },
-    { id: '2', name: 'Orthodontics', market_size_usd_millions: 3200, avg_growth_rate: 8.3, innovation_score: 70, trend_direction: 'up' },
-    { id: '3', name: 'Facial Aesthetics', market_size_usd_millions: 2800, avg_growth_rate: 15.2, innovation_score: 90, trend_direction: 'up' },
-    { id: '4', name: 'Injectables', market_size_usd_millions: 2100, avg_growth_rate: 18.7, innovation_score: 88, trend_direction: 'up' },
-    { id: '5', name: 'Restorative', market_size_usd_millions: 1900, avg_growth_rate: 5.2, innovation_score: 60, trend_direction: 'stable' },
-    { id: '6', name: 'Endodontics', market_size_usd_millions: 1600, avg_growth_rate: 4.8, innovation_score: 55, trend_direction: 'stable' },
-    { id: '7', name: 'Periodontics', market_size_usd_millions: 1400, avg_growth_rate: 6.1, innovation_score: 65, trend_direction: 'up' },
-    { id: '8', name: 'Body Contouring', market_size_usd_millions: 1200, avg_growth_rate: 22.3, innovation_score: 92, trend_direction: 'up' },
-    { id: '9', name: 'Skin Resurfacing', market_size_usd_millions: 980, avg_growth_rate: 11.5, innovation_score: 78, trend_direction: 'up' },
-    { id: '10', name: 'Hair Restoration', market_size_usd_millions: 850, avg_growth_rate: 9.8, innovation_score: 72, trend_direction: 'up' },
-    { id: '11', name: 'Digital Dentistry', market_size_usd_millions: 720, avg_growth_rate: 25.4, innovation_score: 95, trend_direction: 'up' },
-    { id: '12', name: 'Regenerative Medicine', market_size_usd_millions: 650, avg_growth_rate: 28.9, innovation_score: 98, trend_direction: 'up' },
-  ];
-
-  // Fetch category data or use demo data
+  // Fetch and enrich category data
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      
       try {
-        const { data, error } = await supabase
-          .from('category_hierarchy')
-          .select('*')
-          .order('market_size_usd_millions', { ascending: false });
-
-        if (data && !error && data.length > 0) {
-          const formattedData = data.map((cat, index) => ({
-            ...cat,
-            position: calculateOrbitalPosition(index, data.length, cat.market_size_usd_millions),
-            velocity: { 
-              x: (cat.avg_growth_rate || 0) * 0.01, 
-              y: (cat.innovation_score || 50) * 0.001 
-            },
-            color: cat.trend_direction === 'up' ? theme.palette.success.main : 
-                   cat.trend_direction === 'down' ? theme.palette.error.main : 
-                   theme.palette.info.main
-          }));
-          setCategories(formattedData);
-        } else {
-          // Use demo data if no database connection
-          const formattedDemo = demoCategories.map((cat, index) => ({
-            ...cat,
-            position: calculateOrbitalPosition(index, demoCategories.length, cat.market_size_usd_millions),
-            velocity: { 
-              x: cat.avg_growth_rate * 0.01, 
-              y: cat.innovation_score * 0.001 
-            },
-            color: cat.trend_direction === 'up' ? theme.palette.success.main : 
-                   cat.trend_direction === 'down' ? theme.palette.error.main : 
-                   theme.palette.info.main
-          }));
-          setCategories(formattedDemo);
-        }
-      } catch (error) {
-        console.log('Using demo data for Market Galaxy visualization');
-        // Use demo data on error
-        const formattedDemo = demoCategories.map((cat, index) => ({
+        // Get category aggregates
+        const aggregates = await galaxyDataService.getCategoryAggregates(
+          industryFilter === 'all' ? undefined : industryFilter
+        );
+        
+        // Enrich with market intelligence
+        const enrichedData = await galaxyDataService.enrichWithMarketIntelligence(aggregates);
+        
+        // Transform for visualization
+        const visualData: EnhancedCategoryData[] = enrichedData.map((cat, index) => ({
           ...cat,
-          position: calculateOrbitalPosition(index, demoCategories.length, cat.market_size_usd_millions),
+          position: calculateOrbitalPosition(index, enrichedData.length, cat.total_market_size),
           velocity: { 
             x: cat.avg_growth_rate * 0.01, 
             y: cat.innovation_score * 0.001 
           },
-          color: cat.trend_direction === 'up' ? theme.palette.success.main : 
-                 cat.trend_direction === 'down' ? theme.palette.error.main : 
+          color: cat.trending_direction === 'up' ? theme.palette.success.main : 
+                 cat.trending_direction === 'down' ? theme.palette.error.main : 
                  theme.palette.info.main
         }));
-        setCategories(formattedDemo);
+        
+        setCategories(visualData);
+      } catch (err) {
+        console.error('Error loading galaxy data:', err);
+        setError('Failed to load market data. Please check your connection.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCategories();
-  }, [theme]);
+    fetchData();
+  }, [theme, industryFilter]);
 
   // Orbital animation
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && !loading) {
       const interval = setInterval(() => {
         setRotation(prev => ({
           ...prev,
@@ -144,35 +135,188 @@ const MarketGalaxyMap: React.FC = () => {
       }, 50);
       return () => clearInterval(interval);
     }
-  }, [isPlaying, timeScale]);
+  }, [isPlaying, timeScale, loading]);
 
   // Handle category click
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
-    setSelectedCategory(categoryId);
-    
-    // Create ripple effect
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (rect) {
-      const ripple = {
-        id: `ripple-${Date.now()}`,
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-      };
-      setRipples(prev => [...prev, ripple]);
+    const category = categories.find(c => c.id === categoryId);
+    if (category) {
+      setSelectedCategory(category);
       
-      // Remove ripple after animation
-      setTimeout(() => {
-        setRipples(prev => prev.filter(r => r.id !== ripple.id));
-      }, 2000);
+      // Create ripple effect
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        const ripple = {
+          id: `ripple-${Date.now()}`,
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top
+        };
+        setRipples(prev => [...prev, ripple]);
+        
+        setTimeout(() => {
+          setRipples(prev => prev.filter(r => r.id !== ripple.id));
+        }, 2000);
+      }
     }
   };
 
-  // Calculate market totals for center display
+  // Calculate market totals
   const marketTotals = useMemo(() => {
-    const total = categories.reduce((sum, cat) => sum + cat.market_size_usd_millions, 0);
-    const avgGrowth = categories.reduce((sum, cat) => sum + (cat.avg_growth_rate || 0), 0) / categories.length;
-    return { total, avgGrowth };
+    const total = categories.reduce((sum, cat) => sum + cat.total_market_size, 0);
+    const avgGrowth = categories.reduce((sum, cat) => sum + cat.avg_growth_rate, 0) / (categories.length || 1);
+    const totalOpportunities = categories.reduce((sum, cat) => sum + (cat.sales_opportunities?.length || 0), 0);
+    return { total, avgGrowth, totalOpportunities };
   }, [categories]);
+
+  // Render sales actions for selected category
+  const renderSalesActions = () => {
+    if (!selectedCategory) return null;
+
+    return (
+      <Card elevation={6} sx={{ mb: 2 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Campaign color="primary" />
+            Sales Actions
+          </Typography>
+          
+          <Stack spacing={2}>
+            <Button 
+              variant="contained" 
+              fullWidth
+              startIcon={<Analytics />}
+              onClick={() => console.log('Generate pitch deck for', selectedCategory.name)}
+            >
+              Generate Pitch Deck
+            </Button>
+            
+            <Button 
+              variant="outlined" 
+              fullWidth
+              startIcon={<Groups />}
+              onClick={() => console.log('Find decision makers')}
+            >
+              Find Decision Makers
+            </Button>
+            
+            <Button 
+              variant="outlined" 
+              fullWidth
+              startIcon={<Schedule />}
+              onClick={() => console.log('Schedule campaign')}
+            >
+              Schedule Campaign
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Render opportunities
+  const renderOpportunities = (opportunities: SalesOpportunity[]) => {
+    return (
+      <Card elevation={6} sx={{ mb: 2 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Lightbulb color="warning" />
+            Opportunities ({opportunities.length})
+          </Typography>
+          
+          <List dense>
+            {opportunities.map((opp) => (
+              <ListItem key={opp.id}>
+                <ListItemIcon>
+                  {opp.type === 'CROSS_SELL' && <AutoAwesome color="primary" />}
+                  {opp.type === 'NEW_ACCOUNT' && <Groups color="success" />}
+                  {opp.type === 'UPSELL' && <TrendingUp color="info" />}
+                </ListItemIcon>
+                <ListItemText
+                  primary={opp.title}
+                  secondary={
+                    <>
+                      <Typography variant="body2" color="text.secondary">
+                        {opp.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+                        <AttachMoney fontSize="small" />
+                        <Typography variant="caption" color="success.main">
+                          ${(opp.potential_revenue / 1000).toFixed(0)}k potential
+                        </Typography>
+                        <Chip 
+                          label={`${(opp.probability * 100).toFixed(0)}% probability`}
+                          size="small"
+                          variant="outlined"
+                        />
+                      </Box>
+                    </>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // Render market signals
+  const renderMarketSignals = (signals: MarketSignal[]) => {
+    if (!signals || signals.length === 0) return null;
+
+    return (
+      <Card elevation={6}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Speed color="error" />
+            Live Market Signals
+          </Typography>
+          
+          <Stack spacing={1}>
+            {signals.slice(0, 3).map((signal) => (
+              <Alert 
+                key={signal.id}
+                severity={signal.urgency === 'HIGH' ? 'error' : signal.urgency === 'MEDIUM' ? 'warning' : 'info'}
+                action={
+                  <Button size="small" onClick={() => window.open(signal.url, '_blank')}>
+                    View
+                  </Button>
+                }
+              >
+                <Typography variant="subtitle2">{signal.title}</Typography>
+                {signal.sales_action && (
+                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                    Action: {signal.sales_action}
+                  </Typography>
+                )}
+              </Alert>
+            ))}
+          </Stack>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '80vh' 
+      }}>
+        <CircularProgress size={60} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box 
@@ -256,21 +400,33 @@ const MarketGalaxyMap: React.FC = () => {
                 size="small"
                 sx={{ mt: 1 }}
               />
+              <Typography variant="caption" color="primary" sx={{ mt: 1 }}>
+                {marketTotals.totalOpportunities} opportunities
+              </Typography>
             </Paper>
           </motion.div>
         </Box>
 
         {/* Connection Lines */}
         {showConnections && (
-          <ConnectionLines categories={categories} selectedCategory={selectedCategory} />
+          <ConnectionLines 
+            categories={categories} 
+            selectedCategory={selectedCategory?.id || null} 
+          />
         )}
 
         {/* Category Spheres */}
         {categories.map((category, index) => (
           <CategorySphere
             key={category.id}
-            category={category}
-            isSelected={selectedCategory === category.id}
+            category={{
+              ...category,
+              market_size_usd_millions: category.total_market_size,
+              avg_growth_rate: category.avg_growth_rate,
+              innovation_score: category.innovation_score,
+              trend_direction: category.trending_direction
+            }}
+            isSelected={selectedCategory?.id === category.id}
             onClick={handleCategoryClick}
             delay={index * 0.1}
           />
@@ -353,7 +509,9 @@ const MarketGalaxyMap: React.FC = () => {
               position: 'absolute',
               right: 20,
               top: 20,
-              width: 300
+              width: 350,
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             <Paper
@@ -364,11 +522,96 @@ const MarketGalaxyMap: React.FC = () => {
                 backdropFilter: 'blur(10px)'
               }}
             >
-              {/* Category details content */}
-              <Typography variant="h6">
-                {categories.find(c => c.id === selectedCategory)?.name}
-              </Typography>
-              {/* Add more details here */}
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h5" gutterBottom>
+                    {selectedCategory.name}
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                    <Chip 
+                      label={`$${(selectedCategory.total_market_size / 1000).toFixed(1)}B market`}
+                      color="primary"
+                      size="small"
+                    />
+                    <Chip 
+                      label={`${selectedCategory.procedure_count} procedures`}
+                      variant="outlined"
+                      size="small"
+                    />
+                  </Box>
+                </Box>
+                <IconButton onClick={() => setSelectedCategory(null)} size="small">
+                  ×
+                </IconButton>
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* Market Metrics */}
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  Growth Rate
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={Math.min(selectedCategory.avg_growth_rate * 3, 100)}
+                    sx={{ flex: 1, height: 8, borderRadius: 4 }}
+                  />
+                  <Typography variant="body2" color="primary">
+                    +{selectedCategory.avg_growth_rate.toFixed(1)}%
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  Innovation Score
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={selectedCategory.innovation_score}
+                    sx={{ flex: 1, height: 8, borderRadius: 4 }}
+                    color="secondary"
+                  />
+                  <Typography variant="body2" color="secondary">
+                    {selectedCategory.innovation_score.toFixed(0)}/100
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Sales Actions */}
+              {renderSalesActions()}
+
+              {/* Opportunities */}
+              {selectedCategory.sales_opportunities && selectedCategory.sales_opportunities.length > 0 && 
+                renderOpportunities(selectedCategory.sales_opportunities)}
+
+              {/* Market Signals */}
+              {selectedCategory.market_signals && 
+                renderMarketSignals(selectedCategory.market_signals)}
+
+              {/* Top Procedures */}
+              {selectedCategory.top_procedures && selectedCategory.top_procedures.length > 0 && (
+                <Card elevation={6} sx={{ mt: 2 }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Top Procedures
+                    </Typography>
+                    <List dense>
+                      {selectedCategory.top_procedures.slice(0, 3).map((proc, idx) => (
+                        <ListItem key={proc.id}>
+                          <ListItemText
+                            primary={`${idx + 1}. ${proc.procedure_name}`}
+                            secondary={`$${(proc.market_size_2025_usd_millions / 1000).toFixed(1)}B market`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </CardContent>
+                </Card>
+              )}
             </Paper>
           </motion.div>
         )}
