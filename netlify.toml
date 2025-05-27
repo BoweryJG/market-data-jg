@@ -5,6 +5,7 @@
 # If you need to set environment variables for all deploys
 [build.environment]
   NODE_VERSION = "18.19.0"
+  NPM_VERSION = "10.2.3"
   SECRETS_SCAN_OMIT_KEYS = "REACT_APP_API_URL,REACT_APP_GOOGLE_CLIENT_ID,REACT_APP_SUPABASE_URL,REACT_APP_SUPABASE_ANON_KEY"
 
 # Redirects for single-page applications
