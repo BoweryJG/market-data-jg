@@ -12,7 +12,7 @@ import {
   TrendingUp,
   TrendingDown
 } from '@mui/icons-material';
-import { categoryMapping } from '../Dashboard/CategoryMapping';
+// import { categoryMapping } from '../Dashboard/CategoryMapping';
 import { supabase } from '../../services/supabaseClient';
 import ParticleField from './ParticleField';
 import CategorySphere from './CategorySphere';
