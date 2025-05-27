@@ -111,25 +111,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories, selectedC
               }}
             />
 
-            {/* Animated particle along path */}
-            {isHighlighted && (
-              <motion.circle
-                r="3"
-                fill={theme.palette.secondary.main}
-                filter="url(#glow)"
-                initial={{ offsetDistance: '0%' }}
-                animate={{ offsetDistance: '100%' }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'linear'
-                }}
-                style={{
-                  offsetPath: `path('M ${fromX} ${fromY} Q ${midX} ${midY - curve} ${toX} ${toY}')`,
-                  offsetRotate: '0deg'
-                }}
-              />
-            )}
+            {/* Animated particle along path - removed due to SVG limitations */}
 
             {/* Pulse at connection points */}
             {isHighlighted && (

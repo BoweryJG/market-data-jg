@@ -59,27 +59,74 @@ const MarketGalaxyMap: React.FC = () => {
     };
   };
 
-  // Fetch category data
+  // Demo data for visualization
+  const demoCategories: CategoryData[] = [
+    { id: '1', name: 'Dental Implants', market_size_usd_millions: 4500, avg_growth_rate: 12.5, innovation_score: 85, trend_direction: 'up' },
+    { id: '2', name: 'Orthodontics', market_size_usd_millions: 3200, avg_growth_rate: 8.3, innovation_score: 70, trend_direction: 'up' },
+    { id: '3', name: 'Facial Aesthetics', market_size_usd_millions: 2800, avg_growth_rate: 15.2, innovation_score: 90, trend_direction: 'up' },
+    { id: '4', name: 'Injectables', market_size_usd_millions: 2100, avg_growth_rate: 18.7, innovation_score: 88, trend_direction: 'up' },
+    { id: '5', name: 'Restorative', market_size_usd_millions: 1900, avg_growth_rate: 5.2, innovation_score: 60, trend_direction: 'stable' },
+    { id: '6', name: 'Endodontics', market_size_usd_millions: 1600, avg_growth_rate: 4.8, innovation_score: 55, trend_direction: 'stable' },
+    { id: '7', name: 'Periodontics', market_size_usd_millions: 1400, avg_growth_rate: 6.1, innovation_score: 65, trend_direction: 'up' },
+    { id: '8', name: 'Body Contouring', market_size_usd_millions: 1200, avg_growth_rate: 22.3, innovation_score: 92, trend_direction: 'up' },
+    { id: '9', name: 'Skin Resurfacing', market_size_usd_millions: 980, avg_growth_rate: 11.5, innovation_score: 78, trend_direction: 'up' },
+    { id: '10', name: 'Hair Restoration', market_size_usd_millions: 850, avg_growth_rate: 9.8, innovation_score: 72, trend_direction: 'up' },
+    { id: '11', name: 'Digital Dentistry', market_size_usd_millions: 720, avg_growth_rate: 25.4, innovation_score: 95, trend_direction: 'up' },
+    { id: '12', name: 'Regenerative Medicine', market_size_usd_millions: 650, avg_growth_rate: 28.9, innovation_score: 98, trend_direction: 'up' },
+  ];
+
+  // Fetch category data or use demo data
   useEffect(() => {
     const fetchCategories = async () => {
-      const { data, error } = await supabase
-        .from('category_hierarchy')
-        .select('*')
-        .order('market_size_usd_millions', { ascending: false });
+      try {
+        const { data, error } = await supabase
+          .from('category_hierarchy')
+          .select('*')
+          .order('market_size_usd_millions', { ascending: false });
 
-      if (data && !error) {
-        const formattedData = data.map((cat, index) => ({
+        if (data && !error && data.length > 0) {
+          const formattedData = data.map((cat, index) => ({
+            ...cat,
+            position: calculateOrbitalPosition(index, data.length, cat.market_size_usd_millions),
+            velocity: { 
+              x: (cat.avg_growth_rate || 0) * 0.01, 
+              y: (cat.innovation_score || 50) * 0.001 
+            },
+            color: cat.trend_direction === 'up' ? theme.palette.success.main : 
+                   cat.trend_direction === 'down' ? theme.palette.error.main : 
+                   theme.palette.info.main
+          }));
+          setCategories(formattedData);
+        } else {
+          // Use demo data if no database connection
+          const formattedDemo = demoCategories.map((cat, index) => ({
+            ...cat,
+            position: calculateOrbitalPosition(index, demoCategories.length, cat.market_size_usd_millions),
+            velocity: { 
+              x: cat.avg_growth_rate * 0.01, 
+              y: cat.innovation_score * 0.001 
+            },
+            color: cat.trend_direction === 'up' ? theme.palette.success.main : 
+                   cat.trend_direction === 'down' ? theme.palette.error.main : 
+                   theme.palette.info.main
+          }));
+          setCategories(formattedDemo);
+        }
+      } catch (error) {
+        console.log('Using demo data for Market Galaxy visualization');
+        // Use demo data on error
+        const formattedDemo = demoCategories.map((cat, index) => ({
           ...cat,
-          position: calculateOrbitalPosition(index, data.length, cat.market_size_usd_millions),
+          position: calculateOrbitalPosition(index, demoCategories.length, cat.market_size_usd_millions),
           velocity: { 
-            x: (cat.avg_growth_rate || 0) * 0.01, 
-            y: (cat.innovation_score || 50) * 0.001 
+            x: cat.avg_growth_rate * 0.01, 
+            y: cat.innovation_score * 0.001 
           },
           color: cat.trend_direction === 'up' ? theme.palette.success.main : 
                  cat.trend_direction === 'down' ? theme.palette.error.main : 
                  theme.palette.info.main
         }));
-        setCategories(formattedData);
+        setCategories(formattedDemo);
       }
     };
 
