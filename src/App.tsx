@@ -45,8 +45,8 @@ const App: React.FC = () => {
               <>
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
-                  <Route path="/" element={<EnhancedDashboard />} />
-                  <Route path="/galaxy" element={<MarketGalaxyMap />} />
+                  <Route path="/" element={<MarketGalaxyMap />} />
+                  <Route path="/dashboard" element={<EnhancedDashboard />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>
