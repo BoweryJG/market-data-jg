@@ -12,6 +12,7 @@ import {
   SalesIntelligenceHub,
   QuickActionsBar
 } from './components/Sales';
+import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const App: React.FC = () => {
@@ -45,6 +46,7 @@ const App: React.FC = () => {
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
                   <Route path="/" element={<EnhancedDashboard />} />
+                  <Route path="/galaxy" element={<MarketGalaxyMap />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>

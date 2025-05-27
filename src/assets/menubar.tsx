@@ -20,6 +20,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BusinessCenter from '@mui/icons-material/BusinessCenter';
 import MemoryIcon from '@mui/icons-material/Memory';
+import PublicIcon from '@mui/icons-material/Public';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -45,6 +46,12 @@ const getNavLinks = (currentUrl: string) => {
       label: 'Workspace', 
       href: 'https://workspace.repspheres.com/',
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
+    },
+    { 
+      key: 'galaxy',
+      label: 'Market Galaxy', 
+      href: '/galaxy',
+      icon: <PublicIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
