@@ -410,7 +410,13 @@ const MarketGalaxyMap: React.FC = () => {
         {/* Connection Lines */}
         {showConnections && (
           <ConnectionLines 
-            categories={categories} 
+            categories={categories.map(cat => ({
+              id: cat.id,
+              name: cat.name,
+              position: cat.position,
+              market_size_usd_millions: cat.total_market_size,
+              avg_growth_rate: cat.avg_growth_rate
+            }))} 
             selectedCategory={selectedCategory?.id || null} 
           />
         )}

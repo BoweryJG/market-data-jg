@@ -36,7 +36,8 @@ import {
   Share,
   MoreVert,
   FilterList,
-  SortRounded
+  SortRounded,
+  Business
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { galaxyDataService, SalesOpportunity } from '../../services/galaxyDataService';
