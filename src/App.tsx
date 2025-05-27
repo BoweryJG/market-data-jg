@@ -13,6 +13,7 @@ import {
   QuickActionsBar
 } from './components/Sales';
 import { MarketGalaxyMap } from './components/MarketGalaxy';
+import { SalesWorkspace } from './components/Workspace';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const App: React.FC = () => {
@@ -47,6 +48,7 @@ const App: React.FC = () => {
                 <Routes>
                   <Route path="/" element={<MarketGalaxyMap />} />
                   <Route path="/dashboard" element={<EnhancedDashboard />} />
+                  <Route path="/workspace" element={<SalesWorkspace />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>

@@ -42,16 +42,22 @@ const ACCENT_COLOR = '#00ffc6';
 const getNavLinks = (currentUrl: string) => {
   const links = [
     { 
+      key: 'galaxy',
+      label: 'Market Galaxy', 
+      href: '/',
+      icon: <PublicIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
+    },
+    { 
       key: 'workspace',
-      label: 'Workspace', 
-      href: 'https://workspace.repspheres.com/',
+      label: 'Sales Workspace', 
+      href: '/workspace',
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
-      key: 'galaxy',
-      label: 'Market Galaxy', 
-      href: '/galaxy',
-      icon: <PublicIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
+      key: 'dashboard',
+      label: 'Dashboard', 
+      href: '/dashboard',
+      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
