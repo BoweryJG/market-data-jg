@@ -284,7 +284,7 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
       >
         <Box display="flex" alignItems="center" gap={1}>
           <LocalFireDepartment sx={{ color: theme.palette.error.main }} />
-          <Typography variant="caption">High Growth (>12%)</Typography>
+          <Typography variant="caption">High Growth (&gt;12%)</Typography>
         </Box>
         <Box display="flex" alignItems="center" gap={1}>
           <WaterDrop sx={{ color: theme.palette.warning.main }} />
@@ -292,7 +292,7 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
         </Box>
         <Box display="flex" alignItems="center" gap={1}>
           <AcUnit sx={{ color: theme.palette.info.main }} />
-          <Typography variant="caption">Low (<8%)</Typography>
+          <Typography variant="caption">Low (&lt;8%)</Typography>
         </Box>
       </Box>
 
