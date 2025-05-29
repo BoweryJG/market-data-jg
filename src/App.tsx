@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import EnhancedMarketDashboard from './components/Dashboard/EnhancedMarketDashboard';
+import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -36,7 +36,7 @@ const App: React.FC = () => {
                     <Route path="/intelligence" element={<SalesIntelligenceHub />} />
                     <Route path="/market-data" element={
                       <Box sx={{ p: 2 }}>
-                        <EnhancedMarketDashboard />
+                        <ActionableSalesDashboard />
                       </Box>
                     } />
                   </Routes>
@@ -47,7 +47,7 @@ const App: React.FC = () => {
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
                   <Route path="/" element={<MarketGalaxyMap />} />
-                  <Route path="/dashboard" element={<EnhancedMarketDashboard />} />
+                  <Route path="/dashboard" element={<ActionableSalesDashboard />} />
                   <Route path="/workspace" element={<SalesWorkspace />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
