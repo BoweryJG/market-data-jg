@@ -193,7 +193,7 @@ const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights, onDismiss
                   {/* Close Button */}
                   <IconButton
                     size="small"
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleDismiss(insight.id);
                     }}

@@ -554,7 +554,7 @@ const CompactSalesDashboard: React.FC = () => {
                           {salesMode && (
                             <IconButton 
                               size="small"
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 // Add to CRM action
                               }}

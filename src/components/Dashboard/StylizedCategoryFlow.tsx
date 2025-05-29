@@ -564,7 +564,7 @@ const StylizedCategoryFlow: React.FC<{ industry: 'dental' | 'aesthetic' }> = ({ 
           {category.subcategories && category.subcategories.length > 0 && (
             <IconButton 
               size="small" 
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 toggleCategory(category.id);
               }}

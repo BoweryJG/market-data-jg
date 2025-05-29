@@ -470,7 +470,7 @@ const MarketGalaxyMap: React.FC = () => {
           <Typography variant="caption" color="text.secondary">Time Scale</Typography>
           <Slider
             value={timeScale}
-            onChange={(_, value) => setTimeScale(value as number)}
+            onChange={(_, value: number | number[]) => setTimeScale(value as number)}
             min={0.1}
             max={3}
             step={0.1}
