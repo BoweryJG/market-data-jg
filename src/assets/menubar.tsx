@@ -35,6 +35,7 @@ import SignupModal from '../components/Auth/SignupModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../context/AuthContext';
+import DashboardSelector from '../components/Navigation/DashboardSelector';
 
 const ACCENT_COLOR = '#00ffc6';
 
@@ -124,6 +125,7 @@ interface NavBarProps {
 
 export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [dashboardSelectorOpen, setDashboardSelectorOpen] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(null);
   const [loginOpen, setLoginOpen] = React.useState(false);
   const [signupOpen, setSignupOpen] = React.useState(false);
@@ -497,6 +499,9 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           opacity: 0.8,
         }}>
           <ThemeToggle />
+          <IconButton color="inherit" size="small" onClick={() => setDashboardSelectorOpen(true)} sx={{ ml: 1 }}>
+            <DashboardIcon />
+          </IconButton>
           <IconButton color="inherit" size="small" onClick={() => setSearchOpen(true)} sx={{ ml: 1 }}>
             <SearchIcon />
           </IconButton>
@@ -622,6 +627,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+    <DashboardSelector open={dashboardSelectorOpen} onClose={() => setDashboardSelectorOpen(false)} />
     </>
   );
 }
