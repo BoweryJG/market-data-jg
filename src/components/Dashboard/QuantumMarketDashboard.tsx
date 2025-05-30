@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Box, Typography, IconButton, Tooltip, Fade, Grow, useTheme, alpha, Fab } from '@mui/material';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
+import { Box, Typography, IconButton, Tooltip, Fade, Grow, useTheme, alpha, Fab, CircularProgress } from '@mui/material';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Stars, Float, Text, MeshDistortMaterial } from '@react-three/drei';
+import { OrbitControls, Stars, Float, MeshDistortMaterial, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { 
   TrendingUp, 
@@ -20,6 +20,7 @@ import {
   Search
 } from '@mui/icons-material';
 import FloatingInsights from './FloatingInsights';
+import ErrorBoundary from './ErrorBoundary';
 
 interface CategoryData {
   id: string;
@@ -238,15 +239,20 @@ const QuantumMarketDashboard: React.FC = () => {
             emissiveIntensity={hovered || isSelected ? 0.5 : 0.2}
           />
         </mesh>
-        <Text
+        <Html
           position={[data.position[0], data.position[1] + 2, data.position[2]]}
-          fontSize={0.5}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
+          center
+          style={{
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+            whiteSpace: 'nowrap',
+            userSelect: 'none',
+          }}
         >
           {data.name}
-        </Text>
+        </Html>
       </Float>
     );
   };
@@ -686,20 +692,46 @@ const QuantumMarketDashboard: React.FC = () => {
             exit={{ opacity: 0 }}
             style={{ height: '100vh' }}
           >
-            <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} />
-              <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
-              <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
-              
-              {categoryData.map((data) => (
-                <CategorySphere
-                  key={data.id}
-                  data={data}
-                  isSelected={selectedCategory?.id === data.id}
-                />
-              ))}
-            </Canvas>
+            <ErrorBoundary>
+              <Suspense fallback={
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                  <CircularProgress />
+                </Box>
+              }>
+                <Canvas 
+                  camera={{ position: [0, 0, 10], fov: 75 }}
+                  onCreated={({ gl }) => {
+                    gl.setClearColor('#0a0a0a');
+                  }}
+                  gl={{ 
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: 'high-performance',
+                  }}
+                >
+                  <ambientLight intensity={0.5} />
+                  <pointLight position={[10, 10, 10]} />
+                  <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade />
+                  <OrbitControls 
+                    enablePan={true} 
+                    enableZoom={true} 
+                    enableRotate={true}
+                    maxDistance={20}
+                    minDistance={5}
+                  />
+                  
+                  <group>
+                    {categoryData.map((data) => (
+                      <CategorySphere
+                        key={data.id}
+                        data={data}
+                        isSelected={selectedCategory?.id === data.id}
+                      />
+                    ))}
+                  </group>
+                </Canvas>
+              </Suspense>
+            </ErrorBoundary>
             
             {/* Selected Category Details */}
             {selectedCategory && (
