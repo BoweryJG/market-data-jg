@@ -279,7 +279,7 @@ const SalesWorkspace: React.FC = () => {
             >
               <Tabs
                 value={rightPanelTab}
-                onChange={(_, value: number) => setRightPanelTab(value)}
+                onChange={(_: React.SyntheticEvent, value: number) => setRightPanelTab(value)}
                 sx={{ borderBottom: 1, borderColor: 'divider' }}
               >
                 <Tab label="Insights" icon={<Analytics />} iconPosition="start" />

@@ -531,7 +531,7 @@ const SalesIntelligenceHub: React.FC = () => {
       <Paper sx={{ mb: 3 }}>
         <Tabs
           value={activeTab}
-          onChange={(_, value: number) => setActiveTab(value)}
+          onChange={(_: React.SyntheticEvent, value: number) => setActiveTab(value)}
           variant="scrollable"
           scrollButtons="auto"
         >

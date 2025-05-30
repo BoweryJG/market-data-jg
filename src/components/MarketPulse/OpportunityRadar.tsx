@@ -225,7 +225,7 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
           </Typography>
           <Slider
             value={radarRadius}
-            onChange={(_, value: number | number[]) => setRadarRadius(value as number)}
+            onChange={(_: React.SyntheticEvent, value: number | number[]) => setRadarRadius(value as number)}
             min={10}
             max={100}
             size="small"

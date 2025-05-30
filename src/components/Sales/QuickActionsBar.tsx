@@ -329,7 +329,7 @@ const QuickActionsBar: React.FC = () => {
 
       <BottomNavigation
         value={selectedNav}
-        onChange={(_, newValue: number) => setSelectedNav(newValue)}
+        onChange={(_: React.SyntheticEvent, newValue: number) => setSelectedNav(newValue)}
         sx={{
           position: 'fixed',
           bottom: 0,
