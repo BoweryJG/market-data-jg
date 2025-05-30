@@ -43,16 +43,18 @@ class ComprehensiveDataService {
     console.log('🔍 Discovering all Supabase tables...');
     
     try {
-      // Get all tables in the public schema
-      const { data: tables, error } = await supabase
-        .rpc('list_tables') // If this function exists
-        .or(
-          // Fallback: try to get table information from information_schema
-          supabase
-            .from('information_schema.tables')
-            .select('table_name')
-            .eq('table_schema', 'public')
-        );
+      // Try to get all tables using RPC function first
+      let tables: any[] | null = null;
+      let error: any = null;
+
+      try {
+        const rpcResult = await supabase.rpc('list_tables');
+        tables = rpcResult.data;
+        error = rpcResult.error;
+      } catch (rpcError) {
+        console.warn('RPC function not available, trying alternative approach...');
+        error = rpcError;
+      }
 
       if (error) {
         console.warn('Failed to get tables from RPC, trying direct query...');
