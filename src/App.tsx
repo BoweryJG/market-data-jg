@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
-import { QuantumMarketDashboard } from './components/Dashboard';
+import { QuantumMarketDashboard, EnhancedMarketDashboard } from './components/Dashboard';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -45,9 +45,12 @@ const App: React.FC = () => {
               </>
             ) : (
               <>
+                <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
-                  <Route path="/" element={<QuantumMarketDashboard />} />
-                  <Route path="/dashboard" element={<QuantumMarketDashboard />} />
+                  <Route path="/" element={<EnhancedMarketDashboard />} />
+                  <Route path="/dashboard" element={<EnhancedMarketDashboard />} />
+                  <Route path="/actionable" element={<ActionableSalesDashboard />} />
+                  <Route path="/quantum" element={<QuantumMarketDashboard />} />
                   <Route path="/workspace" element={<SalesWorkspace />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
