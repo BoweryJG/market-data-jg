@@ -357,28 +357,27 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* FIXED NEEDLE - THICK AND PROPERLY CENTERED */}
-        <g transform={`translate(${size / 2}, ${size / 2})`}>
-          <motion.g
-            animate={{ 
-              rotate: hasLoaded ? needleRotation : -90,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
-              damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
-              mass: 1.8,
-              duration: hasLoaded ? undefined : 3,
-            }}
-            style={{ 
-              transformOrigin: '0px 0px', // FORCE CENTER ANCHOR
-            }}
+        {/* NEEDLE ROTATES FROM BASE */}
+        <motion.g
+          animate={{ 
+            rotate: hasLoaded ? needleRotation : -90,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
+            damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
+            mass: 1.8,
+            duration: hasLoaded ? undefined : 3,
+          }}
+          style={{ 
+            transformOrigin: `${size / 2}px ${size / 2}px`, // ROTATE AROUND GAUGE CENTER
+          }}
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* CARTIER-STYLE LUXURY NEEDLE BODY */}
+            {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM CENTER */}
             <path
-              d={`M 0 -1.5 L ${size / 2 - 20} -0.8 L ${size / 2 - 20} 0.8 L 0 1.5 Z`}
+              d={`M ${size / 2} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} L ${size / 2} ${size / 2 + 1.5} Z`}
               fill="url(#luxury-needle-gradient)"
               stroke="#2C3E50"
               strokeWidth="0.3"
@@ -386,16 +385,16 @@ const CockpitGauge: React.FC<{
             
             {/* CHROME TIP - POINTED LUXURY STYLE */}
             <path
-              d={`M ${size / 2 - 20} -0.8 L ${size / 2 - 12} 0 L ${size / 2 - 20} 0.8 Z`}
+              d={`M ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 12)} ${size / 2} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} Z`}
               fill="url(#chrome-tip-gradient)"
               stroke="#BDC3C7"
               strokeWidth="0.2"
             />
             
-            {/* HEAVY BASE HUB - ROTATES WITH NEEDLE */}
+            {/* HEAVY BASE HUB - AT CENTER */}
             <circle
-              cx="0"
-              cy="0"
+              cx={size / 2}
+              cy={size / 2}
               r="8"
               fill="url(#base-gradient)"
               stroke="#34495E"
@@ -403,8 +402,8 @@ const CockpitGauge: React.FC<{
             />
             
             <circle
-              cx="0"
-              cy="0"
+              cx={size / 2}
+              cy={size / 2}
               r="4"
               fill="#2C3E50"
               stroke="#000"
