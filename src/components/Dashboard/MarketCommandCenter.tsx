@@ -410,7 +410,6 @@ const CockpitGauge: React.FC<{
               strokeWidth="1"
             />
           </motion.g>
-        </g>
         
         {/* Center hub with luxury details */}
         <motion.circle
