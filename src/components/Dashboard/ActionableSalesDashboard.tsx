@@ -57,7 +57,6 @@ import {
   Grow,
   Zoom
 } from '@mui/material';
-import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import {
   LocalFireDepartment,
   TrendingUp,
@@ -978,58 +977,64 @@ const ActionableSalesDashboard: React.FC = () => {
               </Box>
             </DialogTitle>
             <DialogContent>
-              <Timeline>
-                <TimelineItem>
-                  <TimelineOppositeContent color="text.secondary">
-                    Today
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineDot color="error">
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: 'error.main' }}>
                       <Phone />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography variant="subtitle2">Call to discuss implant options</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Mention Zimmer Biomet promotion and Nobel price increase
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                  <TimelineOppositeContent color="text.secondary">
-                    Tomorrow
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineDot color="primary">
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary="Call to discuss implant options"
+                    secondary={
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Mention Zimmer Biomet promotion and Nobel price increase
+                        </Typography>
+                        <Typography variant="caption" color="primary">Today</Typography>
+                      </Box>
+                    }
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>
                       <Business />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography variant="subtitle2">In-person demo</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Bring sample kit and iPad for virtual surgery planning
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                  <TimelineOppositeContent color="text.secondary">
-                    Next Week
-                  </TimelineOppositeContent>
-                  <TimelineSeparator>
-                    <TimelineDot color="success">
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary="In-person demo"
+                    secondary={
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Bring sample kit and iPad for virtual surgery planning
+                        </Typography>
+                        <Typography variant="caption" color="primary">Tomorrow</Typography>
+                      </Box>
+                    }
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: 'success.main' }}>
                       <CheckCircle />
-                    </TimelineDot>
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography variant="subtitle2">Close deal</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Finance options ready, implementation team on standby
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>
-              </Timeline>
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary="Close deal"
+                    secondary={
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Finance options ready, implementation team on standby
+                        </Typography>
+                        <Typography variant="caption" color="primary">Next Week</Typography>
+                      </Box>
+                    }
+                  />
+                </ListItem>
+              </List>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setSelectedLead(null)}>Close</Button>
