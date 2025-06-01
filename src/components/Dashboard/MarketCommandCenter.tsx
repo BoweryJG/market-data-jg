@@ -279,13 +279,28 @@ const CockpitGauge: React.FC<{
             <stop offset="100%" stopColor={alpha(theme.palette.success.main, 0.6)} />
           </linearGradient>
           
-          {/* Gradient for needle */}
-          <linearGradient id={`needle-gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          {/* LUXURY NEEDLE GRADIENTS - CARTIER STYLE */}
+          <linearGradient id="luxury-needle-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#2C3E50" />
             <stop offset="30%" stopColor="#34495E" />
-            <stop offset="60%" stopColor="#5D6D7E" />
+            <stop offset="70%" stopColor="#5D6D7E" />
             <stop offset="100%" stopColor="#85929E" />
           </linearGradient>
+          
+          {/* CHROME TIP GRADIENT */}
+          <radialGradient id="chrome-tip-gradient" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#F8F9FA" />
+            <stop offset="30%" stopColor="#ECF0F1" />
+            <stop offset="70%" stopColor="#BDC3C7" />
+            <stop offset="100%" stopColor="#95A5A6" />
+          </radialGradient>
+          
+          {/* BASE GRADIENT */}
+          <radialGradient id="base-gradient" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#ECF0F1" />
+            <stop offset="50%" stopColor="#BDC3C7" />
+            <stop offset="100%" stopColor="#2C3E50" />
+          </radialGradient>
           
           {/* Shadow filter */}
           <filter id={`needle-shadow-${label}`} x="-50%" y="-50%" width="200%" height="200%">
@@ -361,23 +376,37 @@ const CockpitGauge: React.FC<{
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* THIN LUXURY NEEDLE - STARTS AT CENTER (0,0) */}
-            <line
-              x1="0"
-              y1="0"
-              x2={size / 2 - 15}
-              y2="0"
-              stroke={`url(#needle-gradient-${label})`}
-              strokeWidth="2"
-              strokeLinecap="round"
+            {/* CARTIER-STYLE LUXURY NEEDLE BODY */}
+            <path
+              d={`M 0 -1.5 L ${size / 2 - 20} -0.8 L ${size / 2 - 20} 0.8 L 0 1.5 Z`}
+              fill="url(#luxury-needle-gradient)"
+              stroke="#2C3E50"
+              strokeWidth="0.3"
             />
             
-            {/* NEEDLE TIP */}
+            {/* CHROME TIP - POINTED LUXURY STYLE */}
+            <path
+              d={`M ${size / 2 - 20} -0.8 L ${size / 2 - 12} 0 L ${size / 2 - 20} 0.8 Z`}
+              fill="url(#chrome-tip-gradient)"
+              stroke="#BDC3C7"
+              strokeWidth="0.2"
+            />
+            
+            {/* HEAVY BASE HUB - ROTATES WITH NEEDLE */}
             <circle
-              cx={size / 2 - 15}
+              cx="0"
               cy="0"
-              r="2"
-              fill="#E74C3C"
+              r="8"
+              fill="url(#base-gradient)"
+              stroke="#34495E"
+              strokeWidth="1"
+            />
+            
+            <circle
+              cx="0"
+              cy="0"
+              r="4"
+              fill="#2C3E50"
               stroke="#000"
               strokeWidth="1"
             />
