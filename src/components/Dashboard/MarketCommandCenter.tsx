@@ -97,12 +97,13 @@ const CockpitGauge: React.FC<{
   const [isHovered, setIsHovered] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(-90); // Start at leftmost position
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false);
   const [liveValue, setLiveValue] = useState(value);
   const percentage = Math.min((liveValue / max) * 100, 100);
   const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
-  // Debug logging
-  console.log(`🎯 Gauge ${label}: value=${liveValue}, max=${max}, percentage=${percentage}, angle=${targetAngle}, needleRotation=${needleRotation}, hasLoaded=${hasLoaded}`);
+  // Live gauge with real Supabase data
+  // Values: Market Size (~134K), Growth (~12%), Procedures (367), Companies (85)
   
   // Live data fetching effect for all gauge types
   useEffect(() => {
@@ -180,14 +181,42 @@ const CockpitGauge: React.FC<{
     }
   }, [isLive, label, industry, value]);
 
-  // Luxurious initial spin animation on load
+  // DRAMATIC NEEDLE STARTUP ANIMATION - Each gauge spins differently
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setHasLoaded(true);
-      setNeedleRotation(targetAngle); // Direct set to target angle
-    }, 500); // Give time for component to mount
+    // Different delay and spin patterns for each gauge type
+    const getSpinConfig = () => {
+      switch (label) {
+        case 'Market Size':
+          return { delay: 300, spins: 3.5, speed: 2500 }; // Fast and dramatic
+        case 'Avg Growth':
+          return { delay: 800, spins: 2.8, speed: 2200 }; // Medium speed
+        case 'Procedures':
+          return { delay: 1300, spins: 4.2, speed: 2800 }; // Lots of spins
+        case 'Companies':
+          return { delay: 1800, spins: 1.9, speed: 1800 }; // Slower and elegant
+        default:
+          return { delay: 500, spins: 2.5, speed: 2000 };
+      }
+    };
 
-    return () => clearTimeout(timer);
+    const { delay, spins, speed } = getSpinConfig();
+    
+    const startAnimation = setTimeout(() => {
+      setIsSpinning(true);
+      // Dramatic spinning phase
+      setNeedleRotation(-90 + (spins * 360)); // Multiple full rotations
+      
+      // After spinning, settle to actual value
+      const settleTimer = setTimeout(() => {
+        setIsSpinning(false);
+        setHasLoaded(true);
+        setNeedleRotation(targetAngle);
+      }, speed);
+
+      return () => clearTimeout(settleTimer);
+    }, delay);
+
+    return () => clearTimeout(startAnimation);
   }, []); // Only run once on mount
 
   // Update needle when target changes (after initial load)
@@ -375,7 +404,14 @@ const CockpitGauge: React.FC<{
 
         {/* NEEDLE ROTATES FROM GAUGE CENTER (GLOWING DOT) */}
         <g 
-          transform={`rotate(${hasLoaded ? needleRotation : -90} ${size / 2} ${size / 2})`}
+          transform={`rotate(${hasLoaded || isSpinning ? needleRotation : -90} ${size / 2} ${size / 2})`}
+          style={{
+            transition: isSpinning 
+              ? `transform ${2.5}s cubic-bezier(0.25, 0.46, 0.45, 0.94)` // Smooth spin
+              : hasLoaded 
+                ? 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)' // Bouncy settle
+                : 'none'
+          }}
           onMouseEnter={handleMouseEnterNeedle}
           onMouseLeave={handleMouseLeaveNeedle}
         >
