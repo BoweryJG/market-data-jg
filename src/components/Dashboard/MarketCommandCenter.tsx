@@ -80,6 +80,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
+import SimpleGauge from './SimpleGauge';
 
 // Luxury automotive-style gauge component with physics-based needle
 const CockpitGauge: React.FC<{
@@ -950,15 +951,13 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.6 }}
               >
-                <CockpitGauge
+                <SimpleGauge
                   value={marketMetrics.totalMarketSize}
                   max={50000}
                   label="Market Size"
                   unit="M"
                   color={theme.palette.primary.main}
                   size={150}
-                  isLive={liveData}
-                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -966,15 +965,13 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <CockpitGauge
+                <SimpleGauge
                   value={marketMetrics.averageGrowth}
                   max={50}
                   label="Avg Growth"
                   unit="%"
                   color={theme.palette.success.main}
                   size={150}
-                  isLive={liveData}
-                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -982,15 +979,13 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <CockpitGauge
+                <SimpleGauge
                   value={marketMetrics.totalProcedures}
                   max={1000}
                   label="Procedures"
                   unit=""
                   color={theme.palette.info.main}
                   size={150}
-                  isLive={liveData}
-                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -998,15 +993,13 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
               >
-                <CockpitGauge
+                <SimpleGauge
                   value={marketMetrics.totalCompanies}
                   max={200}
                   label="Companies"
                   unit=""
                   color={theme.palette.warning.main}
                   size={150}
-                  isLive={liveData}
-                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
             </Box>
