@@ -59,13 +59,11 @@ class ComprehensiveDataService {
       if (error) {
         console.warn('Failed to get tables from RPC, trying direct query...');
         
-        // Alternative approach: Query known table patterns
+        // Alternative approach: Query known table patterns (only tables that exist)
         const knownTablePatterns = [
           'procedures', 'dental_procedures', 'aesthetic_procedures',
-          'companies', 'dental_companies', 'aesthetic_companies',
-          'categories', 'dental_procedure_categories', 'aesthetic_categories',
-          'providers', 'articles', 'trends', 'search_analytics',
-          'v_dashboard_*', 'standardized_*'
+          'companies', 'dental_procedure_categories', 'aesthetic_categories',
+          'standardized_procedure_categories'
         ];
 
         const discoveredTables: TableInfo[] = [];
@@ -177,104 +175,66 @@ class ComprehensiveDataService {
     console.log('🚀 Fetching comprehensive market data...');
 
     try {
-      // Fetch all core data in parallel
+      // Only fetch the tables you actually have
+      console.log('📊 Fetching from dental_procedures and aesthetic_procedures tables...');
       const [
-        proceduresResponse,
         dentalProceduresResponse,
         aestheticProceduresResponse,
-        dentalCompaniesResponse,
-        aestheticCompaniesResponse,
-        dentalCategoriesResponse,
-        aestheticCategoriesResponse,
-        providersResponse,
-        trendsResponse,
-        analyticsResponse,
       ] = await Promise.allSettled([
-        supabase.from('procedures').select(`
-          *,
-          dental_procedure_categories(name),
-          aesthetic_categories(name)
-        `).order('market_size_2025_usd_millions', { ascending: false }),
-        supabase.from('dental_procedures').select(`
-          *,
-          dental_procedure_categories(name)
-        `),
-        supabase.from('aesthetic_procedures').select(`
-          *,
-          aesthetic_categories(name)
-        `),
-        supabase.from('dental_companies').select('*'),
-        supabase.from('aesthetic_companies').select('*'),
-        supabase.from('dental_procedure_categories').select('*'),
-        supabase.from('aesthetic_categories').select('*'),
-        supabase.from('providers').select('*').limit(100),
-        supabase.from('trends').select('*').limit(50),
-        supabase.from('search_analytics').select('*').limit(100),
+        supabase.from('dental_procedures').select('*'),
+        supabase.from('aesthetic_procedures').select('*'),
       ]);
 
-      // Process and combine all procedures with proper categorization
-      const processedProcedures = (proceduresResponse.status === 'fulfilled' ? proceduresResponse.value.data || [] : [])
-        .map((proc: any) => ({
-          ...proc,
-          category: proc.category || 
-                   proc.normalized_category || 
-                   proc.clinical_category ||
-                   (proc.dental_procedure_categories?.name) ||
-                   (proc.aesthetic_categories?.name) ||
-                   (proc.industry === 'dental' ? 'Dental Procedure' : 'Aesthetic Procedure'),
-          industry: proc.industry || 'dental' // Default to dental if not specified
-        }));
+      console.log('📊 Dental procedures response:', dentalProceduresResponse);
+      console.log('📊 Aesthetic procedures response:', aestheticProceduresResponse);
 
+      // Process dental procedures
       const processedDentalProcedures = (dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : [])
         .map((proc: any) => ({
           ...proc,
+          id: proc.id || `dental_${proc.procedure_name || proc.name}`,
+          procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
           category: proc.category || 
                    proc.clinical_category ||
                    proc.normalized_category ||
-                   (proc.dental_procedure_categories?.name) ||
+                   proc.procedure_category ||
                    'Dental Procedure',
-          industry: 'dental'
+          industry: 'dental',
+          market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
+          yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
+          average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
+          trending_score: proc.trending_score || proc.popularity_score || 0,
+          popularity_score: proc.popularity_score || proc.trending_score || 0,
         }));
 
+      // Process aesthetic procedures
       const processedAestheticProcedures = (aestheticProceduresResponse.status === 'fulfilled' ? aestheticProceduresResponse.value.data || [] : [])
         .map((proc: any) => ({
           ...proc,
+          id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
+          procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
           category: proc.category || 
                    proc.aesthetic_category ||
                    proc.normalized_category ||
-                   (proc.aesthetic_categories?.name) ||
+                   proc.procedure_category ||
                    'Aesthetic Procedure',
-          industry: 'aesthetic'
+          industry: 'aesthetic',
+          market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
+          yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
+          average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
+          trending_score: proc.trending_score || proc.popularity_score || 0,
+          popularity_score: proc.popularity_score || proc.trending_score || 0,
         }));
 
       const allProcedures = [
-        ...processedProcedures,
         ...processedDentalProcedures,
         ...processedAestheticProcedures,
       ];
 
-      // Combine all companies
-      const allCompanies = [
-        ...(dentalCompaniesResponse.status === 'fulfilled' ? 
-          (dentalCompaniesResponse.value.data || []).map((c: any) => ({ ...c, industry: 'dental' })) : []),
-        ...(aestheticCompaniesResponse.status === 'fulfilled' ? 
-          (aestheticCompaniesResponse.value.data || []).map((c: any) => ({ ...c, industry: 'aesthetic' })) : []),
-      ];
-
-      // Combine all categories
-      const allCategories = [
-        ...(dentalCategoriesResponse.status === 'fulfilled' ? dentalCategoriesResponse.value.data || [] : []),
-        ...(aestheticCategoriesResponse.status === 'fulfilled' ? aestheticCategoriesResponse.value.data || [] : []),
-      ];
+      console.log(`✅ Processed ${processedDentalProcedures.length} dental and ${processedAestheticProcedures.length} aesthetic procedures`);
 
       // Extract territory data from procedures regional_popularity
       const territories = this.extractTerritoryData(allProcedures);
-
-      // Get analytics data
-      const analytics = [
-        ...(trendsResponse.status === 'fulfilled' ? trendsResponse.value.data || [] : []),
-        ...(analyticsResponse.status === 'fulfilled' ? analyticsResponse.value.data || [] : []),
-      ];
 
       // Calculate market metrics
       const totalMarketSize = allProcedures.reduce((sum, p) => 
@@ -287,14 +247,14 @@ class ComprehensiveDataService {
 
       const comprehensiveData: ComprehensiveMarketData = {
         procedures: allProcedures,
-        companies: allCompanies,
-        categories: allCategories,
+        companies: [], // Empty for now - focus on procedures
+        categories: [], // Empty for now - focus on procedures  
         territories,
-        analytics,
+        analytics: [], // Empty for now - focus on procedures
         marketMetrics: {
           totalMarketSize,
           totalProcedures: allProcedures.length,
-          totalCompanies: allCompanies.length,
+          totalCompanies: 0,
           averageGrowth: avgGrowth,
           territoryCount: territories.length,
         },
@@ -305,10 +265,11 @@ class ComprehensiveDataService {
 
       console.log('✅ Comprehensive market data loaded:', {
         procedures: allProcedures.length,
-        companies: allCompanies.length,
-        categories: allCategories.length,
+        dentalProcedures: processedDentalProcedures.length,
+        aestheticProcedures: processedAestheticProcedures.length,
         territories: territories.length,
         totalMarketSize: totalMarketSize.toFixed(2) + 'M',
+        avgGrowth: avgGrowth.toFixed(1) + '%',
       });
 
       return comprehensiveData;
@@ -401,6 +362,29 @@ class ComprehensiveDataService {
     this.dataCache = null;
     this.tableCache.clear();
     this.lastFetch = 0;
+  }
+
+  // Special method to test specific tables for debugging
+  async testSpecificTables(): Promise<any> {
+    console.log('🧪 Testing specific dental_procedures and aesthetic_procedures tables...');
+    
+    try {
+      const [dentalTest, aestheticTest] = await Promise.allSettled([
+        supabase.from('dental_procedures').select('*').limit(5),
+        supabase.from('aesthetic_procedures').select('*').limit(5),
+      ]);
+
+      console.log('🦷 Dental procedures test:', dentalTest);
+      console.log('💄 Aesthetic procedures test:', aestheticTest);
+
+      return {
+        dental: dentalTest,
+        aesthetic: aestheticTest,
+      };
+    } catch (error) {
+      console.error('❌ Table test failed:', error);
+      return { error };
+    }
   }
 }
 

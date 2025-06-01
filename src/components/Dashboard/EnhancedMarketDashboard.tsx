@@ -225,20 +225,14 @@ const EnhancedMarketDashboard: React.FC = () => {
       try {
         setDataLoading(true);
         
-        // Load procedures with enhanced data
+        // Load procedures with simple queries (no joins)
         const { data: dentalData } = await supabase
           .from('dental_procedures')
-          .select(`
-            *,
-            dental_procedure_categories(name, color_code, market_size_usd_millions)
-          `);
+          .select('*');
         
         const { data: aestheticData } = await supabase
           .from('aesthetic_procedures')
-          .select(`
-            *,
-            aesthetic_categories(name, color_code, market_size_usd_millions)
-          `);
+          .select('*');
 
         // Load categories with procedure counts
         const { data: categoriesData } = await supabase

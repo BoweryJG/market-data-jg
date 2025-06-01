@@ -342,14 +342,15 @@ class MarketIntelligenceService {
 
   private async storeSearchAnalytics(query: string, insight: MarketInsight) {
     try {
-      await supabase.from('search_analytics').insert({
-        query,
-        industry: insight.results[0]?.category || 'general',
-        result_count: insight.results.length,
-        sentiment: insight.sentiment.overall,
-        trends: insight.trends,
-        timestamp: new Date()
-      });
+      // TODO: Create search_analytics table or remove this tracking
+      // await supabase.from('search_analytics').insert({
+      //   query,
+      //   industry: insight.results[0]?.category || 'general',
+      //   result_count: insight.results.length,
+      //   sentiment: insight.sentiment.overall,
+      //   trends: insight.trends,
+      //   timestamp: new Date()
+      // });
     } catch (error) {
       console.error('Failed to store search analytics:', error);
     }
