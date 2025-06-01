@@ -101,6 +101,9 @@ const CockpitGauge: React.FC<{
   const percentage = Math.min((liveValue / max) * 100, 100);
   const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
+  // Debug logging
+  console.log(`🎯 Gauge ${label}: value=${liveValue}, max=${max}, percentage=${percentage}, angle=${targetAngle}`);
+  
   // Live data fetching effect for all gauge types
   useEffect(() => {
     if (isLive) {
@@ -181,24 +184,18 @@ const CockpitGauge: React.FC<{
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasLoaded(true);
-      // Spin around a few times then settle to target
-      setNeedleRotation(720 + targetAngle); // 2 full rotations + target
-      
-      // After the dramatic spin, settle to actual target
-      setTimeout(() => {
-        setNeedleRotation(targetAngle);
-      }, 2000);
-    }, 300); // Small delay for dramatic effect
+      setNeedleRotation(targetAngle); // Direct set to target angle
+    }, 500); // Give time for component to mount
 
     return () => clearTimeout(timer);
-  }, [targetAngle]);
+  }, []); // Only run once on mount
 
   // Update needle when target changes (after initial load)
   useEffect(() => {
     if (hasLoaded) {
       setNeedleRotation(targetAngle);
     }
-  }, [targetAngle, hasLoaded]);
+  }, [targetAngle, hasLoaded, liveValue]); // Add liveValue dependency
 
   const handleMouseEnter = () => {
     setIsHovered(true);
