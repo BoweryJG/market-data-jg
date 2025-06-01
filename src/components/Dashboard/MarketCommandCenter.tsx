@@ -341,7 +341,7 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* Luxury needle with physics animation - rotates around its base at gauge center */}
+        {/* FIXED NEEDLE - THICK AND PROPERLY CENTERED */}
         <g transform={`translate(${size / 2}, ${size / 2})`}>
           <motion.g
             animate={{ 
@@ -351,72 +351,43 @@ const CockpitGauge: React.FC<{
               type: "spring",
               stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
               damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
-              mass: 1.8, // Heavier for more luxurious weighted feel
+              mass: 1.8,
               duration: hasLoaded ? undefined : 3,
             }}
             style={{ 
-              filter: `url(#needle-shadow-${label})`,
-              transformOrigin: '0 0', // Anchor needle rotation at gauge center
+              transformOrigin: '0px 0px', // FORCE CENTER ANCHOR
             }}
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* Needle base (anchored at center) - THICKER */}
-            <path
-              d={`M 0 -4 
-                  L 6 -2
-                  L 6 2
-                  L 0 4
-                  Z`}
-              fill={`url(#needle-gradient-${label})`}
-              stroke="rgba(0,0,0,0.4)"
+            {/* THICK NEEDLE BASE - STARTS AT CENTER (0,0) */}
+            <rect
+              x="0"
+              y="-6"
+              width="8"
+              height="12"
+              fill="#2C3E50"
+              stroke="#000"
               strokeWidth="1"
             />
             
-            {/* Needle shaft with luxury styling (extends from center) - THICKER */}
-            <path
-              d={`M 0 -3 
-                  L ${size / 2 - 25} -1.5
-                  L ${size / 2 - 20} 0
-                  L ${size / 2 - 25} 1.5
-                  L 0 3
-                  Z`}
-              fill={`url(#needle-gradient-${label})`}
-              stroke="rgba(0,0,0,0.3)"
+            {/* THICK NEEDLE SHAFT - EXTENDS FROM CENTER */}
+            <rect
+              x="0"
+              y="-4"
+              width={size / 2 - 20}
+              height="8"
+              fill="#34495E"
+              stroke="#000"
               strokeWidth="1"
             />
             
-            {/* Needle tip (diamond shaped) */}
-            <path
-              d={`M ${size / 2 - 25} -1
-                  L ${size / 2 - 15} 0
-                  L ${size / 2 - 25} 1
-                  Z`}
+            {/* NEEDLE TIP */}
+            <polygon
+              points={`${size / 2 - 20},-4 ${size / 2 - 10},0 ${size / 2 - 20},4`}
               fill="#C0392B"
-              stroke="rgba(0,0,0,0.4)"
-              strokeWidth="0.5"
-            />
-            
-            {/* Metallic shine on needle shaft */}
-            <path
-              d={`M 1 -0.5 
-                  L ${size / 2 - 27} -0.2
-                  L ${size / 2 - 22} 0
-                  L 1 0.5
-                  Z`}
-              fill={`url(#metallic-shine-${label})`}
-              opacity="0.7"
-            />
-            
-            {/* Metallic shine on base */}
-            <path
-              d={`M 0 -1 
-                  L 2 -0.5
-                  L 2 0.5
-                  L 0 1
-                  Z`}
-              fill={`url(#metallic-shine-${label})`}
-              opacity="0.5"
+              stroke="#000"
+              strokeWidth="1"
             />
           </motion.g>
         </g>
