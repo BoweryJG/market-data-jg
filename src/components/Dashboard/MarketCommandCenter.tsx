@@ -76,6 +76,12 @@ import {
   Healing,
   Brush,
   Category,
+  // Additional icons for categories
+  FlashOn,
+  Spa,
+  FitnessCenter,
+  Psychology,
+  Engineering,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
@@ -688,6 +694,10 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'Aesthetic Medicine': <Brush sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Hair Restoration': <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />,
   'Breast Procedures': <Accessibility sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Wellness': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Fitness': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Mental Health': <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Technology': <Engineering sx={{ color: '#2196F3', fontSize: 20 }} />,
   
   // Additional common categories
   'Dermal Fillers': <Colorize sx={{ color: '#FF5722', fontSize: 20 }} />,
@@ -1171,18 +1181,21 @@ const MarketCommandCenter: React.FC = () => {
                 onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                 sx={{
                   '& .MuiSvgIcon-root': {
-                    fontSize: 18,
+                    fontSize: 20,
                     marginRight: 0.5,
                   },
-                  backgroundColor: selectedCategory === category ? theme.palette.primary.main : 'transparent',
+                  backgroundColor: selectedCategory === category ? theme.palette.primary.main : 'rgba(255,255,255,0.05)',
                   color: selectedCategory === category ? theme.palette.primary.contrastText : theme.palette.text.primary,
                   border: selectedCategory === category ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                  borderRadius: 2,
+                  fontWeight: 500,
                   '&:hover': {
                     backgroundColor: selectedCategory === category 
                       ? alpha(theme.palette.primary.main, 0.8) 
                       : alpha(theme.palette.primary.main, 0.1),
-                    transform: 'scale(1.02)',
+                    transform: 'scale(1.05)',
                     transition: 'all 0.2s ease',
+                    boxShadow: `0 4px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
                   }
                 }}
               />
