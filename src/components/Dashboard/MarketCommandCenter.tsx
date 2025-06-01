@@ -76,14 +76,33 @@ const CockpitGauge: React.FC<{
 }> = ({ value, max, label, unit, color, size = 120, isLive = false }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
-  const [needleRotation, setNeedleRotation] = useState(0);
+  const [needleRotation, setNeedleRotation] = useState(-90); // Start at leftmost position
+  const [hasLoaded, setHasLoaded] = useState(false);
   const percentage = Math.min((value / max) * 100, 100);
   const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
-  // Physics-based needle movement with spring animation
+  // Luxurious initial spin animation on load
   useEffect(() => {
-    setNeedleRotation(targetAngle);
+    const timer = setTimeout(() => {
+      setHasLoaded(true);
+      // Spin around a few times then settle to target
+      setNeedleRotation(720 + targetAngle); // 2 full rotations + target
+      
+      // After the dramatic spin, settle to actual target
+      setTimeout(() => {
+        setNeedleRotation(targetAngle);
+      }, 2000);
+    }, 300); // Small delay for dramatic effect
+
+    return () => clearTimeout(timer);
   }, [targetAngle]);
+
+  // Update needle when target changes (after initial load)
+  useEffect(() => {
+    if (hasLoaded) {
+      setNeedleRotation(targetAngle);
+    }
+  }, [targetAngle, hasLoaded]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -208,57 +227,82 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* Luxury needle with physics animation */}
-        <motion.g
-          animate={{ 
-            rotate: isHovered ? needleRotation : targetAngle,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: isHovered ? 100 : 60,
-            damping: isHovered ? 15 : 20,
-            mass: 1.2,
-          }}
-          style={{ 
-            transformOrigin: `${size / 2}px ${size / 2}px`,
-            filter: `url(#needle-shadow-${label})`,
-          }}
-        >
-          {/* Needle shaft with luxury styling */}
-          <path
-            d={`M ${size / 2 - 4} ${size / 2 - 1.5} 
-                L ${size / 2 + (size / 2 - 30)} ${size / 2 - 0.5}
-                L ${size / 2 + (size / 2 - 25)} ${size / 2}
-                L ${size / 2 + (size / 2 - 30)} ${size / 2 + 0.5}
-                L ${size / 2 - 4} ${size / 2 + 1.5}
-                Z`}
-            fill={`url(#needle-gradient-${label})`}
-            stroke="rgba(0,0,0,0.3)"
-            strokeWidth="0.5"
-          />
-          
-          {/* Needle tip (diamond shaped) */}
-          <path
-            d={`M ${size / 2 + (size / 2 - 30)} ${size / 2 - 1}
-                L ${size / 2 + (size / 2 - 20)} ${size / 2}
-                L ${size / 2 + (size / 2 - 30)} ${size / 2 + 1}
-                Z`}
-            fill="#C0392B"
-            stroke="rgba(0,0,0,0.4)"
-            strokeWidth="0.5"
-          />
-          
-          {/* Metallic shine on needle */}
-          <path
-            d={`M ${size / 2 - 2} ${size / 2 - 0.5} 
-                L ${size / 2 + (size / 2 - 32)} ${size / 2 - 0.2}
-                L ${size / 2 + (size / 2 - 28)} ${size / 2}
-                L ${size / 2 - 2} ${size / 2 + 0.5}
-                Z`}
-            fill={`url(#metallic-shine-${label})`}
-            opacity="0.7"
-          />
-        </motion.g>
+        {/* Luxury needle with physics animation - rotates around its base */}
+        <g transform={`translate(${size / 2}, ${size / 2})`}>
+          <motion.g
+            animate={{ 
+              rotate: hasLoaded ? needleRotation : -90,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
+              damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
+              mass: 1.8, // Heavier for more luxurious weighted feel
+              duration: hasLoaded ? undefined : 3,
+            }}
+            style={{ 
+              filter: `url(#needle-shadow-${label})`,
+            }}
+          >
+            {/* Needle base (connects to center) */}
+            <path
+              d={`M -8 -2 
+                  L 8 -1
+                  L 8 1
+                  L -8 2
+                  Z`}
+              fill={`url(#needle-gradient-${label})`}
+              stroke="rgba(0,0,0,0.4)"
+              strokeWidth="0.5"
+            />
+            
+            {/* Needle shaft with luxury styling */}
+            <path
+              d={`M 8 -1.5 
+                  L ${size / 2 - 25} -0.5
+                  L ${size / 2 - 20} 0
+                  L ${size / 2 - 25} 0.5
+                  L 8 1.5
+                  Z`}
+              fill={`url(#needle-gradient-${label})`}
+              stroke="rgba(0,0,0,0.3)"
+              strokeWidth="0.5"
+            />
+            
+            {/* Needle tip (diamond shaped) */}
+            <path
+              d={`M ${size / 2 - 25} -1
+                  L ${size / 2 - 15} 0
+                  L ${size / 2 - 25} 1
+                  Z`}
+              fill="#C0392B"
+              stroke="rgba(0,0,0,0.4)"
+              strokeWidth="0.5"
+            />
+            
+            {/* Metallic shine on needle shaft */}
+            <path
+              d={`M 6 -0.5 
+                  L ${size / 2 - 27} -0.2
+                  L ${size / 2 - 22} 0
+                  L 6 0.5
+                  Z`}
+              fill={`url(#metallic-shine-${label})`}
+              opacity="0.7"
+            />
+            
+            {/* Metallic shine on base */}
+            <path
+              d={`M -6 -1 
+                  L 6 -0.5
+                  L 6 0.5
+                  L -6 1
+                  Z`}
+              fill={`url(#metallic-shine-${label})`}
+              opacity="0.5"
+            />
+          </motion.g>
+        </g>
         
         {/* Center hub with luxury details */}
         <motion.circle
@@ -663,42 +707,66 @@ const MarketCommandCenter: React.FC = () => {
               Market Intelligence Dashboard
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 3, py: 2 }}>
-              <CockpitGauge
-                value={marketMetrics.totalMarketSize}
-                max={50000}
-                label="Market Size"
-                unit="M"
-                color={theme.palette.primary.main}
-                size={150}
-                isLive={liveData}
-              />
-              <CockpitGauge
-                value={marketMetrics.averageGrowth}
-                max={50}
-                label="Avg Growth"
-                unit="%"
-                color={theme.palette.success.main}
-                size={150}
-                isLive={liveData}
-              />
-              <CockpitGauge
-                value={marketMetrics.totalProcedures}
-                max={1000}
-                label="Procedures"
-                unit=""
-                color={theme.palette.info.main}
-                size={150}
-                isLive={liveData}
-              />
-              <CockpitGauge
-                value={marketMetrics.totalCompanies}
-                max={200}
-                label="Companies"
-                unit=""
-                color={theme.palette.warning.main}
-                size={150}
-                isLive={liveData}
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+              >
+                <CockpitGauge
+                  value={marketMetrics.totalMarketSize}
+                  max={50000}
+                  label="Market Size"
+                  unit="M"
+                  color={theme.palette.primary.main}
+                  size={150}
+                  isLive={liveData}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <CockpitGauge
+                  value={marketMetrics.averageGrowth}
+                  max={50}
+                  label="Avg Growth"
+                  unit="%"
+                  color={theme.palette.success.main}
+                  size={150}
+                  isLive={liveData}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                <CockpitGauge
+                  value={marketMetrics.totalProcedures}
+                  max={1000}
+                  label="Procedures"
+                  unit=""
+                  color={theme.palette.info.main}
+                  size={150}
+                  isLive={liveData}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+              >
+                <CockpitGauge
+                  value={marketMetrics.totalCompanies}
+                  max={200}
+                  label="Companies"
+                  unit=""
+                  color={theme.palette.warning.main}
+                  size={150}
+                  isLive={liveData}
+                />
+              </motion.div>
             </Box>
           </Card>
         </Grid>
