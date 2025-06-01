@@ -1172,8 +1172,10 @@ const MarketCommandCenter: React.FC = () => {
                 .filter(p => selectedIndustry === 'all' || p.industry === selectedIndustry)
                 .map(p => p.category || p.normalized_category || p.clinical_category)
                 .filter(Boolean)
-            )).map((category) => (
-              <Chip
+            )).map((category) => {
+              console.log('🏷️ Category:', category, 'Has Icon:', !!categoryIconMap[category]);
+              return (
+                <Chip
                 key={category}
                 icon={categoryIconMap[category] || categoryIconMap['default'] as React.ReactElement}
                 label={category}
@@ -1198,8 +1200,9 @@ const MarketCommandCenter: React.FC = () => {
                     boxShadow: `0 4px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
                   }
                 }}
-              />
-            ))}
+                />
+              );
+            })}
           </Box>
         </Card>
       )}
