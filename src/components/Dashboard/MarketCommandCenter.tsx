@@ -64,7 +64,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 
-// Cockpit-style gauge component
+// Luxury automotive-style gauge component with physics-based needle
 const CockpitGauge: React.FC<{
   value: number;
   max: number;
@@ -75,20 +75,107 @@ const CockpitGauge: React.FC<{
   isLive?: boolean;
 }> = ({ value, max, label, unit, color, size = 120, isLive = false }) => {
   const theme = useTheme();
+  const [isHovered, setIsHovered] = useState(false);
+  const [needleRotation, setNeedleRotation] = useState(0);
   const percentage = Math.min((value / max) * 100, 100);
-  const angle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
+  const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
+  
+  // Physics-based needle movement with spring animation
+  useEffect(() => {
+    setNeedleRotation(targetAngle);
+  }, [targetAngle]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const mouseX = event.clientX - centerX;
+    const mouseY = event.clientY - centerY;
+    
+    // Calculate angle from center to mouse, constrained to gauge range
+    let angle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
+    
+    // Constrain to gauge range (-90 to 90 degrees)
+    angle = Math.max(-90, Math.min(90, angle));
+    
+    if (isHovered) {
+      setNeedleRotation(angle);
+    }
+  };
+
+  const handleMouseClick = () => {
+    // Add a wobble effect on click
+    setNeedleRotation(targetAngle + (Math.random() - 0.5) * 20);
+    setTimeout(() => setNeedleRotation(targetAngle), 300);
+  };
 
   return (
-    <Box sx={{ position: 'relative', width: size, height: size / 2 + 40 }}>
-      {/* Gauge background */}
+    <Box 
+      sx={{ 
+        position: 'relative', 
+        width: size, 
+        height: size / 2 + 40,
+        cursor: 'pointer',
+        '&:hover': {
+          transform: 'scale(1.02)',
+          transition: 'transform 0.2s ease',
+        }
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      onClick={handleMouseClick}
+    >
+      {/* Gauge background with luxury styling */}
       <svg width={size} height={size / 2 + 20} style={{ position: 'absolute', top: 0 }}>
         <defs>
+          {/* Gradient for gauge background */}
           <linearGradient id={`gauge-bg-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={alpha(theme.palette.error.main, 0.3)} />
-            <stop offset="50%" stopColor={alpha(theme.palette.warning.main, 0.3)} />
-            <stop offset="100%" stopColor={alpha(theme.palette.success.main, 0.3)} />
+            <stop offset="0%" stopColor={alpha(theme.palette.error.main, 0.4)} />
+            <stop offset="30%" stopColor={alpha(theme.palette.warning.main, 0.4)} />
+            <stop offset="70%" stopColor={alpha(theme.palette.success.main, 0.4)} />
+            <stop offset="100%" stopColor={alpha(theme.palette.success.main, 0.6)} />
+          </linearGradient>
+          
+          {/* Gradient for needle */}
+          <linearGradient id={`needle-gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#2C3E50" />
+            <stop offset="30%" stopColor="#34495E" />
+            <stop offset="60%" stopColor="#5D6D7E" />
+            <stop offset="100%" stopColor="#85929E" />
+          </linearGradient>
+          
+          {/* Shadow filter */}
+          <filter id={`needle-shadow-${label}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.3)" />
+          </filter>
+          
+          {/* Metallic shine gradient */}
+          <linearGradient id={`metallic-shine-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
+            <stop offset="30%" stopColor="rgba(255,255,255,0.3)" />
+            <stop offset="70%" stopColor="rgba(255,255,255,0.1)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.6)" />
           </linearGradient>
         </defs>
+        
+        {/* Outer ring for luxury feel */}
+        <path
+          d={`M 10 ${size / 2} A ${size / 2 - 10} ${size / 2 - 10} 0 0 1 ${size - 10} ${size / 2}`}
+          fill="none"
+          stroke={alpha(theme.palette.text.primary, 0.1)}
+          strokeWidth="2"
+        />
+        
+        {/* Main gauge track */}
         <path
           d={`M 15 ${size / 2} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${size - 15} ${size / 2}`}
           fill="none"
@@ -96,68 +183,205 @@ const CockpitGauge: React.FC<{
           strokeWidth="8"
           strokeLinecap="round"
         />
-        {/* Needle */}
-        <g transform={`translate(${size / 2}, ${size / 2}) rotate(${angle})`}>
-          <line
-            x1="0"
-            y1="0"
-            x2={size / 2 - 25}
-            y2="0"
-            stroke={color}
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <circle cx="0" cy="0" r="6" fill={color} />
-          {isLive && (
-            <motion.circle
-              cx="0"
-              cy="0"
-              r="8"
-              fill="none"
-              stroke={theme.palette.success.main}
-              strokeWidth="2"
-              animate={{
-                r: [8, 12, 8],
-                opacity: [1, 0.3, 1],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-              }}
+        
+        {/* Tick marks for luxury automotive feel */}
+        {Array.from({ length: 9 }, (_, i) => {
+          const tickAngle = (-90 + (i * 22.5)) * (Math.PI / 180);
+          const innerRadius = size / 2 - 25;
+          const outerRadius = size / 2 - (i % 2 === 0 ? 35 : 30);
+          const x1 = size / 2 + Math.cos(tickAngle) * innerRadius;
+          const y1 = size / 2 + Math.sin(tickAngle) * innerRadius;
+          const x2 = size / 2 + Math.cos(tickAngle) * outerRadius;
+          const y2 = size / 2 + Math.sin(tickAngle) * outerRadius;
+          
+          return (
+            <line
+              key={i}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={alpha(theme.palette.text.primary, 0.6)}
+              strokeWidth={i % 2 === 0 ? "2" : "1"}
+              strokeLinecap="round"
             />
-          )}
-        </g>
+          );
+        })}
+        
+        {/* Luxury needle with physics animation */}
+        <motion.g
+          animate={{ 
+            rotate: isHovered ? needleRotation : targetAngle,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: isHovered ? 100 : 60,
+            damping: isHovered ? 15 : 20,
+            mass: 1.2,
+          }}
+          style={{ 
+            transformOrigin: `${size / 2}px ${size / 2}px`,
+            filter: `url(#needle-shadow-${label})`,
+          }}
+        >
+          {/* Needle shaft with luxury styling */}
+          <path
+            d={`M ${size / 2 - 4} ${size / 2 - 1.5} 
+                L ${size / 2 + (size / 2 - 30)} ${size / 2 - 0.5}
+                L ${size / 2 + (size / 2 - 25)} ${size / 2}
+                L ${size / 2 + (size / 2 - 30)} ${size / 2 + 0.5}
+                L ${size / 2 - 4} ${size / 2 + 1.5}
+                Z`}
+            fill={`url(#needle-gradient-${label})`}
+            stroke="rgba(0,0,0,0.3)"
+            strokeWidth="0.5"
+          />
+          
+          {/* Needle tip (diamond shaped) */}
+          <path
+            d={`M ${size / 2 + (size / 2 - 30)} ${size / 2 - 1}
+                L ${size / 2 + (size / 2 - 20)} ${size / 2}
+                L ${size / 2 + (size / 2 - 30)} ${size / 2 + 1}
+                Z`}
+            fill="#C0392B"
+            stroke="rgba(0,0,0,0.4)"
+            strokeWidth="0.5"
+          />
+          
+          {/* Metallic shine on needle */}
+          <path
+            d={`M ${size / 2 - 2} ${size / 2 - 0.5} 
+                L ${size / 2 + (size / 2 - 32)} ${size / 2 - 0.2}
+                L ${size / 2 + (size / 2 - 28)} ${size / 2}
+                L ${size / 2 - 2} ${size / 2 + 0.5}
+                Z`}
+            fill={`url(#metallic-shine-${label})`}
+            opacity="0.7"
+          />
+        </motion.g>
+        
+        {/* Center hub with luxury details */}
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r="8"
+          fill="#34495E"
+          stroke="#2C3E50"
+          strokeWidth="2"
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.2 }}
+        />
+        
+        {/* Inner hub detail */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r="5"
+          fill="url(#metallic-shine-${label})"
+          opacity="0.8"
+        />
+        
+        {/* Center dot */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r="2"
+          fill={color}
+        />
+        
+        {/* Live indicator pulse */}
+        {isLive && (
+          <motion.circle
+            cx={size / 2}
+            cy={size / 2}
+            r="12"
+            fill="none"
+            stroke={theme.palette.success.main}
+            strokeWidth="2"
+            animate={{
+              r: [12, 18, 12],
+              opacity: [0.8, 0.2, 0.8],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        )}
       </svg>
       
-      {/* Value display */}
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          textAlign: 'center',
+      {/* Value display with enhanced styling */}
+      <motion.div
+        animate={{
+          scale: isHovered ? 1.05 : 1,
         }}
+        transition={{ duration: 0.2 }}
       >
-        <Typography variant="h6" sx={{ fontFamily: 'monospace', color }}>
-          {value.toLocaleString()}{unit}
-        </Typography>
-        <Typography variant="caption" color="text.secondary">
-          {label}
-        </Typography>
-        {isLive && (
-          <motion.div
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            textAlign: 'center',
+            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.background.paper, 0.7)})`,
+            borderRadius: 2,
+            p: 1,
+            border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontFamily: "'JetBrains Mono', 'Roboto Mono', monospace",
+              color,
+              fontWeight: 'bold',
+              textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+            }}
           >
-            <FiberManualRecord sx={{ fontSize: 8, color: theme.palette.success.main }} />
-            <Typography variant="caption" sx={{ fontSize: 10 }}>
-              LIVE
-            </Typography>
-          </motion.div>
-        )}
-      </Box>
+            {value.toLocaleString()}{unit}
+          </Typography>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              letterSpacing: '0.5px',
+            }}
+          >
+            {label}
+          </Typography>
+          {isLive && (
+            <motion.div
+              animate={{ opacity: [1, 0.4, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: 4,
+                marginTop: 2,
+              }}
+            >
+              <FiberManualRecord sx={{ fontSize: 8, color: theme.palette.success.main }} />
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: theme.palette.success.main,
+                }}
+              >
+                LIVE
+              </Typography>
+            </motion.div>
+          )}
+        </Box>
+      </motion.div>
     </Box>
   );
 };
