@@ -328,15 +328,6 @@ const CockpitGauge: React.FC<{
             <stop offset="100%" stopColor="#2C3E50" />
           </radialGradient>
           
-          {/* GLOW FILTER FOR NEEDLES */}
-          <filter id="needle-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge> 
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          
           {/* Shadow filter */}
           <filter id={`needle-shadow-${label}`} x="-50%" y="-50%" width="200%" height="200%">
             <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.3)" />
@@ -359,51 +350,13 @@ const CockpitGauge: React.FC<{
           strokeWidth="2"
         />
         
-        {/* PERFORMANCE ZONES - Background track */}
+        {/* Main gauge track */}
         <path
           d={`M 15 ${size / 2} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${size - 15} ${size / 2}`}
           fill="none"
-          stroke="rgba(96, 125, 139, 0.2)"
-          strokeWidth="12"
-          strokeLinecap="round"
-        />
-        
-        {/* RED ZONE (0-30%) */}
-        <path
-          d={`M 15 ${size / 2} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${15 + (size - 30) * 0.3} ${size / 2 - Math.sqrt((size / 2 - 15) ** 2 - ((size - 30) * 0.3 / 2) ** 2)}`}
-          fill="none"
-          stroke="rgba(244, 67, 54, 0.4)"
+          stroke={`url(#gauge-bg-${label})`}
           strokeWidth="8"
           strokeLinecap="round"
-        />
-        
-        {/* YELLOW ZONE (30-70%) */}
-        <path
-          d={`M ${15 + (size - 30) * 0.3} ${size / 2 - Math.sqrt((size / 2 - 15) ** 2 - ((size - 30) * 0.3 / 2) ** 2)} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${15 + (size - 30) * 0.7} ${size / 2 - Math.sqrt((size / 2 - 15) ** 2 - ((size - 30) * 0.7 / 2) ** 2)}`}
-          fill="none"
-          stroke="rgba(255, 193, 7, 0.4)"
-          strokeWidth="8"
-          strokeLinecap="round"
-        />
-        
-        {/* GREEN ZONE (70-100%) */}
-        <path
-          d={`M ${15 + (size - 30) * 0.7} ${size / 2 - Math.sqrt((size / 2 - 15) ** 2 - ((size - 30) * 0.7 / 2) ** 2)} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${size - 15} ${size / 2}`}
-          fill="none"
-          stroke="rgba(76, 175, 80, 0.4)"
-          strokeWidth="8"
-          strokeLinecap="round"
-        />
-        
-        {/* DYNAMIC PROGRESS ARC */}
-        <path
-          d={`M 15 ${size / 2} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${size - 15} ${size / 2}`}
-          fill="none"
-          stroke={percentage < 30 ? '#F44336' : percentage < 70 ? '#FF9800' : '#4CAF50'}
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={`${percentage * Math.PI * (size / 2 - 15) / 100} ${Math.PI * (size / 2 - 15)}`}
-          filter="url(#needle-glow)"
         />
         
         {/* Tick marks for luxury automotive feel */}
@@ -430,36 +383,17 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* ENHANCED PULSATING LIVE INDICATOR */}
+        {/* PULSATING LIVE ANCHOR POINT */}
         <motion.circle
           cx={size / 2}
           cy={size / 2}
-          r="15"
-          fill="rgba(76, 175, 80, 0.1)"
-          stroke={percentage < 30 ? '#F44336' : percentage < 70 ? '#FF9800' : '#4CAF50'}
-          strokeWidth="3"
+          r="12"
+          fill="rgba(231, 76, 60, 0.2)"
+          stroke="#E74C3C"
+          strokeWidth="2"
           animate={{
-            scale: isLive ? [1, 1.5, 1] : 1,
-            opacity: isLive ? [0.2, 0.9, 0.2] : 0.4,
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: isLive ? Infinity : 0,
-            ease: "easeInOut"
-          }}
-        />
-        
-        {/* SECONDARY PULSE RING */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="20"
-          fill="none"
-          stroke={percentage < 30 ? 'rgba(244, 67, 54, 0.3)' : percentage < 70 ? 'rgba(255, 152, 0, 0.3)' : 'rgba(76, 175, 80, 0.3)'}
-          strokeWidth="1"
-          animate={{
-            scale: isLive ? [1, 2, 1] : 1,
-            opacity: isLive ? [0.6, 0, 0.6] : 0,
+            scale: isLive ? [1, 1.3, 1] : 1,
+            opacity: isLive ? [0.3, 0.8, 0.3] : 0.5,
           }}
           transition={{
             duration: 2,
@@ -485,18 +419,16 @@ const CockpitGauge: React.FC<{
           <path
             d={`M ${size / 2} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} L ${size / 2} ${size / 2 + 1.5} Z`}
             fill="url(#luxury-needle-gradient)"
-            stroke={percentage < 30 ? '#F44336' : percentage < 70 ? '#FF9800' : '#4CAF50'}
-            strokeWidth="0.5"
-            filter="url(#needle-glow)"
+            stroke="#2C3E50"
+            strokeWidth="0.3"
           />
           
           {/* CHROME TIP - POINTED LUXURY STYLE */}
           <path
             d={`M ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 12)} ${size / 2} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} Z`}
             fill="url(#chrome-tip-gradient)"
-            stroke={percentage < 30 ? '#F44336' : percentage < 70 ? '#FF9800' : '#4CAF50'}
-            strokeWidth="0.3"
-            filter="url(#needle-glow)"
+            stroke="#BDC3C7"
+            strokeWidth="0.2"
           />
         </g>
 
@@ -594,7 +526,7 @@ const CockpitGauge: React.FC<{
           variant="h5" 
           sx={{ 
             fontFamily: "'JetBrains Mono', 'Roboto Mono', monospace",
-            color: percentage < 30 ? '#F44336' : percentage < 70 ? '#FF9800' : '#4CAF50',
+            color,
             fontWeight: 'bold',
             textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             fontSize: '1.2rem',
