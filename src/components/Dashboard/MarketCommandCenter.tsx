@@ -376,39 +376,40 @@ const CockpitGauge: React.FC<{
           }}
         />
 
-        {/* NEEDLE ROTATES AROUND LIVE ANCHOR */}
-        <g transform={`translate(${size / 2}, ${size / 2})`}>
-          <motion.g
-            animate={{ 
-              rotate: hasLoaded ? needleRotation : -90,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
-              damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
-              mass: 1.8,
-              duration: hasLoaded ? undefined : 3,
-            }}
-            onMouseEnter={handleMouseEnterNeedle}
-            onMouseLeave={handleMouseLeaveNeedle}
-          >
-            {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM ANCHOR POINT */}
-            <path
-              d={`M 0 -1.5 L ${size / 2 - 20} -0.8 L ${size / 2 - 20} 0.8 L 0 1.5 Z`}
-              fill="url(#luxury-needle-gradient)"
-              stroke="#2C3E50"
-              strokeWidth="0.3"
-            />
-            
-            {/* CHROME TIP - POINTED LUXURY STYLE */}
-            <path
-              d={`M ${size / 2 - 20} -0.8 L ${size / 2 - 12} 0 L ${size / 2 - 20} 0.8 Z`}
-              fill="url(#chrome-tip-gradient)"
-              stroke="#BDC3C7"
-              strokeWidth="0.2"
-            />
-          </motion.g>
-        </g>
+        {/* NEEDLE ROTATES FROM GAUGE CENTER (GLOWING DOT) */}
+        <motion.g
+          animate={{ 
+            rotate: hasLoaded ? needleRotation : -90,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
+            damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
+            mass: 1.8,
+            duration: hasLoaded ? undefined : 3,
+          }}
+          style={{
+            transformOrigin: `${size / 2}px ${size / 2}px`,
+          }}
+          onMouseEnter={handleMouseEnterNeedle}
+          onMouseLeave={handleMouseLeaveNeedle}
+        >
+          {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM GAUGE CENTER */}
+          <path
+            d={`M ${size / 2} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} L ${size / 2} ${size / 2 + 1.5} Z`}
+            fill="url(#luxury-needle-gradient)"
+            stroke="#2C3E50"
+            strokeWidth="0.3"
+          />
+          
+          {/* CHROME TIP - POINTED LUXURY STYLE */}
+          <path
+            d={`M ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 12)} ${size / 2} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} Z`}
+            fill="url(#chrome-tip-gradient)"
+            stroke="#BDC3C7"
+            strokeWidth="0.2"
+          />
+        </motion.g>
 
         {/* LUXURY BASE HUB ON TOP OF LIVE INDICATOR */}
         <motion.circle
