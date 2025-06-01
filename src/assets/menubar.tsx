@@ -42,8 +42,8 @@ const getNavLinks = (currentUrl: string) => {
   const links = [
     { 
       key: 'workspace',
-      label: 'Sales Workspace', 
-      href: '/workspace',
+      label: 'Workspace', 
+      href: 'https://workspace.repspheres.com/',
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
