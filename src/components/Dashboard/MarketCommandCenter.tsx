@@ -621,7 +621,7 @@ const MarketCommandCenter: React.FC = () => {
     
     let filtered = marketData.procedures.filter(p => {
       const procedureName = p.procedure_name || p.name || '';
-      const category = p.category || '';
+      const category = p.category || p.normalized_category || p.clinical_category || '';
       
       const matchesSearch = procedureName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            category.toLowerCase().includes(searchTerm.toLowerCase());
@@ -906,7 +906,7 @@ const MarketCommandCenter: React.FC = () => {
                     color={procedure.industry === 'dental' ? 'info' : 'secondary'}
                   />
                 </TableCell>
-                <TableCell>{procedure.category || 'Uncategorized'}</TableCell>
+                <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
                 <TableCell align="right">
                   <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                     ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M

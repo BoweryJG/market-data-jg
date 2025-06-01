@@ -190,9 +190,19 @@ class ComprehensiveDataService {
         trendsResponse,
         analyticsResponse,
       ] = await Promise.allSettled([
-        supabase.from('procedures').select('*').order('market_size_2025_usd_millions', { ascending: false }),
-        supabase.from('dental_procedures').select('*'),
-        supabase.from('aesthetic_procedures').select('*'),
+        supabase.from('procedures').select(`
+          *,
+          dental_procedure_categories(name),
+          aesthetic_categories(name)
+        `).order('market_size_2025_usd_millions', { ascending: false }),
+        supabase.from('dental_procedures').select(`
+          *,
+          dental_procedure_categories(name)
+        `),
+        supabase.from('aesthetic_procedures').select(`
+          *,
+          aesthetic_categories(name)
+        `),
         supabase.from('dental_companies').select('*'),
         supabase.from('aesthetic_companies').select('*'),
         supabase.from('dental_procedure_categories').select('*'),
@@ -202,11 +212,45 @@ class ComprehensiveDataService {
         supabase.from('search_analytics').select('*').limit(100),
       ]);
 
-      // Combine all procedures
+      // Process and combine all procedures with proper categorization
+      const processedProcedures = (proceduresResponse.status === 'fulfilled' ? proceduresResponse.value.data || [] : [])
+        .map((proc: any) => ({
+          ...proc,
+          category: proc.category || 
+                   proc.normalized_category || 
+                   proc.clinical_category ||
+                   (proc.dental_procedure_categories?.name) ||
+                   (proc.aesthetic_categories?.name) ||
+                   (proc.industry === 'dental' ? 'Dental Procedure' : 'Aesthetic Procedure'),
+          industry: proc.industry || 'dental' // Default to dental if not specified
+        }));
+
+      const processedDentalProcedures = (dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : [])
+        .map((proc: any) => ({
+          ...proc,
+          category: proc.category || 
+                   proc.clinical_category ||
+                   proc.normalized_category ||
+                   (proc.dental_procedure_categories?.name) ||
+                   'Dental Procedure',
+          industry: 'dental'
+        }));
+
+      const processedAestheticProcedures = (aestheticProceduresResponse.status === 'fulfilled' ? aestheticProceduresResponse.value.data || [] : [])
+        .map((proc: any) => ({
+          ...proc,
+          category: proc.category || 
+                   proc.aesthetic_category ||
+                   proc.normalized_category ||
+                   (proc.aesthetic_categories?.name) ||
+                   'Aesthetic Procedure',
+          industry: 'aesthetic'
+        }));
+
       const allProcedures = [
-        ...(proceduresResponse.status === 'fulfilled' ? proceduresResponse.value.data || [] : []),
-        ...(dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : []),
-        ...(aestheticProceduresResponse.status === 'fulfilled' ? aestheticProceduresResponse.value.data || [] : []),
+        ...processedProcedures,
+        ...processedDentalProcedures,
+        ...processedAestheticProcedures,
       ];
 
       // Combine all companies
