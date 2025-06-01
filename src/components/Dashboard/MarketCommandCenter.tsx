@@ -508,6 +508,36 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
   );
 };
 
+// Enhanced category icons map for procedures
+const categoryIconMap: Record<string, React.ReactNode> = {
+  // Dental categories
+  'Implantology': <i className="material-icons">build</i>,
+  'Oral Surgery': <i className="material-icons">medical_services</i>,
+  'Orthodontics': <i className="material-icons">straighten</i>,
+  'Periodontics': <i className="material-icons">grass</i>,
+  'Endodontics': <i className="material-icons">hub</i>,
+  'Prosthodontics': <i className="material-icons">architecture</i>,
+  'Cosmetic Dentistry': <i className="material-icons">auto_awesome</i>,
+  'Digital Dentistry': <i className="material-icons">computer</i>,
+  'Preventive Care': <i className="material-icons">shield</i>,
+  'General Dentistry': <i className="material-icons">medical_services</i>,
+  
+  // Aesthetic categories  
+  'Facial Rejuvenation': <i className="material-icons">face</i>,
+  'Body Contouring': <i className="material-icons">accessibility</i>,
+  'Skin Resurfacing': <i className="material-icons">grain</i>,
+  'Injectable Treatments': <i className="material-icons">colorize</i>,
+  'Laser Procedures': <i className="material-icons">flash_on</i>,
+  'Non-Invasive': <i className="material-icons">healing</i>,
+  'Minimally Invasive': <i className="material-icons">online_prediction</i>,
+  'Aesthetic Medicine': <i className="material-icons">brush</i>,
+  'Hair Restoration': <i className="material-icons">grass</i>,
+  'Breast Procedures': <i className="material-icons">accessibility</i>,
+  
+  // Default fallback
+  'default': <i className="material-icons">category</i>,
+};
+
 // Market data interfaces
 interface Procedure {
   id: string;
@@ -548,6 +578,7 @@ const MarketCommandCenter: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState<'all' | 'dental' | 'aesthetic'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'procedures' | 'companies'>('procedures');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
     key: 'market_size_2025_usd_millions',
@@ -699,7 +730,12 @@ const MarketCommandCenter: React.FC = () => {
       const matchesSearch = procedureName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
-      return matchesSearch && matchesIndustry;
+      const matchesCategory = !selectedCategory || 
+        category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+        p.category === selectedCategory ||
+        p.normalized_category === selectedCategory ||
+        p.clinical_category === selectedCategory;
+      return matchesSearch && matchesIndustry && matchesCategory;
     });
 
     filtered.sort((a, b) => {
@@ -716,7 +752,7 @@ const MarketCommandCenter: React.FC = () => {
     });
 
     return filtered;
-  }, [marketData, searchTerm, selectedIndustry, sortConfig]);
+  }, [marketData, searchTerm, selectedIndustry, selectedCategory, sortConfig]);
 
   // Filter and sort companies
   const filteredCompanies = useMemo(() => {
@@ -748,7 +784,7 @@ const MarketCommandCenter: React.FC = () => {
           ? Number(aVal) - Number(bVal)
           : Number(bVal) - Number(aVal);
       });
-  }, [marketData, searchTerm, selectedIndustry, sortConfig]);
+  }, [marketData, searchTerm, selectedIndustry, selectedCategory, sortConfig]);
 
   const handleSort = (key: string) => {
     setSortConfig(prev => ({
@@ -792,28 +828,16 @@ const MarketCommandCenter: React.FC = () => {
           </motion.div>
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={viewMode === 'companies'}
-                onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
-                color="primary"
-              />
-            }
-            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={liveData}
-                onChange={(e) => setLiveData(e.target.checked)}
-                color="success"
-              />
-            }
-            label="Live Updates"
-          />
-        </Box>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={liveData}
+              onChange={(e) => setLiveData(e.target.checked)}
+              color="success"
+            />
+          }
+          label="Live Updates"
+        />
       </Box>
 
       {/* Cockpit-style gauges */}
@@ -931,19 +955,69 @@ const MarketCommandCenter: React.FC = () => {
             </Button>
           </ButtonGroup>
           
-          <Button
-            variant={dataDiscoveryMode ? 'contained' : 'outlined'}
-            onClick={() => setDataDiscoveryMode(!dataDiscoveryMode)}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={viewMode === 'companies'}
+                onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
+                color="primary"
+              />
+            }
+            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
             sx={{ ml: 2 }}
-          >
-            🔍 Discover All Tables ({discoveredTables.length})
-          </Button>
+          />
           
           <Typography variant="body2" color="text.secondary">
             Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
           </Typography>
         </Box>
       </Card>
+
+      {/* Enhanced Category Filtering */}
+      {viewMode === 'procedures' && marketData?.procedures && (
+        <Card sx={{ mb: 3, p: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+            <i className="material-icons" style={{ marginRight: 8 }}>filter_list</i>
+            Filter by Category
+            {selectedCategory && (
+              <Chip 
+                label="Clear Filter" 
+                size="small" 
+                onDelete={() => setSelectedCategory(null)}
+                sx={{ ml: 2 }}
+              />
+            )}
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {Array.from(new Set(
+              marketData.procedures
+                .filter(p => selectedIndustry === 'all' || p.industry === selectedIndustry)
+                .map(p => p.category || p.normalized_category || p.clinical_category)
+                .filter(Boolean)
+            )).map((category) => (
+              <Chip
+                key={category}
+                icon={categoryIconMap[category] || categoryIconMap.default}
+                label={category}
+                variant={selectedCategory === category ? 'filled' : 'outlined'}
+                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+                sx={{
+                  '& .material-icons': {
+                    fontSize: 16,
+                  },
+                  backgroundColor: selectedCategory === category ? theme.palette.primary.main : 'transparent',
+                  color: selectedCategory === category ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                  '&:hover': {
+                    backgroundColor: selectedCategory === category 
+                      ? alpha(theme.palette.primary.main, 0.8) 
+                      : alpha(theme.palette.primary.main, 0.1),
+                  }
+                }}
+              />
+            ))}
+          </Box>
+        </Card>
+      )}
 
       {/* Procedures/Companies table */}
       <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
@@ -1066,7 +1140,7 @@ const MarketCommandCenter: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={procedure.industry || 'Unknown'}
+                      label={procedure.industry === 'dental' ? 'Dental' : procedure.industry === 'aesthetic' ? 'Aesthetic' : 'Unknown'}
                       size="small"
                       color={procedure.industry === 'dental' ? 'info' : 'secondary'}
                     />
@@ -1154,7 +1228,7 @@ const MarketCommandCenter: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={company.industry || 'Unknown'}
+                      label={company.industry === 'dental' ? 'Dental' : company.industry === 'aesthetic' ? 'Aesthetic' : 'Unknown'}
                       size="small"
                       color={company.industry === 'dental' ? 'info' : 'secondary'}
                     />
