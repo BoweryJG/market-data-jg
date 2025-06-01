@@ -361,32 +361,23 @@ const CockpitGauge: React.FC<{
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* THICK NEEDLE BASE - STARTS AT CENTER (0,0) */}
-            <rect
-              x="0"
-              y="-6"
-              width="8"
-              height="12"
-              fill="#2C3E50"
-              stroke="#000"
-              strokeWidth="1"
-            />
-            
-            {/* THICK NEEDLE SHAFT - EXTENDS FROM CENTER */}
-            <rect
-              x="0"
-              y="-4"
-              width={size / 2 - 20}
-              height="8"
-              fill="#34495E"
-              stroke="#000"
-              strokeWidth="1"
+            {/* THIN LUXURY NEEDLE - STARTS AT CENTER (0,0) */}
+            <line
+              x1="0"
+              y1="0"
+              x2={size / 2 - 15}
+              y2="0"
+              stroke={`url(#needle-gradient-${label})`}
+              strokeWidth="2"
+              strokeLinecap="round"
             />
             
             {/* NEEDLE TIP */}
-            <polygon
-              points={`${size / 2 - 20},-4 ${size / 2 - 10},0 ${size / 2 - 20},4`}
-              fill="#C0392B"
+            <circle
+              cx={size / 2 - 15}
+              cy="0"
+              r="2"
+              fill="#E74C3C"
               stroke="#000"
               strokeWidth="1"
             />
@@ -951,13 +942,15 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.6 }}
               >
-                <SimpleGauge
+                <CockpitGauge
                   value={marketMetrics.totalMarketSize}
                   max={50000}
                   label="Market Size"
                   unit="M"
                   color={theme.palette.primary.main}
                   size={150}
+                  isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -965,13 +958,15 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <SimpleGauge
+                <CockpitGauge
                   value={marketMetrics.averageGrowth}
                   max={50}
                   label="Avg Growth"
                   unit="%"
                   color={theme.palette.success.main}
                   size={150}
+                  isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -979,13 +974,15 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <SimpleGauge
+                <CockpitGauge
                   value={marketMetrics.totalProcedures}
                   max={1000}
                   label="Procedures"
                   unit=""
                   color={theme.palette.info.main}
                   size={150}
+                  isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -993,13 +990,15 @@ const MarketCommandCenter: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
               >
-                <SimpleGauge
+                <CockpitGauge
                   value={marketMetrics.totalCompanies}
                   max={200}
                   label="Companies"
                   unit=""
                   color={theme.palette.warning.main}
                   size={150}
+                  isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
             </Box>
