@@ -360,25 +360,25 @@ const CockpitGauge: React.FC<{
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* Needle base (connects to center) */}
+            {/* Needle base (anchored at center) */}
             <path
-              d={`M -8 -2 
-                  L 8 -1
-                  L 8 1
-                  L -8 2
+              d={`M 0 -2 
+                  L 3 -1
+                  L 3 1
+                  L 0 2
                   Z`}
               fill={`url(#needle-gradient-${label})`}
               stroke="rgba(0,0,0,0.4)"
               strokeWidth="0.5"
             />
             
-            {/* Needle shaft with luxury styling */}
+            {/* Needle shaft with luxury styling (extends from center) */}
             <path
-              d={`M 8 -1.5 
+              d={`M 0 -1.5 
                   L ${size / 2 - 25} -0.5
                   L ${size / 2 - 20} 0
                   L ${size / 2 - 25} 0.5
-                  L 8 1.5
+                  L 0 1.5
                   Z`}
               fill={`url(#needle-gradient-${label})`}
               stroke="rgba(0,0,0,0.3)"
@@ -398,10 +398,10 @@ const CockpitGauge: React.FC<{
             
             {/* Metallic shine on needle shaft */}
             <path
-              d={`M 6 -0.5 
+              d={`M 1 -0.5 
                   L ${size / 2 - 27} -0.2
                   L ${size / 2 - 22} 0
-                  L 6 0.5
+                  L 1 0.5
                   Z`}
               fill={`url(#metallic-shine-${label})`}
               opacity="0.7"
@@ -409,10 +409,10 @@ const CockpitGauge: React.FC<{
             
             {/* Metallic shine on base */}
             <path
-              d={`M -6 -1 
-                  L 6 -0.5
-                  L 6 0.5
-                  L -6 1
+              d={`M 0 -1 
+                  L 2 -0.5
+                  L 2 0.5
+                  L 0 1
                   Z`}
               fill={`url(#metallic-shine-${label})`}
               opacity="0.5"
@@ -624,34 +624,43 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
   );
 };
 
-// Enhanced category icons map for procedures with proper MUI icons
+// Enhanced category icons map for procedures with vibrant MUI icons
 const categoryIconMap: Record<string, React.ReactNode> = {
-  // Dental categories
-  'Implantology': <Build sx={{ color: '#1976d2' }} />,
-  'Oral Surgery': <MedicalServices sx={{ color: '#d32f2f' }} />,
-  'Orthodontics': <Straighten sx={{ color: '#388e3c' }} />,
-  'Periodontics': <Nature sx={{ color: '#689f38' }} />,
-  'Endodontics': <Hub sx={{ color: '#7b1fa2' }} />,
-  'Prosthodontics': <Architecture sx={{ color: '#455a64' }} />,
-  'Cosmetic Dentistry': <AutoAwesome sx={{ color: '#f57c00' }} />,
-  'Digital Dentistry': <Computer sx={{ color: '#303f9f' }} />,
-  'Preventive Care': <Shield sx={{ color: '#2e7d32' }} />,
-  'General Dentistry': <LocalHospital sx={{ color: '#1976d2' }} />,
+  // Dental categories with vibrant, professional colors
+  'Implantology': <Build sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Oral Surgery': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
+  'Orthodontics': <Straighten sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Periodontics': <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />,
+  'Endodontics': <Hub sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Prosthodontics': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
+  'Cosmetic Dentistry': <AutoAwesome sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Digital Dentistry': <Computer sx={{ color: '#3F51B5', fontSize: 20 }} />,
+  'Preventive Care': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'General Dentistry': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
   
-  // Aesthetic categories  
-  'Facial Rejuvenation': <Face sx={{ color: '#e91e63' }} />,
-  'Body Contouring': <Accessibility sx={{ color: '#9c27b0' }} />,
-  'Skin Resurfacing': <Grain sx={{ color: '#795548' }} />,
-  'Injectable Treatments': <Colorize sx={{ color: '#ff5722' }} />,
-  'Laser Procedures': <FlashOn sx={{ color: '#ff9800' }} />,
-  'Non-Invasive': <Healing sx={{ color: '#4caf50' }} />,
-  'Minimally Invasive': <MedicalServices sx={{ color: '#00bcd4' }} />,
-  'Aesthetic Medicine': <Brush sx={{ color: '#e91e63' }} />,
-  'Hair Restoration': <Nature sx={{ color: '#8bc34a' }} />,
-  'Breast Procedures': <Accessibility sx={{ color: '#9c27b0' }} />,
+  // Aesthetic categories with beautiful, luxurious colors
+  'Facial Rejuvenation': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Body Contouring': <Accessibility sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Skin Resurfacing': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
+  'Injectable Treatments': <Colorize sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Laser Procedures': <FlashOn sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Non-Invasive': <Healing sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Minimally Invasive': <MedicalServices sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'Aesthetic Medicine': <Brush sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Hair Restoration': <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />,
+  'Breast Procedures': <Accessibility sx={{ color: '#9C27B0', fontSize: 20 }} />,
   
-  // Default fallback
-  'default': <Category sx={{ color: '#757575' }} />,
+  // Additional common categories
+  'Dermal Fillers': <Colorize sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Botox': <MedicalServices sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Teeth Whitening': <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />,
+  'Dental Cleaning': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Root Canal': <Hub sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Dental Procedure': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Aesthetic Procedure': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
+  
+  // Default fallback with enhanced styling
+  'default': <Category sx={{ color: '#9E9E9E', fontSize: 20 }} />,
 };
 
 // Market data interfaces
@@ -1122,15 +1131,19 @@ const MarketCommandCenter: React.FC = () => {
                 variant={selectedCategory === category ? 'filled' : 'outlined'}
                 onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
                 sx={{
-                  '& .material-icons': {
-                    fontSize: 16,
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 18,
+                    marginRight: 0.5,
                   },
                   backgroundColor: selectedCategory === category ? theme.palette.primary.main : 'transparent',
                   color: selectedCategory === category ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                  border: selectedCategory === category ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
                   '&:hover': {
                     backgroundColor: selectedCategory === category 
                       ? alpha(theme.palette.primary.main, 0.8) 
                       : alpha(theme.palette.primary.main, 0.1),
+                    transform: 'scale(1.02)',
+                    transition: 'all 0.2s ease',
                   }
                 }}
               />
