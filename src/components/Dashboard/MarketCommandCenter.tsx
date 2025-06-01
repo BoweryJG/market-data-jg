@@ -59,6 +59,22 @@ import {
   FiberManualRecord,
   MonetizationOn,
   PinDrop,
+  // Category icons
+  Build,
+  Straighten,
+  Nature,
+  Hub,
+  Architecture,
+  AutoAwesome,
+  Computer,
+  Shield,
+  Face,
+  Accessibility,
+  Grain,
+  Colorize,
+  Healing,
+  Brush,
+  Category,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
@@ -73,14 +89,92 @@ const CockpitGauge: React.FC<{
   color: string;
   size?: number;
   isLive?: boolean;
-}> = ({ value, max, label, unit, color, size = 120, isLive = false }) => {
+  industry?: 'dental' | 'aesthetic' | 'all';
+}> = ({ value, max, label, unit, color, size = 120, isLive = false, industry = 'all' }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(-90); // Start at leftmost position
   const [hasLoaded, setHasLoaded] = useState(false);
-  const percentage = Math.min((value / max) * 100, 100);
+  const [liveValue, setLiveValue] = useState(value);
+  const percentage = Math.min((liveValue / max) * 100, 100);
   const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
+  // Live data fetching effect for all gauge types
+  useEffect(() => {
+    if (isLive) {
+      const fetchLiveData = async () => {
+        try {
+          const data = await comprehensiveDataService.getComprehensiveMarketData();
+          let industrySpecificValue = 0;
+          
+          // Calculate industry-specific values based on label
+          switch (label) {
+            case 'Market Size':
+              if (industry === 'dental') {
+                industrySpecificValue = data.procedures
+                  .filter(p => p.industry === 'dental')
+                  .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+              } else if (industry === 'aesthetic') {
+                industrySpecificValue = data.procedures
+                  .filter(p => p.industry === 'aesthetic')
+                  .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+              } else {
+                industrySpecificValue = data.marketMetrics.totalMarketSize;
+              }
+              break;
+              
+            case 'Avg Growth':
+              if (industry === 'dental') {
+                const dentalProcedures = data.procedures.filter(p => p.industry === 'dental');
+                industrySpecificValue = dentalProcedures.length > 0
+                  ? dentalProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / dentalProcedures.length
+                  : 0;
+              } else if (industry === 'aesthetic') {
+                const aestheticProcedures = data.procedures.filter(p => p.industry === 'aesthetic');
+                industrySpecificValue = aestheticProcedures.length > 0
+                  ? aestheticProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / aestheticProcedures.length
+                  : 0;
+              } else {
+                industrySpecificValue = data.marketMetrics.averageGrowth;
+              }
+              break;
+              
+            case 'Procedures':
+              if (industry === 'dental') {
+                industrySpecificValue = data.procedures.filter(p => p.industry === 'dental').length;
+              } else if (industry === 'aesthetic') {
+                industrySpecificValue = data.procedures.filter(p => p.industry === 'aesthetic').length;
+              } else {
+                industrySpecificValue = data.marketMetrics.totalProcedures;
+              }
+              break;
+              
+            case 'Companies':
+              if (industry === 'dental') {
+                industrySpecificValue = data.companies.filter(c => c.industry === 'dental').length;
+              } else if (industry === 'aesthetic') {
+                industrySpecificValue = data.companies.filter(c => c.industry === 'aesthetic').length;
+              } else {
+                industrySpecificValue = data.marketMetrics.totalCompanies;
+              }
+              break;
+              
+            default:
+              industrySpecificValue = value; // Fallback to original value
+          }
+          
+          setLiveValue(industrySpecificValue);
+        } catch (error) {
+          console.error('Failed to fetch live gauge data:', error);
+        }
+      };
+      
+      fetchLiveData();
+      const interval = setInterval(fetchLiveData, 30000); // Update every 30s
+      return () => clearInterval(interval);
+    }
+  }, [isLive, label, industry, value]);
+
   // Luxurious initial spin animation on load
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -113,6 +207,8 @@ const CockpitGauge: React.FC<{
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
+    if (!isHovered) return;
+    
     const rect = event.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -125,15 +221,32 @@ const CockpitGauge: React.FC<{
     // Constrain to gauge range (-90 to 90 degrees)
     angle = Math.max(-90, Math.min(90, angle));
     
-    if (isHovered) {
-      setNeedleRotation(angle);
-    }
+    // Add spin animation on hover
+    setNeedleRotation(angle + (Math.sin(Date.now() * 0.01) * 5)); // Small oscillation
   };
 
   const handleMouseClick = () => {
-    // Add a wobble effect on click
-    setNeedleRotation(targetAngle + (Math.random() - 0.5) * 20);
-    setTimeout(() => setNeedleRotation(targetAngle), 300);
+    // Add a complete spin effect on click
+    setNeedleRotation(needleRotation + 360);
+    setTimeout(() => setNeedleRotation(targetAngle), 1000);
+  };
+
+  const handleMouseEnterNeedle = () => {
+    setIsHovered(true);
+    // Start needle spin animation on hover
+    const spinAnimation = () => {
+      if (isHovered) {
+        setNeedleRotation(prev => prev + 2); // Continuous spin
+        requestAnimationFrame(spinAnimation);
+      }
+    };
+    requestAnimationFrame(spinAnimation);
+  };
+
+  const handleMouseLeaveNeedle = () => {
+    setIsHovered(false);
+    // Return to target position
+    setNeedleRotation(targetAngle);
   };
 
   return (
@@ -227,7 +340,7 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* Luxury needle with physics animation - rotates around its base */}
+        {/* Luxury needle with physics animation - rotates around its base at gauge center */}
         <g transform={`translate(${size / 2}, ${size / 2})`}>
           <motion.g
             animate={{ 
@@ -242,7 +355,10 @@ const CockpitGauge: React.FC<{
             }}
             style={{ 
               filter: `url(#needle-shadow-${label})`,
+              transformOrigin: '0 0', // Anchor needle rotation at gauge center
             }}
+            onMouseEnter={handleMouseEnterNeedle}
+            onMouseLeave={handleMouseLeaveNeedle}
           >
             {/* Needle base (connects to center) */}
             <path
@@ -377,9 +493,9 @@ const CockpitGauge: React.FC<{
             fontSize: '1.2rem',
           }}
         >
-          {unit === 'M' ? `$${(value / 1000).toFixed(1)}B` : 
-           unit === '%' ? `${value.toFixed(1)}%` :
-           value.toLocaleString()}{unit === 'M' || unit === '%' ? '' : unit}
+          {unit === 'M' ? `$${(liveValue / 1000).toFixed(1)}B` : 
+           unit === '%' ? `${liveValue.toFixed(1)}%` :
+           liveValue.toLocaleString()}{unit === 'M' || unit === '%' ? '' : unit}
         </Typography>
         <Typography 
           variant="caption" 
@@ -508,34 +624,34 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
   );
 };
 
-// Enhanced category icons map for procedures
+// Enhanced category icons map for procedures with proper MUI icons
 const categoryIconMap: Record<string, React.ReactNode> = {
   // Dental categories
-  'Implantology': <i className="material-icons">build</i>,
-  'Oral Surgery': <i className="material-icons">medical_services</i>,
-  'Orthodontics': <i className="material-icons">straighten</i>,
-  'Periodontics': <i className="material-icons">grass</i>,
-  'Endodontics': <i className="material-icons">hub</i>,
-  'Prosthodontics': <i className="material-icons">architecture</i>,
-  'Cosmetic Dentistry': <i className="material-icons">auto_awesome</i>,
-  'Digital Dentistry': <i className="material-icons">computer</i>,
-  'Preventive Care': <i className="material-icons">shield</i>,
-  'General Dentistry': <i className="material-icons">medical_services</i>,
+  'Implantology': <Build sx={{ color: '#1976d2' }} />,
+  'Oral Surgery': <MedicalServices sx={{ color: '#d32f2f' }} />,
+  'Orthodontics': <Straighten sx={{ color: '#388e3c' }} />,
+  'Periodontics': <Nature sx={{ color: '#689f38' }} />,
+  'Endodontics': <Hub sx={{ color: '#7b1fa2' }} />,
+  'Prosthodontics': <Architecture sx={{ color: '#455a64' }} />,
+  'Cosmetic Dentistry': <AutoAwesome sx={{ color: '#f57c00' }} />,
+  'Digital Dentistry': <Computer sx={{ color: '#303f9f' }} />,
+  'Preventive Care': <Shield sx={{ color: '#2e7d32' }} />,
+  'General Dentistry': <LocalHospital sx={{ color: '#1976d2' }} />,
   
   // Aesthetic categories  
-  'Facial Rejuvenation': <i className="material-icons">face</i>,
-  'Body Contouring': <i className="material-icons">accessibility</i>,
-  'Skin Resurfacing': <i className="material-icons">grain</i>,
-  'Injectable Treatments': <i className="material-icons">colorize</i>,
-  'Laser Procedures': <i className="material-icons">flash_on</i>,
-  'Non-Invasive': <i className="material-icons">healing</i>,
-  'Minimally Invasive': <i className="material-icons">online_prediction</i>,
-  'Aesthetic Medicine': <i className="material-icons">brush</i>,
-  'Hair Restoration': <i className="material-icons">grass</i>,
-  'Breast Procedures': <i className="material-icons">accessibility</i>,
+  'Facial Rejuvenation': <Face sx={{ color: '#e91e63' }} />,
+  'Body Contouring': <Accessibility sx={{ color: '#9c27b0' }} />,
+  'Skin Resurfacing': <Grain sx={{ color: '#795548' }} />,
+  'Injectable Treatments': <Colorize sx={{ color: '#ff5722' }} />,
+  'Laser Procedures': <FlashOn sx={{ color: '#ff9800' }} />,
+  'Non-Invasive': <Healing sx={{ color: '#4caf50' }} />,
+  'Minimally Invasive': <MedicalServices sx={{ color: '#00bcd4' }} />,
+  'Aesthetic Medicine': <Brush sx={{ color: '#e91e63' }} />,
+  'Hair Restoration': <Nature sx={{ color: '#8bc34a' }} />,
+  'Breast Procedures': <Accessibility sx={{ color: '#9c27b0' }} />,
   
   // Default fallback
-  'default': <i className="material-icons">category</i>,
+  'default': <Category sx={{ color: '#757575' }} />,
 };
 
 // Market data interfaces
@@ -861,6 +977,7 @@ const MarketCommandCenter: React.FC = () => {
                   color={theme.palette.primary.main}
                   size={150}
                   isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -876,6 +993,7 @@ const MarketCommandCenter: React.FC = () => {
                   color={theme.palette.success.main}
                   size={150}
                   isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -891,6 +1009,7 @@ const MarketCommandCenter: React.FC = () => {
                   color={theme.palette.info.main}
                   size={150}
                   isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
               <motion.div
@@ -906,6 +1025,7 @@ const MarketCommandCenter: React.FC = () => {
                   color={theme.palette.warning.main}
                   size={150}
                   isLive={liveData}
+                  industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
                 />
               </motion.div>
             </Box>
@@ -977,7 +1097,7 @@ const MarketCommandCenter: React.FC = () => {
       {viewMode === 'procedures' && marketData?.procedures && (
         <Card sx={{ mb: 3, p: 2 }}>
           <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-            <i className="material-icons" style={{ marginRight: 8 }}>filter_list</i>
+            <FilterList sx={{ mr: 1, color: 'primary.main' }} />
             Filter by Category
             {selectedCategory && (
               <Chip 
