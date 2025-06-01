@@ -313,75 +313,69 @@ const CockpitGauge: React.FC<{
         )}
       </svg>
       
-      {/* Value display with enhanced styling */}
-      <motion.div
-        animate={{
-          scale: isHovered ? 1.05 : 1,
+      {/* Clean integrated value display */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 5,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          textAlign: 'center',
         }}
-        transition={{ duration: 0.2 }}
       >
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            textAlign: 'center',
-            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.background.paper, 0.7)})`,
-            borderRadius: 2,
-            p: 1,
-            border: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
-            backdropFilter: 'blur(10px)',
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontFamily: "'JetBrains Mono', 'Roboto Mono', monospace",
+            color,
+            fontWeight: 'bold',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            fontSize: '1.2rem',
           }}
         >
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontFamily: "'JetBrains Mono', 'Roboto Mono', monospace",
-              color,
-              fontWeight: 'bold',
-              textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+          {unit === 'M' ? `$${(value / 1000).toFixed(1)}B` : 
+           unit === '%' ? `${value.toFixed(1)}%` :
+           value.toLocaleString()}{unit === 'M' || unit === '%' ? '' : unit}
+        </Typography>
+        <Typography 
+          variant="caption" 
+          sx={{ 
+            color: theme.palette.text.secondary,
+            fontWeight: 600,
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            fontSize: '0.7rem',
+          }}
+        >
+          {label}
+        </Typography>
+        {isLive && (
+          <motion.div
+            animate={{ opacity: [1, 0.4, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: 4,
+              marginTop: 2,
             }}
           >
-            {value.toLocaleString()}{unit}
-          </Typography>
-          <Typography 
-            variant="caption" 
-            sx={{ 
-              color: theme.palette.text.secondary,
-              fontWeight: 500,
-              letterSpacing: '0.5px',
-            }}
-          >
-            {label}
-          </Typography>
-          {isLive && (
-            <motion.div
-              animate={{ opacity: [1, 0.4, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: 4,
-                marginTop: 2,
+            <FiberManualRecord sx={{ fontSize: 6, color: theme.palette.success.main }} />
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                fontSize: 8,
+                fontWeight: 'bold',
+                color: theme.palette.success.main,
+                letterSpacing: '0.5px',
               }}
             >
-              <FiberManualRecord sx={{ fontSize: 8, color: theme.palette.success.main }} />
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  fontSize: 10,
-                  fontWeight: 'bold',
-                  color: theme.palette.success.main,
-                }}
-              >
-                LIVE
-              </Typography>
-            </motion.div>
-          )}
-        </Box>
-      </motion.div>
+              LIVE
+            </Typography>
+          </motion.div>
+        )}
+      </Box>
     </Box>
   );
 };
@@ -668,13 +662,14 @@ const MarketCommandCenter: React.FC = () => {
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
               Market Intelligence Dashboard
             </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 3, py: 2 }}>
               <CockpitGauge
                 value={marketMetrics.totalMarketSize}
                 max={50000}
                 label="Market Size"
                 unit="M"
                 color={theme.palette.primary.main}
+                size={150}
                 isLive={liveData}
               />
               <CockpitGauge
@@ -683,6 +678,7 @@ const MarketCommandCenter: React.FC = () => {
                 label="Avg Growth"
                 unit="%"
                 color={theme.palette.success.main}
+                size={150}
                 isLive={liveData}
               />
               <CockpitGauge
@@ -691,6 +687,7 @@ const MarketCommandCenter: React.FC = () => {
                 label="Procedures"
                 unit=""
                 color={theme.palette.info.main}
+                size={150}
                 isLive={liveData}
               />
               <CockpitGauge
@@ -699,6 +696,7 @@ const MarketCommandCenter: React.FC = () => {
                 label="Companies"
                 unit=""
                 color={theme.palette.warning.main}
+                size={150}
                 isLive={liveData}
               />
             </Box>
