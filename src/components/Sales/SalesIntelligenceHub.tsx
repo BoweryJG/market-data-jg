@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { categorizeProcedure } from '../Dashboard/CategoryMapping';
 import {
   Box,
   Card,
@@ -86,6 +87,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
 interface BattlecardProps {
   competitor: string;
   product: string;
+  category?: 'dental' | 'aesthetic';
   ourStrengths: string[];
   theirStrengths: string[];
   objections: { question: string; response: string }[];
@@ -96,6 +98,7 @@ interface BattlecardProps {
 const Battlecard: React.FC<BattlecardProps> = ({
   competitor,
   product,
+  category,
   ourStrengths,
   theirStrengths,
   objections,
@@ -123,6 +126,14 @@ const Battlecard: React.FC<BattlecardProps> = ({
               {competitor} - {product}
             </Typography>
             <Box display="flex" gap={1} mt={1}>
+              {category && (
+                <Chip
+                  size="small"
+                  label={category.charAt(0).toUpperCase() + category.slice(1)}
+                  color={category === 'dental' ? 'info' : 'secondary'}
+                  variant="outlined"
+                />
+              )}
               <Chip
                 size="small"
                 label={`Win Rate: ${winRate}%`}
@@ -137,8 +148,8 @@ const Battlecard: React.FC<BattlecardProps> = ({
             </Box>
           </Box>
           <Stack direction="row" spacing={1}>
-            <IconButton onClick={() => setIsSaved(!isSaved)}>
-              {isSaved ? <Bookmark color="primary" /> : <BookmarkBorder />}
+            <IconButton onClick={() => {}}>
+              {saved ? <Bookmark color="primary" /> : <BookmarkBorder />}
             </IconButton>
             <IconButton>
               <Share />
@@ -453,11 +464,13 @@ const SalesIntelligenceHub: React.FC = () => {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [industryFilter, setIndustryFilter] = useState<'all' | 'dental' | 'aesthetic'>('all');
 
   const battlecards: BattlecardProps[] = [
     {
       competitor: 'Allergan',
       product: 'Botox Cosmetic',
+      category: 'aesthetic',
       ourStrengths: [
         'Lower price point',
         'Faster onset of action',
@@ -484,6 +497,7 @@ const SalesIntelligenceHub: React.FC = () => {
     {
       competitor: 'Invisalign',
       product: 'Clear Aligners',
+      category: 'dental',
       ourStrengths: [
         '30% lower cost',
         'Faster treatment time',
@@ -507,7 +521,76 @@ const SalesIntelligenceHub: React.FC = () => {
       ],
       winRate: 62,
     },
+    {
+      competitor: 'Juvederm',
+      product: 'Dermal Fillers',
+      category: 'aesthetic',
+      ourStrengths: [
+        '15% longer lasting results',
+        'Lower injection force required',
+        'Better patient comfort',
+        'Competitive pricing',
+      ],
+      theirStrengths: [
+        'Strong brand recognition',
+        'Wide product portfolio',
+        'Established training programs',
+      ],
+      objections: [
+        {
+          question: "Juvederm has been around longer, is it safer?",
+          response: "Both products have excellent safety profiles. Our hyaluronic acid technology actually provides smoother injection and longer-lasting results, backed by 3+ years of clinical data.",
+        },
+        {
+          question: "What about the learning curve?",
+          response: "We provide comprehensive training and our product has similar injection techniques. Most practitioners are comfortable after just 2-3 cases.",
+        },
+      ],
+      winRate: 58,
+    },
+    {
+      competitor: 'Nobel Biocare',
+      product: 'Dental Implants',
+      category: 'dental',
+      ourStrengths: [
+        '25% better osseointegration',
+        'Simplified surgical protocol',
+        'Lower cost per unit',
+        'Comprehensive prosthetic options',
+      ],
+      theirStrengths: [
+        'Premium brand reputation',
+        'Extensive research backing',
+        'Global market presence',
+      ],
+      objections: [
+        {
+          question: "Nobel has the gold standard reputation",
+          response: "While Nobel has a strong reputation, our latest surface technology shows 25% faster healing times in clinical studies. We offer the same quality at a better value proposition.",
+        },
+        {
+          question: "What about compatibility with my current system?",
+          response: "Our implants are compatible with most major prosthetic platforms, and we provide conversion guides for seamless integration.",
+        },
+      ],
+      winRate: 52,
+    },
   ];
+
+  // Filter battlecards based on industry and search
+  const filteredBattlecards = useMemo(() => {
+    return battlecards.filter(card => {
+      // Industry filter
+      const matchesIndustry = industryFilter === 'all' || card.category === industryFilter;
+      
+      // Search filter
+      const matchesSearch = searchQuery === '' || 
+        card.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        card.competitor.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      return matchesIndustry && matchesSearch;
+    });
+  }, [battlecards, industryFilter, searchQuery]);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -546,23 +629,48 @@ const SalesIntelligenceHub: React.FC = () => {
         <Box mb={3}>
           <Stack direction="row" spacing={2} alignItems="center">
             <Typography variant="body1">Filter by:</Typography>
-            <Chip label="All Products" clickable color="primary" />
-            <Chip label="Aesthetic" clickable />
-            <Chip label="Dental" clickable />
-            <Chip label="Equipment" clickable />
+            <Chip 
+              label={`All Products (${battlecards.length})`} 
+              clickable 
+              color={industryFilter === 'all' ? 'primary' : 'default'}
+              onClick={() => setIndustryFilter('all')}
+            />
+            <Chip 
+              label={`Dental (${battlecards.filter(c => c.category === 'dental').length})`} 
+              clickable 
+              color={industryFilter === 'dental' ? 'primary' : 'default'}
+              onClick={() => setIndustryFilter('dental')}
+            />
+            <Chip 
+              label={`Aesthetic (${battlecards.filter(c => c.category === 'aesthetic').length})`} 
+              clickable 
+              color={industryFilter === 'aesthetic' ? 'primary' : 'default'}
+              onClick={() => setIndustryFilter('aesthetic')}
+            />
           </Stack>
         </Box>
         
-        {battlecards.map((card, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Battlecard {...card} />
-          </motion.div>
-        ))}
+        {filteredBattlecards.length > 0 ? (
+          filteredBattlecards.map((card, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Battlecard {...card} />
+            </motion.div>
+          ))
+        ) : (
+          <Card sx={{ p: 3, textAlign: 'center' }}>
+            <Typography variant="h6" color="text.secondary">
+              No battlecards found for the selected filter
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Try adjusting your search or filter criteria
+            </Typography>
+          </Card>
+        )}
         
         <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
           Load More Battlecards

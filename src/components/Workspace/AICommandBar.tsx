@@ -331,7 +331,14 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   };
 
   const extractProcedure = (query: string): string | undefined => {
-    const procedures = ['implants', 'botox', 'fillers', 'aligners', 'veneers', 'whitening'];
+    const procedures = [
+      // Dental procedures
+      'implants', 'dental implants', 'aligners', 'invisalign', 'veneers', 'whitening', 
+      'crowns', 'braces', 'orthodontics', 'root canal', 'fillings',
+      // Aesthetic procedures  
+      'botox', 'fillers', 'dermal fillers', 'lip filler', 'pdo threads', 'prp', 
+      'prf', 'body contouring', 'liposuction', 'laser treatments', 'injectables'
+    ];
     const lower = query.toLowerCase();
     return procedures.find(proc => lower.includes(proc));
   };
