@@ -102,7 +102,7 @@ const CockpitGauge: React.FC<{
   const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
   // Debug logging
-  console.log(`🎯 Gauge ${label}: value=${liveValue}, max=${max}, percentage=${percentage}, angle=${targetAngle}`);
+  console.log(`🎯 Gauge ${label}: value=${liveValue}, max=${max}, percentage=${percentage}, angle=${targetAngle}, needleRotation=${needleRotation}, hasLoaded=${hasLoaded}`);
   
   // Live data fetching effect for all gauge types
   useEffect(() => {
@@ -374,20 +374,8 @@ const CockpitGauge: React.FC<{
         />
 
         {/* NEEDLE ROTATES FROM GAUGE CENTER (GLOWING DOT) */}
-        <motion.g
-          animate={{ 
-            rotate: hasLoaded ? needleRotation : -90,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: hasLoaded && !isHovered ? 40 : (isHovered ? 100 : 30),
-            damping: hasLoaded && !isHovered ? 25 : (isHovered ? 15 : 18),
-            mass: 1.8,
-            duration: hasLoaded ? undefined : 3,
-          }}
-          style={{
-            transformOrigin: `${size / 2}px ${size / 2}px`,
-          }}
+        <g 
+          transform={`rotate(${hasLoaded ? needleRotation : -90} ${size / 2} ${size / 2})`}
           onMouseEnter={handleMouseEnterNeedle}
           onMouseLeave={handleMouseLeaveNeedle}
         >
@@ -406,7 +394,7 @@ const CockpitGauge: React.FC<{
             stroke="#BDC3C7"
             strokeWidth="0.2"
           />
-        </motion.g>
+        </g>
 
         {/* LUXURY BASE HUB ON TOP OF LIVE INDICATOR */}
         <motion.circle
