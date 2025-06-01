@@ -945,141 +945,265 @@ const MarketCommandCenter: React.FC = () => {
         </Box>
       </Card>
 
-      {/* Procedures table */}
+      {/* Procedures/Companies table */}
       <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.key === 'procedure_name'}
-                  direction={sortConfig.direction}
-                  onClick={() => handleSort('procedure_name')}
-                >
-                  Procedure
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>Industry</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={sortConfig.key === 'market_size_2025_usd_millions'}
-                  direction={sortConfig.direction}
-                  onClick={() => handleSort('market_size_2025_usd_millions')}
-                >
-                  Market Size
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={sortConfig.key === 'yearly_growth_percentage'}
-                  direction={sortConfig.direction}
-                  onClick={() => handleSort('yearly_growth_percentage')}
-                >
-                  Growth %
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={sortConfig.key === 'average_cost_usd'}
-                  direction={sortConfig.direction}
-                  onClick={() => handleSort('average_cost_usd')}
-                >
-                  Avg Cost
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">Trending</TableCell>
-              <TableCell align="center">Status</TableCell>
+              {viewMode === 'procedures' ? (
+                <>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortConfig.key === 'procedure_name'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('procedure_name')}
+                    >
+                      Procedure
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>Industry</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'market_size_2025_usd_millions'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('market_size_2025_usd_millions')}
+                    >
+                      Market Size
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'yearly_growth_percentage'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('yearly_growth_percentage')}
+                    >
+                      Growth %
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'average_cost_usd'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('average_cost_usd')}
+                    >
+                      Avg Cost
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">Trending</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                </>
+              ) : (
+                <>
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortConfig.key === 'name'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('name')}
+                    >
+                      Company
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>Industry</TableCell>
+                  <TableCell>Headquarters</TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'market_size_2025_usd_billion'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('market_size_2025_usd_billion')}
+                    >
+                      Market Size ($B)
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'projected_growth_pct'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('projected_growth_pct')}
+                    >
+                      Growth %
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={sortConfig.key === 'last_year_sales_usd_million'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('last_year_sales_usd_million')}
+                    >
+                      Sales ($M)
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">Market Share %</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProcedures.map((procedure) => (
-              <TableRow
-                key={procedure.id}
-                hover
-                sx={{
-                  '&:hover': {
-                    background: alpha(theme.palette.primary.main, 0.05),
-                  },
-                }}
-              >
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <MedicalServices 
-                      sx={{ 
-                        mr: 1, 
-                        color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
-                      }} 
+            {viewMode === 'procedures' ? (
+              filteredProcedures.map((procedure) => (
+                <TableRow
+                  key={procedure.id}
+                  hover
+                  sx={{
+                    '&:hover': {
+                      background: alpha(theme.palette.primary.main, 0.05),
+                    },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <MedicalServices 
+                        sx={{ 
+                          mr: 1, 
+                          color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
+                        }} 
+                      />
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                        {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={procedure.industry || 'Unknown'}
+                      size="small"
+                      color={procedure.industry === 'dental' ? 'info' : 'secondary'}
                     />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                      {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
+                  </TableCell>
+                  <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                      ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M
                     </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={procedure.industry || 'Unknown'}
-                    size="small"
-                    color={procedure.industry === 'dental' ? 'info' : 'secondary'}
-                  />
-                </TableCell>
-                <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
-                <TableCell align="right">
-                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                    ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M
-                  </Typography>
-                </TableCell>
-                <TableCell align="right">
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    {(procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? (
-                      <TrendingUp sx={{ color: theme.palette.success.main, mr: 0.5 }} />
-                    ) : (
-                      <TrendingDown sx={{ color: theme.palette.error.main, mr: 0.5 }} />
-                    )}
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: (procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? theme.palette.success.main : theme.palette.error.main,
-                        fontWeight: 'bold',
-                      }}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                      {(procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? (
+                        <TrendingUp sx={{ color: theme.palette.success.main, mr: 0.5 }} />
+                      ) : (
+                        <TrendingDown sx={{ color: theme.palette.error.main, mr: 0.5 }} />
+                      )}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: (procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? theme.palette.success.main : theme.palette.error.main,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {(procedure.yearly_growth_percentage || procedure.growth_rate || 0).toFixed(1)}%
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2">
+                      ${(procedure.average_cost_usd || 0).toLocaleString()}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={procedure.trending_score || procedure.popularity_score || 0}
+                        sx={{
+                          width: 60,
+                          mr: 1,
+                          '& .MuiLinearProgress-bar': {
+                            backgroundColor: (procedure.trending_score || procedure.popularity_score || 0) > 70 ? theme.palette.success.main : theme.palette.warning.main,
+                          },
+                        }}
+                      />
+                      <Typography variant="caption">
+                        {procedure.trending_score || procedure.popularity_score || 0}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <motion.div
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
                     >
-                      {(procedure.yearly_growth_percentage || procedure.growth_rate || 0).toFixed(1)}%
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography variant="body2">
-                    ${(procedure.average_cost_usd || 0).toLocaleString()}
-                  </Typography>
-                </TableCell>
-                <TableCell align="right">
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={procedure.trending_score || procedure.popularity_score || 0}
-                      sx={{
-                        width: 60,
-                        mr: 1,
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: (procedure.trending_score || procedure.popularity_score || 0) > 70 ? theme.palette.success.main : theme.palette.warning.main,
-                        },
-                      }}
+                      <Circle sx={{ color: theme.palette.success.main, fontSize: 12 }} />
+                    </motion.div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              filteredCompanies.map((company) => (
+                <TableRow
+                  key={company.id}
+                  hover
+                  sx={{
+                    '&:hover': {
+                      background: alpha(theme.palette.primary.main, 0.05),
+                    },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Business 
+                        sx={{ 
+                          mr: 1, 
+                          color: company.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
+                        }} 
+                      />
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                        {company.name || company.company_name || 'Unknown Company'}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={company.industry || 'Unknown'}
+                      size="small"
+                      color={company.industry === 'dental' ? 'info' : 'secondary'}
                     />
-                    <Typography variant="caption">
-                      {procedure.trending_score || procedure.popularity_score || 0}
+                  </TableCell>
+                  <TableCell>{company.headquarters || '-'}</TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                      ${(company.market_size_2025_usd_billion || company.market_size_usd_billions || 0).toFixed(1)}B
                     </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <motion.div
-                    animate={{ opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <Circle sx={{ color: theme.palette.success.main, fontSize: 12 }} />
-                  </motion.div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                      {(company.projected_growth_pct || 0) > 0 ? (
+                        <TrendingUp sx={{ color: theme.palette.success.main, mr: 0.5 }} />
+                      ) : (
+                        <TrendingDown sx={{ color: theme.palette.error.main, mr: 0.5 }} />
+                      )}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: (company.projected_growth_pct || 0) > 0 ? theme.palette.success.main : theme.palette.error.main,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {(company.projected_growth_pct || 0).toFixed(1)}%
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2">
+                      ${(company.last_year_sales_usd_million || 0).toLocaleString()}M
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2">
+                      {(company.market_share_pct || 0).toFixed(1)}%
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <motion.div
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Circle sx={{ color: theme.palette.success.main, fontSize: 12 }} />
+                    </motion.div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
