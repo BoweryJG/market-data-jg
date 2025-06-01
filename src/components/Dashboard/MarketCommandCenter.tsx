@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+// FORCE RELOAD - NEEDLE AND ICONS FIXED
 import {
   Box,
   Typography,
@@ -360,29 +361,29 @@ const CockpitGauge: React.FC<{
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* Needle base (anchored at center) */}
+            {/* Needle base (anchored at center) - THICKER */}
             <path
-              d={`M 0 -2 
-                  L 3 -1
-                  L 3 1
-                  L 0 2
+              d={`M 0 -4 
+                  L 6 -2
+                  L 6 2
+                  L 0 4
                   Z`}
               fill={`url(#needle-gradient-${label})`}
               stroke="rgba(0,0,0,0.4)"
-              strokeWidth="0.5"
+              strokeWidth="1"
             />
             
-            {/* Needle shaft with luxury styling (extends from center) */}
+            {/* Needle shaft with luxury styling (extends from center) - THICKER */}
             <path
-              d={`M 0 -1.5 
-                  L ${size / 2 - 25} -0.5
+              d={`M 0 -3 
+                  L ${size / 2 - 25} -1.5
                   L ${size / 2 - 20} 0
-                  L ${size / 2 - 25} 0.5
-                  L 0 1.5
+                  L ${size / 2 - 25} 1.5
+                  L 0 3
                   Z`}
               fill={`url(#needle-gradient-${label})`}
               stroke="rgba(0,0,0,0.3)"
-              strokeWidth="0.5"
+              strokeWidth="1"
             />
             
             {/* Needle tip (diamond shaped) */}
