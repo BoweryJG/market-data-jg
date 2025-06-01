@@ -20,7 +20,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BusinessCenter from '@mui/icons-material/BusinessCenter';
 import MemoryIcon from '@mui/icons-material/Memory';
-import PublicIcon from '@mui/icons-material/Public';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -42,12 +41,6 @@ const ACCENT_COLOR = '#00ffc6';
 // Main navigation links
 const getNavLinks = (currentUrl: string) => {
   const links = [
-    { 
-      key: 'galaxy',
-      label: 'Market Galaxy', 
-      href: '/',
-      icon: <PublicIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
     { 
       key: 'workspace',
       label: 'Sales Workspace', 
@@ -76,7 +69,7 @@ const getNavLinks = (currentUrl: string) => {
   
   // Show Linguistics link only if not on the linguistics page
   if (!currentUrl.includes('/linguistics')) {
-    links.splice(1, 0, { 
+    links.splice(0, 0, { 
       key: 'linguistics',
       label: 'Linguistics', 
       href: 'https://linguistics.repspheres.com/',
