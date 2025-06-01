@@ -357,7 +357,26 @@ const CockpitGauge: React.FC<{
           );
         })}
         
-        {/* TRANSLATE TO NEEDLE BASE, THEN ROTATE FROM BASE */}
+        {/* PULSATING LIVE ANCHOR POINT */}
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r="12"
+          fill="rgba(231, 76, 60, 0.2)"
+          stroke="#E74C3C"
+          strokeWidth="2"
+          animate={{
+            scale: isLive ? [1, 1.3, 1] : 1,
+            opacity: isLive ? [0.3, 0.8, 0.3] : 0.5,
+          }}
+          transition={{
+            duration: 2,
+            repeat: isLive ? Infinity : 0,
+            ease: "easeInOut"
+          }}
+        />
+
+        {/* NEEDLE ROTATES AROUND LIVE ANCHOR */}
         <g transform={`translate(${size / 2}, ${size / 2})`}>
           <motion.g
             animate={{ 
@@ -373,7 +392,7 @@ const CockpitGauge: React.FC<{
             onMouseEnter={handleMouseEnterNeedle}
             onMouseLeave={handleMouseLeaveNeedle}
           >
-            {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM BASE (0,0) */}
+            {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM ANCHOR POINT */}
             <path
               d={`M 0 -1.5 L ${size / 2 - 20} -0.8 L ${size / 2 - 20} 0.8 L 0 1.5 Z`}
               fill="url(#luxury-needle-gradient)"
@@ -388,27 +407,35 @@ const CockpitGauge: React.FC<{
               stroke="#BDC3C7"
               strokeWidth="0.2"
             />
-            
-            {/* HEAVY BASE HUB - ROTATES WITH NEEDLE */}
-            <circle
-              cx="0"
-              cy="0"
-              r="8"
-              fill="url(#base-gradient)"
-              stroke="#34495E"
-              strokeWidth="1"
-            />
-            
-            <circle
-              cx="0"
-              cy="0"
-              r="4"
-              fill="#2C3E50"
-              stroke="#000"
-              strokeWidth="1"
-            />
           </motion.g>
         </g>
+
+        {/* LUXURY BASE HUB ON TOP OF LIVE INDICATOR */}
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r="8"
+          fill="url(#base-gradient)"
+          stroke="#34495E"
+          strokeWidth="1"
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.2 }}
+        />
+        
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r="4"
+          fill="#2C3E50"
+          stroke="#000"
+          strokeWidth="1"
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.2 }}
+        />
         
         {/* Center hub with luxury details */}
         <motion.circle
