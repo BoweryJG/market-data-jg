@@ -1144,7 +1144,7 @@ const MarketCommandCenter: React.FC = () => {
             )).map((category) => (
               <Chip
                 key={category}
-                icon={categoryIconMap[category] || categoryIconMap['default']}
+                icon={categoryIconMap[category] || categoryIconMap['default'] as React.ReactElement}
                 label={category}
                 variant={selectedCategory === category ? 'filled' : 'outlined'}
                 onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
