@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npm run build"
+  command = "npm install && npm run build:vite-only"
   publish = "dist"
 
 # If you need to set environment variables for all deploys
