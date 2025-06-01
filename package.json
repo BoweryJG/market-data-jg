@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --noEmit && vite build",
+    "build:vite-only": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx"
   },
@@ -12,22 +13,23 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.16",
-    "@mui/lab": "^5.0.0-alpha.140",
     "@mui/material": "^5.15.16",
-    "@react-three/drei": "^9.105.4",
-    "@react-three/fiber": "^8.16.8",
+    "@react-three/drei": "^9.113.0",
+    "@react-three/fiber": "^8.17.10",
+    "@stripe/stripe-js": "^4.10.0",
     "@supabase/supabase-js": "^2.39.7",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
-    "framer-motion": "^11.0.0",
+    "framer-motion": "^12.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "three": "^0.176.0"
+    "three": "^0.169.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.62",
     "@types/react-dom": "^18.2.19",
+    "@types/three": "^0.169.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.34.1",

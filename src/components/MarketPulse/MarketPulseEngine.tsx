@@ -409,7 +409,7 @@ const MarketPulseEngine: React.FC<MarketPulseEngineProps> = ({
           </Typography>
           <Slider
             value={timeRange}
-            onChange={(_: React.SyntheticEvent, value: number | number[]) => setTimeRange(value as number)}
+            onChange={(_: Event, value: number | number[]) => setTimeRange(value as number)}
             min={2020}
             max={2030}
             marks={[

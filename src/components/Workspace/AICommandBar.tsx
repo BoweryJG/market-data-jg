@@ -35,7 +35,7 @@ import {
   Lightbulb
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { braveSearchService } from '../../services/braveSearchService';
+import * as braveSearchService from '../../services/braveSearchService';
 import { galaxyDataService } from '../../services/galaxyDataService';
 import { supabase } from '../../services/supabaseClient';
 
@@ -197,9 +197,9 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   // Search market trends
   const searchTrends = async (query: string): Promise<CommandResult[]> => {
     try {
-      const searchResults = await braveSearchService.searchWithIntelligence(
+      const searchResults = await braveSearchService.search(
         `${query} market trends healthcare dental aesthetic`,
-        { count: 5 }
+        5
       );
 
       return searchResults.map((result: any, idx: number) => ({

@@ -138,7 +138,7 @@ import {
 } from '@mui/icons-material';
 
 import { supabase } from '../../services/supabaseClient';
-import { braveSearchService } from '../../services/braveSearchService';
+import * as braveSearchService from '../../services/braveSearchService';
 
 // Animations
 const pulse = keyframes`
