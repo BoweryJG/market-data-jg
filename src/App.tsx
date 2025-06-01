@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } from './components/Dashboard';
+import DashboardUpdated from './components/Dashboard/DashboardUpdated';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -15,6 +16,7 @@ import {
 } from './components/Sales';
 import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
+import SupabaseTest from './components/Test/SupabaseTest';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const App: React.FC = () => {
@@ -50,9 +52,11 @@ const App: React.FC = () => {
                   <Route path="/" element={<MarketCommandCenter />} />
                   <Route path="/dashboard" element={<MarketCommandCenter />} />
                   <Route path="/enhanced" element={<EnhancedMarketDashboard />} />
+                  <Route path="/updated" element={<DashboardUpdated />} />
                   <Route path="/actionable" element={<ActionableSalesDashboard />} />
                   <Route path="/quantum" element={<QuantumMarketDashboard />} />
                   <Route path="/workspace" element={<SalesWorkspace />} />
+                  <Route path="/test" element={<SupabaseTest />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>
