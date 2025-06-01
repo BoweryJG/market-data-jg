@@ -19,7 +19,7 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
   size = 150 
 }) => {
   const percentage = Math.min((value / max) * 100, 100);
-  const angle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
+  const angle = -90 + (percentage / 100) * 180; // Start at -90, sweep to +90
   const radius = size / 2 - 20;
   
   return (
@@ -52,38 +52,7 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
           strokeDasharray={`${percentage * 3.14159 * radius / 100} ${3.14159 * radius}`}
         />
         
-        {/* CENTER POINT */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="8"
-          fill="#333"
-          stroke="#000"
-          strokeWidth="2"
-        />
-        
-        {/* LUXURY NEEDLE - THIN, SLEEK DESIGN */}
-        <g transform={`rotate(${angle} ${size / 2} ${size / 2})`}>
-          {/* Main needle body - ultra thin like luxury car needle */}
-          <path
-            d={`M ${size / 2} ${size / 2 - 2} L ${size / 2 + radius - 15} ${size / 2} L ${size / 2} ${size / 2 + 2} Z`}
-            fill="url(#needleGradient)"
-            stroke="#2C3E50"
-            strokeWidth="0.5"
-          />
-          
-          {/* Needle tip - pointed for precision */}
-          <circle
-            cx={size / 2 + radius - 15}
-            cy={size / 2}
-            r="2"
-            fill="#E74C3C"
-            stroke="#C0392B"
-            strokeWidth="0.5"
-          />
-        </g>
-        
-        {/* LUXURY NEEDLE BASE - ROTATING HUB */}
+        {/* GRADIENTS */}
         <defs>
           <radialGradient id="needleGradient" cx="0%" cy="50%" r="100%">
             <stop offset="0%" stopColor="#E74C3C" />
@@ -98,35 +67,44 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
           </radialGradient>
         </defs>
         
-        {/* Outer ring - luxury finish */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="10"
-          fill="url(#baseGradient)"
-          stroke="#34495E"
-          strokeWidth="1"
-        />
-        
-        {/* Inner hub - precision center */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="6"
-          fill="#2C3E50"
-          stroke="#1B2631"
-          strokeWidth="0.5"
-        />
-        
-        {/* Center jewel - luxury detail */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="2"
-          fill="#E74C3C"
-          stroke="#C0392B"
-          strokeWidth="0.5"
-        />
+        {/* ROTATING NEEDLE GROUP */}
+        <g transform={`rotate(${angle} ${size / 2} ${size / 2})`}>
+          {/* ENTIRE NEEDLE ROTATES FROM BASE */}
+          <line
+            x1={size / 2}
+            y1={size / 2}
+            x2={size / 2 + radius - 10}
+            y2={size / 2}
+            stroke="url(#needleGradient)"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          
+          {/* Needle tip */}
+          <circle
+            cx={size / 2 + radius - 10}
+            cy={size / 2}
+            r="2"
+            fill="#E74C3C"
+          />
+          
+          {/* CENTER BASE - PART OF ROTATING GROUP */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="8"
+            fill="url(#baseGradient)"
+            stroke="#34495E"
+            strokeWidth="1"
+          />
+          
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="4"
+            fill="#2C3E50"
+          />
+        </g>
       </svg>
       
       {/* Value display */}
