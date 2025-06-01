@@ -10,7 +10,8 @@ import {
   Chip,
   Box,
   useTheme,
-  alpha
+  alpha,
+  Button
 } from '@mui/material';
 import { 
   Dashboard,
@@ -21,7 +22,8 @@ import {
   TrendingUp,
   Settings,
   TableChart,
-  PieChart
+  PieChart,
+  BusinessCenter
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -35,7 +37,11 @@ interface DashboardOption {
   isPremium?: boolean;
 }
 
-const DashboardSelector: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
+const DashboardSelector: React.FC<{ 
+  open: boolean; 
+  onClose: () => void; 
+  onSalesModeToggle?: () => void; 
+}> = ({ open, onClose, onSalesModeToggle }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -186,6 +192,35 @@ const DashboardSelector: React.FC<{ open: boolean; onClose: () => void }> = ({ o
         </List>
 
         <Divider sx={{ my: 3 }} />
+        
+        {/* Sales Mode Toggle */}
+        {onSalesModeToggle && (
+          <>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => {
+                onSalesModeToggle();
+                onClose();
+              }}
+              startIcon={<BusinessCenter />}
+              sx={{
+                mb: 3,
+                background: 'linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(90deg, #FF5252 0%, #45B7B8 100%)',
+                  transform: 'scale(1.02)',
+                },
+                borderRadius: 2,
+                fontWeight: 'bold',
+                textTransform: 'none',
+              }}
+            >
+              Switch to Sales Mode
+            </Button>
+            <Divider sx={{ mb: 3 }} />
+          </>
+        )}
         
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
           Data Status

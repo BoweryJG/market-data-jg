@@ -18,7 +18,6 @@ import LanguageIcon from '@mui/icons-material/Language';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import BusinessCenter from '@mui/icons-material/BusinessCenter';
 import MemoryIcon from '@mui/icons-material/Memory';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -48,12 +47,6 @@ const getNavLinks = (currentUrl: string) => {
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
-      key: 'dashboard',
-      label: 'Dashboard', 
-      href: '/dashboard',
-      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
-    { 
       key: 'sphereos',
       label: 'Sphere OS', 
       href: 'https://crm.repspheres.com/',
@@ -69,7 +62,7 @@ const getNavLinks = (currentUrl: string) => {
   
   // Show Linguistics link only if not on the linguistics page
   if (!currentUrl.includes('/linguistics')) {
-    links.splice(0, 0, { 
+    links.splice(1, 0, { 
       key: 'linguistics',
       label: 'Linguistics', 
       href: 'https://linguistics.repspheres.com/',
@@ -453,26 +446,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
                 </Button>
               ))}
               
-              {/* Sales Mode Toggle */}
-              {onSalesModeToggle && (
-                <>
-                  <Divider orientation="vertical" flexItem sx={{ mx: 2, bgcolor: 'rgba(255,255,255,0.2)' }} />
-                  <Button
-                    onClick={onSalesModeToggle}
-                    sx={{
-                      ...navButtonStyles,
-                      background: 'linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%)',
-                      '&:hover': {
-                        background: 'linear-gradient(90deg, #FF5252 0%, #45B7B8 100%)',
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                    startIcon={<BusinessCenter />}
-                  >
-                    Sales Mode
-                  </Button>
-                </>
-              )}
             </Box>
           </Box>
         )}
@@ -620,7 +593,11 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
-    <DashboardSelector open={dashboardSelectorOpen} onClose={() => setDashboardSelectorOpen(false)} />
+    <DashboardSelector 
+      open={dashboardSelectorOpen} 
+      onClose={() => setDashboardSelectorOpen(false)} 
+      onSalesModeToggle={onSalesModeToggle}
+    />
     </>
   );
 }
