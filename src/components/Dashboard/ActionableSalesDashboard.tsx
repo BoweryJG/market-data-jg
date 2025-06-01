@@ -560,7 +560,7 @@ const ActionableSalesDashboard: React.FC = () => {
 
       {/* Main Dashboard Tabs */}
       <Paper sx={{ mb: 2 }}>
-        <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)} variant="fullWidth">
+        <Tabs value={activeTab} onChange={(e: React.SyntheticEvent, v: number) => setActiveTab(v)} variant="fullWidth">
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Dashboard /> Today's Plan</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Whatshot /> Hot Leads</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Timeline /> Pipeline</Box>} />

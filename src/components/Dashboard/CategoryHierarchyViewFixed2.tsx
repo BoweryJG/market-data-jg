@@ -220,7 +220,7 @@ const CategoryHierarchyView: React.FC<CategoryHierarchyViewProps> = ({
             <IconButton 
               edge="end" 
               size="small"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 toggleCategory(category.id);
               }}

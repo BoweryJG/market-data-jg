@@ -282,7 +282,7 @@ const QuickActionsBar: React.FC = () => {
 
         {/* Notifications */}
         <IconButton
-          onClick={(e) => setNotificationAnchor(e.currentTarget)}
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => setNotificationAnchor(e.currentTarget)}
           sx={{ mr: 2 }}
         >
           <Badge badgeContent={2} color="error">
@@ -291,7 +291,7 @@ const QuickActionsBar: React.FC = () => {
         </IconButton>
 
         {/* User Menu */}
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+        <IconButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(e.currentTarget)}>
           <Avatar sx={{ width: 32, height: 32 }}>SJ</Avatar>
         </IconButton>
       </Toolbar>
@@ -319,7 +319,7 @@ const QuickActionsBar: React.FC = () => {
           <IconButton onClick={() => setSearchOpen(!searchOpen)}>
             <SearchIcon />
           </IconButton>
-          <IconButton onClick={(e) => setNotificationAnchor(e.currentTarget)}>
+          <IconButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => setNotificationAnchor(e.currentTarget)}>
             <Badge badgeContent={2} color="error">
               <Notifications />
             </Badge>
@@ -329,7 +329,7 @@ const QuickActionsBar: React.FC = () => {
 
       <BottomNavigation
         value={selectedNav}
-        onChange={(_, newValue) => setSelectedNav(newValue)}
+        onChange={(_: React.SyntheticEvent, newValue: number) => setSelectedNav(newValue)}
         sx={{
           position: 'fixed',
           bottom: 0,

@@ -394,7 +394,7 @@ const SalesDashboard: React.FC = () => {
       <Paper sx={{ mb: 3 }}>
         <Tabs
           value={selectedTab}
-          onChange={(_, value) => setSelectedTab(value)}
+          onChange={(_: React.SyntheticEvent, value: number) => setSelectedTab(value)}
           variant="scrollable"
           scrollButtons="auto"
         >
