@@ -525,8 +525,9 @@ const CockpitGauge: React.FC<{
             fill="none"
             stroke={theme.palette.success.main}
             strokeWidth="2"
+            style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
             animate={{
-              r: [12, 18, 12],
+              scale: [1, 1.5, 1],
               opacity: [0.8, 0.2, 0.8],
             }}
             transition={{
