@@ -280,7 +280,7 @@ class ComprehensiveDataService {
             trending_score: proc.trending_score || proc.popularity_score || 0,
             popularity_score: proc.popularity_score || proc.trending_score || 0,
           };
-        }));
+        });
 
       const allProcedures = [
         ...processedDentalProcedures,

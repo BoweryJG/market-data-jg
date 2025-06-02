@@ -1178,7 +1178,7 @@ const MarketCommandCenter: React.FC = () => {
                 return (
                   <Tooltip key={category.id} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
-                      icon={categoryIconMap[category.name] || categoryIconMap['default'] as React.ReactElement}
+                      icon={(categoryIconMap[category.name] || categoryIconMap['default']) as React.ReactElement}
                       label={`${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
