@@ -829,8 +829,14 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'default': <HealthAndSafety sx={{ color: '#9E9E9E', fontSize: 20 }} />,
 };
 
-// Debug: Log all available category icon keys
-console.log('🔍 Available category icon keys:', Object.keys(categoryIconMap));
+// Debug: Log all available category icon keys with timestamp to force reload
+console.log('🔍 Available category icon keys [' + new Date().toISOString() + ']:', Object.keys(categoryIconMap).length, 'icons loaded');
+console.log('📋 First 10 icon keys:', Object.keys(categoryIconMap).slice(0, 10));
+console.log('🔍 Checking specific missing icons:', {
+  'Imaging Procedures': !!categoryIconMap['Imaging Procedures'],
+  'Single Implants Procedures': !!categoryIconMap['Single Implants Procedures'],
+  'Extractions Procedures': !!categoryIconMap['Extractions Procedures']
+});
 
 // Market data interfaces
 interface Procedure {
