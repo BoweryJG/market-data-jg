@@ -1301,11 +1301,61 @@ const MarketCommandCenter: React.FC = () => {
                   .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
                   .length;
                 
-                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name], 'Icon:', categoryIconMap[category.name] ? 'Found' : 'Missing');
+                // Smart icon fallback system
+                const getIconForCategory = (categoryName: string) => {
+                  // Direct match first
+                  if (categoryIconMap[categoryName]) {
+                    return categoryIconMap[categoryName];
+                  }
+                  
+                  // Smart fallback based on keywords
+                  const name = categoryName.toLowerCase();
+                  if (name.includes('imaging')) return <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />;
+                  if (name.includes('implant')) return <Build sx={{ color: '#3F51B5', fontSize: 20 }} />;
+                  if (name.includes('extraction')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />;
+                  if (name.includes('whitening')) return <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />;
+                  if (name.includes('cleaning')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />;
+                  if (name.includes('laser')) return <Flare sx={{ color: '#FF5722', fontSize: 20 }} />;
+                  if (name.includes('facial') || name.includes('face')) return <Face sx={{ color: '#E91E63', fontSize: 20 }} />;
+                  if (name.includes('filling')) return <Healing sx={{ color: '#607D8B', fontSize: 20 }} />;
+                  if (name.includes('prp') || name.includes('stem cell')) return <Biotech sx={{ color: '#8BC34A', fontSize: 20 }} />;
+                  if (name.includes('hair')) return <Grain sx={{ color: '#795548', fontSize: 20 }} />;
+                  if (name.includes('neuromodulator') || name.includes('botox')) return <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />;
+                  if (name.includes('sealant')) return <Shield sx={{ color: '#00BCD4', fontSize: 20 }} />;
+                  if (name.includes('screening')) return <Visibility sx={{ color: '#2196F3', fontSize: 20 }} />;
+                  if (name.includes('bone') || name.includes('graft')) return <Engineering sx={{ color: '#FF5722', fontSize: 20 }} />;
+                  if (name.includes('bridge')) return <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />;
+                  if (name.includes('bonding')) return <AutoAwesome sx={{ color: '#4CAF50', fontSize: 20 }} />;
+                  if (name.includes('fluoride')) return <LocalPharmacy sx={{ color: '#00BCD4', fontSize: 20 }} />;
+                  if (name.includes('digital')) return <Computer sx={{ color: '#673AB7', fontSize: 20 }} />;
+                  if (name.includes('pediatric')) return <Face sx={{ color: '#FFC107', fontSize: 20 }} />;
+                  if (name.includes('tmj') || name.includes('pain')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />;
+                  if (name.includes('sleep')) return <Mood sx={{ color: '#673AB7', fontSize: 20 }} />;
+                  if (name.includes('cellulite')) return <FitnessCenter sx={{ color: '#FF9800', fontSize: 20 }} />;
+                  if (name.includes('biotech')) return <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />;
+                  if (name.includes('skin')) return <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />;
+                  if (name.includes('tech')) return <Computer sx={{ color: '#673AB7', fontSize: 20 }} />;
+                  if (name.includes('vascular')) return <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />;
+                  if (name.includes('energy')) return <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />;
+                  if (name.includes('wellness')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />;
+                  if (name.includes('breast')) return <FitnessCenter sx={{ color: '#E91E63', fontSize: 20 }} />;
+                  if (name.includes('body')) return <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />;
+                  
+                  // Industry-based fallback
+                  if (category.industry === 'dental') return <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />;
+                  if (category.industry === 'aesthetic') return <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />;
+                  
+                  // Final fallback
+                  return categoryIconMap['default'];
+                };
+
+                const categoryIcon = getIconForCategory(category.name);
+                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIcon, 'Icon:', categoryIcon ? 'Found/Generated' : 'Missing');
+                
                 return (
                   <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
-                      icon={(categoryIconMap[category.name] || categoryIconMap['default']) as React.ReactElement}
+                      icon={categoryIcon as React.ReactElement}
                       label={`${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
