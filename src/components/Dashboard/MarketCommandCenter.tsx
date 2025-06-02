@@ -1303,7 +1303,7 @@ const MarketCommandCenter: React.FC = () => {
                 
                 console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name], 'Icon:', categoryIconMap[category.name] ? 'Found' : 'Missing');
                 return (
-                  <Tooltip key={category.id} title={`${category.description || category.name} (${procedureCount} procedures)`}>
+                  <Tooltip key={`category-${category.id}-${category.name}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
                       icon={(categoryIconMap[category.name] || categoryIconMap['default']) as React.ReactElement}
                       label={`${category.name} (${procedureCount})`}
@@ -1432,9 +1432,9 @@ const MarketCommandCenter: React.FC = () => {
           </TableHead>
           <TableBody>
             {viewMode === 'procedures' ? (
-              filteredProcedures.map((procedure) => (
+              filteredProcedures.map((procedure, index) => (
                 <TableRow
-                  key={procedure.id}
+                  key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
                   sx={{
                     '&:hover': {
@@ -1520,9 +1520,9 @@ const MarketCommandCenter: React.FC = () => {
                 </TableRow>
               ))
             ) : (
-              filteredCompanies.map((company) => (
+              filteredCompanies.map((company, index) => (
                 <TableRow
-                  key={company.id}
+                  key={`company-${company.id || index}-${company.name || company.company_name || 'unknown'}`}
                   hover
                   sx={{
                     '&:hover': {
