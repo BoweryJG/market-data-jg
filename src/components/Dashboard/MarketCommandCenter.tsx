@@ -1302,52 +1302,79 @@ const MarketCommandCenter: React.FC = () => {
                   .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
                   .length;
                 
-                // Smart icon fallback system
+                // Smart icon fallback system with beautiful individual colors
                 const getIconForCategory = (categoryName: string) => {
-                  // Direct match first
+                  // Direct match first (handles exact matches)
                   if (categoryIconMap[categoryName]) {
                     return categoryIconMap[categoryName];
                   }
                   
-                  // Smart fallback based on keywords
+                  // Smart pattern matching with diverse beautiful colors
                   const name = categoryName.toLowerCase();
-                  if (name.includes('imaging')) return <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />;
-                  if (name.includes('implant')) return <Build sx={{ color: '#3F51B5', fontSize: 20 }} />;
-                  if (name.includes('extraction')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />;
-                  if (name.includes('whitening')) return <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />;
-                  if (name.includes('cleaning')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />;
-                  if (name.includes('laser')) return <Flare sx={{ color: '#FF5722', fontSize: 20 }} />;
-                  if (name.includes('facial') || name.includes('face')) return <Face sx={{ color: '#E91E63', fontSize: 20 }} />;
-                  if (name.includes('filling')) return <Healing sx={{ color: '#607D8B', fontSize: 20 }} />;
-                  if (name.includes('prp') || name.includes('stem cell')) return <Biotech sx={{ color: '#8BC34A', fontSize: 20 }} />;
-                  if (name.includes('hair')) return <Grain sx={{ color: '#795548', fontSize: 20 }} />;
-                  if (name.includes('neuromodulator') || name.includes('botox')) return <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />;
-                  if (name.includes('sealant')) return <Shield sx={{ color: '#00BCD4', fontSize: 20 }} />;
-                  if (name.includes('screening')) return <Visibility sx={{ color: '#2196F3', fontSize: 20 }} />;
-                  if (name.includes('bone') || name.includes('graft')) return <Engineering sx={{ color: '#FF5722', fontSize: 20 }} />;
-                  if (name.includes('bridge')) return <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />;
-                  if (name.includes('bonding')) return <AutoAwesome sx={{ color: '#4CAF50', fontSize: 20 }} />;
-                  if (name.includes('fluoride')) return <LocalPharmacy sx={{ color: '#00BCD4', fontSize: 20 }} />;
-                  if (name.includes('digital')) return <Computer sx={{ color: '#673AB7', fontSize: 20 }} />;
-                  if (name.includes('pediatric')) return <Face sx={{ color: '#FFC107', fontSize: 20 }} />;
-                  if (name.includes('tmj') || name.includes('pain')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />;
-                  if (name.includes('sleep')) return <Mood sx={{ color: '#673AB7', fontSize: 20 }} />;
-                  if (name.includes('cellulite')) return <FitnessCenter sx={{ color: '#FF9800', fontSize: 20 }} />;
-                  if (name.includes('biotech')) return <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />;
-                  if (name.includes('skin')) return <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />;
-                  if (name.includes('tech')) return <Computer sx={{ color: '#673AB7', fontSize: 20 }} />;
-                  if (name.includes('vascular')) return <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />;
-                  if (name.includes('energy')) return <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />;
-                  if (name.includes('wellness')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />;
-                  if (name.includes('breast')) return <FitnessCenter sx={{ color: '#E91E63', fontSize: 20 }} />;
-                  if (name.includes('body')) return <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />;
                   
-                  // Industry-based fallback
-                  if (category.industry === 'dental') return <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />;
-                  if (category.industry === 'aesthetic') return <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />;
+                  // 🎨 RICH COLOR PALETTE - Each category gets unique styling
+                  if (name.includes('diagnostic')) return <MonitorHeart sx={{ color: '#3F51B5', fontSize: 20 }} />; // Deep Blue
+                  if (name.includes('preventive')) return <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />; // Green
+                  if (name.includes('restorative')) return <Healing sx={{ color: '#FF9800', fontSize: 20 }} />; // Orange
+                  if (name.includes('cosmetic')) return <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />; // Pink
+                  if (name.includes('oral surgery')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />; // Red
+                  if (name.includes('endodontic')) return <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />; // Purple
+                  if (name.includes('periodontic')) return <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />; // Light Green
+                  if (name.includes('prosthodontic')) return <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />; // Blue Grey
+                  if (name.includes('orthodontic')) return <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />; // Cyan
+                  if (name.includes('implantology') || name.includes('implant')) return <Build sx={{ color: '#795548', fontSize: 20 }} />; // Brown
                   
-                  // Final fallback
-                  return categoryIconMap['default'];
+                  // 🎯 SPECIFIC PROCEDURE COLORS
+                  if (name.includes('imaging')) return <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />; // Blue
+                  if (name.includes('extraction')) return <MedicalServices sx={{ color: '#D32F2F', fontSize: 20 }} />; // Dark Red
+                  if (name.includes('whitening')) return <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />; // Amber
+                  if (name.includes('cleaning')) return <Spa sx={{ color: '#00E676', fontSize: 20 }} />; // Bright Green
+                  if (name.includes('ablative') && name.includes('laser')) return <Flare sx={{ color: '#FF5722', fontSize: 20 }} />; // Deep Orange
+                  if (name.includes('facial') || name.includes('face')) return <Face sx={{ color: '#EC407A', fontSize: 20 }} />; // Hot Pink
+                  if (name.includes('filling')) return <Healing sx={{ color: '#5D4037', fontSize: 20 }} />; // Dark Brown
+                  if (name.includes('prp') || name.includes('stem cell')) return <Biotech sx={{ color: '#66BB6A', fontSize: 20 }} />; // Medium Green
+                  if (name.includes('hair')) return <Grain sx={{ color: '#8D6E63', fontSize: 20 }} />; // Light Brown
+                  if (name.includes('neuromodulator')) return <Psychology sx={{ color: '#BA68C8', fontSize: 20 }} />; // Light Purple
+                  if (name.includes('sealant')) return <Shield sx={{ color: '#26C6DA', fontSize: 20 }} />; // Light Cyan
+                  if (name.includes('screening')) return <Visibility sx={{ color: '#42A5F5', fontSize: 20 }} />; // Light Blue
+                  if (name.includes('bone') || name.includes('graft')) return <Engineering sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
+                  if (name.includes('bridge')) return <Architecture sx={{ color: '#78909C', fontSize: 20 }} />; // Light Blue Grey
+                  if (name.includes('bonding')) return <AutoAwesome sx={{ color: '#81C784', fontSize: 20 }} />; // Light Green
+                  if (name.includes('fluoride')) return <LocalPharmacy sx={{ color: '#4DD0E1', fontSize: 20 }} />; // Light Cyan
+                  if (name.includes('digital')) return <Computer sx={{ color: '#9575CD', fontSize: 20 }} />; // Medium Purple
+                  if (name.includes('pediatric')) return <Face sx={{ color: '#FFB74D', fontSize: 20 }} />; // Light Orange
+                  if (name.includes('tmj') || name.includes('pain')) return <MedicalServices sx={{ color: '#EF5350', fontSize: 20 }} />; // Light Red
+                  if (name.includes('sleep')) return <Mood sx={{ color: '#7986CB', fontSize: 20 }} />; // Light Indigo
+                  if (name.includes('adjunctive')) return <MedicalInformation sx={{ color: '#29B6F6', fontSize: 20 }} />; // Light Blue
+                  
+                  // 💄 AESTHETIC SPECIFIC COLORS
+                  if (name.includes('injectable')) return <Vaccines sx={{ color: '#AB47BC', fontSize: 20 }} />; // Medium Purple
+                  if (name.includes('skin') && name.includes('resurfacing')) return <Waves sx={{ color: '#26A69A', fontSize: 20 }} />; // Teal
+                  if (name.includes('skin') && name.includes('tightening')) return <SelfImprovement sx={{ color: '#66BB6A', fontSize: 20 }} />; // Green
+                  if (name.includes('body') && name.includes('contouring')) return <FitnessCenter sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
+                  if (name.includes('cellulite')) return <FitnessCenter sx={{ color: '#FFA726', fontSize: 20 }} />; // Orange
+                  if (name.includes('pigmentation')) return <Palette sx={{ color: '#FFCA28', fontSize: 20 }} />; // Amber
+                  if (name.includes('regenerative')) return <Biotech sx={{ color: '#66BB6A', fontSize: 20 }} />; // Green
+                  if (name.includes('laser') && !name.includes('ablative')) return <AutoFixHigh sx={{ color: '#FF9800', fontSize: 20 }} />; // Orange
+                  if (name.includes('minimally invasive')) return <AutoFixHigh sx={{ color: '#26C6DA', fontSize: 20 }} />; // Cyan
+                  if (name.includes('combination')) return <Diamond sx={{ color: '#9C27B0', fontSize: 20 }} />; // Purple
+                  if (name.includes('vascular')) return <MonitorHeart sx={{ color: '#E53935', fontSize: 20 }} />; // Red
+                  if (name.includes('energy')) return <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />; // Dark Orange
+                  if (name.includes('wellness')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />; // Green
+                  if (name.includes('breast')) return <FitnessCenter sx={{ color: '#EC407A', fontSize: 20 }} />; // Pink
+                  if (name.includes('body') && !name.includes('contouring')) return <Accessibility sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
+                  if (name.includes('skin') && !name.includes('resurfacing') && !name.includes('tightening')) return <WbSunny sx={{ color: '#FFA726', fontSize: 20 }} />; // Orange
+                  if (name.includes('tech')) return <Computer sx={{ color: '#7E57C2', fontSize: 20 }} />; // Deep Purple
+                  if (name.includes('advanced')) return <Science sx={{ color: '#5C6BC0', fontSize: 20 }} />; // Indigo
+                  
+                  // 🎨 FINAL BEAUTIFUL FALLBACKS (no more boring industry defaults!)
+                  const colors = ['#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#607D8B'];
+                  const icons = [FaceRetouchingNatural, LocalHospital, Science, Computer, Build, Flare, AutoAwesome, Shield, Nature];
+                  const colorIndex = categoryName.length % colors.length;
+                  const iconIndex = categoryName.length % icons.length;
+                  const IconComponent = icons[iconIndex];
+                  
+                  return <IconComponent sx={{ color: colors[colorIndex], fontSize: 20 }} />;
                 };
 
                 const categoryIcon = getIconForCategory(category.name);
