@@ -60,7 +60,7 @@ import {
   FiberManualRecord,
   MonetizationOn,
   PinDrop,
-  // Category icons
+  // Category icons - comprehensive set
   Build,
   Straighten,
   Nature,
@@ -76,11 +76,32 @@ import {
   Healing,
   Brush,
   Category,
-  // Additional icons for categories
   Spa,
   FitnessCenter,
   Psychology,
   Engineering,
+  // Enhanced medical & aesthetic icons
+  Biotech,
+  Science,
+  Vaccines,
+  Medication,
+  SelfImprovement,
+  FaceRetouchingNatural,
+  HealthAndSafety,
+  MonitorHeart,
+  VisibilityOff,
+  CameraAlt,
+  Palette,
+  Bathtub,
+  WbSunny,
+  Waves,
+  Diamond,
+  AutoFixHigh,
+  Flare,
+  MedicalInformation,
+  LocalPharmacy,
+  Mood,
+  SentimentVerySatisfied,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
@@ -668,47 +689,64 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
   );
 };
 
-// Enhanced category icons map for procedures with vibrant MUI icons
+// ✨ Premium Category Icons Map - Professional Medical & Aesthetic Icons
 const categoryIconMap: Record<string, React.ReactNode> = {
-  // Dental categories with vibrant, professional colors
-  'Implantology': <Build sx={{ color: '#2196F3', fontSize: 20 }} />,
+  // 🦷 ===== DENTAL CATEGORIES ===== 
+  // Primary dental categories with sophisticated medical icons
+  'Diagnostic': <MonitorHeart sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Preventive': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Restorative': <Healing sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Cosmetic': <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Oral Surgery': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
-  'Orthodontics': <Straighten sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Periodontics': <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />,
-  'Endodontics': <Hub sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Prosthodontics': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Cosmetic Dentistry': <AutoAwesome sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Digital Dentistry': <Computer sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Preventive Care': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'General Dentistry': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
-  
-  // Aesthetic categories with beautiful, luxurious colors
-  'Facial Rejuvenation': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Body Contouring': <Accessibility sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Skin Resurfacing': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Injectable Treatments': <Colorize sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Laser Procedures': <FlashOn sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Non-Invasive': <Healing sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Minimally Invasive': <MedicalServices sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Aesthetic Medicine': <Brush sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Hair Restoration': <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />,
-  'Breast Procedures': <Accessibility sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Endodontic': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Periodontic': <Nature sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Prosthodontic': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
+  'Orthodontic': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'Implantology': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
+  'Digital Dentistry': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
+
+  // 💄 ===== AESTHETIC CATEGORIES =====
+  // Premium aesthetic categories with luxury spa-like icons
+  'Facial Aesthetic': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Injectables': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Body': <Accessibility sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Skin': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Hair': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
+  'Minimally Invasive': <AutoFixHigh sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'Regenerative': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Lasers': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
+  'Combination': <Diamond sx={{ color: '#673AB7', fontSize: 20 }} />,
+
+  // 🎯 ===== AESTHETIC SUBCATEGORIES =====
+  'Body Contouring': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Skin Resurfacing': <Waves sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'Skin Tightening': <SelfImprovement sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Pigmentation': <Palette sx={{ color: '#FF9800', fontSize: 20 }} />,
+
+  // 🔄 ===== LEGACY/ALTERNATIVE MAPPINGS =====
+  // Support for older category names with updated icons
+  'Implants': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
+  'Botox': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Dermal Fillers': <LocalPharmacy sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Laser Therapy': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
+  'Facial Rejuvenation': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Anti-Aging': <SentimentVerySatisfied sx={{ color: '#4CAF50', fontSize: 20 }} />,
   'Wellness': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Fitness': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Mental Health': <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Technology': <Engineering sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Technology': <Science sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Aesthetic Medicine': <MedicalInformation sx={{ color: '#E91E63', fontSize: 20 }} />,
   
-  // Additional common categories
-  'Dermal Fillers': <Colorize sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Botox': <MedicalServices sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  // Dental legacy names with medical precision
   'Teeth Whitening': <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />,
-  'Dental Cleaning': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Root Canal': <Hub sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Veneers': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
+  'Crowns': <Architecture sx={{ color: '#795548', fontSize: 20 }} />,
+  'Root Canal': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Braces': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'General Dentistry': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
   'Dental Procedure': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Aesthetic Procedure': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  
-  // Default fallback with enhanced styling
-  'default': <Category sx={{ color: '#9E9E9E', fontSize: 20 }} />,
+  'Aesthetic Procedure': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
+
+  // ⚡ Default fallback with premium medical icon
+  'default': <HealthAndSafety sx={{ color: '#9E9E9E', fontSize: 20 }} />,
 };
 
 // Market data interfaces
