@@ -521,7 +521,7 @@ const CockpitGauge: React.FC<{
           <motion.circle
             cx={size / 2}
             cy={size / 2}
-            r={12}
+            r="12"
             fill="none"
             stroke={theme.palette.success.main}
             strokeWidth="2"
@@ -746,7 +746,7 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'Aesthetic Procedure': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
 
   // 🏥 ===== MISSING PROCEDURE CATEGORIES =====
-  // Based on console logs showing "Has Icon: false"
+  // Based on console logs showing "Has Icon: false" - ALL COMPREHENSIVE MAPPING
   'Imaging Procedures': <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />,
   'Single Implants Procedures': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
   'Extractions Procedures': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
@@ -756,15 +756,12 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'MediFacial Combos Procedures': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Fillings Procedures': <Healing sx={{ color: '#607D8B', fontSize: 20 }} />,
   'PRP Treatments Procedures': <Biotech sx={{ color: '#8BC34A', fontSize: 20 }} />,
+  'Hair Restoration Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
   'Neuromodulators Procedures': <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />,
   'Non-surgical Facial Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Diagnostic Procedures': <MonitorHeart sx={{ color: '#2196F3', fontSize: 20 }} />,
   'Stem Cell Procedures Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
   'Sealants Procedures': <Shield sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Crowns Procedures': <Architecture sx={{ color: '#795548', fontSize: 20 }} />,
-  'Preventive Procedures': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
   'Screening Procedures': <Visibility sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Veneers Procedures': <Diamond sx={{ color: '#607D8B', fontSize: 20 }} />,
   'Bone Grafting Procedures': <Engineering sx={{ color: '#FF5722', fontSize: 20 }} />,
   'Full Arch Implants Procedures': <Architecture sx={{ color: '#3F51B5', fontSize: 20 }} />,
   'Facial Contouring Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
@@ -775,7 +772,6 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'Bridges Procedures': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
   'Mini Implants Procedures': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
   'Esthetic Bonding Procedures': <AutoAwesome sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Restorative Procedures': <Healing sx={{ color: '#FF9800', fontSize: 20 }} />,
   'Facial Resurfacing Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Fractionated Lasers Procedures': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
   'Biostimulators Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
@@ -785,41 +781,49 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'Digital Diagnostics Procedures': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
   'Growth Factor Therapies Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
   'Tissue Procedures Procedures': <Healing sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Cosmetic Procedures': <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Endodontic Procedures': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Periodontic Procedures': <Nature sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Prosthodontic Procedures': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Orthodontic Procedures': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
   'Pediatric Procedures': <Face sx={{ color: '#FFC107', fontSize: 20 }} />,
   'TMJ/Orofacial Pain Procedures': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
   'Sleep Dentistry Procedures': <Mood sx={{ color: '#673AB7', fontSize: 20 }} />,
   'Adjunctive Procedures': <MedicalInformation sx={{ color: '#2196F3', fontSize: 20 }} />,
   'Scar/Stretch Mark Procedures': <Healing sx={{ color: '#FF5722', fontSize: 20 }} />,
   'Face Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Skin Tightening Procedures': <SelfImprovement sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Facial Aesthetic Procedures': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Cellulite Procedures': <FitnessCenter sx={{ color: '#FF9800', fontSize: 20 }} />,
   'Biotech Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Lasers Procedures': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Hair Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Skin Procedures': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
   'Skin Treatments Procedures': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
   'Tech-Enhanced Procedures': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
   'Advanced Treatments Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Regenerative Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Body Procedures': <Accessibility sx={{ color: '#FF5722', fontSize: 20 }} />,
   'Hair Treatments Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Injectables Procedures': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
   'Vascular Treatments Procedures': <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />,
   'Energy-Based Procedures': <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />,
   'Wellness Treatments Procedures': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Combination Procedures': <Diamond sx={{ color: '#673AB7', fontSize: 20 }} />,
   'Breast Procedures Procedures': <FitnessCenter sx={{ color: '#E91E63', fontSize: 20 }} />,
   'Facial Procedures Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Anti-Aging Procedures': <SentimentVerySatisfied sx={{ color: '#4CAF50', fontSize: 20 }} />,
   'Hair Care Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Pigmentation Procedures': <Palette sx={{ color: '#FF9800', fontSize: 20 }} />,
   'Vascular Procedures': <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />,
+
+  // 🔄 ===== LEGACY/DUPLICATE MAPPINGS =====
+  // Support for common variations and legacy names
+  'Diagnostic Procedures': <MonitorHeart sx={{ color: '#2196F3', fontSize: 20 }} />,
+  'Crowns Procedures': <Architecture sx={{ color: '#795548', fontSize: 20 }} />,
+  'Preventive Procedures': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Veneers Procedures': <Diamond sx={{ color: '#607D8B', fontSize: 20 }} />,
+  'Restorative Procedures': <Healing sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Cosmetic Procedures': <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Endodontic Procedures': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Periodontic Procedures': <Nature sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Prosthodontic Procedures': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
+  'Orthodontic Procedures': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
+  'Skin Tightening Procedures': <SelfImprovement sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Facial Aesthetic Procedures': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
+  'Lasers Procedures': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
+  'Hair Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
+  'Skin Procedures': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
+  'Regenerative Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Body Procedures': <Accessibility sx={{ color: '#FF5722', fontSize: 20 }} />,
+  'Injectables Procedures': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
+  'Combination Procedures': <Diamond sx={{ color: '#673AB7', fontSize: 20 }} />,
+  'Anti-Aging Procedures': <SentimentVerySatisfied sx={{ color: '#4CAF50', fontSize: 20 }} />,
+  'Pigmentation Procedures': <Palette sx={{ color: '#FF9800', fontSize: 20 }} />,
 
   // ⚡ Default fallback with premium medical icon
   'default': <HealthAndSafety sx={{ color: '#9E9E9E', fontSize: 20 }} />,
