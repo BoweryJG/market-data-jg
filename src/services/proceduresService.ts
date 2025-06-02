@@ -37,8 +37,11 @@ export const ProceduresService = {
     
     if (error) {
       console.error('Error fetching dental procedures:', error);
+      console.error('Full error details:', error);
       return [];
     }
+    
+    console.log('Raw dental procedures data:', data);
     
     return (data || []).map((proc: any) => ({
       ...proc,
@@ -53,22 +56,45 @@ export const ProceduresService = {
    * Fetch all aesthetic procedures with proper categorization
    */
   async getAllAestheticProcedures(): Promise<AestheticProcedure[]> {
-    const { data, error } = await supabase
+    // Fetch procedures with category join
+    const { data: procedures, error: procError } = await supabase
       .from('aesthetic_procedures')
       .select('*');
     
-    if (error) {
-      console.error('Error fetching aesthetic procedures:', error);
+    const { data: categories, error: catError } = await supabase
+      .from('aesthetic_categories')
+      .select('*');
+    
+    if (procError) {
+      console.error('Error fetching aesthetic procedures:', procError);
       return [];
     }
     
-    return (data || []).map((proc: any) => ({
-      ...proc,
-      id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
-      procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
-      category: proc.category || proc.aesthetic_category || 'Aesthetic Medicine',
-      industry: 'aesthetic' as const,
-    }));
+    if (catError) {
+      console.warn('Error fetching aesthetic categories:', catError);
+    }
+    
+    console.log('Raw aesthetic procedures data:', procedures);
+    console.log('Aesthetic categories data:', categories);
+    
+    return (procedures || []).map((proc: any) => {
+      // Find the related category
+      const relatedCategory = (categories || []).find((cat: any) => 
+        cat.id === proc.aesthetic_category_id || 
+        cat.name === proc.category ||
+        cat.name === proc.aesthetic_category
+      );
+
+      return {
+        ...proc,
+        id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
+        procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
+        category: relatedCategory?.name || proc.category || 'Aesthetic Medicine',
+        category_id: relatedCategory?.id || proc.aesthetic_category_id,
+        category_description: relatedCategory?.description,
+        industry: 'aesthetic' as const,
+      };
+    });
   },
 
   /**
@@ -112,7 +138,7 @@ export const ProceduresService = {
       ...proc,
       id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
       procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
-      category: proc.category || proc.aesthetic_category || 'Aesthetic Medicine',
+      category: proc.category || 'Aesthetic Medicine',
       industry: 'aesthetic' as const,
     }));
   },

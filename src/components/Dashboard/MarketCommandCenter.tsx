@@ -77,7 +77,6 @@ import {
   Brush,
   Category,
   // Additional icons for categories
-  FlashOn,
   Spa,
   FitnessCenter,
   Psychology,
@@ -1167,42 +1166,45 @@ const MarketCommandCenter: React.FC = () => {
             )}
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {Array.from(new Set(
-              marketData.procedures
-                .filter(p => selectedIndustry === 'all' || p.industry === selectedIndustry)
-                .map(p => p.category || p.normalized_category || p.clinical_category)
-                .filter(Boolean)
-            )).map((category) => {
-              console.log('🏷️ Category:', category, 'Has Icon:', !!categoryIconMap[category]);
-              return (
-                <Chip
-                key={category}
-                icon={categoryIconMap[category] || categoryIconMap['default'] as React.ReactElement}
-                label={category}
-                variant={selectedCategory === category ? 'filled' : 'outlined'}
-                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    fontSize: 20,
-                    marginRight: 0.5,
-                  },
-                  backgroundColor: selectedCategory === category ? theme.palette.primary.main : 'rgba(255,255,255,0.05)',
-                  color: selectedCategory === category ? theme.palette.primary.contrastText : theme.palette.text.primary,
-                  border: selectedCategory === category ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-                  borderRadius: 2,
-                  fontWeight: 500,
-                  '&:hover': {
-                    backgroundColor: selectedCategory === category 
-                      ? alpha(theme.palette.primary.main, 0.8) 
-                      : alpha(theme.palette.primary.main, 0.1),
-                    transform: 'scale(1.05)',
-                    transition: 'all 0.2s ease',
-                    boxShadow: `0 4px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
-                  }
-                }}
-                />
-              );
-            })}
+            {/* Display rich categories from the categories table */}
+            {marketData.categories
+              .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
+              .map((category) => {
+                const procedureCount = marketData.procedures
+                  .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
+                  .length;
+                
+                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name]);
+                return (
+                  <Tooltip key={category.id} title={`${category.description || category.name} (${procedureCount} procedures)`}>
+                    <Chip
+                      icon={categoryIconMap[category.name] || categoryIconMap['default'] as React.ReactElement}
+                      label={`${category.name} (${procedureCount})`}
+                      variant={selectedCategory === category.name ? 'filled' : 'outlined'}
+                      onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
+                      sx={{
+                        '& .MuiSvgIcon-root': {
+                          fontSize: 20,
+                          marginRight: 0.5,
+                        },
+                        backgroundColor: selectedCategory === category.name ? theme.palette.primary.main : 'rgba(255,255,255,0.05)',
+                        color: selectedCategory === category.name ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                        border: selectedCategory === category.name ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                        borderRadius: 2,
+                        fontWeight: 500,
+                        '&:hover': {
+                          backgroundColor: selectedCategory === category.name 
+                            ? alpha(theme.palette.primary.main, 0.8) 
+                            : alpha(theme.palette.primary.main, 0.1),
+                          transform: 'scale(1.05)',
+                          transition: 'all 0.2s ease',
+                          boxShadow: `0 4px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
+                        }
+                      }}
+                    />
+                  </Tooltip>
+                );
+              })}
           </Box>
         </Card>
       )}

@@ -195,42 +195,91 @@ class ComprehensiveDataService {
       console.log('📊 Dental companies response:', dentalCompaniesResponse);
       console.log('📊 Aesthetic companies response:', aestheticCompaniesResponse);
 
-      // Process dental procedures
-      const processedDentalProcedures = (dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : [])
-        .map((proc: any) => ({
-          ...proc,
-          id: proc.id || `dental_${proc.procedure_name || proc.name}`,
-          procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
-          category: proc.category || 
-                   proc.clinical_category ||
-                   proc.normalized_category ||
-                   proc.procedure_category ||
-                   'Dental Procedure',
-          industry: 'dental',
-          market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
-          yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
-          average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
-          trending_score: proc.trending_score || proc.popularity_score || 0,
-          popularity_score: proc.popularity_score || proc.trending_score || 0,
-        }));
+      // Fetch category data for proper joins - use both old and new category systems
+      const [dentalCategoriesResponse, aestheticCategoriesResponse, categoryHierarchyResponse] = await Promise.allSettled([
+        supabase.from('dental_procedure_categories').select('*'),
+        supabase.from('aesthetic_categories').select('*'),
+        supabase.from('category_hierarchy').select('*').order('display_order', { ascending: true }),
+      ]);
 
-      // Process aesthetic procedures
+      const dentalCategories = dentalCategoriesResponse.status === 'fulfilled' ? dentalCategoriesResponse.value.data || [] : [];
+      const aestheticCategories = aestheticCategoriesResponse.status === 'fulfilled' ? aestheticCategoriesResponse.value.data || [] : [];
+      const categoryHierarchy = categoryHierarchyResponse.status === 'fulfilled' ? categoryHierarchyResponse.value.data || [] : [];
+
+      console.log('📊 Dental categories:', dentalCategories);
+      console.log('📊 Aesthetic categories:', aestheticCategories);
+      console.log('📊 Category hierarchy:', categoryHierarchy);
+
+      // Process dental procedures with category joins
+      const processedDentalProcedures = (dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : [])
+        .map((proc: any) => {
+          // Find the related category - try hierarchy first, then fallback to old categories
+          const hierarchyCategory = categoryHierarchy.find(cat => 
+            cat.id === proc.category_hierarchy_id ||
+            (cat.industry === 'dental' && cat.name === proc.category) ||
+            (cat.industry === 'dental' && cat.name === proc.clinical_category)
+          );
+          
+          const oldCategory = dentalCategories.find(cat => 
+            cat.id === proc.clinical_category_id || 
+            cat.name === proc.category ||
+            cat.name === proc.clinical_category
+          );
+
+          const finalCategory = hierarchyCategory || oldCategory;
+
+          return {
+            ...proc,
+            id: proc.id || `dental_${proc.procedure_name || proc.name}`,
+            procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
+            category: finalCategory?.name || proc.category || proc.clinical_category || proc.normalized_category || 'General Dentistry',
+            category_id: finalCategory?.id || proc.clinical_category_id || proc.category_hierarchy_id,
+            category_description: finalCategory?.description,
+            category_hierarchy_id: proc.category_hierarchy_id || hierarchyCategory?.id,
+            hierarchy_category: hierarchyCategory,
+            industry: 'dental',
+            market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
+            yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
+            average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
+            trending_score: proc.trending_score || proc.popularity_score || 0,
+            popularity_score: proc.popularity_score || proc.trending_score || 0,
+          };
+        });
+
+      // Process aesthetic procedures with category joins
       const processedAestheticProcedures = (aestheticProceduresResponse.status === 'fulfilled' ? aestheticProceduresResponse.value.data || [] : [])
-        .map((proc: any) => ({
-          ...proc,
-          id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
-          procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
-          category: proc.category || 
-                   proc.aesthetic_category ||
-                   proc.normalized_category ||
-                   proc.procedure_category ||
-                   'Aesthetic Procedure',
-          industry: 'aesthetic',
-          market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
-          yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
-          average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
-          trending_score: proc.trending_score || proc.popularity_score || 0,
-          popularity_score: proc.popularity_score || proc.trending_score || 0,
+        .map((proc: any) => {
+          // Find the related category - try hierarchy first, then fallback to old categories
+          const hierarchyCategory = categoryHierarchy.find(cat => 
+            cat.id === proc.category_hierarchy_id ||
+            (cat.industry === 'aesthetic' && cat.name === proc.category) ||
+            (cat.industry === 'aesthetic' && cat.name === proc.aesthetic_category)
+          );
+          
+          const oldCategory = aestheticCategories.find(cat => 
+            cat.id === proc.aesthetic_category_id || 
+            cat.name === proc.category ||
+            cat.name === proc.aesthetic_category
+          );
+
+          const finalCategory = hierarchyCategory || oldCategory;
+
+          return {
+            ...proc,
+            id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
+            procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
+            category: finalCategory?.name || proc.category || proc.aesthetic_category || proc.normalized_category || 'Aesthetic Medicine',
+            category_id: finalCategory?.id || proc.aesthetic_category_id || proc.category_hierarchy_id,
+            category_description: finalCategory?.description,
+            category_hierarchy_id: proc.category_hierarchy_id || hierarchyCategory?.id,
+            hierarchy_category: hierarchyCategory,
+            industry: 'aesthetic',
+            market_size_2025_usd_millions: proc.market_size_2025_usd_millions || proc.market_size_usd_millions || proc.market_size || 0,
+            yearly_growth_percentage: proc.yearly_growth_percentage || proc.growth_rate || 0,
+            average_cost_usd: proc.average_cost_usd || proc.cost || proc.price || 0,
+            trending_score: proc.trending_score || proc.popularity_score || 0,
+            popularity_score: proc.popularity_score || proc.trending_score || 0,
+          };
         }));
 
       const allProcedures = [
@@ -278,10 +327,19 @@ class ComprehensiveDataService {
         ? allProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / allProcedures.length
         : 0;
 
+      // Combine and process categories for filtering - prioritize hierarchy
+      const processedCategories = [
+        // Rich category hierarchy (primary)
+        ...categoryHierarchy.map(cat => ({ ...cat, type: 'category_hierarchy' })),
+        // Legacy categories as fallback  
+        ...dentalCategories.map(cat => ({ ...cat, industry: 'dental', type: 'dental_procedure_category' })),
+        ...aestheticCategories.map(cat => ({ ...cat, industry: 'aesthetic', type: 'aesthetic_category' }))
+      ];
+
       const comprehensiveData: ComprehensiveMarketData = {
         procedures: allProcedures,
         companies: allCompanies,
-        categories: [], // Empty for now - focus on procedures  
+        categories: processedCategories,
         territories,
         analytics: [], // Empty for now - focus on procedures
         marketMetrics: {
@@ -375,6 +433,33 @@ class ComprehensiveDataService {
         (procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0) >= filters.minMarketSize;
 
       return matchesQuery && matchesIndustry && matchesMinMarketSize;
+    });
+  }
+
+  /**
+   * Get rich categories for filtering
+   */
+  async getCategories(industry?: 'dental' | 'aesthetic'): Promise<any[]> {
+    const data = await this.getComprehensiveMarketData();
+    
+    if (industry) {
+      return data.categories.filter(cat => cat.industry === industry);
+    }
+    
+    return data.categories;
+  }
+
+  /**
+   * Get procedures by category with rich category information
+   */
+  async getProceduresByCategory(categoryName: string, industry?: 'dental' | 'aesthetic'): Promise<any[]> {
+    const data = await this.getComprehensiveMarketData();
+    
+    return data.procedures.filter(procedure => {
+      const matchesCategory = procedure.category === categoryName;
+      const matchesIndustry = !industry || procedure.industry === industry;
+      
+      return matchesCategory && matchesIndustry;
     });
   }
 
