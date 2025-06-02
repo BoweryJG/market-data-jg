@@ -521,7 +521,7 @@ const CockpitGauge: React.FC<{
           <motion.circle
             cx={size / 2}
             cy={size / 2}
-            r="12"
+            r={12}
             fill="none"
             stroke={theme.palette.success.main}
             strokeWidth="2"
