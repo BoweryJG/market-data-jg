@@ -829,6 +829,9 @@ const categoryIconMap: Record<string, React.ReactNode> = {
   'default': <HealthAndSafety sx={{ color: '#9E9E9E', fontSize: 20 }} />,
 };
 
+// Debug: Log all available category icon keys
+console.log('🔍 Available category icon keys:', Object.keys(categoryIconMap));
+
 // Market data interfaces
 interface Procedure {
   id: string;
@@ -1292,7 +1295,7 @@ const MarketCommandCenter: React.FC = () => {
                   .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
                   .length;
                 
-                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name]);
+                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name], 'Icon:', categoryIconMap[category.name] ? 'Found' : 'Missing');
                 return (
                   <Tooltip key={category.id} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
