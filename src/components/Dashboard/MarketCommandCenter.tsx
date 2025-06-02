@@ -413,7 +413,7 @@ const CockpitGauge: React.FC<{
         <motion.circle
           cx={size / 2}
           cy={size / 2}
-          r="12"
+          r={12}
           fill="rgba(231, 76, 60, 0.2)"
           stroke="#E74C3C"
           strokeWidth="2"
@@ -521,7 +521,7 @@ const CockpitGauge: React.FC<{
           <motion.circle
             cx={size / 2}
             cy={size / 2}
-            r="12"
+            r={12}
             fill="none"
             stroke={theme.palette.success.main}
             strokeWidth="2"
@@ -1296,14 +1296,14 @@ const MarketCommandCenter: React.FC = () => {
             {/* Display rich categories from the categories table */}
             {marketData.categories
               .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
-              .map((category) => {
+              .map((category, index) => {
                 const procedureCount = marketData.procedures
                   .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
                   .length;
                 
                 console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIconMap[category.name], 'Icon:', categoryIconMap[category.name] ? 'Found' : 'Missing');
                 return (
-                  <Tooltip key={`category-${category.id}-${category.name}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
+                  <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
                       icon={(categoryIconMap[category.name] || categoryIconMap['default']) as React.ReactElement}
                       label={`${category.name} (${procedureCount})`}
