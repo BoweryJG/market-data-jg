@@ -1172,6 +1172,11 @@ const MarketCommandCenter: React.FC = () => {
                       label={`${category.name} (${procedureCount})`}
                       variant="outlined"
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
+                      sx={{
+                        '& .MuiChip-icon svg': {
+                          color: `${iconConfig.color} !important`
+                        }
+                      }}
                     />
                   </Tooltip>
                 );
