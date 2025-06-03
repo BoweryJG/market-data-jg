@@ -1111,7 +1111,7 @@ const MarketCommandCenter: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
-            Market Command Center
+            Market Command Center v2.0
           </Typography>
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
@@ -1384,7 +1384,7 @@ const MarketCommandCenter: React.FC = () => {
                   <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
                       icon={categoryIcon as React.ReactElement}
-                      label={`${category.name} (${procedureCount})`}
+                      label={`🎯 ${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
                       sx={{
