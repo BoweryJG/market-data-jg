@@ -39,49 +39,49 @@ import {
 
 // Icon mapping with explicit icon components
 export const categoryIcons: Record<string, { icon: React.ComponentType<any>, color: string }> = {
-  // Dental Categories (with and without "Procedures" suffix)
-  'Diagnostic': { icon: MonitorHeart, color: '#2196F3' },
-  'Diagnostic Procedures': { icon: MonitorHeart, color: '#2196F3' },
-  'Preventive': { icon: Shield, color: '#4CAF50' },
-  'Preventive Procedures': { icon: Shield, color: '#4CAF50' },
-  'Restorative': { icon: Healing, color: '#FF9800' },
-  'Restorative Procedures': { icon: Healing, color: '#FF9800' },
-  'Cosmetic': { icon: AutoAwesome, color: '#E91E63' },
+  // Dental Categories (with and without "Procedures" suffix) - ENHANCED COLORS
+  'Diagnostic': { icon: MonitorHeart, color: '#1E88E5' }, // Brilliant Blue
+  'Diagnostic Procedures': { icon: MonitorHeart, color: '#1E88E5' },
+  'Preventive': { icon: Shield, color: '#43A047' }, // Emerald Green
+  'Preventive Procedures': { icon: Shield, color: '#43A047' },
+  'Restorative': { icon: Healing, color: '#FB8C00' }, // Vibrant Orange
+  'Restorative Procedures': { icon: Healing, color: '#FB8C00' },
+  'Cosmetic': { icon: AutoAwesome, color: '#E91E63' }, // Hot Pink
   'Cosmetic Procedures': { icon: AutoAwesome, color: '#E91E63' },
-  'Oral Surgery': { icon: MedicalServices, color: '#F44336' },
-  'Oral Surgery Procedures': { icon: MedicalServices, color: '#F44336' },
-  'Endodontic': { icon: Biotech, color: '#9C27B0' },
-  'Endodontic Procedures': { icon: Biotech, color: '#9C27B0' },
-  'Periodontic': { icon: Nature, color: '#4CAF50' },
-  'Periodontic Procedures': { icon: Nature, color: '#4CAF50' },
-  'Prosthodontic': { icon: Architecture, color: '#607D8B' },
-  'Prosthodontic Procedures': { icon: Architecture, color: '#607D8B' },
-  'Orthodontic': { icon: Straighten, color: '#00BCD4' },
-  'Orthodontic Procedures': { icon: Straighten, color: '#00BCD4' },
-  'Implantology': { icon: Build, color: '#3F51B5' },
-  'Implantology Procedures': { icon: Build, color: '#3F51B5' },
-  'Digital Dentistry': { icon: Computer, color: '#673AB7' },
-  'Digital Dentistry Procedures': { icon: Computer, color: '#673AB7' },
+  'Oral Surgery': { icon: MedicalServices, color: '#E53935' }, // Crimson Red
+  'Oral Surgery Procedures': { icon: MedicalServices, color: '#E53935' },
+  'Endodontic': { icon: Biotech, color: '#8E24AA' }, // Royal Purple
+  'Endodontic Procedures': { icon: Biotech, color: '#8E24AA' },
+  'Periodontic': { icon: Nature, color: '#43A047' }, // Forest Green
+  'Periodontic Procedures': { icon: Nature, color: '#43A047' },
+  'Prosthodontic': { icon: Architecture, color: '#546E7A' }, // Steel Blue
+  'Prosthodontic Procedures': { icon: Architecture, color: '#546E7A' },
+  'Orthodontic': { icon: Straighten, color: '#00ACC1' }, // Turquoise
+  'Orthodontic Procedures': { icon: Straighten, color: '#00ACC1' },
+  'Implantology': { icon: Build, color: '#3949AB' }, // Indigo
+  'Implantology Procedures': { icon: Build, color: '#3949AB' },
+  'Digital Dentistry': { icon: Computer, color: '#5E35B1' }, // Deep Purple
+  'Digital Dentistry Procedures': { icon: Computer, color: '#5E35B1' },
   
-  // Aesthetic Categories
-  'Facial Aesthetic': { icon: FaceRetouchingNatural, color: '#E91E63' },
-  'Facial Aesthetic Procedures': { icon: FaceRetouchingNatural, color: '#E91E63' },
-  'Injectables': { icon: Vaccines, color: '#9C27B0' },
-  'Injectables Procedures': { icon: Vaccines, color: '#9C27B0' },
-  'Body': { icon: Accessibility, color: '#FF5722' },
+  // Aesthetic Categories - LUXURY COLORS
+  'Facial Aesthetic': { icon: FaceRetouchingNatural, color: '#EC407A' }, // Rose Gold
+  'Facial Aesthetic Procedures': { icon: FaceRetouchingNatural, color: '#EC407A' },
+  'Injectables': { icon: Vaccines, color: '#AB47BC' }, // Orchid Purple
+  'Injectables Procedures': { icon: Vaccines, color: '#AB47BC' },
+  'Body': { icon: Accessibility, color: '#FF5722' }, // Flame Orange
   'Body Procedures': { icon: Accessibility, color: '#FF5722' },
-  'Skin': { icon: WbSunny, color: '#FF9800' },
-  'Skin Procedures': { icon: WbSunny, color: '#FF9800' },
-  'Hair': { icon: Grain, color: '#795548' },
-  'Hair Procedures': { icon: Grain, color: '#795548' },
-  'Minimally Invasive': { icon: AutoFixHigh, color: '#00BCD4' },
+  'Skin': { icon: WbSunny, color: '#FFB300' }, // Golden Amber
+  'Skin Procedures': { icon: WbSunny, color: '#FFB300' },
+  'Hair': { icon: Grain, color: '#6D4C41' }, // Mahogany
+  'Hair Procedures': { icon: Grain, color: '#6D4C41' },
+  'Minimally Invasive': { icon: AutoFixHigh, color: '#00BCD4' }, // Crystal Blue
   'Minimally Invasive Procedures': { icon: AutoFixHigh, color: '#00BCD4' },
-  'Regenerative': { icon: Biotech, color: '#4CAF50' },
-  'Regenerative Procedures': { icon: Biotech, color: '#4CAF50' },
-  'Lasers': { icon: Flare, color: '#FF6F00' },
+  'Regenerative': { icon: Biotech, color: '#66BB6A' }, // Jade Green
+  'Regenerative Procedures': { icon: Biotech, color: '#66BB6A' },
+  'Lasers': { icon: Flare, color: '#FF6F00' }, // Electric Orange
   'Lasers Procedures': { icon: Flare, color: '#FF6F00' },
-  'Combination': { icon: Diamond, color: '#673AB7' },
-  'Combination Procedures': { icon: Diamond, color: '#673AB7' },
+  'Combination': { icon: Diamond, color: '#7E57C2' }, // Amethyst
+  'Combination Procedures': { icon: Diamond, color: '#7E57C2' },
   
   // Subcategories
   'Body Contouring': { icon: FitnessCenter, color: '#FF5722' },

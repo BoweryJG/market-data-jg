@@ -1163,31 +1163,83 @@ const MarketCommandCenter: React.FC = () => {
                 return (
                   <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
-                      icon={<IconComponent sx={{ color: iconConfig.color, fontSize: 20 }} />}
+                      icon={
+                        <Box sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          width: 28,
+                          height: 28,
+                          borderRadius: '50%',
+                          background: `linear-gradient(135deg, ${iconConfig.color} 0%, ${alpha(iconConfig.color, 0.6)} 100%)`,
+                          boxShadow: `0 2px 8px ${alpha(iconConfig.color, 0.3)}`,
+                          mr: 0.5
+                        }}>
+                          <IconComponent sx={{ 
+                            color: 'white', 
+                            fontSize: 18,
+                            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                          }} />
+                        </Box>
+                      }
                       label={`🎯 ${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
                       sx={{
-                        '& .MuiSvgIcon-root': {
-                          fontSize: 20,
-                          marginRight: 0.5,
-                          // DON'T override icon colors - let our beautiful individual colors show through!
+                        height: 40,
+                        '& .MuiChip-icon': {
+                          marginLeft: '8px',
+                          marginRight: '-4px',
                         },
                         '& .MuiChip-label': {
-                          // Only color the text label, NOT the icon
                           color: selectedCategory === category.name ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                          fontWeight: 600,
+                          fontSize: '0.875rem',
                         },
-                        backgroundColor: selectedCategory === category.name ? theme.palette.primary.main : 'rgba(255,255,255,0.05)',
-                        border: selectedCategory === category.name ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-                        borderRadius: 2,
-                        fontWeight: 500,
+                        backgroundColor: selectedCategory === category.name 
+                          ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+                          : alpha(theme.palette.background.paper, 0.8),
+                        background: selectedCategory === category.name 
+                          ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+                          : alpha(theme.palette.background.paper, 0.8),
+                        backdropFilter: 'blur(10px)',
+                        border: selectedCategory === category.name 
+                          ? `2px solid ${theme.palette.primary.light}` 
+                          : `1px solid ${alpha(iconConfig.color, 0.3)}`,
+                        borderRadius: '20px',
+                        boxShadow: selectedCategory === category.name
+                          ? `0 4px 20px ${alpha(theme.palette.primary.main, 0.4)}, inset 0 1px 0 ${alpha(theme.palette.common.white, 0.2)}`
+                          : `0 2px 8px ${alpha(iconConfig.color, 0.15)}`,
+                        position: 'relative',
+                        overflow: 'visible',
+                        '&::before': selectedCategory === category.name ? {
+                          content: '""',
+                          position: 'absolute',
+                          top: -2,
+                          left: -2,
+                          right: -2,
+                          bottom: -2,
+                          background: `linear-gradient(45deg, ${theme.palette.primary.light}, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                          borderRadius: '22px',
+                          opacity: 0.8,
+                          zIndex: -1,
+                          animation: 'pulse 2s ease-in-out infinite',
+                        } : {},
                         '&:hover': {
-                          backgroundColor: selectedCategory === category.name 
-                            ? alpha(theme.palette.primary.main, 0.8) 
-                            : alpha(theme.palette.primary.main, 0.1),
-                          transform: 'scale(1.05)',
-                          transition: 'all 0.2s ease',
-                          boxShadow: `0 4px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
+                          transform: 'translateY(-2px) scale(1.02)',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          boxShadow: selectedCategory === category.name
+                            ? `0 6px 24px ${alpha(theme.palette.primary.main, 0.5)}`
+                            : `0 4px 16px ${alpha(iconConfig.color, 0.25)}`,
+                          border: `1px solid ${alpha(iconConfig.color, 0.5)}`,
+                          '& .MuiChip-icon > div': {
+                            transform: 'rotate(360deg) scale(1.1)',
+                            transition: 'transform 0.6s ease',
+                          }
+                        },
+                        '@keyframes pulse': {
+                          '0%, 100%': { opacity: 0.6 },
+                          '50%': { opacity: 1 },
                         }
                       }}
                     />
