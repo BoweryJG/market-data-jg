@@ -27,14 +27,15 @@ import {
   FormControlLabel,
   styled,
   alpha,
-  useTheme
+  useTheme,
+  CircularProgress
 } from '@mui/material';
 import {
   CheckCircle,
   Cancel,
   Star,
   Rocket,
-  Crown,
+  EmojiEvents as Crown,
   TrendingUp,
   Speed,
   AutoAwesome,

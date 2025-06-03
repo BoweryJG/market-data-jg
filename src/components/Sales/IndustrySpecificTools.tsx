@@ -177,7 +177,7 @@ const AestheticTools: React.FC = () => {
                 <Typography gutterBottom>Overhead (%)</Typography>
                 <Slider
                   value={roiInputs.overhead}
-                  onChange={(_: React.SyntheticEvent, value: number | number[]) => setRoiInputs({ ...roiInputs, overhead: value as number })}
+                  onChange={(event: Event, value: number | number[]) => setRoiInputs({ ...roiInputs, overhead: value as number })}
                   valueLabelDisplay="auto"
                   min={0}
                   max={50}
@@ -435,7 +435,7 @@ const DentalTools: React.FC = () => {
             <Typography gutterBottom>Average Patients per Month</Typography>
             <Slider
               value={patientVolume}
-              onChange={(_: React.SyntheticEvent, value: number | number[]) => setPatientVolume(value as number)}
+              onChange={(event: Event, value: number | number[]) => setPatientVolume(value as number)}
               valueLabelDisplay="auto"
               min={50}
               max={500}

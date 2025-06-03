@@ -133,7 +133,8 @@ import {
   Delete,
   Share,
   MoreVert,
-  Settings
+  Settings,
+  ShowChart
 } from '@mui/icons-material';
 
 import { supabase } from '../../services/supabaseClient';
