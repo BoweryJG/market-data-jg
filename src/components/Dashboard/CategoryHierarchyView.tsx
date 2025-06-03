@@ -22,36 +22,60 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import InfoIcon from '@mui/icons-material/Info';
+import SearchIcon from '@mui/icons-material/Search';
+import SecurityIcon from '@mui/icons-material/Security';
+import BuildIcon from '@mui/icons-material/Build';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import NatureIcon from '@mui/icons-material/Nature';
+import GrassIcon from '@mui/icons-material/Grass';
+import ArchitectureIcon from '@mui/icons-material/Architecture';
+import StraightenIcon from '@mui/icons-material/Straighten';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ComputerIcon from '@mui/icons-material/Computer';
+import FaceIcon from '@mui/icons-material/Face';
+import ColorizeIcon from '@mui/icons-material/Colorize';
+import AccessibilityIcon from '@mui/icons-material/Accessibility';
+import GrainIcon from '@mui/icons-material/Grain';
+import BrushIcon from '@mui/icons-material/Brush';
+import HealingIcon from '@mui/icons-material/Healing';
+import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import WallpaperIcon from '@mui/icons-material/Wallpaper';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import HubIcon from '@mui/icons-material/Hub';
+import CategoryIcon from '@mui/icons-material/Category';
 import { CategoryHierarchy } from '../../types';
 
-// Material UI icons map
+// Material UI icons map with proper MUI components and individual colors
 const iconMap: Record<string, React.ReactNode> = {
-  search: <i className="material-icons">search</i>,
-  shield: <i className="material-icons">shield</i>,
-  build: <i className="material-icons">build</i>,
-  auto_awesome: <i className="material-icons">auto_awesome</i>,
-  medical_services: <i className="material-icons">medical_services</i>,
-  emoji_nature: <i className="material-icons">emoji_nature</i>,
-  grass: <i className="material-icons">grass</i>,
-  architecture: <i className="material-icons">architecture</i>,
-  straighten: <i className="material-icons">straighten</i>,
-  add_circle: <i className="material-icons">add_circle</i>,
-  computer: <i className="material-icons">computer</i>,
-  face: <i className="material-icons">face</i>,
-  colorize: <i className="material-icons">colorize</i>,
-  accessibility: <i className="material-icons">accessibility</i>,
-  grain: <i className="material-icons">grain</i>,
-  brush: <i className="material-icons">brush</i>,
-  healing: <i className="material-icons">healing</i>,
-  online_prediction: <i className="material-icons">online_prediction</i>,
-  flash_on: <i className="material-icons">flash_on</i>,
-  dashboard_customize: <i className="material-icons">dashboard_customize</i>,
+  search: <SearchIcon sx={{ color: '#1976d2' }} />,
+  shield: <SecurityIcon sx={{ color: '#2e7d32' }} />,
+  build: <BuildIcon sx={{ color: '#ed6c02' }} />,
+  auto_awesome: <AutoAwesomeIcon sx={{ color: '#9c27b0' }} />,
+  medical_services: <MedicalServicesIcon sx={{ color: '#d32f2f' }} />,
+  emoji_nature: <NatureIcon sx={{ color: '#388e3c' }} />,
+  grass: <GrassIcon sx={{ color: '#4caf50' }} />,
+  architecture: <ArchitectureIcon sx={{ color: '#795548' }} />,
+  straighten: <StraightenIcon sx={{ color: '#607d8b' }} />,
+  add_circle: <AddCircleIcon sx={{ color: '#2196f3' }} />,
+  computer: <ComputerIcon sx={{ color: '#3f51b5' }} />,
+  face: <FaceIcon sx={{ color: '#ff9800' }} />,
+  colorize: <ColorizeIcon sx={{ color: '#e91e63' }} />,
+  accessibility: <AccessibilityIcon sx={{ color: '#00bcd4' }} />,
+  grain: <GrainIcon sx={{ color: '#8bc34a' }} />,
+  brush: <BrushIcon sx={{ color: '#ff5722' }} />,
+  healing: <HealingIcon sx={{ color: '#4caf50' }} />,
+  online_prediction: <OnlinePredictionIcon sx={{ color: '#673ab7' }} />,
+  flash_on: <FlashOnIcon sx={{ color: '#ffc107' }} />,
+  dashboard_customize: <DashboardCustomizeIcon sx={{ color: '#009688' }} />,
   // Subcategories
-  wallpaper: <i className="material-icons">wallpaper</i>,
-  fact_check: <i className="material-icons">fact_check</i>,
-  hub: <i className="material-icons">hub</i>,
+  wallpaper: <WallpaperIcon sx={{ color: '#795548' }} />,
+  fact_check: <FactCheckIcon sx={{ color: '#4caf50' }} />,
+  hub: <HubIcon sx={{ color: '#3f51b5' }} />,
   // Default fallback
-  category: <i className="material-icons">category</i>,
+  category: <CategoryIcon sx={{ color: '#757575' }} />,
 };
 
 interface CategoryHierarchyViewProps {
