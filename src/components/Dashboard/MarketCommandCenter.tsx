@@ -1097,7 +1097,8 @@ const MarketCommandCenter: React.FC = () => {
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {marketData.categories
-                    .filter(cat => selectedIndustry === 'all' || cat.applicable_to === selectedIndustry || cat.industry === selectedIndustry)
+                    .filter(cat => (selectedIndustry === 'all' || cat.applicable_to === selectedIndustry || cat.industry === selectedIndustry) && 
+                                   cat.parent_id === null) // Only show parent categories since procedures link to these
                     .slice(0, 8) // Show only top 8 categories to save space
                     .map((category) => {
                       const procedureCount = marketData.procedures
@@ -1106,7 +1107,11 @@ const MarketCommandCenter: React.FC = () => {
                           const matchesCategory = p.category === category.name || 
                                                 p.clinical_category === category.name ||
                                                 p.normalized_category === category.name ||
-                                                p.category_hierarchy_id === category.id;
+                                                p.category_hierarchy_id === category.id ||
+                                                p.clinical_category_id === category.id ||
+                                                // Also check if procedure has a hierarchy_category object
+                                                (p.hierarchy_category && p.hierarchy_category.id === category.id) ||
+                                                (p.hierarchy_category && p.hierarchy_category.name === category.name);
                           const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
                           return matchesCategory && matchesIndustry;
                         })
@@ -1116,23 +1121,26 @@ const MarketCommandCenter: React.FC = () => {
                       
                       // Debug only once to avoid spam
                       if (procedureCount === 0 && marketData.procedures.length > 0 && category.name === 'Imaging') {
-                        console.log('🔍 CATEGORY MISMATCH DEBUG:');
-                        console.log('Looking for category:', category);
-                        console.log('Category applicable_to:', category.applicable_to);
-                        console.log('Selected industry:', selectedIndustry);
-                        console.log('Sample DENTAL procedures:');
-                        marketData.procedures
-                          .filter(p => p.industry === 'dental')
-                          .slice(0, 3)
-                          .forEach((p, i) => {
-                            console.log(`${i + 1}. "${p.procedure_name}":`, {
-                              category: p.category,
-                              clinical_category: p.clinical_category,
-                              normalized_category: p.normalized_category,
-                              category_hierarchy_id: p.category_hierarchy_id,
-                              hierarchy_category: p.hierarchy_category
-                            });
-                          });
+                        console.log('🔍 CATEGORY MATCHING ANALYSIS:');
+                        console.log('Looking for:', category.name, 'ID:', category.id, 'Parent ID:', category.parent_id);
+                        
+                        // Check if any procedures match this category
+                        const matchingProcedures = marketData.procedures.filter(p => 
+                          p.category_hierarchy_id === category.id || 
+                          p.category === category.name ||
+                          (p.hierarchy_category && p.hierarchy_category.id === category.id)
+                        );
+                        console.log('Procedures directly matching this category:', matchingProcedures.length);
+                        
+                        // Check if procedures are linked to parent category instead
+                        const parentMatches = marketData.procedures.filter(p => 
+                          p.category_hierarchy_id === category.parent_id
+                        );
+                        console.log('Procedures matching parent category ID', category.parent_id + ':', parentMatches.length);
+                        
+                        // Show unique category_hierarchy_ids in procedures
+                        const uniqueCategoryIds = [...new Set(marketData.procedures.map(p => p.category_hierarchy_id))];
+                        console.log('All unique category_hierarchy_ids in procedures:', uniqueCategoryIds.sort((a, b) => a - b));
                       }
                       
                       return (
