@@ -1097,7 +1097,7 @@ const MarketCommandCenter: React.FC = () => {
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {marketData.categories
-                    .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
+                    .filter(cat => selectedIndustry === 'all' || cat.applicable_to === selectedIndustry || cat.industry === selectedIndustry)
                     .slice(0, 8) // Show only top 8 categories to save space
                     .map((category) => {
                       const procedureCount = marketData.procedures
@@ -1118,16 +1118,21 @@ const MarketCommandCenter: React.FC = () => {
                       if (procedureCount === 0 && marketData.procedures.length > 0 && category.name === 'Imaging') {
                         console.log('🔍 CATEGORY MISMATCH DEBUG:');
                         console.log('Looking for category:', category);
-                        console.log('Sample procedures with their categories:');
-                        marketData.procedures.slice(0, 5).forEach((p, i) => {
-                          console.log(`${i + 1}. "${p.procedure_name}":`, {
-                            category: p.category,
-                            clinical_category: p.clinical_category,
-                            normalized_category: p.normalized_category,
-                            category_hierarchy_id: p.category_hierarchy_id,
-                            industry: p.industry
+                        console.log('Category applicable_to:', category.applicable_to);
+                        console.log('Selected industry:', selectedIndustry);
+                        console.log('Sample DENTAL procedures:');
+                        marketData.procedures
+                          .filter(p => p.industry === 'dental')
+                          .slice(0, 3)
+                          .forEach((p, i) => {
+                            console.log(`${i + 1}. "${p.procedure_name}":`, {
+                              category: p.category,
+                              clinical_category: p.clinical_category,
+                              normalized_category: p.normalized_category,
+                              category_hierarchy_id: p.category_hierarchy_id,
+                              hierarchy_category: p.hierarchy_category
+                            });
                           });
-                        });
                       }
                       
                       return (
