@@ -14,7 +14,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import InsightsIcon from '@mui/icons-material/Insights';
 import PodcastsIcon from '@mui/icons-material/Podcasts';
-import LanguageIcon from '@mui/icons-material/Language';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -41,14 +40,14 @@ const ACCENT_COLOR = '#00ffc6';
 const getNavLinks = (currentUrl: string) => {
   const links = [
     { 
-      key: 'workspace',
-      label: 'Workspace', 
-      href: 'https://workspace.repspheres.com/',
+      key: 'canvas',
+      label: 'Canvas', 
+      href: 'https://canvas.repspheres.com/',
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
-      label: 'Sphere OS', 
+      label: 'Sphere oS', 
       href: 'https://crm.repspheres.com/',
       icon: <MemoryIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
@@ -59,16 +58,6 @@ const getNavLinks = (currentUrl: string) => {
       icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
   ];
-  
-  // Show Linguistics link only if not on the linguistics page
-  if (!currentUrl.includes('/linguistics')) {
-    links.splice(1, 0, { 
-      key: 'linguistics',
-      label: 'Linguistics', 
-      href: 'https://linguistics.repspheres.com/',
-      icon: <LanguageIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    });
-  }
   
   return links;
 };
