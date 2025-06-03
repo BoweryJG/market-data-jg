@@ -18,9 +18,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import BusinessCenter from '@mui/icons-material/BusinessCenter';
 import MemoryIcon from '@mui/icons-material/Memory';
-import PublicIcon from '@mui/icons-material/Public';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -35,6 +33,7 @@ import SignupModal from '../components/Auth/SignupModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../context/AuthContext';
+import DashboardSelector from '../components/Navigation/DashboardSelector';
 
 const ACCENT_COLOR = '#00ffc6';
 
@@ -42,22 +41,10 @@ const ACCENT_COLOR = '#00ffc6';
 const getNavLinks = (currentUrl: string) => {
   const links = [
     { 
-      key: 'galaxy',
-      label: 'Market Galaxy', 
-      href: '/',
-      icon: <PublicIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
-    { 
       key: 'workspace',
-      label: 'Sales Workspace', 
-      href: '/workspace',
+      label: 'Workspace', 
+      href: 'https://workspace.repspheres.com/',
       icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
-    { 
-      key: 'dashboard',
-      label: 'Dashboard', 
-      href: '/dashboard',
-      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
@@ -68,7 +55,7 @@ const getNavLinks = (currentUrl: string) => {
     { 
       key: 'podcast',
       label: 'Podcast', 
-      href: '/podcast.html',
+      href: 'https://workshop-homepage.netlify.app/?page=podcast',
       icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
   ];
@@ -124,6 +111,7 @@ interface NavBarProps {
 
 export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [dashboardSelectorOpen, setDashboardSelectorOpen] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(null);
   const [loginOpen, setLoginOpen] = React.useState(false);
   const [signupOpen, setSignupOpen] = React.useState(false);
@@ -458,26 +446,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
                 </Button>
               ))}
               
-              {/* Sales Mode Toggle */}
-              {onSalesModeToggle && (
-                <>
-                  <Divider orientation="vertical" flexItem sx={{ mx: 2, bgcolor: 'rgba(255,255,255,0.2)' }} />
-                  <Button
-                    onClick={onSalesModeToggle}
-                    sx={{
-                      ...navButtonStyles,
-                      background: 'linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%)',
-                      '&:hover': {
-                        background: 'linear-gradient(90deg, #FF5252 0%, #45B7B8 100%)',
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                    startIcon={<BusinessCenter />}
-                  >
-                    Sales Mode
-                  </Button>
-                </>
-              )}
             </Box>
           </Box>
         )}
@@ -497,6 +465,9 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           opacity: 0.8,
         }}>
           <ThemeToggle />
+          <IconButton color="inherit" size="small" onClick={() => setDashboardSelectorOpen(true)} sx={{ ml: 1 }}>
+            <DashboardIcon />
+          </IconButton>
           <IconButton color="inherit" size="small" onClick={() => setSearchOpen(true)} sx={{ ml: 1 }}>
             <SearchIcon />
           </IconButton>
@@ -622,6 +593,11 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+    <DashboardSelector 
+      open={dashboardSelectorOpen} 
+      onClose={() => setDashboardSelectorOpen(false)} 
+      onSalesModeToggle={onSalesModeToggle}
+    />
     </>
   );
 }

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import EnhancedDashboard from './components/Dashboard/EnhancedDashboard';
+import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
+import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } from './components/Dashboard';
+import DashboardUpdated from './components/Dashboard/DashboardUpdated';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -14,6 +16,7 @@ import {
 } from './components/Sales';
 import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
+import SupabaseTest from './components/Test/SupabaseTest';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const App: React.FC = () => {
@@ -36,7 +39,7 @@ const App: React.FC = () => {
                     <Route path="/intelligence" element={<SalesIntelligenceHub />} />
                     <Route path="/market-data" element={
                       <Box sx={{ p: 2 }}>
-                        <EnhancedDashboard />
+                        <ActionableSalesDashboard />
                       </Box>
                     } />
                   </Routes>
@@ -46,9 +49,14 @@ const App: React.FC = () => {
               <>
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
-                  <Route path="/" element={<MarketGalaxyMap />} />
-                  <Route path="/dashboard" element={<EnhancedDashboard />} />
+                  <Route path="/" element={<MarketCommandCenter />} />
+                  <Route path="/dashboard" element={<MarketCommandCenter />} />
+                  <Route path="/enhanced" element={<EnhancedMarketDashboard />} />
+                  <Route path="/updated" element={<DashboardUpdated />} />
+                  <Route path="/actionable" element={<ActionableSalesDashboard />} />
+                  <Route path="/quantum" element={<QuantumMarketDashboard />} />
                   <Route path="/workspace" element={<SalesWorkspace />} />
+                  <Route path="/test" element={<SupabaseTest />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>

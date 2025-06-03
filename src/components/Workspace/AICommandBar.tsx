@@ -35,7 +35,7 @@ import {
   Lightbulb
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { braveSearchService } from '../../services/braveSearchService';
+import * as braveSearchService from '../../services/braveSearchService';
 import { galaxyDataService } from '../../services/galaxyDataService';
 import { supabase } from '../../services/supabaseClient';
 
@@ -197,9 +197,9 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   // Search market trends
   const searchTrends = async (query: string): Promise<CommandResult[]> => {
     try {
-      const searchResults = await braveSearchService.searchWithIntelligence(
+      const searchResults = await braveSearchService.search(
         `${query} market trends healthcare dental aesthetic`,
-        { count: 5 }
+        5
       );
 
       return searchResults.map((result: any, idx: number) => ({
@@ -331,7 +331,14 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   };
 
   const extractProcedure = (query: string): string | undefined => {
-    const procedures = ['implants', 'botox', 'fillers', 'aligners', 'veneers', 'whitening'];
+    const procedures = [
+      // Dental procedures
+      'implants', 'dental implants', 'aligners', 'invisalign', 'veneers', 'whitening', 
+      'crowns', 'braces', 'orthodontics', 'root canal', 'fillings',
+      // Aesthetic procedures  
+      'botox', 'fillers', 'dermal fillers', 'lip filler', 'pdo threads', 'prp', 
+      'prf', 'body contouring', 'liposuction', 'laser treatments', 'injectables'
+    ];
     const lower = query.toLowerCase();
     return procedures.find(proc => lower.includes(proc));
   };

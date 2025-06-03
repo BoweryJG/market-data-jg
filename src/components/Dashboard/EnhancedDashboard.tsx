@@ -19,7 +19,13 @@ import {
   useTheme,
   useMediaQuery,
   Divider,
-  Chip
+  Chip,
+  LinearProgress,
+  CircularProgress,
+  Skeleton,
+  Slide,
+  Zoom,
+  Fade,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -29,7 +35,15 @@ import {
   TrendingUp as TrendingUpIcon,
   AutoAwesome as AIIcon,
   Refresh as RefreshIcon,
-  NewReleases as NewIcon
+  NewReleases as NewIcon,
+  Analytics as AnalyticsIcon,
+  Speed as SpeedIcon,
+  Insights as InsightsIcon,
+  Settings as ControlPanelIcon,
+  TableChart as TableIcon,
+  Launch as LaunchIcon,
+  Whatshot as WhatshotIcon,
+  Psychology as PsychologyIcon
 } from '@mui/icons-material';
 
 // Import existing components

@@ -312,7 +312,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
           <Box sx={{ flex: 1, overflow: 'hidden' }}>
             <Tabs 
               value={tabValue} 
-              onChange={(e, v) => setTabValue(v)}
+              onChange={(e: React.SyntheticEvent, v: number) => setTabValue(v)}
               sx={{ borderBottom: 1, borderColor: 'divider', px: 2 }}
             >
               <Tab 

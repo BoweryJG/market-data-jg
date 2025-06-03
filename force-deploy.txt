@@ -1,0 +1,1 @@
+Mon Jun  2 20:54:02 EDT 2025: Force deploy - category icons fixed with proper MUI styling

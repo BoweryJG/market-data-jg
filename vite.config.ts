@@ -5,5 +5,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    force: true, // Force cache invalidation
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 });
