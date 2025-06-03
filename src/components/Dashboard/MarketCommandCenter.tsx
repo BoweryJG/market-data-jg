@@ -1101,10 +1101,30 @@ const MarketCommandCenter: React.FC = () => {
                     .slice(0, 8) // Show only top 8 categories to save space
                     .map((category) => {
                       const procedureCount = marketData.procedures
-                        .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
+                        .filter(p => {
+                          // Match against multiple possible category fields
+                          const matchesCategory = p.category === category.name || 
+                                                p.clinical_category === category.name ||
+                                                p.normalized_category === category.name ||
+                                                p.category_hierarchy_id === category.id;
+                          const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
+                          return matchesCategory && matchesIndustry;
+                        })
                         .length;
                       const iconConfig = getCategoryIconConfig(category.name);
                       const IconComponent = iconConfig.icon;
+                      
+                      // Debug log to check category matching
+                      if (procedureCount === 0 && marketData.procedures.length > 0) {
+                        console.log(`📊 Category "${category.name}" has 0 procedures. Sample procedure categories:`, 
+                          marketData.procedures.slice(0, 3).map(p => ({
+                            category: p.category,
+                            clinical_category: p.clinical_category,
+                            normalized_category: p.normalized_category,
+                            category_hierarchy_id: p.category_hierarchy_id
+                          }))
+                        );
+                      }
                       
                       return (
                         <Chip
