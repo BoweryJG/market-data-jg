@@ -1161,24 +1161,27 @@ const MarketCommandCenter: React.FC = () => {
                 console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Icon:', IconComponent.name, 'Color:', iconConfig.color);
                 
                 return (
-                  <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
-                    <Chip
-                      icon={
-                        <IconComponent sx={{ 
-                          color: iconConfig.color, 
-                          fontSize: 20
-                        }} />
+                  <Box
+                    key={`category-${category.id}-${category.name}-${index}`}
+                    onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 0.5,
+                      px: 1.5,
+                      py: 0.5,
+                      border: '1px solid',
+                      borderColor: selectedCategory === category.name ? 'primary.main' : 'divider',
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        borderColor: 'primary.main',
                       }
-                      label={`${category.name} (${procedureCount})`}
-                      variant="outlined"
-                      onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
-                      sx={{
-                        '& .MuiChip-icon svg': {
-                          color: `${iconConfig.color} !important`
-                        }
-                      }}
-                    />
-                  </Tooltip>
+                    }}
+                  >
+                    <IconComponent sx={{ color: iconConfig.color, fontSize: 20 }} />
+                    <Typography variant="body2">{category.name} ({procedureCount})</Typography>
+                  </Box>
                 );
               })}
           </Box>
