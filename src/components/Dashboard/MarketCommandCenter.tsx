@@ -1114,17 +1114,20 @@ const MarketCommandCenter: React.FC = () => {
                       const iconConfig = getCategoryIconConfig(category.name);
                       const IconComponent = iconConfig.icon;
                       
-                      // Debug log to check category matching
-                      if (procedureCount === 0 && marketData.procedures.length > 0) {
-                        const sampleProcedures = marketData.procedures.slice(0, 3).map(p => ({
-                          procedure: p.procedure_name,
-                          category: p.category,
-                          clinical_category: p.clinical_category,
-                          normalized_category: p.normalized_category,
-                          category_hierarchy_id: p.category_hierarchy_id
-                        }));
-                        console.log(`📊 Category "${category.name}" (id: ${category.id}) has 0 procedures.`);
-                        console.log('Sample procedures:', sampleProcedures);
+                      // Debug only once to avoid spam
+                      if (procedureCount === 0 && marketData.procedures.length > 0 && category.name === 'Imaging') {
+                        console.log('🔍 CATEGORY MISMATCH DEBUG:');
+                        console.log('Looking for category:', category);
+                        console.log('Sample procedures with their categories:');
+                        marketData.procedures.slice(0, 5).forEach((p, i) => {
+                          console.log(`${i + 1}. "${p.procedure_name}":`, {
+                            category: p.category,
+                            clinical_category: p.clinical_category,
+                            normalized_category: p.normalized_category,
+                            category_hierarchy_id: p.category_hierarchy_id,
+                            industry: p.industry
+                          });
+                        });
                       }
                       
                       return (
