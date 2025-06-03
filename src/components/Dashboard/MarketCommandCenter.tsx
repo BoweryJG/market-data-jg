@@ -1191,17 +1191,16 @@ const MarketCommandCenter: React.FC = () => {
                           marginRight: '-4px',
                         },
                         '& .MuiChip-label': {
-                          color: selectedCategory === category.name ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                          color: selectedCategory === category.name ? theme.palette.primary.contrastText : '#333333',
                           fontWeight: 600,
                           fontSize: '0.875rem',
                         },
                         backgroundColor: selectedCategory === category.name 
-                          ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
-                          : alpha(theme.palette.background.paper, 0.8),
+                          ? theme.palette.primary.main
+                          : '#f5f5f5',
                         background: selectedCategory === category.name 
-                          ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
-                          : alpha(theme.palette.background.paper, 0.8),
-                        backdropFilter: 'blur(10px)',
+                          ? theme.palette.primary.main
+                          : '#f5f5f5',
                         border: selectedCategory === category.name 
                           ? `2px solid ${theme.palette.primary.light}` 
                           : `1px solid ${alpha(iconConfig.color, 0.3)}`,
