@@ -107,6 +107,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import SimpleGauge from './SimpleGauge';
+import { getCategoryIconConfig } from './CategoryIcons';
 
 // Luxury automotive-style gauge component with physics-based needle
 const CockpitGauge: React.FC<{
@@ -690,157 +691,9 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
   );
 };
 
-// ✨ Premium Category Icons Map - Professional Medical & Aesthetic Icons
-const categoryIconMap: Record<string, React.ReactNode> = {
-  // 🦷 ===== DENTAL CATEGORIES ===== 
-  // Primary dental categories with sophisticated medical icons
-  'Diagnostic': <MonitorHeart sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Preventive': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Restorative': <Healing sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Cosmetic': <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Oral Surgery': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
-  'Endodontic': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Periodontic': <Nature sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Prosthodontic': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Orthodontic': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Implantology': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Digital Dentistry': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
+// Category icons are now handled in CategoryIcons.tsx for better modularity
 
-  // 💄 ===== AESTHETIC CATEGORIES =====
-  // Premium aesthetic categories with luxury spa-like icons
-  'Facial Aesthetic': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Injectables': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Body': <Accessibility sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Skin': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Hair': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Minimally Invasive': <AutoFixHigh sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Regenerative': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Lasers': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Combination': <Diamond sx={{ color: '#673AB7', fontSize: 20 }} />,
-
-  // 🎯 ===== AESTHETIC SUBCATEGORIES =====
-  'Body Contouring': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Skin Resurfacing': <Waves sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Skin Tightening': <SelfImprovement sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Pigmentation': <Palette sx={{ color: '#FF9800', fontSize: 20 }} />,
-
-  // 🔄 ===== LEGACY/ALTERNATIVE MAPPINGS =====
-  // Support for older category names with updated icons
-  'Implants': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Botox': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Dermal Fillers': <LocalPharmacy sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Laser Therapy': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Facial Rejuvenation': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Anti-Aging': <SentimentVerySatisfied sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Wellness': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Technology': <Science sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Aesthetic Medicine': <MedicalInformation sx={{ color: '#E91E63', fontSize: 20 }} />,
-  
-  // Dental legacy names with medical precision
-  'Teeth Whitening': <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />,
-  'Veneers': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Crowns': <Architecture sx={{ color: '#795548', fontSize: 20 }} />,
-  'Root Canal': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Braces': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'General Dentistry': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Dental Procedure': <LocalHospital sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Aesthetic Procedure': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
-
-  // 🏥 ===== MISSING PROCEDURE CATEGORIES =====
-  // Based on console logs showing "Has Icon: false" - ALL COMPREHENSIVE MAPPING
-  'Imaging Procedures': <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Single Implants Procedures': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Extractions Procedures': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
-  'Whitening Procedures': <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />,
-  'Cleanings Procedures': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Ablative Lasers Procedures': <Flare sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'MediFacial Combos Procedures': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Fillings Procedures': <Healing sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'PRP Treatments Procedures': <Biotech sx={{ color: '#8BC34A', fontSize: 20 }} />,
-  'Hair Restoration Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Neuromodulators Procedures': <Psychology sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Non-surgical Facial Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Stem Cell Procedures Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Sealants Procedures': <Shield sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Screening Procedures': <Visibility sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Bone Grafting Procedures': <Engineering sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Full Arch Implants Procedures': <Architecture sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Facial Contouring Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Body Tightening Procedures': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Hair Removal Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Non-ablative Lasers Procedures': <AutoFixHigh sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Total Face Rejuvenation Procedures': <SentimentVerySatisfied sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Bridges Procedures': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Mini Implants Procedures': <Build sx={{ color: '#3F51B5', fontSize: 20 }} />,
-  'Esthetic Bonding Procedures': <AutoAwesome sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Facial Resurfacing Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Fractionated Lasers Procedures': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Biostimulators Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Fluoride Treatments Procedures': <LocalPharmacy sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Body Transformation Packages Procedures': <FitnessCenter sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Cellulite Treatments Procedures': <FitnessCenter sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Digital Diagnostics Procedures': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
-  'Growth Factor Therapies Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Tissue Procedures Procedures': <Healing sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Pediatric Procedures': <Face sx={{ color: '#FFC107', fontSize: 20 }} />,
-  'TMJ/Orofacial Pain Procedures': <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />,
-  'Sleep Dentistry Procedures': <Mood sx={{ color: '#673AB7', fontSize: 20 }} />,
-  'Adjunctive Procedures': <MedicalInformation sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Scar/Stretch Mark Procedures': <Healing sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Face Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Cellulite Procedures': <FitnessCenter sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Biotech Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Skin Treatments Procedures': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Tech-Enhanced Procedures': <Computer sx={{ color: '#673AB7', fontSize: 20 }} />,
-  'Advanced Treatments Procedures': <Science sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Hair Treatments Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Vascular Treatments Procedures': <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />,
-  'Energy-Based Procedures': <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Wellness Treatments Procedures': <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Breast Procedures Procedures': <FitnessCenter sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Facial Procedures Procedures': <Face sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Hair Care Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Vascular Procedures': <MonitorHeart sx={{ color: '#F44336', fontSize: 20 }} />,
-
-  // 🔄 ===== LEGACY/DUPLICATE MAPPINGS =====
-  // Support for common variations and legacy names
-  'Diagnostic Procedures': <MonitorHeart sx={{ color: '#2196F3', fontSize: 20 }} />,
-  'Crowns Procedures': <Architecture sx={{ color: '#795548', fontSize: 20 }} />,
-  'Preventive Procedures': <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Veneers Procedures': <Diamond sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Restorative Procedures': <Healing sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Cosmetic Procedures': <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Endodontic Procedures': <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Periodontic Procedures': <Nature sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Prosthodontic Procedures': <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />,
-  'Orthodontic Procedures': <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />,
-  'Skin Tightening Procedures': <SelfImprovement sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Facial Aesthetic Procedures': <FaceRetouchingNatural sx={{ color: '#E91E63', fontSize: 20 }} />,
-  'Lasers Procedures': <Flare sx={{ color: '#FF6F00', fontSize: 20 }} />,
-  'Hair Procedures': <Grain sx={{ color: '#795548', fontSize: 20 }} />,
-  'Skin Procedures': <WbSunny sx={{ color: '#FF9800', fontSize: 20 }} />,
-  'Regenerative Procedures': <Biotech sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Body Procedures': <Accessibility sx={{ color: '#FF5722', fontSize: 20 }} />,
-  'Injectables Procedures': <Vaccines sx={{ color: '#9C27B0', fontSize: 20 }} />,
-  'Combination Procedures': <Diamond sx={{ color: '#673AB7', fontSize: 20 }} />,
-  'Anti-Aging Procedures': <SentimentVerySatisfied sx={{ color: '#4CAF50', fontSize: 20 }} />,
-  'Pigmentation Procedures': <Palette sx={{ color: '#FF9800', fontSize: 20 }} />,
-
-  // ⚡ Default fallback with premium medical icon
-  'default': <HealthAndSafety sx={{ color: '#9E9E9E', fontSize: 20 }} />,
-};
-
-// Debug: Log all available category icon keys with timestamp to force reload
-console.log('🔍 Available category icon keys [' + new Date().toISOString() + ']:', Object.keys(categoryIconMap).length, 'icons loaded');
-console.log('📋 First 10 icon keys:', Object.keys(categoryIconMap).slice(0, 10));
-console.log('🔍 Checking specific missing icons:', {
-  'Imaging Procedures': !!categoryIconMap['Imaging Procedures'],
-  'Single Implants Procedures': !!categoryIconMap['Single Implants Procedures'],
-  'Extractions Procedures': !!categoryIconMap['Extractions Procedures']
-});
-
-// Market data interfaces
-interface Procedure {
+interface ProcedureWithMetrics {
   id: string;
   procedure_name: string;
   industry: 'dental' | 'aesthetic';
@@ -1302,88 +1155,15 @@ const MarketCommandCenter: React.FC = () => {
                   .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
                   .length;
                 
-                // Smart icon fallback system with beautiful individual colors
-                const getIconForCategory = (categoryName: string) => {
-                  // Direct match first (handles exact matches)
-                  if (categoryIconMap[categoryName]) {
-                    return categoryIconMap[categoryName];
-                  }
-                  
-                  // Smart pattern matching with diverse beautiful colors
-                  const name = categoryName.toLowerCase();
-                  
-                  // 🎨 RICH COLOR PALETTE - Each category gets unique styling
-                  if (name.includes('diagnostic')) return <MonitorHeart sx={{ color: '#3F51B5', fontSize: 20 }} />; // Deep Blue
-                  if (name.includes('preventive')) return <Shield sx={{ color: '#4CAF50', fontSize: 20 }} />; // Green
-                  if (name.includes('restorative')) return <Healing sx={{ color: '#FF9800', fontSize: 20 }} />; // Orange
-                  if (name.includes('cosmetic')) return <AutoAwesome sx={{ color: '#E91E63', fontSize: 20 }} />; // Pink
-                  if (name.includes('oral surgery')) return <MedicalServices sx={{ color: '#F44336', fontSize: 20 }} />; // Red
-                  if (name.includes('endodontic')) return <Biotech sx={{ color: '#9C27B0', fontSize: 20 }} />; // Purple
-                  if (name.includes('periodontic')) return <Nature sx={{ color: '#8BC34A', fontSize: 20 }} />; // Light Green
-                  if (name.includes('prosthodontic')) return <Architecture sx={{ color: '#607D8B', fontSize: 20 }} />; // Blue Grey
-                  if (name.includes('orthodontic')) return <Straighten sx={{ color: '#00BCD4', fontSize: 20 }} />; // Cyan
-                  if (name.includes('implantology') || name.includes('implant')) return <Build sx={{ color: '#795548', fontSize: 20 }} />; // Brown
-                  
-                  // 🎯 SPECIFIC PROCEDURE COLORS
-                  if (name.includes('imaging')) return <CameraAlt sx={{ color: '#2196F3', fontSize: 20 }} />; // Blue
-                  if (name.includes('extraction')) return <MedicalServices sx={{ color: '#D32F2F', fontSize: 20 }} />; // Dark Red
-                  if (name.includes('whitening')) return <AutoAwesome sx={{ color: '#FFC107', fontSize: 20 }} />; // Amber
-                  if (name.includes('cleaning')) return <Spa sx={{ color: '#00E676', fontSize: 20 }} />; // Bright Green
-                  if (name.includes('ablative') && name.includes('laser')) return <Flare sx={{ color: '#FF5722', fontSize: 20 }} />; // Deep Orange
-                  if (name.includes('facial') || name.includes('face')) return <Face sx={{ color: '#EC407A', fontSize: 20 }} />; // Hot Pink
-                  if (name.includes('filling')) return <Healing sx={{ color: '#5D4037', fontSize: 20 }} />; // Dark Brown
-                  if (name.includes('prp') || name.includes('stem cell')) return <Biotech sx={{ color: '#66BB6A', fontSize: 20 }} />; // Medium Green
-                  if (name.includes('hair')) return <Grain sx={{ color: '#8D6E63', fontSize: 20 }} />; // Light Brown
-                  if (name.includes('neuromodulator')) return <Psychology sx={{ color: '#BA68C8', fontSize: 20 }} />; // Light Purple
-                  if (name.includes('sealant')) return <Shield sx={{ color: '#26C6DA', fontSize: 20 }} />; // Light Cyan
-                  if (name.includes('screening')) return <Visibility sx={{ color: '#42A5F5', fontSize: 20 }} />; // Light Blue
-                  if (name.includes('bone') || name.includes('graft')) return <Engineering sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
-                  if (name.includes('bridge')) return <Architecture sx={{ color: '#78909C', fontSize: 20 }} />; // Light Blue Grey
-                  if (name.includes('bonding')) return <AutoAwesome sx={{ color: '#81C784', fontSize: 20 }} />; // Light Green
-                  if (name.includes('fluoride')) return <LocalPharmacy sx={{ color: '#4DD0E1', fontSize: 20 }} />; // Light Cyan
-                  if (name.includes('digital')) return <Computer sx={{ color: '#9575CD', fontSize: 20 }} />; // Medium Purple
-                  if (name.includes('pediatric')) return <Face sx={{ color: '#FFB74D', fontSize: 20 }} />; // Light Orange
-                  if (name.includes('tmj') || name.includes('pain')) return <MedicalServices sx={{ color: '#EF5350', fontSize: 20 }} />; // Light Red
-                  if (name.includes('sleep')) return <Mood sx={{ color: '#7986CB', fontSize: 20 }} />; // Light Indigo
-                  if (name.includes('adjunctive')) return <MedicalInformation sx={{ color: '#29B6F6', fontSize: 20 }} />; // Light Blue
-                  
-                  // 💄 AESTHETIC SPECIFIC COLORS
-                  if (name.includes('injectable')) return <Vaccines sx={{ color: '#AB47BC', fontSize: 20 }} />; // Medium Purple
-                  if (name.includes('skin') && name.includes('resurfacing')) return <Waves sx={{ color: '#26A69A', fontSize: 20 }} />; // Teal
-                  if (name.includes('skin') && name.includes('tightening')) return <SelfImprovement sx={{ color: '#66BB6A', fontSize: 20 }} />; // Green
-                  if (name.includes('body') && name.includes('contouring')) return <FitnessCenter sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
-                  if (name.includes('cellulite')) return <FitnessCenter sx={{ color: '#FFA726', fontSize: 20 }} />; // Orange
-                  if (name.includes('pigmentation')) return <Palette sx={{ color: '#FFCA28', fontSize: 20 }} />; // Amber
-                  if (name.includes('regenerative')) return <Biotech sx={{ color: '#66BB6A', fontSize: 20 }} />; // Green
-                  if (name.includes('laser') && !name.includes('ablative')) return <AutoFixHigh sx={{ color: '#FF9800', fontSize: 20 }} />; // Orange
-                  if (name.includes('minimally invasive')) return <AutoFixHigh sx={{ color: '#26C6DA', fontSize: 20 }} />; // Cyan
-                  if (name.includes('combination')) return <Diamond sx={{ color: '#9C27B0', fontSize: 20 }} />; // Purple
-                  if (name.includes('vascular')) return <MonitorHeart sx={{ color: '#E53935', fontSize: 20 }} />; // Red
-                  if (name.includes('energy')) return <FlashOn sx={{ color: '#FF6F00', fontSize: 20 }} />; // Dark Orange
-                  if (name.includes('wellness')) return <Spa sx={{ color: '#4CAF50', fontSize: 20 }} />; // Green
-                  if (name.includes('breast')) return <FitnessCenter sx={{ color: '#EC407A', fontSize: 20 }} />; // Pink
-                  if (name.includes('body') && !name.includes('contouring')) return <Accessibility sx={{ color: '#FF7043', fontSize: 20 }} />; // Deep Orange
-                  if (name.includes('skin') && !name.includes('resurfacing') && !name.includes('tightening')) return <WbSunny sx={{ color: '#FFA726', fontSize: 20 }} />; // Orange
-                  if (name.includes('tech')) return <Computer sx={{ color: '#7E57C2', fontSize: 20 }} />; // Deep Purple
-                  if (name.includes('advanced')) return <Science sx={{ color: '#5C6BC0', fontSize: 20 }} />; // Indigo
-                  
-                  // 🎨 FINAL BEAUTIFUL FALLBACKS (no more boring industry defaults!)
-                  const colors = ['#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#607D8B'];
-                  const icons = [FaceRetouchingNatural, LocalHospital, Science, Computer, Build, Flare, AutoAwesome, Shield, Nature];
-                  const colorIndex = categoryName.length % colors.length;
-                  const iconIndex = categoryName.length % icons.length;
-                  const IconComponent = icons[iconIndex];
-                  
-                  return <IconComponent sx={{ color: colors[colorIndex], fontSize: 20 }} />;
-                };
-
-                const categoryIcon = getIconForCategory(category.name);
-                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Has Icon:', !!categoryIcon, 'Icon:', categoryIcon ? 'Found/Generated' : 'Missing');
+                // Get icon configuration from the centralized CategoryIcons module
+                const iconConfig = getCategoryIconConfig(category.name);
+                const IconComponent = iconConfig.icon;
+                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Icon:', IconComponent.name, 'Color:', iconConfig.color);
                 
                 return (
                   <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
-                      icon={categoryIcon as React.ReactElement}
+                      icon={<IconComponent sx={{ color: iconConfig.color, fontSize: 20 }} />}
                       label={`🎯 ${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
