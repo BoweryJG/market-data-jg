@@ -1391,9 +1391,13 @@ const MarketCommandCenter: React.FC = () => {
                         '& .MuiSvgIcon-root': {
                           fontSize: 20,
                           marginRight: 0.5,
+                          // DON'T override icon colors - let our beautiful individual colors show through!
+                        },
+                        '& .MuiChip-label': {
+                          // Only color the text label, NOT the icon
+                          color: selectedCategory === category.name ? theme.palette.primary.contrastText : theme.palette.text.primary,
                         },
                         backgroundColor: selectedCategory === category.name ? theme.palette.primary.main : 'rgba(255,255,255,0.05)',
-                        color: selectedCategory === category.name ? theme.palette.primary.contrastText : theme.palette.text.primary,
                         border: selectedCategory === category.name ? 'none' : `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
                         borderRadius: 2,
                         fontWeight: 500,
