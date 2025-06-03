@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
+import ProcedureDetailsModal from './ProcedureDetailsModal';
+import CompanyDetailsModal from './CompanyDetailsModal';
 import {
   Box,
   Typography,
@@ -740,6 +742,10 @@ const MarketCommandCenter: React.FC = () => {
   });
   const [liveData, setLiveData] = useState(true);
   const [dataDiscoveryMode, setDataDiscoveryMode] = useState(false);
+  const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
+  const [selectedCompany, setSelectedCompany] = useState<any>(null);
+  const [procedureModalOpen, setProcedureModalOpen] = useState(false);
+  const [companyModalOpen, setCompanyModalOpen] = useState(false);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -1288,7 +1294,12 @@ const MarketCommandCenter: React.FC = () => {
                 <TableRow
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
+                  onClick={() => {
+                    setSelectedProcedure(procedure);
+                    setProcedureModalOpen(true);
+                  }}
                   sx={{
+                    cursor: 'pointer',
                     '&:hover': {
                       background: alpha(theme.palette.primary.main, 0.05),
                     },
@@ -1302,9 +1313,14 @@ const MarketCommandCenter: React.FC = () => {
                           color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
                         }} 
                       />
-                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                        {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
-                      </Typography>
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+                          {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Click for detailed insights
+                        </Typography>
+                      </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
@@ -1376,7 +1392,12 @@ const MarketCommandCenter: React.FC = () => {
                 <TableRow
                   key={`company-${company.id || index}-${company.name || company.company_name || 'unknown'}`}
                   hover
+                  onClick={() => {
+                    setSelectedCompany(company);
+                    setCompanyModalOpen(true);
+                  }}
                   sx={{
+                    cursor: 'pointer',
                     '&:hover': {
                       background: alpha(theme.palette.primary.main, 0.05),
                     },
@@ -1390,9 +1411,14 @@ const MarketCommandCenter: React.FC = () => {
                           color: company.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
                         }} 
                       />
-                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                        {company.name || company.company_name || 'Unknown Company'}
-                      </Typography>
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+                          {company.name || company.company_name || 'Unknown Company'}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Click for company details
+                        </Typography>
+                      </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
@@ -1450,6 +1476,29 @@ const MarketCommandCenter: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Modals for detailed views */}
+      {selectedProcedure && (
+        <ProcedureDetailsModal
+          open={procedureModalOpen}
+          onClose={() => {
+            setProcedureModalOpen(false);
+            setSelectedProcedure(null);
+          }}
+          procedure={selectedProcedure}
+        />
+      )}
+
+      {selectedCompany && (
+        <CompanyDetailsModal
+          open={companyModalOpen}
+          onClose={() => {
+            setCompanyModalOpen(false);
+            setSelectedCompany(null);
+          }}
+          company={selectedCompany}
+        />
+      )}
     </Box>
   );
 };
