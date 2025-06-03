@@ -1116,14 +1116,15 @@ const MarketCommandCenter: React.FC = () => {
                       
                       // Debug log to check category matching
                       if (procedureCount === 0 && marketData.procedures.length > 0) {
-                        console.log(`📊 Category "${category.name}" has 0 procedures. Sample procedure categories:`, 
-                          marketData.procedures.slice(0, 3).map(p => ({
-                            category: p.category,
-                            clinical_category: p.clinical_category,
-                            normalized_category: p.normalized_category,
-                            category_hierarchy_id: p.category_hierarchy_id
-                          }))
-                        );
+                        const sampleProcedures = marketData.procedures.slice(0, 3).map(p => ({
+                          procedure: p.procedure_name,
+                          category: p.category,
+                          clinical_category: p.clinical_category,
+                          normalized_category: p.normalized_category,
+                          category_hierarchy_id: p.category_hierarchy_id
+                        }));
+                        console.log(`📊 Category "${category.name}" (id: ${category.id}) has 0 procedures.`);
+                        console.log('Sample procedures:', sampleProcedures);
                       }
                       
                       return (
