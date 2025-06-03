@@ -2,13 +2,13 @@
   command = "npm install && npm run build:vite-only"
   publish = "dist"
 
-# If you need to set environment variables for all deploys
+# Force clear cache
 [build.environment]
   NODE_VERSION = "18.19.0"
   NPM_VERSION = "10.2.3"
-  SECRETS_SCAN_OMIT_KEYS = "REACT_APP_API_URL,REACT_APP_GOOGLE_CLIENT_ID,REACT_APP_SUPABASE_URL,REACT_APP_SUPABASE_ANON_KEY"
+  NETLIFY_USE_YARN = "false"
+  NETLIFY_SKIP_CACHE = "true"
 
-# Redirects for single-page applications
 [[redirects]]
   from = "/*"
   to = "/index.html"
