@@ -1164,82 +1164,14 @@ const MarketCommandCenter: React.FC = () => {
                   <Tooltip key={`category-${category.id}-${category.name}-${index}`} title={`${category.description || category.name} (${procedureCount} procedures)`}>
                     <Chip
                       icon={
-                        <Box sx={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          width: 28,
-                          height: 28,
-                          borderRadius: '50%',
-                          backgroundColor: alpha(iconConfig.color, 0.1),
-                          border: `1px solid ${alpha(iconConfig.color, 0.3)}`,
-                          mr: 0.5
-                        }}>
-                          <IconComponent sx={{ 
-                            color: iconConfig.color, 
-                            fontSize: 18
-                          }} />
-                        </Box>
+                        <IconComponent sx={{ 
+                          color: iconConfig.color, 
+                          fontSize: 20
+                        }} />
                       }
                       label={`${category.name} (${procedureCount})`}
-                      variant={selectedCategory === category.name ? 'filled' : 'outlined'}
+                      variant="outlined"
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
-                      sx={{
-                        height: 40,
-                        '& .MuiChip-icon': {
-                          marginLeft: '8px',
-                          marginRight: '-4px',
-                        },
-                        '& .MuiChip-label': {
-                          color: selectedCategory === category.name ? theme.palette.primary.contrastText : '#333333',
-                          fontWeight: 600,
-                          fontSize: '0.875rem',
-                        },
-                        backgroundColor: selectedCategory === category.name 
-                          ? theme.palette.primary.main
-                          : '#f5f5f5',
-                        background: selectedCategory === category.name 
-                          ? theme.palette.primary.main
-                          : '#f5f5f5',
-                        border: selectedCategory === category.name 
-                          ? `2px solid ${theme.palette.primary.light}` 
-                          : `1px solid ${alpha(iconConfig.color, 0.3)}`,
-                        borderRadius: '20px',
-                        boxShadow: selectedCategory === category.name
-                          ? `0 4px 20px ${alpha(theme.palette.primary.main, 0.4)}, inset 0 1px 0 ${alpha(theme.palette.common.white, 0.2)}`
-                          : `0 2px 8px ${alpha(iconConfig.color, 0.15)}`,
-                        position: 'relative',
-                        overflow: 'visible',
-                        '&::before': selectedCategory === category.name ? {
-                          content: '""',
-                          position: 'absolute',
-                          top: -2,
-                          left: -2,
-                          right: -2,
-                          bottom: -2,
-                          background: `linear-gradient(45deg, ${theme.palette.primary.light}, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                          borderRadius: '22px',
-                          opacity: 0.8,
-                          zIndex: -1,
-                          animation: 'pulse 2s ease-in-out infinite',
-                        } : {},
-                        '&:hover': {
-                          transform: 'translateY(-2px) scale(1.02)',
-                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                          boxShadow: selectedCategory === category.name
-                            ? `0 6px 24px ${alpha(theme.palette.primary.main, 0.5)}`
-                            : `0 4px 16px ${alpha(iconConfig.color, 0.25)}`,
-                          border: `1px solid ${alpha(iconConfig.color, 0.5)}`,
-                          '& .MuiChip-icon > div': {
-                            transform: 'rotate(360deg) scale(1.1)',
-                            transition: 'transform 0.6s ease',
-                          }
-                        },
-                        '@keyframes pulse': {
-                          '0%, 100%': { opacity: 0.6 },
-                          '50%': { opacity: 1 },
-                        }
-                      }}
                     />
                   </Tooltip>
                 );
