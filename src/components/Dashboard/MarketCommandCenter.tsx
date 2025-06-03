@@ -1077,7 +1077,65 @@ const MarketCommandCenter: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} md={4}>
-          <TerritoryPremiumData territories={marketData?.territories || []} />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TerritoryPremiumData territories={marketData?.territories || []} />
+            
+            {/* Compact Category Filter */}
+            {viewMode === 'procedures' && marketData?.categories && (
+              <Card sx={{ p: 2 }}>
+                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                  <Category sx={{ mr: 0.5, fontSize: 18 }} />
+                  Categories
+                  {selectedCategory && (
+                    <Chip 
+                      label="Clear" 
+                      size="small" 
+                      onDelete={() => setSelectedCategory(null)}
+                      sx={{ ml: 'auto', height: 20, fontSize: 11 }}
+                    />
+                  )}
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {marketData.categories
+                    .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
+                    .slice(0, 8) // Show only top 8 categories to save space
+                    .map((category) => {
+                      const procedureCount = marketData.procedures
+                        .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
+                        .length;
+                      const iconConfig = getCategoryIconConfig(category.name);
+                      const IconComponent = iconConfig.icon;
+                      
+                      return (
+                        <Chip
+                          key={`cat-${category.id}`}
+                          label={`${category.name} (${procedureCount})`}
+                          size="small"
+                          icon={<IconComponent sx={{ fontSize: 16 }} />}
+                          onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
+                          variant={selectedCategory === category.name ? "filled" : "outlined"}
+                          sx={{
+                            fontSize: 11,
+                            height: 24,
+                            '& .MuiChip-icon': {
+                              color: iconConfig.color,
+                              fontSize: 16,
+                            },
+                            borderColor: selectedCategory === category.name ? 'primary.main' : 'divider',
+                            bgcolor: selectedCategory === category.name ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+                          }}
+                        />
+                      );
+                    })}
+                </Box>
+                {marketData.categories.length > 8 && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    +{marketData.categories.length - 8} more categories
+                  </Typography>
+                )}
+              </Card>
+            )}
+          </Box>
         </Grid>
       </Grid>
 
@@ -1137,62 +1195,6 @@ const MarketCommandCenter: React.FC = () => {
         </Box>
       </Card>
 
-      {/* Enhanced Category Filtering */}
-      {viewMode === 'procedures' && marketData?.procedures && (
-        <Card sx={{ mb: 3, p: 2 }}>
-          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-            <FilterList sx={{ mr: 1, color: 'primary.main' }} />
-            Filter by Category
-            {selectedCategory && (
-              <Chip 
-                label="Clear Filter" 
-                size="small" 
-                onDelete={() => setSelectedCategory(null)}
-                sx={{ ml: 2 }}
-              />
-            )}
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {/* Display rich categories from the categories table */}
-            {marketData.categories
-              .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
-              .map((category, index) => {
-                const procedureCount = marketData.procedures
-                  .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
-                  .length;
-                
-                // Get icon configuration from the centralized CategoryIcons module
-                const iconConfig = getCategoryIconConfig(category.name);
-                const IconComponent = iconConfig.icon;
-                console.log('🏷️ Rich Category:', category.name, 'Procedures:', procedureCount, 'Icon:', IconComponent.name, 'Color:', iconConfig.color);
-                
-                return (
-                  <Box
-                    key={`category-${category.id}-${category.name}-${index}`}
-                    onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 0.5,
-                      px: 1.5,
-                      py: 0.5,
-                      border: '1px solid',
-                      borderColor: selectedCategory === category.name ? 'primary.main' : 'divider',
-                      borderRadius: '16px',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                      }
-                    }}
-                  >
-                    <IconComponent sx={{ color: iconConfig.color, fontSize: 20 }} />
-                    <Typography variant="body2">{category.name} ({procedureCount})</Typography>
-                  </Box>
-                );
-              })}
-          </Box>
-        </Card>
-      )}
 
       {/* Procedures/Companies table */}
       <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
