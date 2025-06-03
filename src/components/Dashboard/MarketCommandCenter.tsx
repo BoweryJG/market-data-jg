@@ -1171,18 +1171,17 @@ const MarketCommandCenter: React.FC = () => {
                           width: 28,
                           height: 28,
                           borderRadius: '50%',
-                          background: `linear-gradient(135deg, ${iconConfig.color} 0%, ${alpha(iconConfig.color, 0.6)} 100%)`,
-                          boxShadow: `0 2px 8px ${alpha(iconConfig.color, 0.3)}`,
+                          backgroundColor: alpha(iconConfig.color, 0.1),
+                          border: `1px solid ${alpha(iconConfig.color, 0.3)}`,
                           mr: 0.5
                         }}>
                           <IconComponent sx={{ 
-                            color: 'white', 
-                            fontSize: 18,
-                            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                            color: iconConfig.color, 
+                            fontSize: 18
                           }} />
                         </Box>
                       }
-                      label={`🎯 ${category.name} (${procedureCount})`}
+                      label={`${category.name} (${procedureCount})`}
                       variant={selectedCategory === category.name ? 'filled' : 'outlined'}
                       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
                       sx={{
