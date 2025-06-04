@@ -17,6 +17,8 @@ import {
 import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
 import SupabaseTest from './components/Test/SupabaseTest';
+import { MagicLinkHandler } from './components/MagicLink/MagicLinkHandler';
+import { PremiumContentGenerator } from './components/PremiumContent/PremiumContentGenerator';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const App: React.FC = () => {
@@ -56,6 +58,8 @@ const App: React.FC = () => {
                   <Route path="/actionable" element={<ActionableSalesDashboard />} />
                   <Route path="/quantum" element={<QuantumMarketDashboard />} />
                   <Route path="/workspace" element={<SalesWorkspace />} />
+                  <Route path="/premium-content" element={<PremiumContentGenerator />} />
+                  <Route path="/magic-link/:token" element={<MagicLinkHandler />} />
                   <Route path="/test" element={<SupabaseTest />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
