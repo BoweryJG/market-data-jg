@@ -11,7 +11,7 @@ import {
   Box
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../auth';
 
 interface SignupModalProps {
   open: boolean;

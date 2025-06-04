@@ -64,7 +64,7 @@ import {
   WorkspacePremium
 } from '@mui/icons-material';
 import { loadStripe } from '@stripe/stripe-js';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../auth';
 import { apiClient } from '../../services/apiClient';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
