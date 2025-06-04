@@ -31,7 +31,7 @@ import LoginModal from '../components/Auth/LoginModal';
 import SignupModal from '../components/Auth/SignupModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import SuperSearch from '../components/Search/SuperSearch';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../auth';
 import DashboardSelector from '../components/Navigation/DashboardSelector';
 
 const ACCENT_COLOR = '#00ffc6';
