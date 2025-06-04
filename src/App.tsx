@@ -6,7 +6,7 @@ import DashboardUpdated from './components/Dashboard/DashboardUpdated';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './auth';
 import { 
   SalesDashboard,
   FieldTools,
