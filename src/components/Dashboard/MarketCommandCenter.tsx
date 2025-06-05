@@ -128,8 +128,9 @@ const CockpitGauge: React.FC<{
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const [liveValue, setLiveValue] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const percentage = Math.min((liveValue / max) * 100, 100);
-  const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
+  const [targetAngle, setTargetAngle] = useState((percentage / 100) * 180 - 90); // -90 to 90 degrees
   
   // Live gauge with real Supabase data
   // Values: Market Size (~134K), Growth (~12%), Procedures (367), Companies (85)
@@ -212,6 +213,8 @@ const CockpitGauge: React.FC<{
 
   // DRAMATIC NEEDLE STARTUP ANIMATION - Each gauge spins differently
   useEffect(() => {
+    if (hasAnimated) return; // Only animate once
+    
     // Different delay and spin patterns for each gauge type
     const getSpinConfig = () => {
       switch (label) {
@@ -232,6 +235,7 @@ const CockpitGauge: React.FC<{
     
     const startAnimation = setTimeout(() => {
       setIsSpinning(true);
+      setHasAnimated(true);
       // Dramatic spinning phase
       setNeedleRotation(-90 + (spins * 360)); // Multiple full rotations
       
@@ -239,21 +243,31 @@ const CockpitGauge: React.FC<{
       const settleTimer = setTimeout(() => {
         setIsSpinning(false);
         setHasLoaded(true);
-        setNeedleRotation(targetAngle);
+        // Recalculate target angle with current live value
+        const currentPercentage = Math.min((liveValue / max) * 100, 100);
+        const currentTargetAngle = (currentPercentage / 100) * 180 - 90;
+        setNeedleRotation(currentTargetAngle);
       }, speed);
 
       return () => clearTimeout(settleTimer);
     }, delay);
 
     return () => clearTimeout(startAnimation);
-  }, []); // Only run once on mount
+  }, [hasAnimated, liveValue, max, label]); // Include dependencies but guard with hasAnimated
+
+  // Update target angle when live value changes
+  useEffect(() => {
+    const newPercentage = Math.min((liveValue / max) * 100, 100);
+    const newTargetAngle = (newPercentage / 100) * 180 - 90;
+    setTargetAngle(newTargetAngle);
+  }, [liveValue, max]);
 
   // Update needle when target changes (after initial load)
   useEffect(() => {
     if (hasLoaded) {
       setNeedleRotation(targetAngle);
     }
-  }, [targetAngle, hasLoaded, liveValue]); // Add liveValue dependency
+  }, [targetAngle, hasLoaded]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -1015,7 +1029,7 @@ const MarketCommandCenter: React.FC = () => {
               >
                 <CockpitGauge
                   value={marketMetrics.totalMarketSize}
-                  max={50000}
+                  max={200000}
                   label="Market Size"
                   unit="M"
                   color={theme.palette.primary.main}
