@@ -27,6 +27,11 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
   const [hasLoaded, setHasLoaded] = useState(false);
   const animationRef = useRef<number>();
   
+  // Debug hover state
+  useEffect(() => {
+    console.log(`Gauge ${label} hover state:`, isHovered);
+  }, [isHovered, label]);
+  
   // Main needle animation with physics
   const [{ angle }, api] = useSpring(() => ({
     angle: -90,
@@ -106,7 +111,13 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Simple SVG Gauge */}
-      <svg width={size} height={size / 2 + 20}>
+      <svg 
+        width={size} 
+        height={size / 2 + 20}
+        style={{ pointerEvents: 'all' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         {/* Background arc */}
         <path
           d={`M 20 ${size / 2} A ${radius} ${radius} 0 0 1 ${size - 20} ${size / 2}`}
@@ -207,6 +218,16 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
           cy={size / 2}
           r="2"
           fill="#1a1a1a"
+        />
+        
+        {/* Invisible hover area covering entire gauge */}
+        <rect
+          x="0"
+          y="0"
+          width={size}
+          height={size / 2 + 20}
+          fill="transparent"
+          style={{ cursor: 'pointer' }}
         />
       </svg>
       
