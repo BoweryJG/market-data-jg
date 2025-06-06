@@ -1,0 +1,11 @@
+{
+  "totalProcessed": 7324,
+  "states": [
+    "NY",
+    "FL"
+  ],
+  "category": "Dental Practice",
+  "source": "NPI Database",
+  "outputFile": "fused_dental_practices_NY_FL_2025-06-05.csv",
+  "timestamp": "2025-06-05T12:33:37.957Z"
+}

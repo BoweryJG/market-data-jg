@@ -128,9 +128,8 @@ const CockpitGauge: React.FC<{
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const [liveValue, setLiveValue] = useState(value);
-  const [hasAnimated, setHasAnimated] = useState(false);
   const percentage = Math.min((liveValue / max) * 100, 100);
-  const [targetAngle, setTargetAngle] = useState((percentage / 100) * 180 - 90); // -90 to 90 degrees
+  const targetAngle = (percentage / 100) * 180 - 90; // -90 to 90 degrees
   
   // Live gauge with real Supabase data
   // Values: Market Size (~134K), Growth (~12%), Procedures (367), Companies (85)
@@ -213,8 +212,6 @@ const CockpitGauge: React.FC<{
 
   // DRAMATIC NEEDLE STARTUP ANIMATION - Each gauge spins differently
   useEffect(() => {
-    if (hasAnimated) return; // Only animate once
-    
     // Different delay and spin patterns for each gauge type
     const getSpinConfig = () => {
       switch (label) {
@@ -235,7 +232,6 @@ const CockpitGauge: React.FC<{
     
     const startAnimation = setTimeout(() => {
       setIsSpinning(true);
-      setHasAnimated(true);
       // Dramatic spinning phase
       setNeedleRotation(-90 + (spins * 360)); // Multiple full rotations
       
@@ -243,31 +239,21 @@ const CockpitGauge: React.FC<{
       const settleTimer = setTimeout(() => {
         setIsSpinning(false);
         setHasLoaded(true);
-        // Recalculate target angle with current live value
-        const currentPercentage = Math.min((liveValue / max) * 100, 100);
-        const currentTargetAngle = (currentPercentage / 100) * 180 - 90;
-        setNeedleRotation(currentTargetAngle);
+        setNeedleRotation(targetAngle);
       }, speed);
 
       return () => clearTimeout(settleTimer);
     }, delay);
 
     return () => clearTimeout(startAnimation);
-  }, [hasAnimated, liveValue, max, label]); // Include dependencies but guard with hasAnimated
-
-  // Update target angle when live value changes
-  useEffect(() => {
-    const newPercentage = Math.min((liveValue / max) * 100, 100);
-    const newTargetAngle = (newPercentage / 100) * 180 - 90;
-    setTargetAngle(newTargetAngle);
-  }, [liveValue, max]);
+  }, []); // Only run once on mount
 
   // Update needle when target changes (after initial load)
   useEffect(() => {
     if (hasLoaded) {
       setNeedleRotation(targetAngle);
     }
-  }, [targetAngle, hasLoaded]);
+  }, [targetAngle, hasLoaded, liveValue]); // Add liveValue dependency
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -278,22 +264,9 @@ const CockpitGauge: React.FC<{
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (!isHovered) return;
-    
-    const rect = event.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const mouseX = event.clientX - centerX;
-    const mouseY = event.clientY - centerY;
-    
-    // Calculate angle from center to mouse, constrained to gauge range
-    let angle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
-    
-    // Constrain to gauge range (-90 to 90 degrees)
-    angle = Math.max(-90, Math.min(90, angle));
-    
-    // Add spin animation on hover
-    setNeedleRotation(angle + (Math.sin(Date.now() * 0.01) * 5)); // Small oscillation
+    // Disabled mouse tracking to prevent erratic needle movement
+    // Needle will only move based on value changes and animations
+    return;
   };
 
   const handleMouseClick = () => {
@@ -304,14 +277,7 @@ const CockpitGauge: React.FC<{
 
   const handleMouseEnterNeedle = () => {
     setIsHovered(true);
-    // Start needle spin animation on hover
-    const spinAnimation = () => {
-      if (isHovered) {
-        setNeedleRotation(prev => prev + 2); // Continuous spin
-        requestAnimationFrame(spinAnimation);
-      }
-    };
-    requestAnimationFrame(spinAnimation);
+    // Simply highlight on hover, don't spin continuously
   };
 
   const handleMouseLeaveNeedle = () => {
@@ -325,7 +291,7 @@ const CockpitGauge: React.FC<{
       sx={{ 
         position: 'relative', 
         width: size, 
-        height: size,
+        height: size / 2 + 40,
         cursor: 'pointer',
         '&:hover': {
           transform: 'scale(1.02)',
@@ -338,7 +304,7 @@ const CockpitGauge: React.FC<{
       onClick={handleMouseClick}
     >
       {/* Gauge background with luxury styling */}
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: 'absolute', top: 0 }}>
+      <svg width={size} height={size / 2 + 20} style={{ position: 'absolute', top: 0 }}>
         <defs>
           {/* Gradient for gauge background */}
           <linearGradient id={`gauge-bg-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -449,7 +415,6 @@ const CockpitGauge: React.FC<{
         <g 
           transform={`rotate(${hasLoaded || isSpinning ? needleRotation : -90} ${size / 2} ${size / 2})`}
           style={{
-            transformOrigin: `${size / 2}px ${size / 2}px`,
             transition: isSpinning 
               ? `transform ${2.5}s cubic-bezier(0.25, 0.46, 0.45, 0.94)` // Smooth spin
               : hasLoaded 
@@ -459,80 +424,76 @@ const CockpitGauge: React.FC<{
           onMouseEnter={handleMouseEnterNeedle}
           onMouseLeave={handleMouseLeaveNeedle}
         >
-          {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM GAUGE CENTER */}
-          <path
-            d={`M ${size / 2} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} L ${size / 2} ${size / 2 + 1.5} Z`}
-            fill="url(#luxury-needle-gradient)"
-            stroke="#2C3E50"
-            strokeWidth="0.3"
-          />
-          
-          {/* CHROME TIP - POINTED LUXURY STYLE */}
-          <path
-            d={`M ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 12)} ${size / 2} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} Z`}
-            fill="url(#chrome-tip-gradient)"
-            stroke="#BDC3C7"
-            strokeWidth="0.2"
-          />
+          {/* FIXED LUXURY NEEDLE - PROPERLY ANCHORED AT CENTER */}
+          <g>
+            {/* Needle body - starts from center and extends outward */}
+            <path
+              d={`M ${size / 2 - 2} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} L ${size / 2 + 2} ${size / 2} Z`}
+              fill="url(#luxury-needle-gradient)"
+              stroke="#2C3E50"
+              strokeWidth="0.5"
+              filter={`url(#needle-shadow-${label})`}
+            />
+            
+            {/* Chrome tip */}
+            <path
+              d={`M ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 15)} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} Z`}
+              fill="url(#chrome-tip-gradient)"
+              stroke="#BDC3C7"
+              strokeWidth="0.3"
+            />
+            
+            {/* Center cap to hide needle base */}
+            <circle
+              cx={size / 2}
+              cy={size / 2}
+              r="3"
+              fill="#2C3E50"
+            />
+          </g>
         </g>
 
-        {/* LUXURY BASE HUB ON TOP OF LIVE INDICATOR */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="8"
-          fill="url(#base-gradient)"
-          stroke="#34495E"
-          strokeWidth="1"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="4"
-          fill="#2C3E50"
-          stroke="#000"
-          strokeWidth="1"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        {/* Center hub with luxury details */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="8"
-          fill="#34495E"
-          stroke="#2C3E50"
-          strokeWidth="2"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        {/* Inner hub detail */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="5"
-          fill="url(#metallic-shine-${label})"
-          opacity="0.8"
-        />
-        
-        {/* Center dot */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="2"
-          fill={color}
-        />
+        {/* FIXED CENTER HUB - PROPERLY COVERS NEEDLE BASE */}
+        <g>
+          {/* Outer ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="10"
+            fill="url(#base-gradient)"
+            stroke="#34495E"
+            strokeWidth="1.5"
+          />
+          
+          {/* Middle ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="7"
+            fill="#34495E"
+            stroke="#2C3E50"
+            strokeWidth="1"
+          />
+          
+          {/* Inner metallic detail */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="5"
+            fill={`url(#metallic-shine-${label})`}
+            opacity="0.9"
+          />
+          
+          {/* Center dot */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="3"
+            fill={color}
+            stroke="#000"
+            strokeWidth="0.5"
+          />
+        </g>
         
         {/* Live indicator pulse */}
         {isLive && (
@@ -561,7 +522,7 @@ const CockpitGauge: React.FC<{
       <Box
         sx={{
           position: 'absolute',
-          bottom: size * 0.3,
+          bottom: 5,
           left: '50%',
           transform: 'translateX(-50%)',
           textAlign: 'center',
@@ -761,8 +722,6 @@ const MarketCommandCenter: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [procedureModalOpen, setProcedureModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
-  const [showCategories, setShowCategories] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -807,24 +766,6 @@ const MarketCommandCenter: React.FC = () => {
     return () => clearInterval(interval);
   }, [fetchAllData, liveData]);
 
-  // Scroll detection effect
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const threshold = 200; // Hide categories after scrolling 200px
-      
-      if (scrollY > threshold && showCategories) {
-        setShowCategories(false);
-        setIsScrolled(true);
-      } else if (scrollY <= threshold && !showCategories) {
-        setShowCategories(true);
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [showCategories]);
 
   // Get market metrics from comprehensive data with fallback to demo data
   const marketMetrics = useMemo(() => {
@@ -1038,7 +979,7 @@ const MarketCommandCenter: React.FC = () => {
 
       {/* Cockpit-style gauges */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={isScrolled ? 12 : 8} sx={{ transition: 'all 0.3s ease-in-out' }}>
+        <Grid item xs={12} md={8}>
           <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
               Market Intelligence Dashboard
@@ -1112,21 +1053,12 @@ const MarketCommandCenter: React.FC = () => {
           </Card>
         </Grid>
         
-        {!isScrolled && (
-          <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TerritoryPremiumData territories={marketData?.territories || []} />
             
             {/* Compact Category Filter */}
-            <AnimatePresence>
-              {viewMode === 'procedures' && marketData?.categories && showCategories && (
-                <motion.div
-                  initial={{ opacity: 1, height: 'auto' }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ overflow: 'hidden' }}
-                >
+            {viewMode === 'procedures' && marketData?.categories && (
                   <Card sx={{ p: 2 }}>
                     <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                       <Category sx={{ mr: 0.5, fontSize: 18 }} />
@@ -1216,12 +1148,9 @@ const MarketCommandCenter: React.FC = () => {
                   </Typography>
                 )}
               </Card>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            )}
           </Box>
-          </Grid>
-        )}
+        </Grid>
       </Grid>
 
       {/* Search and filters */}
