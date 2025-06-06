@@ -68,29 +68,24 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
     }
   }, [targetAngle, api, hasLoaded]);
   
-  // Hover vibration effect
+  // Hover spinning effect
   useEffect(() => {
     if (isHovered) {
-      const vibrate = () => {
-        api.start({
-          angle: targetAngle + (Math.random() - 0.5) * 4, // ±2° vibration
-          config: { tension: 300, friction: 10 }
-        });
-        animationRef.current = requestAnimationFrame(vibrate);
-      };
-      vibrate();
+      // Continuous spinning on hover
+      api.start({
+        from: { angle: targetAngle },
+        to: { angle: targetAngle + 360 },
+        loop: true,
+        config: { duration: 2000, easing: t => t } // Linear easing for smooth spin
+      });
     } else {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      api.start({ angle: targetAngle });
+      // Stop spinning and return to target angle
+      api.stop();
+      api.start({ 
+        angle: targetAngle,
+        config: { tension: 40, friction: 12, mass: 2.5 }
+      });
     }
-    
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
   }, [isHovered, targetAngle, api]);
   
   // Calculate pulsation offset
