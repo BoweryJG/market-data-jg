@@ -43,14 +43,6 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
     }
   }));
   
-  // Continuous pulsation
-  const [{ pulsate }, pulsateApi] = useSpring(() => ({
-    from: { pulsate: 0 },
-    to: { pulsate: 1 },
-    loop: true,
-    config: { duration: 3000 }
-  }));
-  
   // Initial load animation sequence
   useEffect(() => {
     if (!hasLoaded) {
@@ -92,9 +84,6 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
       });
     }
   }, [isHovered, targetAngle, api]);
-  
-  // Calculate pulsation offset
-  const pulseOffset = pulsate.to(p => Math.sin(p * Math.PI * 2) * 0.5);
   
   return (
     <Box 
@@ -185,9 +174,7 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
         
         {/* ANIMATED NEEDLE GROUP - ONLY NEEDLE ROTATES */}
         <animated.g 
-          transform={angle.to(a => 
-            `rotate(${a + pulseOffset.get()} ${size / 2} ${size / 2})`
-          )}
+          transform={angle.to(a => `rotate(${a} ${size / 2} ${size / 2})`)}
           style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
         >
           {/* Needle with filter */}

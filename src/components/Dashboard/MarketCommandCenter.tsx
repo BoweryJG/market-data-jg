@@ -785,16 +785,18 @@ const MarketCommandCenter: React.FC = () => {
     comprehensiveDataService.testSpecificTables().then(result => {
       console.log('🧪 Table test result:', result);
     });
+  }, []); // Only run once on mount
+
+  // Separate effect for live data refresh
+  useEffect(() => {
+    if (!liveData) return;
     
-    // Set up live data refresh
     const interval = setInterval(() => {
-      if (liveData) {
-        fetchAllData();
-      }
+      fetchAllData();
     }, 30000); // Refresh every 30 seconds
 
     return () => clearInterval(interval);
-  }, [fetchAllData, liveData]);
+  }, [liveData, fetchAllData]);
 
   // Handle scroll for sticky search bar
   useEffect(() => {
@@ -818,8 +820,11 @@ const MarketCommandCenter: React.FC = () => {
       marketMetricsStructure: marketData?.marketMetrics
     });
     
-    if (!marketData || marketData.procedures.length === 0) {
-      console.log('⚠️ Using fallback demo data - no procedures found');
+    if (!marketData || !marketData.procedures || marketData.procedures.length === 0) {
+      // Only log warning if we don't have data, not on initial load
+      if (marketData === null) {
+        console.log('⚠️ Using fallback demo data - no procedures found');
+      }
       // Return demo data when database is unavailable
       return {
         totalMarketSize: 134866, // $134.9B
@@ -1309,7 +1314,6 @@ const MarketCommandCenter: React.FC = () => {
         component={Paper} 
         sx={{ 
           maxHeight: isSearchSticky ? 'calc(100vh - 140px)' : '60vh',
-          height: isSearchSticky ? 'calc(100vh - 140px)' : 'auto',
           transition: 'all 0.3s ease'
         }}
       >
