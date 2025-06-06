@@ -325,7 +325,7 @@ const CockpitGauge: React.FC<{
       sx={{ 
         position: 'relative', 
         width: size, 
-        height: size / 2 + 40,
+        height: size,
         cursor: 'pointer',
         '&:hover': {
           transform: 'scale(1.02)',
@@ -338,7 +338,7 @@ const CockpitGauge: React.FC<{
       onClick={handleMouseClick}
     >
       {/* Gauge background with luxury styling */}
-      <svg width={size} height={size / 2 + 20} style={{ position: 'absolute', top: 0 }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: 'absolute', top: 0 }}>
         <defs>
           {/* Gradient for gauge background */}
           <linearGradient id={`gauge-bg-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -449,6 +449,7 @@ const CockpitGauge: React.FC<{
         <g 
           transform={`rotate(${hasLoaded || isSpinning ? needleRotation : -90} ${size / 2} ${size / 2})`}
           style={{
+            transformOrigin: `${size / 2}px ${size / 2}px`,
             transition: isSpinning 
               ? `transform ${2.5}s cubic-bezier(0.25, 0.46, 0.45, 0.94)` // Smooth spin
               : hasLoaded 
@@ -560,7 +561,7 @@ const CockpitGauge: React.FC<{
       <Box
         sx={{
           position: 'absolute',
-          bottom: 5,
+          bottom: size * 0.3,
           left: '50%',
           transform: 'translateX(-50%)',
           textAlign: 'center',
@@ -760,6 +761,8 @@ const MarketCommandCenter: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [procedureModalOpen, setProcedureModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
+  const [showCategories, setShowCategories] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -803,6 +806,25 @@ const MarketCommandCenter: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [fetchAllData, liveData]);
+
+  // Scroll detection effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const threshold = 200; // Hide categories after scrolling 200px
+      
+      if (scrollY > threshold && showCategories) {
+        setShowCategories(false);
+        setIsScrolled(true);
+      } else if (scrollY <= threshold && !showCategories) {
+        setShowCategories(true);
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [showCategories]);
 
   // Get market metrics from comprehensive data with fallback to demo data
   const marketMetrics = useMemo(() => {
@@ -1016,7 +1038,7 @@ const MarketCommandCenter: React.FC = () => {
 
       {/* Cockpit-style gauges */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={isScrolled ? 12 : 8} sx={{ transition: 'all 0.3s ease-in-out' }}>
           <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
               Market Intelligence Dashboard
@@ -1090,16 +1112,25 @@ const MarketCommandCenter: React.FC = () => {
           </Card>
         </Grid>
         
-        <Grid item xs={12} md={4}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TerritoryPremiumData territories={marketData?.territories || []} />
+        {!isScrolled && (
+          <Grid item xs={12} md={4}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TerritoryPremiumData territories={marketData?.territories || []} />
             
             {/* Compact Category Filter */}
-            {viewMode === 'procedures' && marketData?.categories && (
-              <Card sx={{ p: 2 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-                  <Category sx={{ mr: 0.5, fontSize: 18 }} />
-                  Categories
+            <AnimatePresence>
+              {viewMode === 'procedures' && marketData?.categories && showCategories && (
+                <motion.div
+                  initial={{ opacity: 1, height: 'auto' }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <Card sx={{ p: 2 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                      <Category sx={{ mr: 0.5, fontSize: 18 }} />
+                      Categories
                   {selectedCategory && (
                     <Chip 
                       label="Clear" 
@@ -1185,9 +1216,12 @@ const MarketCommandCenter: React.FC = () => {
                   </Typography>
                 )}
               </Card>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Box>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
 
       {/* Search and filters */}
