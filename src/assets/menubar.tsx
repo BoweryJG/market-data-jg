@@ -33,6 +33,8 @@ import LogoutModal from '../components/Auth/LogoutModal';
 import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../auth';
 import DashboardSelector from '../components/Navigation/DashboardSelector';
+import SettingsModal from '../components/Settings/SettingsModal';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const ACCENT_COLOR = '#00ffc6';
 
@@ -106,6 +108,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [signupOpen, setSignupOpen] = React.useState(false);
   const [logoutOpen, setLogoutOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
   const { user } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -460,6 +463,9 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           <IconButton color="inherit" size="small" onClick={() => setSearchOpen(true)} sx={{ ml: 1 }}>
             <SearchIcon />
           </IconButton>
+          <IconButton color="inherit" size="small" onClick={() => setSettingsOpen(true)} sx={{ ml: 1 }}>
+            <SettingsIcon />
+          </IconButton>
         </Box>
           
           {/* Auth Buttons - Always visible except on very small screens */}
@@ -586,6 +592,10 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
       open={dashboardSelectorOpen} 
       onClose={() => setDashboardSelectorOpen(false)} 
       onSalesModeToggle={onSalesModeToggle}
+    />
+    <SettingsModal 
+      open={settingsOpen} 
+      onClose={() => setSettingsOpen(false)} 
     />
     </>
   );

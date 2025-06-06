@@ -39,6 +39,8 @@ import {
   ButtonGroup,
   Button,
 } from '@mui/material';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import ExpandLess from '@mui/icons-material/ExpandLess';
 import {
   TrendingUp,
   TrendingDown,
@@ -717,6 +719,8 @@ const MarketCommandCenter: React.FC = () => {
     direction: 'desc',
   });
   const [liveData, setLiveData] = useState(true);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [isSearchSticky, setIsSearchSticky] = useState(false);
   const [dataDiscoveryMode, setDataDiscoveryMode] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
@@ -765,6 +769,17 @@ const MarketCommandCenter: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [fetchAllData, liveData]);
+
+  // Handle scroll for sticky search bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSearchSticky(scrollY > 400); // Make sticky after scrolling past header
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
 
   // Get market metrics from comprehensive data with fallback to demo data
@@ -1076,7 +1091,7 @@ const MarketCommandCenter: React.FC = () => {
                   {marketData.categories
                     .filter(cat => (selectedIndustry === 'all' || cat.applicable_to === selectedIndustry || cat.industry === selectedIndustry) && 
                                    cat.parent_id === null) // Only show parent categories since procedures link to these
-                    .slice(0, 8) // Show only top 8 categories to save space
+                    .slice(0, showAllCategories ? undefined : 8) // Show all or top 8 categories
                     .map((category) => {
                       const procedureCount = marketData.procedures
                         .filter(p => {
@@ -1143,9 +1158,23 @@ const MarketCommandCenter: React.FC = () => {
                     })}
                 </Box>
                 {marketData.categories.length > 8 && (
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                    +{marketData.categories.length - 8} more categories
-                  </Typography>
+                  <Button
+                    size="small"
+                    onClick={() => setShowAllCategories(!showAllCategories)}
+                    sx={{ 
+                      mt: 1, 
+                      textTransform: 'none',
+                      fontSize: '0.75rem',
+                      py: 0.5,
+                      px: 1
+                    }}
+                    endIcon={showAllCategories ? <ExpandLess /> : <ExpandMore />}
+                  >
+                    {showAllCategories 
+                      ? 'Show less' 
+                      : `+${marketData.categories.length - 8} more categories`
+                    }
+                  </Button>
                 )}
               </Card>
             )}
@@ -1154,7 +1183,19 @@ const MarketCommandCenter: React.FC = () => {
       </Grid>
 
       {/* Search and filters */}
-      <Card sx={{ p: 2, mb: 3 }}>
+      <Card sx={{ 
+        p: 2, 
+        mb: 3,
+        position: isSearchSticky ? 'sticky' : 'relative',
+        top: isSearchSticky ? 80 : 0, // Below navbar
+        zIndex: isSearchSticky ? 1100 : 1,
+        transition: 'all 0.3s ease',
+        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[1],
+        background: isSearchSticky 
+          ? alpha(theme.palette.background.paper, 0.95)
+          : theme.palette.background.paper,
+        backdropFilter: isSearchSticky ? 'blur(10px)' : 'none',
+      }}>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
             placeholder="Search procedures, categories..."
