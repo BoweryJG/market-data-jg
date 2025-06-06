@@ -800,7 +800,7 @@ const MarketCommandCenter: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsSearchSticky(scrollY > 400); // Make sticky after scrolling past header
+      setIsSearchSticky(scrollY > 200); // Make sticky after scrolling past header
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -1019,7 +1019,8 @@ const MarketCommandCenter: React.FC = () => {
       </Box>
 
       {/* Cockpit-style gauges */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      {!isSearchSticky && (
+        <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
@@ -1210,54 +1211,69 @@ const MarketCommandCenter: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+      )}
 
       {/* Search and filters */}
       <Card sx={{ 
-        p: 2, 
-        mb: 3,
+        p: isSearchSticky ? 1 : 2, 
+        mb: isSearchSticky ? 1 : 3,
         position: isSearchSticky ? 'sticky' : 'relative',
-        top: isSearchSticky ? 80 : 0, // Below navbar
+        top: isSearchSticky ? 64 : 0, // Below navbar
         zIndex: isSearchSticky ? 1100 : 1,
         transition: 'all 0.3s ease',
         boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[1],
         background: isSearchSticky 
-          ? alpha(theme.palette.background.paper, 0.95)
+          ? alpha(theme.palette.background.paper, 0.98)
           : theme.palette.background.paper,
         backdropFilter: isSearchSticky ? 'blur(10px)' : 'none',
       }}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isSearchSticky ? 1 : 2, 
+          alignItems: 'center', 
+          flexWrap: isSearchSticky ? 'nowrap' : 'wrap',
+          justifyContent: isSearchSticky ? 'space-between' : 'flex-start'
+        }}>
           <TextField
-            placeholder="Search procedures, categories..."
+            placeholder={isSearchSticky ? "Search..." : "Search procedures, categories..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            size={isSearchSticky ? "small" : "medium"}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search />
+                  <Search size={isSearchSticky ? 18 : 20} />
                 </InputAdornment>
               ),
             }}
-            sx={{ minWidth: 300 }}
+            sx={{ 
+              minWidth: isSearchSticky ? 200 : 300,
+              flexGrow: isSearchSticky ? 0 : 1,
+              maxWidth: isSearchSticky ? 250 : 400
+            }}
           />
           
-          <ButtonGroup variant="outlined">
+          <ButtonGroup variant="outlined" size={isSearchSticky ? "small" : "medium"}>
             <Button
               variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('all')}
+              sx={{ px: isSearchSticky ? 1 : 2 }}
             >
-              All ({marketData?.procedures.length || 0})
+              {isSearchSticky ? 'All' : `All (${marketData?.procedures.length || 0})`}
             </Button>
             <Button
               variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('dental')}
+              sx={{ px: isSearchSticky ? 1 : 2 }}
             >
-              Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
+              {isSearchSticky ? 'Dental' : `Dental (${marketData?.procedures.filter(p => p.industry === 'dental').length || 0})`}
             </Button>
             <Button
               variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('aesthetic')}
+              sx={{ px: isSearchSticky ? 1 : 2 }}
             >
-              Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
+              {isSearchSticky ? 'Aesthetic' : `Aesthetic (${marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})`}
             </Button>
           </ButtonGroup>
           
@@ -1267,21 +1283,36 @@ const MarketCommandCenter: React.FC = () => {
                 checked={viewMode === 'companies'}
                 onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
                 color="primary"
+                size={isSearchSticky ? "small" : "medium"}
               />
             }
-            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
-            sx={{ ml: 2 }}
+            label={isSearchSticky ? (viewMode === 'companies' ? 'Co.' : 'Proc.') : (viewMode === 'companies' ? 'Companies' : 'Procedures')}
+            sx={{ 
+              ml: isSearchSticky ? 1 : 2,
+              '& .MuiFormControlLabel-label': {
+                fontSize: isSearchSticky ? '0.85rem' : '1rem'
+              }
+            }}
           />
           
-          <Typography variant="body2" color="text.secondary">
-            Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
-          </Typography>
+          {!isSearchSticky && (
+            <Typography variant="body2" color="text.secondary">
+              Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
+            </Typography>
+          )}
         </Box>
       </Card>
 
 
       {/* Procedures/Companies table */}
-      <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          maxHeight: isSearchSticky ? 'calc(100vh - 140px)' : '60vh',
+          height: isSearchSticky ? 'calc(100vh - 140px)' : 'auto',
+          transition: 'all 0.3s ease'
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>
