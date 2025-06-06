@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
+import EnhancedTerritoryIntelligence from './EnhancedTerritoryIntelligence';
 import {
   Box,
   Typography,
@@ -38,9 +39,13 @@ import {
   Divider,
   ButtonGroup,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
+import Close from '@mui/icons-material/Close';
 import {
   TrendingUp,
   TrendingDown,
@@ -588,7 +593,7 @@ const CockpitGauge: React.FC<{
 };
 
 // Territory data component with premium styling
-const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories }) => {
+const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }> = ({ territories, onClick }) => {
   const theme = useTheme();
   
   return (
@@ -598,7 +603,14 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
         border: `2px solid ${theme.palette.warning.main}`,
         position: 'relative',
         overflow: 'visible',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: theme.shadows[8],
+        }
       }}
+      onClick={onClick}
     >
       <Box
         sx={{
@@ -635,6 +647,19 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
               }}
             />
           </motion.div>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              ml: 'auto', 
+              color: theme.palette.text.secondary,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5
+            }}
+          >
+            Click to open
+            <ExpandMore sx={{ fontSize: 16 }} />
+          </Typography>
         </Box>
         
         {territories.map((territory, index) => (
@@ -725,6 +750,7 @@ const MarketCommandCenter: React.FC = () => {
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [procedureModalOpen, setProcedureModalOpen] = useState(false);
+  const [territoryModalOpen, setTerritoryModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
 
   // Fetch all comprehensive data
@@ -1070,7 +1096,10 @@ const MarketCommandCenter: React.FC = () => {
         
         <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TerritoryPremiumData territories={marketData?.territories || []} />
+              <TerritoryPremiumData 
+                territories={marketData?.territories || []} 
+                onClick={() => setTerritoryModalOpen(true)}
+              />
             
             {/* Compact Category Filter */}
             {viewMode === 'procedures' && marketData?.categories && (
@@ -1556,6 +1585,40 @@ const MarketCommandCenter: React.FC = () => {
           company={selectedCompany}
         />
       )}
+
+      {/* Territory Intelligence Modal */}
+      <Dialog
+        open={territoryModalOpen}
+        onClose={() => setTerritoryModalOpen(false)}
+        maxWidth="xl"
+        fullWidth
+        PaperProps={{
+          sx: {
+            height: '90vh',
+            maxHeight: '90vh',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          borderBottom: 1,
+          borderColor: 'divider'
+        }}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Territory Intelligence Dashboard
+          </Typography>
+          <IconButton onClick={() => setTerritoryModalOpen(false)}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0 }}>
+          <Box sx={{ p: 3, height: '100%', overflow: 'auto' }}>
+            <EnhancedTerritoryIntelligence />
+          </Box>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
