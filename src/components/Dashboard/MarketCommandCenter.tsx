@@ -988,7 +988,12 @@ const MarketCommandCenter: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3, background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` }}>
+    <Box sx={{ 
+      p: 3, 
+      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+      minHeight: '100vh',
+      overflow: 'visible'
+    }}>
       {/* Header with live indicator */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -1313,7 +1318,7 @@ const MarketCommandCenter: React.FC = () => {
       <TableContainer 
         component={Paper} 
         sx={{ 
-          maxHeight: isSearchSticky ? 'calc(100vh - 140px)' : '60vh',
+          overflow: 'auto',
           transition: 'all 0.3s ease'
         }}
       >

@@ -19,7 +19,7 @@ import { SalesWorkspace } from './components/Workspace';
 import SupabaseTest from './components/Test/SupabaseTest';
 import { MagicLinkHandler } from './components/MagicLink/MagicLinkHandler';
 import { PremiumContentGenerator } from './components/PremiumContent/PremiumContentGenerator';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
 
 const App: React.FC = () => {
   const [salesMode, setSalesMode] = useState(false);
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             {salesMode ? (
               <>
                 <QuickActionsBar />
-                <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 } }}>
+                <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 }, minHeight: '100vh', overflow: 'visible' }}>
                   <Routes>
                     <Route path="/" element={<Navigate to="/sales-dashboard" />} />
                     <Route path="/sales-dashboard" element={<SalesDashboard />} />

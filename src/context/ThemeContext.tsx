@@ -54,6 +54,41 @@ const getTheme = (mode: ThemeMode): Theme => {
       },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          html: {
+            height: '100%',
+            scrollBehavior: 'smooth',
+          },
+          body: {
+            margin: 0,
+            padding: 0,
+            minHeight: '100vh',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            '&::-webkit-scrollbar': {
+              width: '12px',
+              height: '12px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: mode === 'light' ? '#f1f1f1' : '#2a2a2a',
+              borderRadius: '6px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: mode === 'light' ? '#888' : '#555',
+              borderRadius: '6px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: mode === 'light' ? '#555' : '#777',
+            },
+          },
+          '#root': {
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        },
+      },
       MuiCard: {
         styleOverrides: {
           root: {
