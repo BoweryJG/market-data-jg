@@ -286,6 +286,24 @@ class ComprehensiveDataService {
         ...processedDentalProcedures,
         ...processedAestheticProcedures,
       ];
+      
+      // Remove duplicates based on procedure name and industry
+      const uniqueProcedures = allProcedures.reduce((acc, procedure) => {
+        const key = `${procedure.procedure_name}_${procedure.industry}`;
+        const existing = acc.get(key);
+        
+        // Keep the procedure with more complete data (higher market size or more fields)
+        if (!existing || 
+            (procedure.market_size_2025_usd_millions > existing.market_size_2025_usd_millions) ||
+            (procedure.market_size_2025_usd_millions === existing.market_size_2025_usd_millions && 
+             procedure.yearly_growth_percentage > existing.yearly_growth_percentage)) {
+          acc.set(key, procedure);
+        }
+        
+        return acc;
+      }, new Map());
+      
+      const dedupedProcedures = Array.from(uniqueProcedures.values());
 
       // Process dental companies
       const processedDentalCompanies = (dentalCompaniesResponse.status === 'fulfilled' ? dentalCompaniesResponse.value.data || [] : [])
@@ -314,17 +332,18 @@ class ComprehensiveDataService {
 
       console.log(`✅ Processed ${processedDentalProcedures.length} dental and ${processedAestheticProcedures.length} aesthetic procedures`);
       console.log(`✅ Processed ${processedDentalCompanies.length} dental and ${processedAestheticCompanies.length} aesthetic companies`);
+      console.log(`✅ After deduplication: ${dedupedProcedures.length} unique procedures (removed ${allProcedures.length - dedupedProcedures.length} duplicates)`);
 
       // Extract territory data from procedures regional_popularity
-      const territories = this.extractTerritoryData(allProcedures);
+      const territories = this.extractTerritoryData(dedupedProcedures);
 
       // Calculate market metrics
-      const totalMarketSize = allProcedures.reduce((sum, p) => 
+      const totalMarketSize = dedupedProcedures.reduce((sum, p) => 
         sum + (p.market_size_2025_usd_millions || p.market_size_usd_millions || 0), 0
       );
       
-      const avgGrowth = allProcedures.length > 0 
-        ? allProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / allProcedures.length
+      const avgGrowth = dedupedProcedures.length > 0 
+        ? dedupedProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / dedupedProcedures.length
         : 0;
 
       // Combine and process categories for filtering - prioritize hierarchy
@@ -337,14 +356,14 @@ class ComprehensiveDataService {
       ];
 
       const comprehensiveData: ComprehensiveMarketData = {
-        procedures: allProcedures,
+        procedures: dedupedProcedures,
         companies: allCompanies,
         categories: processedCategories,
         territories,
         analytics: [], // Empty for now - focus on procedures
         marketMetrics: {
           totalMarketSize,
-          totalProcedures: allProcedures.length,
+          totalProcedures: dedupedProcedures.length,
           totalCompanies: allCompanies.length,
           averageGrowth: avgGrowth,
           territoryCount: territories.length,

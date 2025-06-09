@@ -922,6 +922,11 @@ const MarketCommandCenter: React.FC = () => {
       const procedureName = p.procedure_name || p.name || '';
       const category = p.category || p.normalized_category || p.clinical_category || '';
       
+      // Filter out procedures with both 0 market size and 0 growth (likely incomplete data)
+      const marketSize = p.market_size_2025_usd_millions || p.market_size_usd_millions || 0;
+      const growthRate = p.yearly_growth_percentage || p.growth_rate || 0;
+      const hasValidData = marketSize > 0 || growthRate > 0;
+      
       const matchesSearch = procedureName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
@@ -930,7 +935,7 @@ const MarketCommandCenter: React.FC = () => {
         p.category === selectedCategory ||
         p.normalized_category === selectedCategory ||
         p.clinical_category === selectedCategory;
-      return matchesSearch && matchesIndustry && matchesCategory;
+      return hasValidData && matchesSearch && matchesIndustry && matchesCategory;
     });
 
     filtered.sort((a, b) => {
