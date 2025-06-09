@@ -798,11 +798,23 @@ const MarketCommandCenter: React.FC = () => {
     return () => clearInterval(interval);
   }, [liveData, fetchAllData]);
 
-  // Handle scroll for sticky search bar
+  // Handle scroll for sticky search bar with smooth transition
+  const [scrollOpacity, setScrollOpacity] = useState(1);
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsSearchSticky(scrollY > 200); // Make sticky after scrolling past header
+      setIsSearchSticky(scrollY > 250); // Make sticky after scrolling past header
+      
+      // Calculate opacity for smooth fade
+      if (scrollY < 150) {
+        setScrollOpacity(1);
+      } else if (scrollY >= 150 && scrollY <= 250) {
+        // Smooth fade between 150px and 250px
+        const opacity = 1 - ((scrollY - 150) / 100);
+        setScrollOpacity(opacity);
+      } else {
+        setScrollOpacity(0);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -995,7 +1007,16 @@ const MarketCommandCenter: React.FC = () => {
       overflow: 'visible'
     }}>
       {/* Header with live indicator */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        mb: 4,
+        opacity: scrollOpacity,
+        transform: `scale(${0.9 + (scrollOpacity * 0.1)})`,
+        transformOrigin: 'top left',
+        transition: 'none', // Real-time updates
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
             Market Command Center v2.0
@@ -1029,8 +1050,19 @@ const MarketCommandCenter: React.FC = () => {
       </Box>
 
       {/* Cockpit-style gauges */}
-      {!isSearchSticky && (
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Box
+        sx={{
+          opacity: scrollOpacity,
+          transform: `translateY(${(1 - scrollOpacity) * -20}px) scale(${0.95 + (scrollOpacity * 0.05)})`,
+          transition: 'none', // Smooth real-time updates instead of CSS transition
+          visibility: scrollOpacity === 0 ? 'hidden' : 'visible',
+          height: scrollOpacity === 0 ? 0 : 'auto',
+          overflow: 'hidden',
+          mb: scrollOpacity === 0 ? 0 : 4,
+          pointerEvents: scrollOpacity < 0.5 ? 'none' : 'auto',
+        }}
+      >
+        <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
@@ -1221,7 +1253,7 @@ const MarketCommandCenter: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      )}
+      </Box>
 
       {/* Search and filters */}
       <Card sx={{ 
@@ -1230,7 +1262,7 @@ const MarketCommandCenter: React.FC = () => {
         position: isSearchSticky ? 'sticky' : 'relative',
         top: isSearchSticky ? 64 : 0, // Below navbar
         zIndex: isSearchSticky ? 1100 : 1,
-        transition: 'all 0.3s ease',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[1],
         background: isSearchSticky 
           ? alpha(theme.palette.background.paper, 0.98)
