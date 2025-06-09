@@ -1260,67 +1260,65 @@ const MarketCommandCenter: React.FC = () => {
       </Grid>
       </Box>
 
-      {/* Search and filters */}
+      {/* Search and filters - Always sticky */}
       <Card sx={{ 
-        p: isSearchSticky ? 1 : 2, 
-        mb: isSearchSticky ? 1 : 3,
-        position: isSearchSticky ? 'sticky' : 'relative',
-        top: isSearchSticky ? 64 : 0, // Below navbar
-        zIndex: isSearchSticky ? 1100 : 1,
+        p: 1.5, 
+        mb: 2,
+        position: 'sticky',
+        top: 64, // Below navbar
+        zIndex: 1100,
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[1],
-        background: isSearchSticky 
-          ? alpha(theme.palette.background.paper, 0.98)
-          : theme.palette.background.paper,
-        backdropFilter: isSearchSticky ? 'blur(10px)' : 'none',
+        boxShadow: theme.shadows[4],
+        background: alpha(theme.palette.background.paper, 0.98),
+        backdropFilter: 'blur(10px)',
       }}>
         <Box sx={{ 
           display: 'flex', 
-          gap: isSearchSticky ? 1 : 2, 
+          gap: 2, 
           alignItems: 'center', 
-          flexWrap: isSearchSticky ? 'nowrap' : 'wrap',
-          justifyContent: isSearchSticky ? 'space-between' : 'flex-start'
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start'
         }}>
           <TextField
-            placeholder={isSearchSticky ? "Search..." : "Search procedures, categories..."}
+            placeholder="Search procedures, categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            size={isSearchSticky ? "small" : "medium"}
+            size="medium"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search size={isSearchSticky ? 18 : 20} />
+                  <Search size={20} />
                 </InputAdornment>
               ),
             }}
             sx={{ 
-              minWidth: isSearchSticky ? 200 : 300,
-              flexGrow: isSearchSticky ? 0 : 1,
-              maxWidth: isSearchSticky ? 250 : 400
+              minWidth: 300,
+              flexGrow: 1,
+              maxWidth: 400
             }}
           />
           
-          <ButtonGroup variant="outlined" size={isSearchSticky ? "small" : "medium"}>
+          <ButtonGroup variant="outlined" size="medium">
             <Button
               variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('all')}
-              sx={{ px: isSearchSticky ? 1 : 2 }}
+              sx={{ px: 2 }}
             >
-              {isSearchSticky ? 'All' : `All (${marketData?.procedures.length || 0})`}
+              All ({marketData?.procedures.length || 0})
             </Button>
             <Button
               variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('dental')}
-              sx={{ px: isSearchSticky ? 1 : 2 }}
+              sx={{ px: 2 }}
             >
-              {isSearchSticky ? 'Dental' : `Dental (${marketData?.procedures.filter(p => p.industry === 'dental').length || 0})`}
+              Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
             </Button>
             <Button
               variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
               onClick={() => setSelectedIndustry('aesthetic')}
-              sx={{ px: isSearchSticky ? 1 : 2 }}
+              sx={{ px: 2 }}
             >
-              {isSearchSticky ? 'Aesthetic' : `Aesthetic (${marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})`}
+              Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
             </Button>
           </ButtonGroup>
           
@@ -1330,23 +1328,21 @@ const MarketCommandCenter: React.FC = () => {
                 checked={viewMode === 'companies'}
                 onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
                 color="primary"
-                size={isSearchSticky ? "small" : "medium"}
+                size="medium"
               />
             }
-            label={isSearchSticky ? (viewMode === 'companies' ? 'Co.' : 'Proc.') : (viewMode === 'companies' ? 'Companies' : 'Procedures')}
+            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
             sx={{ 
-              ml: isSearchSticky ? 1 : 2,
+              ml: 2,
               '& .MuiFormControlLabel-label': {
-                fontSize: isSearchSticky ? '0.85rem' : '1rem'
+                fontSize: '1rem'
               }
             }}
           />
           
-          {!isSearchSticky && (
-            <Typography variant="body2" color="text.secondary">
-              Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
-            </Typography>
-          )}
+          <Typography variant="body2" color="text.secondary">
+            Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
+          </Typography>
         </Box>
       </Card>
 
