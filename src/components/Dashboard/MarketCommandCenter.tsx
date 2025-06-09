@@ -798,23 +798,11 @@ const MarketCommandCenter: React.FC = () => {
     return () => clearInterval(interval);
   }, [liveData, fetchAllData]);
 
-  // Handle scroll for sticky search bar with smooth transition
-  const [scrollOpacity, setScrollOpacity] = useState(1);
+  // Simple scroll handling
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsSearchSticky(scrollY > 250); // Make sticky after scrolling past header
-      
-      // Calculate opacity for smooth fade
-      if (scrollY < 150) {
-        setScrollOpacity(1);
-      } else if (scrollY >= 150 && scrollY <= 250) {
-        // Smooth fade between 150px and 250px
-        const opacity = 1 - ((scrollY - 150) / 100);
-        setScrollOpacity(opacity);
-      } else {
-        setScrollOpacity(0);
-      }
+      setIsSearchSticky(scrollY > 250);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -1017,10 +1005,6 @@ const MarketCommandCenter: React.FC = () => {
         justifyContent: 'space-between', 
         alignItems: 'center', 
         mb: 4,
-        opacity: scrollOpacity,
-        transform: `scale(${0.9 + (scrollOpacity * 0.1)})`,
-        transformOrigin: 'top left',
-        transition: 'none', // Real-time updates
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
@@ -1057,14 +1041,8 @@ const MarketCommandCenter: React.FC = () => {
       {/* Cockpit-style gauges */}
       <Box
         sx={{
-          opacity: scrollOpacity,
-          transform: `translateY(${(1 - scrollOpacity) * -20}px) scale(${0.95 + (scrollOpacity * 0.05)})`,
-          transition: 'none', // Smooth real-time updates instead of CSS transition
-          visibility: scrollOpacity === 0 ? 'hidden' : 'visible',
-          height: scrollOpacity === 0 ? 0 : 'auto',
-          overflow: 'hidden',
-          mb: scrollOpacity === 0 ? 0 : 4,
-          pointerEvents: scrollOpacity < 0.5 ? 'none' : 'auto',
+          mb: 4,
+          display: isSearchSticky ? 'none' : 'block',
         }}
       >
         <Grid container spacing={3}>
@@ -1492,7 +1470,13 @@ const MarketCommandCenter: React.FC = () => {
                   <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
                   <TableCell align="right">
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M
+                      {(() => {
+                        const marketSize = procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0;
+                        if (marketSize >= 1000) {
+                          return `$${(marketSize / 1000).toFixed(1)}B`;
+                        }
+                        return `$${marketSize.toFixed(1)}M`;
+                      })()}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -1515,7 +1499,7 @@ const MarketCommandCenter: React.FC = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="body2">
-                      ${(procedure.average_cost_usd || 0).toLocaleString()}
+                      ${(procedure.average_cost_usd || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
