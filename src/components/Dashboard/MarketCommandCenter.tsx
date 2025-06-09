@@ -821,8 +821,8 @@ const MarketCommandCenter: React.FC = () => {
     });
     
     if (!marketData || !marketData.procedures || marketData.procedures.length === 0) {
-      // Only log warning if we don't have data, not on initial load
-      if (marketData === null) {
+      // Only log warning if loading is complete but no data found
+      if (marketData !== null && marketData?.procedures?.length === 0) {
         console.log('⚠️ Using fallback demo data - no procedures found');
       }
       // Return demo data when database is unavailable

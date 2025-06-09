@@ -206,7 +206,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
 
   // Helper functions for report generation
   const generateExecutiveSummary = (proc: any, enhanced: any) => {
-    const industryName = industry.charAt(0).toUpperCase() + industry.slice(1);
+    const industryName = industry ? industry.charAt(0).toUpperCase() + industry.slice(1) : 'Medical';
     return `${proc.name || proc.procedure_name} represents a ${
       proc.yearly_growth_percentage > 10 ? 'high-growth' : 'stable'
     } segment in the ${industryName} market with a current market size of $${

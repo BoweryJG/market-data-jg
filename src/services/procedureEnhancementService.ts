@@ -178,6 +178,8 @@ class ProcedureEnhancementService {
 
   private cleanText(text: string): string {
     return text
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/&[a-zA-Z]+;/g, '') // Remove HTML entities
       .replace(/\s+/g, ' ')
       .replace(/^[^a-zA-Z]+/, '')
       .replace(/[^a-zA-Z]+$/, '')
@@ -206,6 +208,7 @@ class ProcedureEnhancementService {
 
     // Find the most comprehensive description from search results
     const bestDescription = descriptions
+      .map(d => this.cleanText(d)) // Clean HTML from descriptions
       .filter(d => d.length > 100)
       .sort((a, b) => b.length - a.length)[0];
 
