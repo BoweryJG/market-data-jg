@@ -40,6 +40,7 @@ import {
   Search as SearchIcon,
   OpenInNew as OpenInNewIcon,
   AutoAwesome as AIIcon,
+  AutoAwesome,
   Biotech as BiotechIcon,
   Psychology as PsychologyIcon,
   Person as PersonIcon,

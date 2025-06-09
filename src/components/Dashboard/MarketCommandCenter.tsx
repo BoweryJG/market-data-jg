@@ -1441,8 +1441,10 @@ const MarketCommandCenter: React.FC = () => {
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
                   onClick={() => {
+                    console.log('Procedure clicked:', procedure);
                     setSelectedProcedure(procedure);
                     setProcedureModalOpen(true);
+                    console.log('Modal state set - selectedProcedure:', procedure, 'modalOpen:', true);
                   }}
                   sx={{
                     cursor: 'pointer',
@@ -1656,6 +1658,7 @@ const MarketCommandCenter: React.FC = () => {
             setSelectedProcedure(null);
           }}
           procedure={selectedProcedure}
+          industry={selectedProcedure.industry as 'dental' | 'aesthetic'}
         />
       )}
 
