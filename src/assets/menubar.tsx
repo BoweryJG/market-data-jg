@@ -16,7 +16,6 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import PodcastsIcon from '@mui/icons-material/Podcasts';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import MemoryIcon from '@mui/icons-material/Memory';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -30,7 +29,6 @@ import LoginModal from '../components/Auth/LoginModal';
 import SignupModal from '../components/Auth/SignupModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import { useAuth } from '../auth';
-import DashboardSelector from '../components/Navigation/DashboardSelector';
 import SettingsModal from '../components/Settings/SettingsModal';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -43,7 +41,7 @@ const getNavLinks = (currentUrl: string) => {
       key: 'canvas',
       label: 'Canvas', 
       href: 'https://canvas.repspheres.com/',
-      icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
+      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
@@ -100,7 +98,6 @@ interface NavBarProps {
 
 export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [dashboardSelectorOpen, setDashboardSelectorOpen] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(null);
   const [loginOpen, setLoginOpen] = React.useState(false);
   const [signupOpen, setSignupOpen] = React.useState(false);
@@ -485,7 +482,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           ml: 'auto',
           gap: { xs: 0.5, sm: 1 },
         }}>
-          {/* Theme Toggle and Dashboard */}
+          {/* Theme Toggle Only */}
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -493,9 +490,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           opacity: 0.8,
         }}>
           <ThemeToggle />
-          <IconButton color="inherit" size="small" onClick={() => setDashboardSelectorOpen(true)} sx={{ ml: 1 }}>
-            <DashboardIcon />
-          </IconButton>
         </Box>
           
           {/* Auth Buttons - Always visible except on very small screens */}
@@ -634,11 +628,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
     <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
-    <DashboardSelector 
-      open={dashboardSelectorOpen} 
-      onClose={() => setDashboardSelectorOpen(false)} 
-      onSalesModeToggle={onSalesModeToggle}
-    />
     <SettingsModal 
       open={settingsOpen} 
       onClose={() => setSettingsOpen(false)} 
