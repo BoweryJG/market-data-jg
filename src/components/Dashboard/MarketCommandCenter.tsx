@@ -300,6 +300,7 @@ const CockpitGauge: React.FC<{
         width: size, 
         height: size / 2 + 40,
         cursor: 'pointer',
+        willChange: 'transform',
         '&:hover': {
           transform: 'scale(1.02)',
           transition: 'transform 0.2s ease',
@@ -798,14 +799,22 @@ const MarketCommandCenter: React.FC = () => {
     return () => clearInterval(interval);
   }, [liveData, fetchAllData]);
 
-  // Simple scroll handling
+  // Optimized scroll handling with throttling
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsSearchSticky(scrollY > 250);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          setIsSearchSticky(scrollY > 250);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -996,8 +1005,7 @@ const MarketCommandCenter: React.FC = () => {
     <Box sx={{ 
       p: 3, 
       background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-      minHeight: '100vh',
-      overflow: 'visible'
+      minHeight: '100vh'
     }}>
       {/* Header with live indicator */}
       <Box sx={{ 
@@ -1245,10 +1253,12 @@ const MarketCommandCenter: React.FC = () => {
         position: 'sticky',
         top: 64, // Below navbar
         zIndex: 1100,
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: theme.shadows[4],
+        transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[2],
         background: alpha(theme.palette.background.paper, 0.98),
         backdropFilter: 'blur(10px)',
+        transform: isSearchSticky ? 'translateY(0)' : 'translateY(0)',
+        willChange: 'transform, box-shadow',
       }}>
         <Box sx={{ 
           display: 'flex', 
@@ -1330,7 +1340,20 @@ const MarketCommandCenter: React.FC = () => {
         component={Paper} 
         sx={{ 
           overflow: 'auto',
-          transition: 'all 0.3s ease'
+          maxHeight: 'calc(100vh - 300px)',
+          '&::-webkit-scrollbar': {
+            width: '12px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.divider,
+            borderRadius: '6px',
+            '&:hover': {
+              backgroundColor: theme.palette.text.disabled,
+            }
+          },
+          '& .MuiTable-root': {
+            tableLayout: 'fixed',
+          }
         }}
       >
         <Table stickyHeader>

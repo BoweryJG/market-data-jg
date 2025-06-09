@@ -32,7 +32,7 @@ const App: React.FC = () => {
             {salesMode ? (
               <>
                 <QuickActionsBar />
-                <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 }, minHeight: '100vh', overflow: 'visible' }}>
+                <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 }, minHeight: '100vh' }}>
                   <Routes>
                     <Route path="/" element={<Navigate to="/sales-dashboard" />} />
                     <Route path="/sales-dashboard" element={<SalesDashboard />} />
