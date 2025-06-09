@@ -463,7 +463,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
         {/* Key metrics */}
         <Grid container spacing={2}>
           {averageCost && (
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <MoneyIcon />
                 <Box>
@@ -478,7 +478,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
             </Grid>
           )}
           {growthRate && (
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TrendingUpIcon />
                 <Box>
@@ -492,8 +492,23 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
               </Box>
             </Grid>
           )}
+          {procedure.market_maturity_stage && (
+            <Grid item xs={12} sm={3}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AutoAwesome />
+                <Box>
+                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                    Market Maturity
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold">
+                    {procedure.market_maturity_stage}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          )}
           {marketSize && (
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <ScienceIcon />
                 <Box>
@@ -897,6 +912,48 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                         }}
                       />
                     </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+
+            {procedure.market_maturity_stage && (
+              <Grid item xs={12} sm={6}>
+                <Card elevation={0} sx={{ 
+                  backgroundColor: 'rgba(30, 41, 59, 0.8)', 
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <AutoAwesome sx={{ color: '#06B6D4' }} />
+                      <Typography variant="h6" sx={{ color: 'white' }}>Market Maturity</Typography>
+                    </Box>
+                    <Chip
+                      label={procedure.market_maturity_stage}
+                      size="large"
+                      color={
+                        procedure.market_maturity_stage === 'Emerging' ? 'success' :
+                        procedure.market_maturity_stage === 'Growth' ? 'primary' :
+                        procedure.market_maturity_stage === 'Expansion' ? 'info' :
+                        procedure.market_maturity_stage === 'Mature' ? 'warning' :
+                        procedure.market_maturity_stage === 'Saturated' ? 'error' :
+                        'default'
+                      }
+                      sx={{
+                        fontWeight: 'bold',
+                        fontSize: '1.1rem',
+                        py: 2,
+                        px: 3
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ mt: 1.5, color: 'rgba(255, 255, 255, 0.7)' }}>
+                      {procedure.market_maturity_stage === 'Emerging' && 'High growth potential, early adopter phase'}
+                      {procedure.market_maturity_stage === 'Growth' && 'Rapid expansion, increasing adoption'}
+                      {procedure.market_maturity_stage === 'Expansion' && 'Steady growth, mainstream market'}
+                      {procedure.market_maturity_stage === 'Mature' && 'Established market, stable returns'}
+                      {procedure.market_maturity_stage === 'Saturated' && 'Low growth, market consolidation'}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>

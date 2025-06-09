@@ -86,6 +86,7 @@ export interface DentalProcedure {
   popularity?: number;
   imageUrl?: string;
   procedure_source?: 'dental';
+  market_maturity_stage?: 'Emerging' | 'Growth' | 'Expansion' | 'Mature' | 'Saturated' | null;
 }
 
 export interface AestheticProcedure {
@@ -105,6 +106,7 @@ export interface AestheticProcedure {
   yearly_growth_percentage?: number;
   average_cost_usd?: number;
   imageUrl?: string;
+  market_maturity_stage?: 'Emerging' | 'Growth' | 'Expansion' | 'Mature' | 'Saturated' | null;
 }
 
 export interface Company {

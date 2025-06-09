@@ -9,7 +9,9 @@
     "preview": "node --max-old-space-size=8192 ./node_modules/.bin/vite preview",
     "lint": "node --max-old-space-size=8192 ./node_modules/.bin/eslint . --ext .ts,.tsx",
     "process-data": "node --max-old-space-size=8192",
-    "stream-csv": "node --max-old-space-size=8192 scripts/process-data-streaming.js"
+    "stream-csv": "node --max-old-space-size=8192 scripts/process-data-streaming.js",
+    "enrich:procedures": "node --max-old-space-size=8192 ./node_modules/.bin/ts-node scripts/enrichProcedureDataMock.ts",
+    "apply:enrichment": "node --max-old-space-size=8192 ./node_modules/.bin/ts-node scripts/applyEnrichment.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -37,12 +39,14 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/node": "^22.15.30",
     "@types/react": "^18.2.62",
     "@types/react-dom": "^18.2.19",
     "@types/three": "^0.169.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.34.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.10"
   }

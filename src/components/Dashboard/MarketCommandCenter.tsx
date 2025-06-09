@@ -1367,6 +1367,15 @@ const MarketCommandCenter: React.FC = () => {
                       Growth %
                     </TableSortLabel>
                   </TableCell>
+                  <TableCell align="center">
+                    <TableSortLabel
+                      active={sortConfig.key === 'market_maturity_stage'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('market_maturity_stage')}
+                    >
+                      Maturity
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="right">
                     <TableSortLabel
                       active={sortConfig.key === 'average_cost_usd'}
@@ -1496,6 +1505,24 @@ const MarketCommandCenter: React.FC = () => {
                         {(procedure.yearly_growth_percentage || procedure.growth_rate || 0).toFixed(1)}%
                       </Typography>
                     </Box>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={procedure.market_maturity_stage || 'N/A'}
+                      size="small"
+                      color={
+                        procedure.market_maturity_stage === 'Emerging' ? 'success' :
+                        procedure.market_maturity_stage === 'Growth' ? 'primary' :
+                        procedure.market_maturity_stage === 'Expansion' ? 'info' :
+                        procedure.market_maturity_stage === 'Mature' ? 'warning' :
+                        procedure.market_maturity_stage === 'Saturated' ? 'error' :
+                        'default'
+                      }
+                      sx={{
+                        fontWeight: 'bold',
+                        minWidth: 80
+                      }}
+                    />
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="body2">
