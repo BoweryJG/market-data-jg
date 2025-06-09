@@ -68,29 +68,6 @@ const moreMenuItems = [
   { label: 'Legal', href: 'https://repspheres.com/legal' }
 ];
 
-// Inline ThemeToggle component to avoid import issues
-const ThemeToggle = () => {
-  const theme = useTheme();
-  const { colorMode, toggleColorMode } = useColorMode();
-  
-  return (
-    <IconButton 
-      onClick={toggleColorMode} 
-      color="inherit"
-      aria-label="toggle dark/light mode"
-      sx={{ 
-        opacity: 0.8,
-        '&:hover': { opacity: 1 }
-      }}
-    >
-      {theme.palette.mode === 'dark' ? (
-        <Brightness7Icon fontSize="small" />
-      ) : (
-        <Brightness4Icon fontSize="small" />
-      )}
-    </IconButton>
-  );
-};
 
 interface NavBarProps {
   onSalesModeToggle?: () => void;
@@ -105,6 +82,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const { user } = useAuth();
   const theme = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   
@@ -290,6 +268,28 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
             </ListItemButton>
           </ListItem>
         ))}
+        
+        {/* Theme Toggle in mobile */}
+        <ListItem disablePadding sx={{ mb: 0.5 }}>
+          <ListItemButton
+            onClick={() => {
+              toggleColorMode();
+            }}
+            sx={{ 
+              py: 0.75,
+              px: 2,
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+            }}
+          >
+            {theme.palette.mode === 'dark' ? (
+              <Brightness7Icon fontSize="small" sx={{ mr: 1.5 }} />
+            ) : (
+              <Brightness4Icon fontSize="small" sx={{ mr: 1.5 }} />
+            )}
+            {theme.palette.mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </ListItemButton>
+        </ListItem>
         
         {/* Settings in mobile */}
         <ListItem disablePadding sx={{ mb: 0.5 }}>
@@ -482,15 +482,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           ml: 'auto',
           gap: { xs: 0.5, sm: 1 },
         }}>
-          {/* Theme Toggle Only */}
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mr: 1,
-          opacity: 0.8,
-        }}>
-          <ThemeToggle />
-        </Box>
           
           {/* Auth Buttons - Always visible except on very small screens */}
           <Box sx={{
@@ -581,6 +572,27 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               }
             }}
           >
+            {/* Theme Toggle */}
+            <MenuItem
+              onClick={() => {
+                toggleColorMode();
+                handleMenuClose();
+              }}
+              sx={{ 
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5
+              }}
+            >
+              {theme.palette.mode === 'dark' ? (
+                <Brightness7Icon fontSize="small" />
+              ) : (
+                <Brightness4Icon fontSize="small" />
+              )}
+              {theme.palette.mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </MenuItem>
+            
             {/* Settings Option */}
             <MenuItem
               onClick={() => {
