@@ -10,7 +10,6 @@ html {
   height: 100%;
   /* Add smooth scrolling optimizations */
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: y proximity;
 }
 
 body {
@@ -24,10 +23,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Optimize scroll performance */
-  will-change: scroll-position;
-  /* Prevent overscroll bounce on macOS */
-  overscroll-behavior-y: none;
 }
 
 /* Root element should not have its own scroll */
@@ -71,22 +66,6 @@ code {
   scrollbar-color: #888 #f1f1f1;
 }
 
-/* Smooth transitions for all animated elements */
-* {
-  /* Optimize transitions */
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Optimize performance for animated elements */
-@media (prefers-reduced-motion: no-preference) {
-  .MuiBox-root,
-  .MuiCard-root,
-  .MuiPaper-root {
-    /* Enable hardware acceleration */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-}
 
 /* Ensure tables are scrollable */
 .MuiTableContainer-root {

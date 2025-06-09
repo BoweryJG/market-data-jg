@@ -807,7 +807,7 @@ const MarketCommandCenter: React.FC = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-          setIsSearchSticky(scrollY > 250);
+          setIsSearchSticky(scrollY > 100); // Lower threshold for quicker response
           ticking = false;
         });
         ticking = true;
@@ -1050,7 +1050,12 @@ const MarketCommandCenter: React.FC = () => {
       <Box
         sx={{
           mb: 4,
-          display: isSearchSticky ? 'none' : 'block',
+          opacity: isSearchSticky ? 0 : 1,
+          transform: isSearchSticky ? 'translateY(-50px)' : 'translateY(0)',
+          transition: 'opacity 0.3s ease, transform 0.3s ease',
+          pointerEvents: isSearchSticky ? 'none' : 'auto',
+          height: isSearchSticky ? 0 : 'auto',
+          overflow: 'hidden',
         }}
       >
         <Grid container spacing={3}>
@@ -1251,14 +1256,12 @@ const MarketCommandCenter: React.FC = () => {
         p: 1.5, 
         mb: 2,
         position: 'sticky',
-        top: 64, // Below navbar
+        top: isSearchSticky ? 64 : 'auto', // Stick to navbar when scrolled
         zIndex: 1100,
-        transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+        transition: 'all 0.3s ease',
         boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[2],
         background: alpha(theme.palette.background.paper, 0.98),
         backdropFilter: 'blur(10px)',
-        transform: isSearchSticky ? 'translateY(0)' : 'translateY(0)',
-        willChange: 'transform, box-shadow',
       }}>
         <Box sx={{ 
           display: 'flex', 
@@ -1340,7 +1343,6 @@ const MarketCommandCenter: React.FC = () => {
         component={Paper} 
         sx={{ 
           overflow: 'auto',
-          maxHeight: 'calc(100vh - 300px)',
           '&::-webkit-scrollbar': {
             width: '12px',
           },
@@ -1350,9 +1352,6 @@ const MarketCommandCenter: React.FC = () => {
             '&:hover': {
               backgroundColor: theme.palette.text.disabled,
             }
-          },
-          '& .MuiTable-root': {
-            tableLayout: 'fixed',
           }
         }}
       >
