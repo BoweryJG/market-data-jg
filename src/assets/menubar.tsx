@@ -24,13 +24,11 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import LoginModal from '../components/Auth/LoginModal';
 import SignupModal from '../components/Auth/SignupModal';
 import LogoutModal from '../components/Auth/LogoutModal';
-import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../auth';
 import DashboardSelector from '../components/Navigation/DashboardSelector';
 import SettingsModal from '../components/Settings/SettingsModal';
@@ -107,7 +105,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [loginOpen, setLoginOpen] = React.useState(false);
   const [signupOpen, setSignupOpen] = React.useState(false);
   const [logoutOpen, setLogoutOpen] = React.useState(false);
-  const [searchOpen, setSearchOpen] = React.useState(false);
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const { user } = useAuth();
   const theme = useTheme();
@@ -297,7 +294,24 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           </ListItem>
         ))}
         
-
+        {/* Settings in mobile */}
+        <ListItem disablePadding sx={{ mb: 0.5 }}>
+          <ListItemButton
+            onClick={() => {
+              toggleDrawer(false)({ type: 'click' } as any);
+              setSettingsOpen(true);
+            }}
+            sx={{ 
+              py: 0.75,
+              px: 2,
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+            }}
+          >
+            <SettingsIcon fontSize="small" sx={{ mr: 1.5 }} />
+            Settings
+          </ListItemButton>
+        </ListItem>
       </List>
       
       {/* Auth Buttons */}
@@ -390,6 +404,28 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               WebkitTextFillColor: 'transparent',
             }}>Spheres</Box>
           </Box>
+          
+          {/* Hidden 'g' intelligence link */}
+          <Box
+            component="span"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (onSalesModeToggle) onSalesModeToggle();
+            }}
+            sx={{
+              ml: 0.5,
+              cursor: 'pointer',
+              color: 'transparent',
+              userSelect: 'none',
+              fontSize: '1rem',
+              '&:hover': {
+                color: 'transparent', // Keep it hidden even on hover
+              }
+            }}
+          >
+            g
+          </Box>
         </Box>
 
         {/* Middle Section - Navigation (only on desktop) */}
@@ -449,7 +485,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           ml: 'auto',
           gap: { xs: 0.5, sm: 1 },
         }}>
-          {/* Theme Toggle - Subtle but visible */}
+          {/* Theme Toggle and Dashboard */}
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -459,12 +495,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           <ThemeToggle />
           <IconButton color="inherit" size="small" onClick={() => setDashboardSelectorOpen(true)} sx={{ ml: 1 }}>
             <DashboardIcon />
-          </IconButton>
-          <IconButton color="inherit" size="small" onClick={() => setSearchOpen(true)} sx={{ ml: 1 }}>
-            <SearchIcon />
-          </IconButton>
-          <IconButton color="inherit" size="small" onClick={() => setSettingsOpen(true)} sx={{ ml: 1 }}>
-            <SettingsIcon />
           </IconButton>
         </Box>
           
@@ -557,6 +587,23 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               }
             }}
           >
+            {/* Settings Option */}
+            <MenuItem
+              onClick={() => {
+                handleMenuClose();
+                setSettingsOpen(true);
+              }}
+              sx={{ 
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5
+              }}
+            >
+              <SettingsIcon fontSize="small" />
+              Settings
+            </MenuItem>
+            
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', my: 1 }} />
 
             {/* More Menu Items */}
@@ -587,7 +634,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
     <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
-    <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     <DashboardSelector 
       open={dashboardSelectorOpen} 
       onClose={() => setDashboardSelectorOpen(false)} 
