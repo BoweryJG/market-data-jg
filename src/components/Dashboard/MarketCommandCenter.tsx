@@ -42,6 +42,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  useMediaQuery,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -111,6 +114,11 @@ import {
   LocalPharmacy,
   Mood,
   SentimentVerySatisfied,
+  // Icons for compact mode
+  FilterAlt,
+  SwapHoriz,
+  ArrowDropDown,
+  AllInclusive,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
@@ -733,6 +741,8 @@ interface Category {
 
 const MarketCommandCenter: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const [marketData, setMarketData] = useState<ComprehensiveMarketData | null>(null);
   const [discoveredTables, setDiscoveredTables] = useState<TableInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -753,6 +763,7 @@ const MarketCommandCenter: React.FC = () => {
   const [procedureModalOpen, setProcedureModalOpen] = useState(false);
   const [territoryModalOpen, setTerritoryModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
+  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -1253,7 +1264,7 @@ const MarketCommandCenter: React.FC = () => {
 
       {/* Search and filters - Always sticky */}
       <Card sx={{ 
-        p: 1.5, 
+        p: isSearchSticky ? (isMobile ? 0.5 : 0.75) : 1.5, 
         mb: 2,
         position: 'sticky',
         top: isSearchSticky ? 64 : 'auto', // Stick to navbar when scrolled
@@ -1265,75 +1276,169 @@ const MarketCommandCenter: React.FC = () => {
       }}>
         <Box sx={{ 
           display: 'flex', 
-          gap: 2, 
+          gap: isSearchSticky ? 1 : 2, 
           alignItems: 'center', 
-          flexWrap: 'wrap',
+          flexWrap: isSearchSticky && isMobile ? 'nowrap' : 'wrap',
           justifyContent: 'flex-start'
         }}>
           <TextField
-            placeholder="Search procedures, categories..."
+            placeholder={isSearchSticky && isMobile ? "Search..." : "Search procedures, categories..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            size="medium"
+            size={isSearchSticky ? "small" : "medium"}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search size={20} />
+                  <Search sx={{ fontSize: isSearchSticky ? 18 : 20 }} />
                 </InputAdornment>
               ),
             }}
             sx={{ 
-              minWidth: 300,
+              minWidth: isMobile ? (isSearchSticky ? 120 : 200) : 300,
               flexGrow: 1,
-              maxWidth: 400
-            }}
-          />
-          
-          <ButtonGroup variant="outlined" size="medium">
-            <Button
-              variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('all')}
-              sx={{ px: 2 }}
-            >
-              All ({marketData?.procedures.length || 0})
-            </Button>
-            <Button
-              variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('dental')}
-              sx={{ px: 2 }}
-            >
-              Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
-            </Button>
-            <Button
-              variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('aesthetic')}
-              sx={{ px: 2 }}
-            >
-              Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
-            </Button>
-          </ButtonGroup>
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={viewMode === 'companies'}
-                onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
-                color="primary"
-                size="medium"
-              />
-            }
-            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
-            sx={{ 
-              ml: 2,
-              '& .MuiFormControlLabel-label': {
-                fontSize: '1rem'
+              maxWidth: isSearchSticky && isMobile ? 200 : 400,
+              '& .MuiInputBase-input': {
+                fontSize: isSearchSticky ? '0.875rem' : '1rem',
               }
             }}
           />
           
-          <Typography variant="body2" color="text.secondary">
-            Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
-          </Typography>
+          {/* Industry Filter - Compact on scroll */}
+          {isSearchSticky && (isMobile || isTablet) ? (
+            <>
+              <Tooltip title="Filter by industry">
+                <IconButton
+                  onClick={(e) => setFilterMenuAnchor(e.currentTarget)}
+                  size="small"
+                  sx={{ 
+                    border: 1,
+                    borderColor: 'divider',
+                    bgcolor: selectedIndustry !== 'all' ? alpha(theme.palette.primary.main, 0.1) : 'transparent'
+                  }}
+                >
+                  <Badge 
+                    badgeContent={selectedIndustry === 'all' ? 0 : 1} 
+                    color="primary"
+                    variant="dot"
+                  >
+                    <FilterAlt sx={{ fontSize: 20 }} />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                anchorEl={filterMenuAnchor}
+                open={Boolean(filterMenuAnchor)}
+                onClose={() => setFilterMenuAnchor(null)}
+              >
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('all'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'all'}
+                >
+                  <AllInclusive sx={{ mr: 1, fontSize: 18 }} />
+                  All ({marketData?.procedures.length || 0})
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('dental'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'dental'}
+                >
+                  <MedicalServices sx={{ mr: 1, fontSize: 18 }} />
+                  Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('aesthetic'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'aesthetic'}
+                >
+                  <Spa sx={{ mr: 1, fontSize: 18 }} />
+                  Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <ButtonGroup variant="outlined" size={isSearchSticky ? "small" : "medium"}>
+              <Button
+                variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('all')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'All' : `All (${marketData?.procedures.length || 0})`}
+              </Button>
+              <Button
+                variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('dental')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'Dental' : `Dental (${marketData?.procedures.filter(p => p.industry === 'dental').length || 0})`}
+              </Button>
+              <Button
+                variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('aesthetic')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'Aesthetic' : `Aesthetic (${marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})`}
+              </Button>
+            </ButtonGroup>
+          )}
+          
+          {/* View Mode Toggle - Icon button when compact */}
+          {isSearchSticky && isMobile ? (
+            <Tooltip title={`Switch to ${viewMode === 'companies' ? 'Procedures' : 'Companies'}`}>
+              <IconButton
+                onClick={() => setViewMode(viewMode === 'companies' ? 'procedures' : 'companies')}
+                size="small"
+                sx={{ 
+                  border: 1,
+                  borderColor: 'divider',
+                  bgcolor: viewMode === 'companies' ? alpha(theme.palette.primary.main, 0.1) : 'transparent'
+                }}
+              >
+                <SwapHoriz sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={viewMode === 'companies'}
+                  onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
+                  color="primary"
+                  size={isSearchSticky ? "small" : "medium"}
+                />
+              }
+              label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
+              sx={{ 
+                ml: isSearchSticky ? 0 : 2,
+                '& .MuiFormControlLabel-label': {
+                  fontSize: isSearchSticky ? '0.875rem' : '1rem'
+                }
+              }}
+            />
+          )}
+          
+          {/* Results count - Hide on mobile when scrolled */}
+          {(!isSearchSticky || !isMobile) && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                display: isSearchSticky && isTablet ? 'none' : 'block'
+              }}
+            >
+              Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
+            </Typography>
+          )}
         </Box>
       </Card>
 
