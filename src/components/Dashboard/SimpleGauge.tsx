@@ -46,22 +46,29 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
   // Initial load animation sequence
   useEffect(() => {
     if (!hasLoaded) {
-      // Step 1: Quick spin to 270 (full revolution)
-      api.start({
-        angle: 270,
-        config: { tension: 100, friction: 10, mass: 1 },
-        onRest: () => {
-          // Step 2: Settle to actual value with heavy physics
-          api.start({
-            angle: targetAngle,
-            config: { tension: 30, friction: 15, mass: 3 }
-          });
-        }
-      });
+      // Delay the animation slightly to ensure component is fully mounted
+      const timer = setTimeout(() => {
+        // Start from left (-90) and animate to target with overshoot
+        api.start({
+          from: { angle: -90 },
+          to: { angle: targetAngle },
+          config: { 
+            tension: 50,    // Medium tension for smooth motion
+            friction: 8,    // Low friction for nice overshoot
+            mass: 1.5,      // Medium mass for responsive feel
+            clamp: false    // Allow overshoot for realistic effect
+          }
+        });
+      }, 100); // Small delay to ensure smooth load
+      
       setHasLoaded(true);
+      return () => clearTimeout(timer);
     } else {
       // Subsequent value changes
-      api.start({ angle: targetAngle });
+      api.start({ 
+        angle: targetAngle,
+        config: { tension: 40, friction: 12, mass: 2.5 }
+      });
     }
   }, [targetAngle, api, hasLoaded]);
   

@@ -1808,8 +1808,10 @@ const MarketCommandCenter: React.FC = () => {
         fullWidth
         PaperProps={{
           sx: {
-            height: '90vh',
-            maxHeight: '90vh',
+            height: '92vh',
+            maxHeight: '92vh',
+            display: 'flex',
+            flexDirection: 'column',
           }
         }}
       >
@@ -1818,7 +1820,9 @@ const MarketCommandCenter: React.FC = () => {
           justifyContent: 'space-between', 
           alignItems: 'center',
           borderBottom: 1,
-          borderColor: 'divider'
+          borderColor: 'divider',
+          flexShrink: 0,
+          minHeight: 'auto'
         }}>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             Territory Intelligence Dashboard
@@ -1827,9 +1831,38 @@ const MarketCommandCenter: React.FC = () => {
             <Close />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ p: 0 }}>
-          <Box sx={{ p: 3, height: '100%', overflow: 'auto' }}>
-            <EnhancedTerritoryIntelligence />
+        <DialogContent 
+          sx={{ 
+            p: 0,
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}
+        >
+          <Box 
+            sx={{ 
+              flex: 1,
+              overflow: 'auto',
+              height: '100%',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'rgba(0,0,0,0.05)',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '4px',
+                '&:hover': {
+                  background: 'rgba(0,0,0,0.3)',
+                }
+              }
+            }}
+          >
+            <Box sx={{ p: 3, minHeight: '100%' }}>
+              <EnhancedTerritoryIntelligence />
+            </Box>
           </Box>
         </DialogContent>
       </Dialog>

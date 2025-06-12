@@ -31,7 +31,7 @@ const glassStyles = {
 };
 
 const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
-  const { signUp } = useAuth();
+  const { signUpWithEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -47,7 +47,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      await signUp(email, password);
+      await signUpWithEmail(email, password);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
