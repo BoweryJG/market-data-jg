@@ -52,7 +52,7 @@ const getNavLinks = (currentUrl: string) => {
     { 
       key: 'podcast',
       label: 'Podcast', 
-      href: 'https://workshop-homepage.netlify.app/?page=podcast',
+      href: 'https://repspheres.com/podcast',
       icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
   ];
