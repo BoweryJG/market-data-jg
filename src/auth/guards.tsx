@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useRequireAuth } from './hooks';
 
@@ -16,14 +16,26 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   fallback = <div>Loading...</div>,
   redirectTo = '/login'
 }) => {
-  const { user, loading } = useRequireAuth(redirectTo);
+  const { user, loading } = useAuth();
+  
+  useEffect(() => {
+    if (!loading && !user && typeof window !== 'undefined') {
+      // For cross-domain auth, redirect to main domain
+      const isExternalRedirect = redirectTo.startsWith('http');
+      if (isExternalRedirect) {
+        window.location.href = redirectTo;
+      } else {
+        window.location.href = redirectTo;
+      }
+    }
+  }, [user, loading, redirectTo]);
   
   if (loading) {
     return <>{fallback}</>;
   }
   
   if (!user) {
-    return null;
+    return <>{fallback}</>;
   }
   
   return <>{children}</>;

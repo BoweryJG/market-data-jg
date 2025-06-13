@@ -3,6 +3,13 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
 
+// Import auth debug utility for development
+if (process.env.NODE_ENV === 'development') {
+  import('./utils/authDebug').then(module => {
+    console.log('Auth debug utility loaded');
+  });
+}
+
 // Ensure the browser tab displays the correct title
 document.title = 'Market Insights';
 

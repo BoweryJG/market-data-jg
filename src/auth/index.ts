@@ -4,3 +4,4 @@ export { supabase, getAppUrl, getRedirectUrl } from './supabase';
 export * from './hooks';
 export * from './guards';
 export * from './types';
+export * from './redirect';

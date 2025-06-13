@@ -1,0 +1,43 @@
+redirectsOrigin = "config"
+plugins = []
+headers = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "/Users/jasonsmacbookpro2022/market-data-jg/dist"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "npm install && npm run build:vite-only"
+
+[build.environment]
+NODE_VERSION = "18.19.0"
+NPM_VERSION = "10.2.3"
+NETLIFY_USE_YARN = "false"
+NETLIFY_SKIP_CACHE = "true"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
