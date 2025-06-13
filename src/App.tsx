@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } from './components/Dashboard';
 import DashboardUpdated from './components/Dashboard/DashboardUpdated';
+import { PublicMarketDashboard } from './components/Dashboard/PublicMarketDashboard';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -29,6 +30,16 @@ const App: React.FC = () => {
       <AuthProvider>
         <Router>
           <AuthGuard 
+            allowPublic={true}
+            publicComponent={
+              <OrbContextProvider>
+                <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)' }}>
+                  <PublicMarketDashboard 
+                    onLoginSuccess={() => window.location.reload()}
+                  />
+                </Box>
+              </OrbContextProvider>
+            }
             redirectTo={`https://repspheres.com/login?redirect=${encodeURIComponent(window.location.href)}`}
             fallback={
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>

@@ -6,6 +6,8 @@ interface AuthGuardProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   redirectTo?: string;
+  allowPublic?: boolean;
+  publicComponent?: React.ReactNode;
 }
 
 /**
@@ -14,12 +16,14 @@ interface AuthGuardProps {
 export const AuthGuard: React.FC<AuthGuardProps> = ({ 
   children, 
   fallback = <div>Loading...</div>,
-  redirectTo = '/login'
+  redirectTo = '/login',
+  allowPublic = false,
+  publicComponent
 }) => {
   const { user, loading } = useAuth();
   
   useEffect(() => {
-    if (!loading && !user && typeof window !== 'undefined') {
+    if (!loading && !user && !allowPublic && typeof window !== 'undefined') {
       // For cross-domain auth, redirect to main domain
       const isExternalRedirect = redirectTo.startsWith('http');
       if (isExternalRedirect) {
@@ -28,13 +32,16 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
         window.location.href = redirectTo;
       }
     }
-  }, [user, loading, redirectTo]);
+  }, [user, loading, redirectTo, allowPublic]);
   
   if (loading) {
     return <>{fallback}</>;
   }
   
   if (!user) {
+    if (allowPublic && publicComponent) {
+      return <>{publicComponent}</>;
+    }
     return <>{fallback}</>;
   }
   
