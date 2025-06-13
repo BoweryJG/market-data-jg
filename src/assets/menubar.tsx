@@ -52,7 +52,7 @@ const getNavLinks = (currentUrl: string) => {
     { 
       key: 'podcast',
       label: 'Podcast', 
-      href: 'https://repspheres.com/podcast',
+      href: 'https://podcast.repspheres.com',
       icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
   ];
