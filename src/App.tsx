@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } from './components/Dashboard';
 import DashboardUpdated from './components/Dashboard/DashboardUpdated';
+import SimpleLogin from './pages/SimpleLogin';
+import AuthCallback from './pages/AuthCallback';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -52,6 +54,8 @@ const App: React.FC = () => {
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
                   <Route path="/" element={<MarketCommandCenter />} />
+                  <Route path="/login" element={<SimpleLogin />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/dashboard" element={<MarketCommandCenter />} />
                   <Route path="/enhanced" element={<EnhancedMarketDashboard />} />
                   <Route path="/updated" element={<DashboardUpdated />} />

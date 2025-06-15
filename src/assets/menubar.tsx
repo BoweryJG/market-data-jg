@@ -27,11 +27,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import LoginModal from '../components/Auth/LoginModal';
-import SignupModal from '../components/Auth/SignupModal';
+import GlobalAuthModal from '../components/Auth/GlobalAuthModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../auth';
+import { useAuthModal } from '../hooks/useAuthModal';
 import DashboardSelector from '../components/Navigation/DashboardSelector';
 
 const ACCENT_COLOR = '#00ffc6';
@@ -102,11 +102,10 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [dashboardSelectorOpen, setDashboardSelectorOpen] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [loginOpen, setLoginOpen] = React.useState(false);
-  const [signupOpen, setSignupOpen] = React.useState(false);
   const [logoutOpen, setLogoutOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const { user } = useAuth();
+  const { isAuthModalOpen, openAuthModal, closeAuthModal, handleAuthSuccess } = useAuthModal();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -302,7 +301,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => setLoginOpen(true)}
+          onClick={() => openAuthModal()}
           sx={{
             ...loginButtonStyles,
             mb: 2,
@@ -315,7 +314,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
         <Button
           fullWidth
           variant="contained"
-          onClick={() => setSignupOpen(true)}
+          onClick={() => openAuthModal()}
           sx={{
             ...signupButtonStyles,
             ml: 0,
@@ -471,14 +470,14 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               <>
                 <Button
                   variant="outlined"
-                  onClick={() => setLoginOpen(true)}
+                  onClick={() => openAuthModal()}
                   sx={loginButtonStyles}
                 >
                   Log In
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => setSignupOpen(true)}
+                  onClick={() => openAuthModal()}
                   sx={signupButtonStyles}
                 >
                   Sign Up
@@ -578,8 +577,11 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
         </Drawer>
       </Toolbar>
     </AppBar>
-    <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
-    <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
+    <GlobalAuthModal 
+      open={isAuthModalOpen} 
+      onClose={closeAuthModal} 
+      onSuccess={handleAuthSuccess}
+    />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     <DashboardSelector 
