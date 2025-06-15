@@ -101,6 +101,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
+      // Store current URL before redirecting
+      if (typeof window !== 'undefined' && !options?.redirectTo) {
+        sessionStorage.setItem('authReturnUrl', window.location.href);
+        localStorage.setItem('authReturnUrl', window.location.href);
+      }
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {

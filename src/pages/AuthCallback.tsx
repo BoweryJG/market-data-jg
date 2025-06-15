@@ -19,8 +19,21 @@ export default function AuthCallback() {
         }
 
         if (session) {
-          // Successfully authenticated, redirect to home
-          navigate('/');
+          // Check for stored return URL
+          const returnUrl = sessionStorage.getItem('authReturnUrl') || localStorage.getItem('authReturnUrl');
+          
+          if (returnUrl) {
+            // Clean up stored URL
+            sessionStorage.removeItem('authReturnUrl');
+            localStorage.removeItem('authReturnUrl');
+            
+            // Navigate to the original page
+            const url = new URL(returnUrl);
+            navigate(url.pathname + url.search + url.hash);
+          } else {
+            // Default to home if no return URL
+            navigate('/');
+          }
         } else {
           // No session, redirect to login
           navigate('/login');
