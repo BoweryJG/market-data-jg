@@ -1,0 +1,34 @@
+{
+  "totalMedSpasFound": 29,
+  "byState": {
+    "NY": 25,
+    "FL": 4
+  },
+  "byCity": {
+    "New York": 20,
+    "Manhattan": 2,
+    "Brooklyn": 2,
+    "Miami Beach": 1,
+    "Aventura": 1,
+    "Long Island": 1,
+    "Miami": 1,
+    "Fort Lauderdale": 1
+  },
+  "byConfidence": {
+    "high": 23,
+    "medium": 6,
+    "low": 0
+  },
+  "chains": 12,
+  "services": {
+    "Aesthetic Services": 10,
+    "Botox/Neurotoxins": 1,
+    "Dermal Fillers": 1,
+    "Laser Treatments": 17,
+    "Hair Removal": 14,
+    "Body Contouring": 12,
+    "Skin Rejuvenation": 13,
+    "Anti-Aging": 2,
+    "Acne Treatment": 1
+  }
+}

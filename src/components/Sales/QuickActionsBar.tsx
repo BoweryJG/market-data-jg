@@ -186,7 +186,7 @@ const QuickActionsBar: React.FC = () => {
   // Desktop Navigation Bar
   const DesktopNav = () => (
     <AppBar
-      position="fixed"
+      position="sticky"
       sx={{
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.primary,
@@ -302,7 +302,7 @@ const QuickActionsBar: React.FC = () => {
   const MobileNav = () => (
     <>
       <AppBar
-        position="fixed"
+        position="sticky"
         sx={{
           backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
@@ -331,7 +331,7 @@ const QuickActionsBar: React.FC = () => {
         value={selectedNav}
         onChange={(_: React.SyntheticEvent, newValue: number) => setSelectedNav(newValue)}
         sx={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
@@ -352,7 +352,7 @@ const QuickActionsBar: React.FC = () => {
     <SpeedDial
       ariaLabel="Quick actions"
       sx={{
-        position: 'fixed',
+        position: 'absolute',
         bottom: isMobile ? 80 : 16,
         right: 16,
       }}
@@ -584,7 +584,7 @@ const QuickActionsBar: React.FC = () => {
           >
             <Paper
               sx={{
-                position: 'fixed',
+                position: 'absolute',
                 top: 70,
                 left: '50%',
                 transform: 'translateX(-50%)',

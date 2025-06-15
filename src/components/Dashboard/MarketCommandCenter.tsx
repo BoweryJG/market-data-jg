@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
+import EnhancedTerritoryIntelligence from './EnhancedTerritoryIntelligence';
 import {
   Box,
   Typography,
@@ -38,7 +39,16 @@ import {
   Divider,
   ButtonGroup,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  useMediaQuery,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import Close from '@mui/icons-material/Close';
 import {
   TrendingUp,
   TrendingDown,
@@ -104,6 +114,11 @@ import {
   LocalPharmacy,
   Mood,
   SentimentVerySatisfied,
+  // Icons for compact mode
+  FilterAlt,
+  SwapHoriz,
+  ArrowDropDown,
+  AllInclusive,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
@@ -264,22 +279,9 @@ const CockpitGauge: React.FC<{
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (!isHovered) return;
-    
-    const rect = event.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const mouseX = event.clientX - centerX;
-    const mouseY = event.clientY - centerY;
-    
-    // Calculate angle from center to mouse, constrained to gauge range
-    let angle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
-    
-    // Constrain to gauge range (-90 to 90 degrees)
-    angle = Math.max(-90, Math.min(90, angle));
-    
-    // Add spin animation on hover
-    setNeedleRotation(angle + (Math.sin(Date.now() * 0.01) * 5)); // Small oscillation
+    // Disabled mouse tracking to prevent erratic needle movement
+    // Needle will only move based on value changes and animations
+    return;
   };
 
   const handleMouseClick = () => {
@@ -290,14 +292,7 @@ const CockpitGauge: React.FC<{
 
   const handleMouseEnterNeedle = () => {
     setIsHovered(true);
-    // Start needle spin animation on hover
-    const spinAnimation = () => {
-      if (isHovered) {
-        setNeedleRotation(prev => prev + 2); // Continuous spin
-        requestAnimationFrame(spinAnimation);
-      }
-    };
-    requestAnimationFrame(spinAnimation);
+    // Simply highlight on hover, don't spin continuously
   };
 
   const handleMouseLeaveNeedle = () => {
@@ -313,6 +308,7 @@ const CockpitGauge: React.FC<{
         width: size, 
         height: size / 2 + 40,
         cursor: 'pointer',
+        willChange: 'transform',
         '&:hover': {
           transform: 'scale(1.02)',
           transition: 'transform 0.2s ease',
@@ -444,80 +440,76 @@ const CockpitGauge: React.FC<{
           onMouseEnter={handleMouseEnterNeedle}
           onMouseLeave={handleMouseLeaveNeedle}
         >
-          {/* CARTIER-STYLE LUXURY NEEDLE BODY - FROM GAUGE CENTER */}
-          <path
-            d={`M ${size / 2} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} L ${size / 2} ${size / 2 + 1.5} Z`}
-            fill="url(#luxury-needle-gradient)"
-            stroke="#2C3E50"
-            strokeWidth="0.3"
-          />
-          
-          {/* CHROME TIP - POINTED LUXURY STYLE */}
-          <path
-            d={`M ${size / 2 + (size / 2 - 20)} ${size / 2 - 0.8} L ${size / 2 + (size / 2 - 12)} ${size / 2} L ${size / 2 + (size / 2 - 20)} ${size / 2 + 0.8} Z`}
-            fill="url(#chrome-tip-gradient)"
-            stroke="#BDC3C7"
-            strokeWidth="0.2"
-          />
+          {/* FIXED LUXURY NEEDLE - PROPERLY ANCHORED AT CENTER */}
+          <g>
+            {/* Needle body - starts from center and extends outward */}
+            <path
+              d={`M ${size / 2 - 2} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} L ${size / 2 + 2} ${size / 2} Z`}
+              fill="url(#luxury-needle-gradient)"
+              stroke="#2C3E50"
+              strokeWidth="0.5"
+              filter={`url(#needle-shadow-${label})`}
+            />
+            
+            {/* Chrome tip */}
+            <path
+              d={`M ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 15)} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} Z`}
+              fill="url(#chrome-tip-gradient)"
+              stroke="#BDC3C7"
+              strokeWidth="0.3"
+            />
+            
+            {/* Center cap to hide needle base */}
+            <circle
+              cx={size / 2}
+              cy={size / 2}
+              r="3"
+              fill="#2C3E50"
+            />
+          </g>
         </g>
 
-        {/* LUXURY BASE HUB ON TOP OF LIVE INDICATOR */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="8"
-          fill="url(#base-gradient)"
-          stroke="#34495E"
-          strokeWidth="1"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="4"
-          fill="#2C3E50"
-          stroke="#000"
-          strokeWidth="1"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        {/* Center hub with luxury details */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r="8"
-          fill="#34495E"
-          stroke="#2C3E50"
-          strokeWidth="2"
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        {/* Inner hub detail */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="5"
-          fill="url(#metallic-shine-${label})"
-          opacity="0.8"
-        />
-        
-        {/* Center dot */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="2"
-          fill={color}
-        />
+        {/* FIXED CENTER HUB - PROPERLY COVERS NEEDLE BASE */}
+        <g>
+          {/* Outer ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="10"
+            fill="url(#base-gradient)"
+            stroke="#34495E"
+            strokeWidth="1.5"
+          />
+          
+          {/* Middle ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="7"
+            fill="#34495E"
+            stroke="#2C3E50"
+            strokeWidth="1"
+          />
+          
+          {/* Inner metallic detail */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="5"
+            fill={`url(#metallic-shine-${label})`}
+            opacity="0.9"
+          />
+          
+          {/* Center dot */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="3"
+            fill={color}
+            stroke="#000"
+            strokeWidth="0.5"
+          />
+        </g>
         
         {/* Live indicator pulse */}
         {isLive && (
@@ -610,7 +602,7 @@ const CockpitGauge: React.FC<{
 };
 
 // Territory data component with premium styling
-const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories }) => {
+const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }> = ({ territories, onClick }) => {
   const theme = useTheme();
   
   return (
@@ -620,7 +612,14 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
         border: `2px solid ${theme.palette.warning.main}`,
         position: 'relative',
         overflow: 'visible',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: theme.shadows[8],
+        }
       }}
+      onClick={onClick}
     >
       <Box
         sx={{
@@ -657,6 +656,19 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
               }}
             />
           </motion.div>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              ml: 'auto', 
+              color: theme.palette.text.secondary,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5
+            }}
+          >
+            Click to open
+            <ExpandMore sx={{ fontSize: 16 }} />
+          </Typography>
         </Box>
         
         {territories.map((territory, index) => (
@@ -729,6 +741,8 @@ interface Category {
 
 const MarketCommandCenter: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const [marketData, setMarketData] = useState<ComprehensiveMarketData | null>(null);
   const [discoveredTables, setDiscoveredTables] = useState<TableInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -741,11 +755,15 @@ const MarketCommandCenter: React.FC = () => {
     direction: 'desc',
   });
   const [liveData, setLiveData] = useState(true);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [isSearchSticky, setIsSearchSticky] = useState(false);
   const [dataDiscoveryMode, setDataDiscoveryMode] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [procedureModalOpen, setProcedureModalOpen] = useState(false);
+  const [territoryModalOpen, setTerritoryModalOpen] = useState(false);
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
+  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -779,16 +797,38 @@ const MarketCommandCenter: React.FC = () => {
     comprehensiveDataService.testSpecificTables().then(result => {
       console.log('🧪 Table test result:', result);
     });
+  }, []); // Only run once on mount
+
+  // Separate effect for live data refresh
+  useEffect(() => {
+    if (!liveData) return;
     
-    // Set up live data refresh
     const interval = setInterval(() => {
-      if (liveData) {
-        fetchAllData();
-      }
+      fetchAllData();
     }, 30000); // Refresh every 30 seconds
 
     return () => clearInterval(interval);
-  }, [fetchAllData, liveData]);
+  }, [liveData, fetchAllData]);
+
+  // Optimized scroll handling with throttling
+  useEffect(() => {
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          setIsSearchSticky(scrollY > 100); // Lower threshold for quicker response
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
   // Get market metrics from comprehensive data with fallback to demo data
   const marketMetrics = useMemo(() => {
@@ -800,8 +840,11 @@ const MarketCommandCenter: React.FC = () => {
       marketMetricsStructure: marketData?.marketMetrics
     });
     
-    if (!marketData || marketData.procedures.length === 0) {
-      console.log('⚠️ Using fallback demo data - no procedures found');
+    if (!marketData || !marketData.procedures || marketData.procedures.length === 0) {
+      // Only log warning if loading is complete but no data found
+      if (marketData !== null && marketData?.procedures?.length === 0) {
+        console.log('⚠️ Using fallback demo data - no procedures found');
+      }
       // Return demo data when database is unavailable
       return {
         totalMarketSize: 134866, // $134.9B
@@ -887,6 +930,11 @@ const MarketCommandCenter: React.FC = () => {
       const procedureName = p.procedure_name || p.name || '';
       const category = p.category || p.normalized_category || p.clinical_category || '';
       
+      // Filter out procedures with both 0 market size and 0 growth (likely incomplete data)
+      const marketSize = p.market_size_2025_usd_millions || p.market_size_usd_millions || 0;
+      const growthRate = p.yearly_growth_percentage || p.growth_rate || 0;
+      const hasValidData = marketSize > 0 || growthRate > 0;
+      
       const matchesSearch = procedureName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
@@ -895,7 +943,7 @@ const MarketCommandCenter: React.FC = () => {
         p.category === selectedCategory ||
         p.normalized_category === selectedCategory ||
         p.clinical_category === selectedCategory;
-      return matchesSearch && matchesIndustry && matchesCategory;
+      return hasValidData && matchesSearch && matchesIndustry && matchesCategory;
     });
 
     filtered.sort((a, b) => {
@@ -965,9 +1013,18 @@ const MarketCommandCenter: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3, background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` }}>
+    <Box sx={{ 
+      p: 3, 
+      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+      minHeight: '100vh'
+    }}>
       {/* Header with live indicator */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        mb: 4,
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
             Market Command Center v2.0
@@ -1001,7 +1058,18 @@ const MarketCommandCenter: React.FC = () => {
       </Box>
 
       {/* Cockpit-style gauges */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Box
+        sx={{
+          mb: 4,
+          opacity: isSearchSticky ? 0 : 1,
+          transform: isSearchSticky ? 'translateY(-50px)' : 'translateY(0)',
+          transition: 'opacity 0.3s ease, transform 0.3s ease',
+          pointerEvents: isSearchSticky ? 'none' : 'auto',
+          height: isSearchSticky ? 0 : 'auto',
+          overflow: 'hidden',
+        }}
+      >
+        <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
@@ -1015,7 +1083,7 @@ const MarketCommandCenter: React.FC = () => {
               >
                 <CockpitGauge
                   value={marketMetrics.totalMarketSize}
-                  max={50000}
+                  max={200000}
                   label="Market Size"
                   unit="M"
                   color={theme.palette.primary.main}
@@ -1077,15 +1145,18 @@ const MarketCommandCenter: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} md={4}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TerritoryPremiumData territories={marketData?.territories || []} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TerritoryPremiumData 
+                territories={marketData?.territories || []} 
+                onClick={() => setTerritoryModalOpen(true)}
+              />
             
             {/* Compact Category Filter */}
             {viewMode === 'procedures' && marketData?.categories && (
-              <Card sx={{ p: 2 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-                  <Category sx={{ mr: 0.5, fontSize: 18 }} />
-                  Categories
+                  <Card sx={{ p: 2 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                      <Category sx={{ mr: 0.5, fontSize: 18 }} />
+                      Categories
                   {selectedCategory && (
                     <Chip 
                       label="Clear" 
@@ -1099,7 +1170,7 @@ const MarketCommandCenter: React.FC = () => {
                   {marketData.categories
                     .filter(cat => (selectedIndustry === 'all' || cat.applicable_to === selectedIndustry || cat.industry === selectedIndustry) && 
                                    cat.parent_id === null) // Only show parent categories since procedures link to these
-                    .slice(0, 8) // Show only top 8 categories to save space
+                    .slice(0, showAllCategories ? undefined : 8) // Show all or top 8 categories
                     .map((category) => {
                       const procedureCount = marketData.procedures
                         .filter(p => {
@@ -1166,75 +1237,229 @@ const MarketCommandCenter: React.FC = () => {
                     })}
                 </Box>
                 {marketData.categories.length > 8 && (
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                    +{marketData.categories.length - 8} more categories
-                  </Typography>
+                  <Button
+                    size="small"
+                    onClick={() => setShowAllCategories(!showAllCategories)}
+                    sx={{ 
+                      mt: 1, 
+                      textTransform: 'none',
+                      fontSize: '0.75rem',
+                      py: 0.5,
+                      px: 1
+                    }}
+                    endIcon={showAllCategories ? <ExpandLess /> : <ExpandMore />}
+                  >
+                    {showAllCategories 
+                      ? 'Show less' 
+                      : `+${marketData.categories.length - 8} more categories`
+                    }
+                  </Button>
                 )}
               </Card>
             )}
           </Box>
         </Grid>
       </Grid>
+      </Box>
 
-      {/* Search and filters */}
-      <Card sx={{ p: 2, mb: 3 }}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+      {/* Search and filters - Always sticky */}
+      <Card sx={{ 
+        p: isSearchSticky ? (isMobile ? 0.5 : 0.75) : 1.5, 
+        mb: 2,
+        position: 'sticky',
+        top: isSearchSticky ? 64 : 'auto', // Stick to navbar when scrolled
+        zIndex: 1100,
+        transition: 'all 0.3s ease',
+        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[2],
+        background: alpha(theme.palette.background.paper, 0.98),
+        backdropFilter: 'blur(10px)',
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isSearchSticky ? 1 : 2, 
+          alignItems: 'center', 
+          flexWrap: isSearchSticky && isMobile ? 'nowrap' : 'wrap',
+          justifyContent: 'flex-start'
+        }}>
           <TextField
-            placeholder="Search procedures, categories..."
+            placeholder={isSearchSticky && isMobile ? "Search..." : "Search procedures, categories..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            size={isSearchSticky ? "small" : "medium"}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search />
+                  <Search sx={{ fontSize: isSearchSticky ? 18 : 20 }} />
                 </InputAdornment>
               ),
             }}
-            sx={{ minWidth: 300 }}
+            sx={{ 
+              minWidth: isMobile ? (isSearchSticky ? 120 : 200) : 300,
+              flexGrow: 1,
+              maxWidth: isSearchSticky && isMobile ? 200 : 400,
+              '& .MuiInputBase-input': {
+                fontSize: isSearchSticky ? '0.875rem' : '1rem',
+              }
+            }}
           />
           
-          <ButtonGroup variant="outlined">
-            <Button
-              variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('all')}
-            >
-              All ({marketData?.procedures.length || 0})
-            </Button>
-            <Button
-              variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('dental')}
-            >
-              Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
-            </Button>
-            <Button
-              variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
-              onClick={() => setSelectedIndustry('aesthetic')}
-            >
-              Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
-            </Button>
-          </ButtonGroup>
+          {/* Industry Filter - Compact on scroll */}
+          {isSearchSticky && (isMobile || isTablet) ? (
+            <>
+              <Tooltip title="Filter by industry">
+                <IconButton
+                  onClick={(e) => setFilterMenuAnchor(e.currentTarget)}
+                  size="small"
+                  sx={{ 
+                    border: 1,
+                    borderColor: 'divider',
+                    bgcolor: selectedIndustry !== 'all' ? alpha(theme.palette.primary.main, 0.1) : 'transparent'
+                  }}
+                >
+                  <Badge 
+                    badgeContent={selectedIndustry === 'all' ? 0 : 1} 
+                    color="primary"
+                    variant="dot"
+                  >
+                    <FilterAlt sx={{ fontSize: 20 }} />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                anchorEl={filterMenuAnchor}
+                open={Boolean(filterMenuAnchor)}
+                onClose={() => setFilterMenuAnchor(null)}
+              >
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('all'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'all'}
+                >
+                  <AllInclusive sx={{ mr: 1, fontSize: 18 }} />
+                  All ({marketData?.procedures.length || 0})
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('dental'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'dental'}
+                >
+                  <MedicalServices sx={{ mr: 1, fontSize: 18 }} />
+                  Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => { setSelectedIndustry('aesthetic'); setFilterMenuAnchor(null); }}
+                  selected={selectedIndustry === 'aesthetic'}
+                >
+                  <Spa sx={{ mr: 1, fontSize: 18 }} />
+                  Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <ButtonGroup variant="outlined" size={isSearchSticky ? "small" : "medium"}>
+              <Button
+                variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('all')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'All' : `All (${marketData?.procedures.length || 0})`}
+              </Button>
+              <Button
+                variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('dental')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'Dental' : `Dental (${marketData?.procedures.filter(p => p.industry === 'dental').length || 0})`}
+              </Button>
+              <Button
+                variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
+                onClick={() => setSelectedIndustry('aesthetic')}
+                sx={{ 
+                  px: isSearchSticky ? 1 : 2,
+                  fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                  minWidth: isSearchSticky ? 'auto' : undefined
+                }}
+              >
+                {isSearchSticky && !isMobile ? 'Aesthetic' : `Aesthetic (${marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})`}
+              </Button>
+            </ButtonGroup>
+          )}
           
-          <FormControlLabel
-            control={
-              <Switch
-                checked={viewMode === 'companies'}
-                onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
-                color="primary"
-              />
-            }
-            label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
-            sx={{ ml: 2 }}
-          />
+          {/* View Mode Toggle - Icon button when compact */}
+          {isSearchSticky && isMobile ? (
+            <Tooltip title={`Switch to ${viewMode === 'companies' ? 'Procedures' : 'Companies'}`}>
+              <IconButton
+                onClick={() => setViewMode(viewMode === 'companies' ? 'procedures' : 'companies')}
+                size="small"
+                sx={{ 
+                  border: 1,
+                  borderColor: 'divider',
+                  bgcolor: viewMode === 'companies' ? alpha(theme.palette.primary.main, 0.1) : 'transparent'
+                }}
+              >
+                <SwapHoriz sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={viewMode === 'companies'}
+                  onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
+                  color="primary"
+                  size={isSearchSticky ? "small" : "medium"}
+                />
+              }
+              label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
+              sx={{ 
+                ml: isSearchSticky ? 0 : 2,
+                '& .MuiFormControlLabel-label': {
+                  fontSize: isSearchSticky ? '0.875rem' : '1rem'
+                }
+              }}
+            />
+          )}
           
-          <Typography variant="body2" color="text.secondary">
-            Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
-          </Typography>
+          {/* Results count - Hide on mobile when scrolled */}
+          {(!isSearchSticky || !isMobile) && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                fontSize: isSearchSticky ? '0.75rem' : '0.875rem',
+                display: isSearchSticky && isTablet ? 'none' : 'block'
+              }}
+            >
+              Showing {viewMode === 'procedures' ? filteredProcedures.length : filteredCompanies.length} of {viewMode === 'procedures' ? (marketData?.procedures.length || 0) : (marketData?.companies.length || 0)} {viewMode}
+            </Typography>
+          )}
         </Box>
       </Card>
 
 
       {/* Procedures/Companies table */}
-      <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '12px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.divider,
+            borderRadius: '6px',
+            '&:hover': {
+              backgroundColor: theme.palette.text.disabled,
+            }
+          }
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -1267,6 +1492,15 @@ const MarketCommandCenter: React.FC = () => {
                       onClick={() => handleSort('yearly_growth_percentage')}
                     >
                       Growth %
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="center">
+                    <TableSortLabel
+                      active={sortConfig.key === 'market_maturity_stage'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('market_maturity_stage')}
+                    >
+                      Maturity
                     </TableSortLabel>
                   </TableCell>
                   <TableCell align="right">
@@ -1334,8 +1568,10 @@ const MarketCommandCenter: React.FC = () => {
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
                   onClick={() => {
+                    console.log('Procedure clicked:', procedure);
                     setSelectedProcedure(procedure);
                     setProcedureModalOpen(true);
+                    console.log('Modal state set - selectedProcedure:', procedure, 'modalOpen:', true);
                   }}
                   sx={{
                     cursor: 'pointer',
@@ -1372,7 +1608,13 @@ const MarketCommandCenter: React.FC = () => {
                   <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
                   <TableCell align="right">
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M
+                      {(() => {
+                        const marketSize = procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0;
+                        if (marketSize >= 1000) {
+                          return `$${(marketSize / 1000).toFixed(1)}B`;
+                        }
+                        return `$${marketSize.toFixed(1)}M`;
+                      })()}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -1393,9 +1635,27 @@ const MarketCommandCenter: React.FC = () => {
                       </Typography>
                     </Box>
                   </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={procedure.market_maturity_stage || 'N/A'}
+                      size="small"
+                      color={
+                        procedure.market_maturity_stage === 'Emerging' ? 'success' :
+                        procedure.market_maturity_stage === 'Growth' ? 'primary' :
+                        procedure.market_maturity_stage === 'Expansion' ? 'info' :
+                        procedure.market_maturity_stage === 'Mature' ? 'warning' :
+                        procedure.market_maturity_stage === 'Saturated' ? 'error' :
+                        'default'
+                      }
+                      sx={{
+                        fontWeight: 'bold',
+                        minWidth: 80
+                      }}
+                    />
+                  </TableCell>
                   <TableCell align="right">
                     <Typography variant="body2">
-                      ${(procedure.average_cost_usd || 0).toLocaleString()}
+                      ${(procedure.average_cost_usd || 0).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -1525,6 +1785,7 @@ const MarketCommandCenter: React.FC = () => {
             setSelectedProcedure(null);
           }}
           procedure={selectedProcedure}
+          industry={selectedProcedure.industry as 'dental' | 'aesthetic'}
         />
       )}
 
@@ -1538,6 +1799,73 @@ const MarketCommandCenter: React.FC = () => {
           company={selectedCompany}
         />
       )}
+
+      {/* Territory Intelligence Modal */}
+      <Dialog
+        open={territoryModalOpen}
+        onClose={() => setTerritoryModalOpen(false)}
+        maxWidth="xl"
+        fullWidth
+        PaperProps={{
+          sx: {
+            height: '92vh',
+            maxHeight: '92vh',
+            display: 'flex',
+            flexDirection: 'column',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          borderBottom: 1,
+          borderColor: 'divider',
+          flexShrink: 0,
+          minHeight: 'auto'
+        }}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Territory Intelligence Dashboard
+          </Typography>
+          <IconButton onClick={() => setTerritoryModalOpen(false)}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent 
+          sx={{ 
+            p: 0,
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}
+        >
+          <Box 
+            sx={{ 
+              flex: 1,
+              overflow: 'auto',
+              height: '100%',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'rgba(0,0,0,0.05)',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '4px',
+                '&:hover': {
+                  background: 'rgba(0,0,0,0.3)',
+                }
+              }
+            }}
+          >
+            <Box sx={{ p: 3, minHeight: '100%' }}>
+              <EnhancedTerritoryIntelligence />
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

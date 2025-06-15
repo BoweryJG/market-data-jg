@@ -92,6 +92,38 @@ export const theme = createTheme({
     borderRadius: 16,
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          height: '100%',
+          scrollBehavior: 'smooth',
+        },
+        body: {
+          height: '100%',
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '12px',
+            height: '12px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: '#f1f1f1',
+            borderRadius: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#888',
+            borderRadius: '6px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: '#555',
+          },
+        },
+        '#root': {
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

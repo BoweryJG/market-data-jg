@@ -194,6 +194,17 @@ class ComprehensiveDataService {
       console.log('📊 Aesthetic procedures response:', aestheticProceduresResponse);
       console.log('📊 Dental companies response:', dentalCompaniesResponse);
       console.log('📊 Aesthetic companies response:', aestheticCompaniesResponse);
+      
+      // Debug: Check sample procedure data structure
+      if (dentalProceduresResponse.status === 'fulfilled' && dentalProceduresResponse.value.data?.length > 0) {
+        const sampleProc = dentalProceduresResponse.value.data[0];
+        console.log('🦷 Sample dental procedure fields:', {
+          has_market_size_2025: 'market_size_2025_usd_millions' in sampleProc,
+          has_market_size: 'market_size_usd_millions' in sampleProc,
+          has_market_size_alt: 'market_size' in sampleProc,
+          actual_fields: Object.keys(sampleProc).filter(k => k.includes('market'))
+        });
+      }
 
       // Fetch category data for proper joins - use both old and new category systems
       const [dentalCategoriesResponse, aestheticCategoriesResponse, categoryHierarchyResponse] = await Promise.allSettled([
@@ -286,6 +297,24 @@ class ComprehensiveDataService {
         ...processedDentalProcedures,
         ...processedAestheticProcedures,
       ];
+      
+      // Remove duplicates based on procedure name and industry
+      const uniqueProcedures = allProcedures.reduce((acc, procedure) => {
+        const key = `${procedure.procedure_name}_${procedure.industry}`;
+        const existing = acc.get(key);
+        
+        // Keep the procedure with more complete data (higher market size or more fields)
+        if (!existing || 
+            (procedure.market_size_2025_usd_millions > existing.market_size_2025_usd_millions) ||
+            (procedure.market_size_2025_usd_millions === existing.market_size_2025_usd_millions && 
+             procedure.yearly_growth_percentage > existing.yearly_growth_percentage)) {
+          acc.set(key, procedure);
+        }
+        
+        return acc;
+      }, new Map());
+      
+      const dedupedProcedures = Array.from(uniqueProcedures.values());
 
       // Process dental companies
       const processedDentalCompanies = (dentalCompaniesResponse.status === 'fulfilled' ? dentalCompaniesResponse.value.data || [] : [])
@@ -314,17 +343,29 @@ class ComprehensiveDataService {
 
       console.log(`✅ Processed ${processedDentalProcedures.length} dental and ${processedAestheticProcedures.length} aesthetic procedures`);
       console.log(`✅ Processed ${processedDentalCompanies.length} dental and ${processedAestheticCompanies.length} aesthetic companies`);
+      console.log(`✅ After deduplication: ${dedupedProcedures.length} unique procedures (removed ${allProcedures.length - dedupedProcedures.length} duplicates)`);
+      
+      // Debug: Check which market size fields are populated
+      const marketSizeFieldUsage = dedupedProcedures.reduce((acc, proc) => {
+        if (proc.market_size_2025_usd_millions > 0) acc.primary++;
+        else if (proc.market_size_usd_millions > 0) acc.fallback1++;
+        else if (proc.market_size > 0) acc.fallback2++;
+        else acc.none++;
+        return acc;
+      }, { primary: 0, fallback1: 0, fallback2: 0, none: 0 });
+      
+      console.log('📊 Market size field usage:', marketSizeFieldUsage);
 
       // Extract territory data from procedures regional_popularity
-      const territories = this.extractTerritoryData(allProcedures);
+      const territories = this.extractTerritoryData(dedupedProcedures);
 
       // Calculate market metrics
-      const totalMarketSize = allProcedures.reduce((sum, p) => 
+      const totalMarketSize = dedupedProcedures.reduce((sum, p) => 
         sum + (p.market_size_2025_usd_millions || p.market_size_usd_millions || 0), 0
       );
       
-      const avgGrowth = allProcedures.length > 0 
-        ? allProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / allProcedures.length
+      const avgGrowth = dedupedProcedures.length > 0 
+        ? dedupedProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / dedupedProcedures.length
         : 0;
 
       // Combine and process categories for filtering - prioritize hierarchy
@@ -337,14 +378,14 @@ class ComprehensiveDataService {
       ];
 
       const comprehensiveData: ComprehensiveMarketData = {
-        procedures: allProcedures,
+        procedures: dedupedProcedures,
         companies: allCompanies,
         categories: processedCategories,
         territories,
         analytics: [], // Empty for now - focus on procedures
         marketMetrics: {
           totalMarketSize,
-          totalProcedures: allProcedures.length,
+          totalProcedures: dedupedProcedures.length,
           totalCompanies: allCompanies.length,
           averageGrowth: avgGrowth,
           territoryCount: territories.length,

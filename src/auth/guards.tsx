@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useRequireAuth } from './hooks';
 
@@ -6,6 +6,8 @@ interface AuthGuardProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   redirectTo?: string;
+  allowPublic?: boolean;
+  publicComponent?: React.ReactNode;
 }
 
 /**
@@ -14,16 +16,33 @@ interface AuthGuardProps {
 export const AuthGuard: React.FC<AuthGuardProps> = ({ 
   children, 
   fallback = <div>Loading...</div>,
-  redirectTo = '/login'
+  redirectTo = '/login',
+  allowPublic = false,
+  publicComponent
 }) => {
-  const { user, loading } = useRequireAuth(redirectTo);
+  const { user, loading } = useAuth();
+  
+  useEffect(() => {
+    if (!loading && !user && !allowPublic && typeof window !== 'undefined') {
+      // For cross-domain auth, redirect to main domain
+      const isExternalRedirect = redirectTo.startsWith('http');
+      if (isExternalRedirect) {
+        window.location.href = redirectTo;
+      } else {
+        window.location.href = redirectTo;
+      }
+    }
+  }, [user, loading, redirectTo, allowPublic]);
   
   if (loading) {
     return <>{fallback}</>;
   }
   
   if (!user) {
-    return null;
+    if (allowPublic && publicComponent) {
+      return <>{publicComponent}</>;
+    }
+    return <>{fallback}</>;
   }
   
   return <>{children}</>;

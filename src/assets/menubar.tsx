@@ -16,7 +16,6 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import PodcastsIcon from '@mui/icons-material/Podcasts';
 import LoginIcon from '@mui/icons-material/Login';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import MemoryIcon from '@mui/icons-material/Memory';
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -24,15 +23,15 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import GlobalAuthModal from '../components/Auth/GlobalAuthModal';
 import LogoutModal from '../components/Auth/LogoutModal';
-import SuperSearch from '../components/Search/SuperSearch';
 import { useAuth } from '../auth';
 import { useAuthModal } from '../hooks/useAuthModal';
 import DashboardSelector from '../components/Navigation/DashboardSelector';
+import SettingsModal from '../components/Settings/SettingsModal';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const ACCENT_COLOR = '#00ffc6';
 
@@ -43,7 +42,7 @@ const getNavLinks = (currentUrl: string) => {
       key: 'canvas',
       label: 'Canvas', 
       href: 'https://canvas.repspheres.com/',
-      icon: <DashboardIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
+      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
     { 
       key: 'sphereos',
@@ -54,7 +53,7 @@ const getNavLinks = (currentUrl: string) => {
     { 
       key: 'podcast',
       label: 'Podcast', 
-      href: 'https://workshop-homepage.netlify.app/?page=podcast',
+      href: 'https://podcast.repspheres.com',
       icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
     },
   ];
@@ -70,29 +69,6 @@ const moreMenuItems = [
   { label: 'Legal', href: 'https://repspheres.com/legal' }
 ];
 
-// Inline ThemeToggle component to avoid import issues
-const ThemeToggle = () => {
-  const theme = useTheme();
-  const { colorMode, toggleColorMode } = useColorMode();
-  
-  return (
-    <IconButton 
-      onClick={toggleColorMode} 
-      color="inherit"
-      aria-label="toggle dark/light mode"
-      sx={{ 
-        opacity: 0.8,
-        '&:hover': { opacity: 1 }
-      }}
-    >
-      {theme.palette.mode === 'dark' ? (
-        <Brightness7Icon fontSize="small" />
-      ) : (
-        <Brightness4Icon fontSize="small" />
-      )}
-    </IconButton>
-  );
-};
 
 interface NavBarProps {
   onSalesModeToggle?: () => void;
@@ -100,13 +76,13 @@ interface NavBarProps {
 
 export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [dashboardSelectorOpen, setDashboardSelectorOpen] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(null);
   const [logoutOpen, setLogoutOpen] = React.useState(false);
-  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
   const { user } = useAuth();
   const { isAuthModalOpen, openAuthModal, closeAuthModal, handleAuthSuccess } = useAuthModal();
   const theme = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   
@@ -176,16 +152,35 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   const loginButtonStyles = {
     ...buttonBaseStyles,
     fontSize: { xs: '0.85rem', sm: '0.9rem' },
-    fontWeight: 500,
-    px: { xs: 1.2, sm: 1.5 },
-    py: 0.5,
-    border: '1px solid #fff',
-    borderRadius: '16px',
+    fontWeight: 600,
+    px: { xs: 1.5, sm: 2 },
+    py: 0.7,
+    border: '2px solid transparent',
+    borderRadius: '24px',
     color: '#fff',
-    background: 'rgba(255,255,255,0.08)',
+    background: 'rgba(102, 126, 234, 0.15)',
+    backdropFilter: 'blur(8px)',
+    position: 'relative',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      opacity: 0,
+      transition: 'opacity 0.3s ease',
+    },
     '&:hover': {
-      background: 'rgba(255,255,255,0.15)',
-      borderColor: '#3a86ff',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+      borderColor: 'rgba(102, 126, 234, 0.5)',
+      '&::before': {
+        opacity: 0.2,
+      },
     },
   };
   
@@ -293,7 +288,46 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           </ListItem>
         ))}
         
-
+        {/* Theme Toggle in mobile */}
+        <ListItem disablePadding sx={{ mb: 0.5 }}>
+          <ListItemButton
+            onClick={() => {
+              toggleColorMode();
+            }}
+            sx={{ 
+              py: 0.75,
+              px: 2,
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+            }}
+          >
+            {theme.palette.mode === 'dark' ? (
+              <Brightness7Icon fontSize="small" sx={{ mr: 1.5 }} />
+            ) : (
+              <Brightness4Icon fontSize="small" sx={{ mr: 1.5 }} />
+            )}
+            {theme.palette.mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </ListItemButton>
+        </ListItem>
+        
+        {/* Settings in mobile */}
+        <ListItem disablePadding sx={{ mb: 0.5 }}>
+          <ListItemButton
+            onClick={() => {
+              toggleDrawer(false)({ type: 'click' } as any);
+              setSettingsOpen(true);
+            }}
+            sx={{ 
+              py: 0.75,
+              px: 2,
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+            }}
+          >
+            <SettingsIcon fontSize="small" sx={{ mr: 1.5 }} />
+            Settings
+          </ListItemButton>
+        </ListItem>
       </List>
       
       {/* Auth Buttons */}
@@ -386,6 +420,28 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               WebkitTextFillColor: 'transparent',
             }}>Spheres</Box>
           </Box>
+          
+          {/* Hidden 'g' intelligence link */}
+          <Box
+            component="span"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (onSalesModeToggle) onSalesModeToggle();
+            }}
+            sx={{
+              ml: 0.5,
+              cursor: 'pointer',
+              color: 'transparent',
+              userSelect: 'none',
+              fontSize: '1rem',
+              '&:hover': {
+                color: 'transparent', // Keep it hidden even on hover
+              }
+            }}
+          >
+            g
+          </Box>
         </Box>
 
         {/* Middle Section - Navigation (only on desktop) */}
@@ -445,21 +501,6 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
           ml: 'auto',
           gap: { xs: 0.5, sm: 1 },
         }}>
-          {/* Theme Toggle - Subtle but visible */}
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mr: 1,
-          opacity: 0.8,
-        }}>
-          <ThemeToggle />
-          <IconButton color="inherit" size="small" onClick={() => setDashboardSelectorOpen(true)} sx={{ ml: 1 }}>
-            <DashboardIcon />
-          </IconButton>
-          <IconButton color="inherit" size="small" onClick={() => setSearchOpen(true)} sx={{ ml: 1 }}>
-            <SearchIcon />
-          </IconButton>
-        </Box>
           
           {/* Auth Buttons - Always visible except on very small screens */}
           <Box sx={{
@@ -550,6 +591,44 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
               }
             }}
           >
+            {/* Theme Toggle */}
+            <MenuItem
+              onClick={() => {
+                toggleColorMode();
+                handleMenuClose();
+              }}
+              sx={{ 
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5
+              }}
+            >
+              {theme.palette.mode === 'dark' ? (
+                <Brightness7Icon fontSize="small" />
+              ) : (
+                <Brightness4Icon fontSize="small" />
+              )}
+              {theme.palette.mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </MenuItem>
+            
+            {/* Settings Option */}
+            <MenuItem
+              onClick={() => {
+                handleMenuClose();
+                setSettingsOpen(true);
+              }}
+              sx={{ 
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5
+              }}
+            >
+              <SettingsIcon fontSize="small" />
+              Settings
+            </MenuItem>
+            
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', my: 1 }} />
 
             {/* More Menu Items */}
@@ -583,11 +662,9 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
       onSuccess={handleAuthSuccess}
     />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
-    <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
-    <DashboardSelector 
-      open={dashboardSelectorOpen} 
-      onClose={() => setDashboardSelectorOpen(false)} 
-      onSalesModeToggle={onSalesModeToggle}
+    <SettingsModal 
+      open={settingsOpen} 
+      onClose={() => setSettingsOpen(false)} 
     />
     </>
   );
