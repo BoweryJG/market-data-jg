@@ -42,7 +42,7 @@ const App: React.FC = () => {
                 </Box>
               </OrbContextProvider>
             }
-            redirectTo={`https://repspheres.com/login?redirect=${encodeURIComponent(window.location.href)}`}
+            redirectTo="/login"
             fallback={
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 Checking authentication...
