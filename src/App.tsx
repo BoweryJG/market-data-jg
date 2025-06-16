@@ -22,6 +22,7 @@ import { SalesWorkspace } from './components/Workspace';
 import SupabaseTest from './components/Test/SupabaseTest';
 import { MagicLinkHandler } from './components/MagicLink/MagicLinkHandler';
 import { PremiumContentGenerator } from './components/PremiumContent/PremiumContentGenerator';
+import ErrorBoundary from './components/Dashboard/ErrorBoundary';
 import { Box, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
 
 const App: React.FC = () => {
@@ -49,8 +50,9 @@ const App: React.FC = () => {
               </Box>
             }
           >
-            <OrbContextProvider>
-              {salesMode ? (
+            <ErrorBoundary>
+              <OrbContextProvider>
+                {salesMode ? (
                 <>
                   <QuickActionsBar />
                   <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 }, minHeight: '100vh' }}>
@@ -88,7 +90,8 @@ const App: React.FC = () => {
                   </Routes>
                 </>
               )}
-            </OrbContextProvider>
+              </OrbContextProvider>
+            </ErrorBoundary>
           </AuthGuard>
         </Router>
       </AuthProvider>

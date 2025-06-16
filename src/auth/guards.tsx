@@ -24,11 +24,8 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   
   useEffect(() => {
     if (!loading && !user && !allowPublic && typeof window !== 'undefined') {
-      // For cross-domain auth, redirect to main domain
-      const isExternalRedirect = redirectTo.startsWith('http');
-      if (isExternalRedirect) {
-        window.location.href = redirectTo;
-      } else {
+      // Only redirect internally within this app
+      if (!redirectTo.startsWith('http')) {
         window.location.href = redirectTo;
       }
     }

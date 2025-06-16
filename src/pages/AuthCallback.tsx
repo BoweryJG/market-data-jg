@@ -9,38 +9,53 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Get the session from the URL hash
+        // Check if we have auth tokens in the URL hash
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        
+        if (accessToken && refreshToken) {
+          // Set the session from URL parameters
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          
+          if (error) {
+            console.error('Auth callback error:', error);
+            navigate('/');
+            return;
+          }
+          
+          if (data.session) {
+            console.log('Auth callback successful, user logged in');
+            // Clear the URL hash to clean up the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Navigate to dashboard
+            navigate('/');
+            return;
+          }
+        }
+        
+        // Fallback: try to get existing session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('Auth callback error:', error);
-          navigate('/login');
+          navigate('/');
           return;
         }
 
         if (session) {
-          // Check for stored return URL
-          const returnUrl = sessionStorage.getItem('authReturnUrl') || localStorage.getItem('authReturnUrl');
-          
-          if (returnUrl) {
-            // Clean up stored URL
-            sessionStorage.removeItem('authReturnUrl');
-            localStorage.removeItem('authReturnUrl');
-            
-            // Navigate to the original page
-            const url = new URL(returnUrl);
-            navigate(url.pathname + url.search + url.hash);
-          } else {
-            // Default to home if no return URL
-            navigate('/');
-          }
+          console.log('Existing session found');
+          navigate('/');
         } else {
-          // No session, redirect to login
-          navigate('/login');
+          console.log('No session found, redirecting to home');
+          navigate('/');
         }
       } catch (error) {
         console.error('Unexpected error during auth callback:', error);
-        navigate('/login');
+        navigate('/');
       }
     };
 

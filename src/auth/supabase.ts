@@ -31,12 +31,13 @@ export const getAppUrl = () => {
     return window.location.origin;
   }
   
-  // In development, use localhost
-  return 'http://localhost:3000';
+  // In development, use the correct port
+  return window.location.origin; // This will be http://localhost:5173 for Vite
 };
 
 // Get redirect URL for OAuth
 export const getRedirectUrl = (returnPath?: string) => {
   const baseUrl = getAppUrl();
-  return returnPath ? `${baseUrl}${returnPath}` : baseUrl;
+  const redirectPath = returnPath || '/auth/callback';
+  return `${baseUrl}${redirectPath}`;
 };
