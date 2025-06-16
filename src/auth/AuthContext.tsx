@@ -107,12 +107,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('authReturnUrl', window.location.href);
       }
       
+      // Explicitly set the redirect URL to the market data subdomain
+      const siteUrl = import.meta.env.VITE_SITE_URL || 'https://marketdata.repspheres.com';
+      const redirectUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:5173/auth/callback'
+        : `${siteUrl}/auth/callback`;
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {
-          redirectTo: options?.redirectTo || getRedirectUrl('/auth/callback'),
+          redirectTo: options?.redirectTo || redirectUrl,
           scopes: options?.scopes,
-          queryParams: options?.queryParams,
+          queryParams: {
+            ...options?.queryParams,
+            // Force the redirect to use our specific URL
+            redirect_to: redirectUrl,
+          },
         },
       });
       

@@ -18,7 +18,8 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKe
     detectSessionInUrl: true,
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
     storageKey: 'marketdata-auth',
-    // Remove cross-domain cookie settings - each app manages its own auth
+    // Ensure flowType is set to use our specific redirect
+    flowType: 'pkce',
   },
 });
 
