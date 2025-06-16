@@ -155,7 +155,7 @@ export const PremiumContentGenerator: React.FC = () => {
         email: recipientEmail,
         contentType: selectedContent!.type,
         contentId: JSON.stringify(formData),
-        priceTier,
+        priceTier: pricingTier,
         price: calculatePrice(),
         expiryHours: 48
       });

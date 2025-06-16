@@ -346,7 +346,7 @@ class ComprehensiveDataService {
       console.log(`✅ After deduplication: ${dedupedProcedures.length} unique procedures (removed ${allProcedures.length - dedupedProcedures.length} duplicates)`);
       
       // Debug: Check which market size fields are populated
-      const marketSizeFieldUsage = dedupedProcedures.reduce((acc, proc) => {
+      const marketSizeFieldUsage = dedupedProcedures.reduce((acc: any, proc: any) => {
         if (proc.market_size_2025_usd_millions > 0) acc.primary++;
         else if (proc.market_size_usd_millions > 0) acc.fallback1++;
         else if (proc.market_size > 0) acc.fallback2++;
@@ -360,13 +360,13 @@ class ComprehensiveDataService {
       const territories = this.extractTerritoryData(dedupedProcedures);
 
       // Calculate market metrics
-      const totalMarketSize = dedupedProcedures.reduce((sum, p) => 
+      const totalMarketSize = dedupedProcedures.reduce((sum, p: any) => 
         sum + (p.market_size_2025_usd_millions || p.market_size_usd_millions || 0), 0
       );
       
-      const avgGrowth = dedupedProcedures.length > 0 
-        ? dedupedProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0) / dedupedProcedures.length
-        : 0;
+      const procedureCount = dedupedProcedures.length;
+      const totalGrowth = dedupedProcedures.reduce((sum: number, p: any) => sum + (p.yearly_growth_percentage || p.growth_rate || 0), 0);
+      const avgGrowth = procedureCount > 0 ? (totalGrowth as number) / (procedureCount as number) : 0;
 
       // Combine and process categories for filtering - prioritize hierarchy
       const processedCategories = [
@@ -384,10 +384,10 @@ class ComprehensiveDataService {
         territories,
         analytics: [], // Empty for now - focus on procedures
         marketMetrics: {
-          totalMarketSize,
+          totalMarketSize: totalMarketSize as number,
           totalProcedures: dedupedProcedures.length,
           totalCompanies: allCompanies.length,
-          averageGrowth: avgGrowth,
+          averageGrowth: avgGrowth as number,
           territoryCount: territories.length,
         },
       };
@@ -403,8 +403,8 @@ class ComprehensiveDataService {
         dentalCompanies: processedDentalCompanies.length,
         aestheticCompanies: processedAestheticCompanies.length,
         territories: territories.length,
-        totalMarketSize: totalMarketSize.toFixed(2) + 'M',
-        avgGrowth: avgGrowth.toFixed(1) + '%',
+        totalMarketSize: (totalMarketSize as number).toFixed(2) + 'M',
+        avgGrowth: (avgGrowth as number).toFixed(1) + '%',
       });
 
       return comprehensiveData;

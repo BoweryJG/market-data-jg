@@ -932,7 +932,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                     </Box>
                     <Chip
                       label={procedure.market_maturity_stage}
-                      size="large"
+                      size="medium"
                       color={
                         procedure.market_maturity_stage === 'Emerging' ? 'success' :
                         procedure.market_maturity_stage === 'Growth' ? 'primary' :

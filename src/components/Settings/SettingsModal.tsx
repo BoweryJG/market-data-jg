@@ -41,7 +41,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useAuth } from '../../auth';
-import { useColorMode } from '../../assets/OrbContextProvider';
+import { useThemeContext } from '../../context/ThemeContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +72,7 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const { user } = useAuth();
-  const { mode, toggleColorMode } = useColorMode();
+  const { mode, toggleTheme } = useThemeContext();
   const [activeTab, setActiveTab] = useState(0);
   
   // Settings state
@@ -299,7 +299,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
                     checked={settings.darkMode}
                     onChange={(e) => {
                       handleSettingChange('darkMode', e.target.checked);
-                      toggleColorMode();
+                      toggleTheme();
                     }}
                   />
                 }

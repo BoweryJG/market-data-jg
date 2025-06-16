@@ -38,24 +38,7 @@ const ACCENT_COLOR = '#00ffc6';
 // Main navigation links
 const getNavLinks = (currentUrl: string) => {
   const links = [
-    { 
-      key: 'canvas',
-      label: 'Canvas', 
-      href: 'https://canvas.repspheres.com/',
-      icon: <InsightsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
-    { 
-      key: 'sphereos',
-      label: 'Sphere oS', 
-      href: 'https://crm.repspheres.com/',
-      icon: <MemoryIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
-    { 
-      key: 'podcast',
-      label: 'Podcast', 
-      href: 'https://podcast.repspheres.com',
-      icon: <PodcastsIcon fontSize="small" sx={{ color: ACCENT_COLOR }} />
-    },
+    // Removed external domain links - each app manages its own auth independently
   ];
   
   return links;

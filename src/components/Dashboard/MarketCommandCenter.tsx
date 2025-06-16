@@ -1797,6 +1797,7 @@ const MarketCommandCenter: React.FC = () => {
             setSelectedCompany(null);
           }}
           company={selectedCompany}
+          industry="dental"
         />
       )}
 

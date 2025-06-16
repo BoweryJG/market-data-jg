@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../auth';
-import { apiClient } from '../services/apiClient';
+import { backendApiClient } from '../services/backendClient';
 
 interface SubscriptionStatus {
   isActive: boolean;
@@ -47,7 +47,7 @@ export const useSubscription = () => {
   const loadSubscription = async () => {
     try {
       setLoading(true);
-      const { data } = await apiClient.get('/subscription/status');
+      const data = await backendApiClient.get('/api/subscription/status');
       setSubscription(data);
     } catch (error) {
       console.error('Failed to load subscription:', error);
@@ -162,7 +162,7 @@ export const useSubscription = () => {
     if (!user) return;
 
     try {
-      await apiClient.post('/subscription/track-usage', {
+      await backendApiClient.post('/api/subscription/track-usage', {
         feature,
         quantity
       });
@@ -187,7 +187,7 @@ export const useSubscription = () => {
 
   const purchaseAddon = useCallback(async (addon: string, quantity: number = 1) => {
     try {
-      const { data } = await apiClient.post('/subscription/purchase-addon', {
+      const data = await backendApiClient.post('/api/subscription/purchase-addon', {
         addon,
         quantity
       });

@@ -65,7 +65,7 @@ import {
 } from '@mui/icons-material';
 import { loadStripe } from '@stripe/stripe-js';
 import { useAuth } from '../../auth';
-import { apiClient } from '../../services/apiClient';
+import { backendApiClient } from '../../services/backendClient';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
@@ -202,14 +202,14 @@ const SubscriptionManager: React.FC = () => {
   const loadSubscriptionData = async () => {
     try {
       const [subscription, usageData, history] = await Promise.all([
-        apiClient.get('/subscription'),
-        apiClient.get('/subscription/usage'),
-        apiClient.get('/subscription/billing-history')
+        backendApiClient.get('/api/subscription'),
+        backendApiClient.get('/api/subscription/usage'),
+        backendApiClient.get('/api/subscription/billing-history')
       ]);
       
-      setCurrentPlan(subscription.data.planId || 'starter');
-      setUsage(usageData.data);
-      setBillingHistory(history.data);
+      setCurrentPlan(subscription.planId || 'starter');
+      setUsage(usageData);
+      setBillingHistory(history);
     } catch (error) {
       console.error('Failed to load subscription data:', error);
     }
@@ -234,7 +234,7 @@ const SubscriptionManager: React.FC = () => {
       if (!stripe) throw new Error('Stripe not loaded');
       
       // Create checkout session
-      const { data } = await apiClient.post('/subscription/create-checkout', {
+      const data = await backendApiClient.post('/api/subscription/create-checkout', {
         planId: selectedPlan,
         userId: user?.id
       });
@@ -256,7 +256,7 @@ const SubscriptionManager: React.FC = () => {
 
   const handleManageBilling = async () => {
     try {
-      const { data } = await apiClient.post('/subscription/portal');
+      const data = await backendApiClient.post('/api/subscription/portal');
       window.location.href = data.url;
     } catch (error) {
       console.error('Failed to open billing portal:', error);
