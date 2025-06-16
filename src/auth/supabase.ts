@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getStandardAuthConfig } from '../utils/crossDomainAuth';
 
 // Get environment variables with fallbacks for development
 // Market Insights uses VITE_ prefix
@@ -10,18 +11,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-// Create a single supabase client for interacting with your database
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    storageKey: 'marketdata-auth',
-    // Ensure flowType is set to use our specific redirect
-    flowType: 'pkce',
-  },
-});
+// Create a single supabase client with standardized configuration
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, getStandardAuthConfig());
 
 // Helper to get the current app URL for redirects
 export const getAppUrl = () => {

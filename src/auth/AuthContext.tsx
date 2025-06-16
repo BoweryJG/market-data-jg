@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase, getRedirectUrl } from './supabase';
+import { 
+  setupCrossDomainAuthListener, 
+  broadcastAuthState, 
+  storeReturnUrl, 
+  getMainDomain,
+  handleCrossDomainRedirect,
+  isOnSubdomain 
+} from '../utils/crossDomainAuth';
 import type { User, AuthSession, AuthState, AuthProvider as AuthProviderType, SignInOptions } from './types';
 import type { Session } from '@supabase/supabase-js';
 
@@ -47,6 +55,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const initializeAuth = async () => {
       try {
+        // Set up cross-domain auth listener
+        setupCrossDomainAuthListener(supabase);
+        
+        // Check for cross-domain redirect
+        const wasRedirected = await handleCrossDomainRedirect(supabase);
+        if (wasRedirected) return;
+        
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) throw error;
@@ -58,6 +73,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             loading: false,
             error: null,
           });
+          
+          // Broadcast initial auth state if we have a session
+          if (session) {
+            broadcastAuthState(session);
+          }
         }
       } catch (error: any) {
         if (mounted) {
@@ -84,6 +104,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             loading: false,
             error: null,
           }));
+          
+          // Broadcast auth state changes to other domains
+          broadcastAuthState(session);
         }
       }
     );
@@ -102,27 +125,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     try {
       // Store current URL before redirecting
-      if (typeof window !== 'undefined' && !options?.redirectTo) {
-        sessionStorage.setItem('authReturnUrl', window.location.href);
-        localStorage.setItem('authReturnUrl', window.location.href);
-      }
+      storeReturnUrl(window.location.href);
       
-      // Explicitly set the redirect URL to the market data subdomain
-      const siteUrl = import.meta.env.VITE_SITE_URL || 'https://marketdata.repspheres.com';
-      const redirectUrl = window.location.hostname === 'localhost' 
-        ? 'http://localhost:5173/auth/callback'
-        : `${siteUrl}/auth/callback`;
+      // Always redirect to main domain for OAuth
+      const mainDomain = getMainDomain();
+      const redirectUrl = `${mainDomain}/auth/callback`;
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {
           redirectTo: options?.redirectTo || redirectUrl,
           scopes: options?.scopes,
-          queryParams: {
-            ...options?.queryParams,
-            // Force the redirect to use our specific URL
-            redirect_to: redirectUrl,
-          },
+          queryParams: options?.queryParams,
         },
       });
       
@@ -155,6 +169,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         loading: false,
         error: null,
       }));
+      
+      // Broadcast auth state to other domains
+      if (data.session) {
+        broadcastAuthState(data.session);
+      }
     } catch (error: any) {
       setState(prev => ({ 
         ...prev, 
@@ -190,6 +209,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         loading: false,
         error: null,
       }));
+      
+      // Broadcast auth state to other domains
+      if (data.session) {
+        broadcastAuthState(data.session);
+      }
     } catch (error: any) {
       setState(prev => ({ 
         ...prev, 
@@ -213,6 +237,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         loading: false,
         error: null,
       });
+      
+      // Broadcast logout to other domains
+      broadcastAuthState(null);
     } catch (error: any) {
       setState(prev => ({ 
         ...prev, 
