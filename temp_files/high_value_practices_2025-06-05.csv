@@ -1,0 +1,522 @@
+practiceName,address,city,state,zip,providerCount,specialties,phones,estimatedSize,isNamedPractice
+72ND STREET DENTAL CARE PLLC,200 E 72ND ST,NEW YORK,NY,100214537,1,Dentist,121-274-4774,small,1
+Practice at WEILL CORNELL INTERNAL MEDICINE ASSOCIATES,WEILL CORNELL INTERNAL MEDICINE ASSOCIATES,NEW YORK,NY,10021,4,Student in an Organized Health Care Education/Training Program,212-746-9663; 212-746-2900,small,
+Practice at 42A E 74TH ST,42A E 74TH ST,NEW YORK,NY,100212735,1,Plastic Surgery,212-774-1828,small,
+"Practice at 1305 YORK, 11TH FLOOR","1305 YORK, 11TH FLOOR",NEW YORK,NY,10021,1,Student in an Organized Health Care Education/Training Program,646-962-2020,small,
+Practice at 505 EAST 70TH STREET,505 EAST 70TH STREET,NEW YORK,NY,10021,1,Student in an Organized Health Care Education/Training Program,212-746-2900,small,
+Practice at 535 E 70TH ST,535 E 70TH ST,NEW YORK,NY,100214898,2,Student in an Organized Health Care Education/Training Program,646-797-8537; 212-606-1000,small,
+Practice at 505 E 70TH ST,505 E 70TH ST,NEW YORK,NY,100214872,10,Student in an Organized Health Care Education/Training Program,212-746-2900; 212-746-9663,large,
+Practice at 100 E 74TH ST,100 E 74TH ST,NEW YORK,NY,100213503,1,"Dermatology, Procedural Dermatology",212-772-3377,small,
+Practice at 192 E 75TH ST,192 E 75TH ST,NEW YORK,NY,100213242,2,"Dentist, Pediatric Dentistry",212-570-2221,small,
+Practice at 285 FORT WASHINGTON AVE,285 FORT WASHINGTON AVE,NEW YORK,NY,100321206,1,"Dentist, General Practice",212-795-9675,small,
+Practice at 800A 5TH AVE,800A 5TH AVE,NEW YORK,NY,100217215,1,"Dentist, Periodontics",212-983-1227,small,
+Practice at 30 E 76TH ST FL 5,30 E 76TH ST FL 5,NEW YORK,NY,100212700,1,"Dentist, General Practice",212-794-9600,small,
+Practice at 525 E 68TH ST,525 E 68TH ST,NEW YORK,NY,100654870,4,Student in an Organized Health Care Education/Training Program,603-370-7977; 212-746-5454; 212-746-5380,small,
+Practice at 910 5TH AVENUE,910 5TH AVENUE,NEW YORK,NY,10021,1,Dermatology,212-400-0999,small,
+Practice at 1275 YORK AVE,1275 YORK AVE,NEW YORK,NY,100656007,3,Student in an Organized Health Care Education/Training Program; Dermatology,212-639-6733; 212-639-5809; 212-639-2000,small,
+Practice at 1305 YORK AVE FL 11,1305 YORK AVE FL 11,NEW YORK,NY,100215663,1,Student in an Organized Health Care Education/Training Program,646-962-2020,small,
+Practice at 525 E 68TH ST STE M-312,525 E 68TH ST STE M-312,NEW YORK,NY,100654870,1,Student in an Organized Health Care Education/Training Program,212-746-2941,small,
+Practice at 1305 YORK AVE FL 9,1305 YORK AVE FL 9,NEW YORK,NY,100215663,1,Dermatology,646-962-3376,small,
+Practice at 535 EAST 70TH STREET,535 EAST 70TH STREET,NEW YORK,NY,10021,1,Student in an Organized Health Care Education/Training Program,212-606-1631,small,
+"ALAN F. BERDAN, D.M.D., P.C.",30 CENTRAL PARK SOUTH,NEW YORK,NY,100211628,1,"Clinic/Center, Dental",212-702-8675,small,1
+Practice at 33 E 70TH ST,33 E 70TH ST,NEW YORK,NY,100214941,1,"Dermatology, MOHS-Micrographic Surgery",212-517-2121,small,
+Practice at 100 E 77TH ST,100 E 77TH ST,NEW YORK,NY,100751850,19,Student in an Organized Health Care Education/Training Program,212-434-2000; 212-434-2150; 212-434-6262; 212-434-2140; 212-434-4763; 973-666-0234; 212-434-0123,large,
+Practice at 111 E 210TH ST,111 E 210TH ST,BRONX,NY,104672401,1,Student in an Organized Health Care Education/Training Program,718-920-4321,small,
+Practice at 525 EAST 68TH STREET,525 EAST 68TH STREET,NEW YORK,NY,10065,1,Student in an Organized Health Care Education/Training Program,646-962-8418,small,
+Practice at 1330 1ST AVE,1330 1ST AVE,NEW YORK,NY,100214742,1,Student in an Organized Health Care Education/Training Program,631-377-0113,small,
+"ALLCITY COSMETIC DENTAL CARE, PC",139 E 63RD ST,NEW YORK,NY,100657408,1,"Clinic/Center, Dental",212-688-1222,small,1
+"120 EAST 56TH STREET, SUITE 800, MEDICAL OFFICE BASED SURGERY, P.C.",120 E 56TH ST,NEW YORK,NY,100223607,3,"Plastic Surgery; Dentist, General Practice",212-688-5955; 212-826-2322,small,1
+141 DENTAL STUDIO PC,141 E 55TH ST,NEW YORK,NY,100224030,1,Dentist,212-262-2952,small,1
+209 NYC DENTAL LLP,209 E 56TH ST,NEW YORK,NY,100223705,1,"Dentist, General Practice",212-355-2290,small,1
+"21ST CENTURY DERMATOLOGY, P.L.L.C.",133 E 58TH ST,NEW YORK,NY,100221236,1,Dermatology,212-644-4440,small,1
+515OMS LLC,"515 MADISON AVENUE, 28TH FLOOR",NEW YORK,NY,10022,1,"Dentist, Oral and Maxillofacial Surgery",212-765-5001,small,1
+"ALLIANCE DENTAL ARTS, P.C.",18 E 50TH ST,NEW YORK,NY,100226817,4,"Dentist, General Practice; Dentist, Prosthodontics; Dentist, Oral and Maxillofacial Surgery",212-688-6010; 212-688-6080; 212-752-1252; 212-751-0001,small,1
+"A.L. DEL VALLE, P.C.",135 E 50TH ST,NEW YORK,NY,100227504,1,"Clinic/Center, Oral and Maxillofacial Surgery",917-450-6531,small,1
+Practice at 305 E 55TH ST,305 E 55TH ST,NEW YORK,NY,100224148,1,"Dentist, General Practice",212-688-7722,small,
+Practice at 13330 USF LAUREL DR,13330 USF LAUREL DR,TAMPA,FL,336126601,1,"Otolaryngology, Plastic Surgery within the Head & Neck",813-821-8038,small,
+Practice at 501 MADISON AVE FL 18,501 MADISON AVE FL 18,NEW YORK,NY,100225613,1,Oral & Maxillofacial Surgery,212-308-9200,small,
+Practice at 30 E 60TH ST STE 1101,30 E 60TH ST STE 1101,NEW YORK,NY,100221139,1,"Dentist, General Practice",212-262-2952,small,
+Practice at 200 E 57TH ST,200 E 57TH ST,NEW YORK,NY,100222860,1,"Dentist, Oral and Maxillofacial Surgery",212-754-4072,small,
+ADA S COOPER DDS PC,417 PARK AVENUE,NEW YORK,NY,10022,1,Dentist,212-838-2760,small,1
+ADVANCED DENTAL AESTHETICS NY,30 E 60TH ST,NEW YORK,NY,100221008,2,"Dentist; Dentist, Pediatric Dentistry",212-421-8180; 212-421-5781,small,1
+ADVANCED DENTAL ARTS PC,686 LEXINGTON AVE FL 5N,NEW YORK,NY,100222670,1,Dentist,212-230-1226,small,1
+"AESTHETIC CREATIONS DENTAL, P.L.L.C.",509 MADISON AVE,NEW YORK,NY,100225501,1,"Dentist, Prosthodontics",212-688-0103,small,1
+Practice at 209 E 56TH ST FRNT 1,209 E 56TH ST FRNT 1,NEW YORK,NY,100223705,1,"Dentist, Endodontics",212-355-2290,small,
+AHUJA DENTAL NYC PC,30 E 60TH ST RM 401,NEW YORK,NY,100221035,1,Dentist,212-537-3894,small,1
+Practice at 111 EAST 210 STREET,111 EAST 210 STREET,BRONX,NY,10467,1,Student in an Organized Health Care Education/Training Program,718-920-6033,small,
+Practice at 693 5TH AVE FL 14,693 5TH AVE FL 14,NEW YORK,NY,100223161,1,"Dentist, General Practice",212-319-6363,small,
+Practice at 530 EAST 73RD STREET,530 EAST 73RD STREET,NEW YORK,NY,10022,1,Dermatology,703-896-8004,small,
+Practice at 259 1ST ST,259 1ST ST,MINEOLA,NY,115013957,3,Student in an Organized Health Care Education/Training Program,516-663-0333; 516-663-8794,small,
+Practice at 1275 YORK AVE # MRI1007,1275 YORK AVE # MRI1007,NEW YORK,NY,100656007,1,Plastic Surgery,212-639-6131,small,
+Practice at 16 E 52ND ST STE 401,16 E 52ND ST STE 401,NEW YORK,NY,100225306,1,"Dentist, General Practice",212-393-4650,small,
+ALTER FAMILY INC,3000 OCEAN PKWY,BROOKLYN,NY,112358367,1,Plastic Surgery,718-710-0040,small,1
+Practice at 501 MADISON AVE,501 MADISON AVE,NEW YORK,NY,100225602,1,"Dentist, General Practice",212-688-2820,small,
+Practice at 130 EAST 77TH STREET,130 EAST 77TH STREET,NEW YORK,NY,10075,3,Student in an Organized Health Care Education/Training Program,212-434-2686; 908-878-8663,small,
+"AMY ROSE MD, PLLC",445 E 58TH ST,NEW YORK,NY,100222384,1,Dermatology,212-838-0270,small,1
+ANALYTICAL DENTAL PC,1110 2ND AVE STE 306,NEW YORK,NY,100222021,1,"Dentist, Periodontics",212-583-1110,small,1
+ANAT LEBOW MD PLLC,635 MADISON AVE,NEW YORK,NY,100221009,1,Dermatology,212-753-1040,small,1
+Practice at 41 EAST 57 ST,41 EAST 57 ST,NEW YORK,NY,10022,1,"Dentist, Orthodontics and Dentofacial Orthopedics",212-753-5575,small,
+"ANNA MELISSA CONCEPCION, D.M.D., P.C.",158 E 58TH ST,NEW YORK,NY,100220002,1,"Dentist, General Practice",212-832-4110,small,1
+Practice at 133 E 54TH ST,133 E 54TH ST,NEW YORK,NY,100224538,1,"Dentist, Prosthodontics",718-864-4465,small,
+1995 BROADWAY DENTAL ARTS PLLC,1995 BROADWAY,NEW YORK,NY,100235882,1,Dentist,212-247-2330,small,1
+71ST STREET SMILES PLLC,145 WEST 71ST STREET,NY,NY,10023,1,Dentist,212-579-0552,small,1
+Practice at 33 W 60TH ST FL 4,33 W 60TH ST FL 4,NEW YORK,NY,100237905,5,Student in an Organized Health Care Education/Training Program,212-333-3444; 773-343-7990,medium,
+Practice at 155 WEST 68TH STREET,155 WEST 68TH STREET,NEW YORK,NY,100235824,1,"Dentist, General Practice",212-724-6280,small,
+Practice at 33 W 60TH ST,33 W 60TH ST,NEW YORK,NY,100237905,1,Student in an Organized Health Care Education/Training Program,212-333-3444,small,
+Practice at 4800 S SAGINAW ST,4800 S SAGINAW ST,FLINT,MI,485072677,1,Student in an Organized Health Care Education/Training Program,810-732-8336,small,
+Practice at 234 E 149TH ST,234 E 149TH ST,BRONX,NY,104515504,2,Student in an Organized Health Care Education/Training Program,201-899-6312; 718-579-5000,small,
+ALAN DAVID FRANKEL DMD PC,277 W END AVE APT 1B,NEW YORK,NY,100232605,1,"Dentist, Orthodontics and Dentofacial Orthopedics",212-877-7177,small,1
+Practice at 4 DEARFIELD DR,4 DEARFIELD DR,GREENWICH,CT,068315351,1,"Dentist, Orthodontics and Dentofacial Orthopedics",203-869-2044,small,
+Practice at 101 WEST END AVE,101 WEST END AVE,NEW YORK,NY,10023,1,Student in an Organized Health Care Education/Training Program,646-241-3635,small,
+Practice at 75 CENTRAL PARK W,75 CENTRAL PARK W,NEW YORK,NY,100236011,1,"Surgery, Plastic and Reconstructive Surgery",212-501-0600,small,
+Practice at 630 W 168TH ST,630 W 168TH ST,NEW YORK,NY,100323725,1,Dentist,212-305-6100,small,
+Practice at 1000 10TH AVE,1000 10TH AVE,NEW YORK,NY,100191147,1,Student in an Organized Health Care Education/Training Program,646-250-9442,small,
+ANGELICA SILIVRIA DDS P.C.,205 WEST END AVE,NEW YORK,NY,10023,1,"Dentist, General Practice",646-414-6238,small,1
+Practice at 101 W END AVE,101 W END AVE,NEW YORK,NY,100236349,1,"Dentist, Oral and Maxillofacial Radiology",646-541-9183,small,
+Practice at 25 CENTRAL PARK W,25 CENTRAL PARK W,NEW YORK,NY,100237253,1,"Dentist, General Practice",212-207-6681,small,
+Practice at 111 AMSTERDAM AVE,111 AMSTERDAM AVE,NEW YORK,NY,100237410,1,Student in an Organized Health Care Education/Training Program,212-523-4330,small,
+Practice at 180 W END AVE APT 1D,180 W END AVE APT 1D,NEW YORK,NY,100234917,1,"Dentist, Pediatric Dentistry",212-362-5517,small,
+"ATLANTIC AVENUE ORTHODONTICS, PLLC",2641 ATLANTIC AVE,BROOKLYN,NY,112072407,1,"Dentist, Orthodontics and Dentofacial Orthopedics",646-505-8852,small,1
+"AUGUST AICHHORN CENTER FOR ADOLESCENT RESIDENTIAL CARE, INC.",23 W 106TH ST,NEW YORK,NY,100253806,1,Psychiatric Residential Treatment Facility,212-316-9353,small,1
+Practice at 125 W 72ND ST RM 4R,125 W 72ND ST RM 4R,NEW YORK,NY,100233278,1,Student in an Organized Health Care Education/Training Program,310-560-6599,small,
+Practice at 805 UNION STREET,805 UNION STREET,BROOKLYN,NY,11215,1,"Dentist, Oral and Maxillofacial Surgery",718-398-1969,small,
+Practice at 1176 5TH AVE,1176 5TH AVE,NEW YORK,NY,100296503,1,Student in an Organized Health Care Education/Training Program,212-241-6500,small,
+Practice at 2376 BROADWAY,2376 BROADWAY,NEW YORK,NY,100242801,1,"Dentist, General Practice",212-686-3686,small,
+Practice at 20 W 87TH ST,20 W 87TH ST,NEW YORK,NY,100243526,1,Dentist,917-207-2774,small,
+Practice at 5 E 98TH ST FL 5,5 E 98TH ST FL 5,NEW YORK,NY,100296501,1,Dermatology,212-241-9728,small,
+ADVANCED DERMATOLOGY PC,130 W 86TH ST,NEW YORK,NY,100244040,1,Dermatology,212-787-2929,small,1
+"AHMET ALTINER, MD, PC",107 W 82ND ST,NEW YORK,NY,100245511,3,Dermatology; Student in an Organized Health Care Education/Training Program,212-362-8012; 646-831-5967; 646-389-4112,small,1
+Practice at 1250 WATERS PLACE,1250 WATERS PLACE,BRONX,NY,10461,1,Student in an Organized Health Care Education/Training Program,678-982-8175,small,
+Practice at 3 TIMES SQ,3 TIMES SQ,NEW YORK,NY,100366564,1,Student in an Organized Health Care Education/Training Program,212-463-0400,small,
+Practice at 622 W 168TH ST,622 W 168TH ST,NEW YORK,NY,100323720,1,Student in an Organized Health Care Education/Training Program,877-426-5637,small,
+Practice at 6714 41ST AVE,6714 41ST AVE,WOODSIDE,NY,113778128,1,Student in an Organized Health Care Education/Training Program,718-458-4243,small,
+"ASNIS DENTAL, PLLC",593 MERRICK RD,LYNBROOK,NY,115632349,1,Dentist,631-414-7927,small,1
+"ASNIS DENTAL, PLLC",211 W 79TH ST,NEW YORK,NY,10024,1,"Dentist, Dental Public Health",212-799-7700,small,1
+Practice at 525 W END AVE,525 W END AVE,NEW YORK,NY,100243207,1,Dentist,212-874-2880,small,
+"950 PARK AVENUE PLASTIC SURGERY, P.L.L.C.",950 PARK AVE,NEW YORK,NY,100280320,2,"Surgery, Plastic and Reconstructive Surgery",212-203-8623,small,1
+Practice at 234 E 85TH ST FL 5,234 E 85TH ST FL 5,NEW YORK,NY,100283001,1,Dermatology,212-241-6585,small,
+Practice at 65 E 79TH ST,65 E 79TH ST,NEW YORK,NY,100750216,2,"Dentist, Endodontics",732-580-3362,small,
+"ADRIAN W. LAU, DDS PLLC",2922 NORTHERN BLVD,LONG ISLAND CITY,NY,111014079,1,"Clinic/Center, Dental",914-418-4479,small,1
+"ALAN BIENSTOCK, MD PC",46 E 82ND ST,NEW YORK,NY,100280305,1,Plastic Surgery,917-257-7560,small,1
+Practice at 955 PARK AVE,955 PARK AVE,NEW YORK,NY,100280321,1,Dermatology,212-570-6800,small,
+Practice at 1 BROOKDALE PLZ,1 BROOKDALE PLZ,BROOKLYN,NY,112123139,1,"Dentist, Oral and Maxillofacial Surgery",718-240-5000,small,
+"Practice at BRONX-LEBANON HOSPITAL CENTER, 1650 GRAND CONCOURSE","BRONX-LEBANON HOSPITAL CENTER, 1650 GRAND CONCOURSE",BRONX,NY,10457,1,Student in an Organized Health Care Education/Training Program,718-590-1800,small,
+"ANDREW PEREDO, MD, PC",1047 PARK AVE,NEW YORK,NY,100281002,1,Plastic Surgery,212-754-6363,small,1
+Practice at 1560 GRAND CONCOURSE,1560 GRAND CONCOURSE,BRONX,NY,10457,1,Student in an Organized Health Care Education/Training Program,718-960-1417,small,
+Practice at 1016 5TH AVE,1016 5TH AVE,NEW YORK,NY,100280132,1,Dermatology,212-535-5522,small,
+Practice at 975 PARK AVE,975 PARK AVE,NEW YORK,NY,100280323,1,"Dermatology, Procedural Dermatology",212-772-9305,small,
+"ARIELLE N.B. KAUVAR, M.D., P.C.",1044 5TH AVE,NEW YORK,NY,100280108,1,Dermatology,212-249-9440,small,1
+Practice at 240 E 86TH ST,240 E 86TH ST,NEW YORK,NY,100283000,1,"Dentist, Oral and Maxillofacial Surgery",646-389-8772,small,
+Practice at 7 E. 86TH ST.,7 E. 86TH ST.,NEW YORK,NY,10028,1,Student in an Organized Health Care Education/Training Program,804-868-5406,small,
+Practice at 10 UNION SQ E STE 3A,10 UNION SQ E STE 3A,NEW YORK,NY,100033314,1,Student in an Organized Health Care Education/Training Program,212-241-8833,small,
+Practice at 116 E 84TH ST,116 E 84TH ST,NEW YORK,NY,100280901,1,"Dentist, Pediatric Dentistry",212-988-4070,small,
+Practice at 1035 PARK AVE,1035 PARK AVE,NEW YORK,NY,100280912,1,Plastic Surgery,212-289-9191,small,
+Practice at 61 E 86TH ST,61 E 86TH ST,NEW YORK,NY,100281068,1,"Otolaryngology, Otolaryngology/Facial Plastic Surgery",212-339-2001,small,
+Practice at 355 BARD AVE,355 BARD AVE,STATEN ISLAND,NY,103101699,1,Student in an Organized Health Care Education/Training Program,718-818-4636,small,
+Practice at 1 GUSTAVE L LEVY PL,1 GUSTAVE L LEVY PL,NEW YORK,NY,100296504,1,Student in an Organized Health Care Education/Training Program,212-241-3209,small,
+Practice at 411 W 114TH ST,411 W 114TH ST,NEW YORK,NY,100251710,1,Student in an Organized Health Care Education/Training Program,978-987-3380,small,
+Practice at 130 E 77TH ST FL 6,130 E 77TH ST FL 6,NEW YORK,NY,100751851,5,Student in an Organized Health Care Education/Training Program,212-434-4763; 212-434-2246,medium,
+Practice at 1600 ST LUKES BLVD,1600 ST LUKES BLVD,EASTON,PA,180455671,1,"Dermatology, MOHS-Micrographic Surgery",484-503-7546,small,
+Practice at 130 E 77TH ST,130 E 77TH ST,NEW YORK,NY,100751851,7,Student in an Organized Health Care Education/Training Program,212-434-2150; 212-434-4763; 212-434-3284; 212-434-2710,medium,
+Practice at 211 E 80TH ST FL 2,211 E 80TH ST FL 2,NEW YORK,NY,100750531,1,Dermatology,646-962-3376,small,
+Practice at 759 CHESTNUT ST,759 CHESTNUT ST,SPRINGFIELD,MA,011990001,1,Student in an Organized Health Care Education/Training Program,413-794-0000,small,
+Practice at 211 E 80TH ST,211 E 80TH ST,NEW YORK,NY,100750531,1,Dermatology,211-805-6421,small,
+Practice at 1 ENGLE ST STE 102,1 ENGLE ST STE 102,ENGLEWOOD,NJ,076312941,1,"Dentist, General Practice",201-227-0516,small,
+Practice at 100 EAST 77TH STREET,100 EAST 77TH STREET,NEW YORK,NY,100751914,1,Student in an Organized Health Care Education/Training Program,212-434-2624,small,
+Practice at 100 EAST 77TH STREET,100 EAST 77TH STREET,NEW YORK,NY,10075,1,Student in an Organized Health Care Education/Training Program,212-434-2158,small,
+Practice at 100 E 77TH ST,100 E 77TH ST,NEW YORK,NY,10075,1,Student in an Organized Health Care Education/Training Program,212-434-2000,small,
+Practice at 111 E 77TH ST,111 E 77TH ST,NEW YORK,NY,100751802,1,Student in an Organized Health Care Education/Training Program,212-434-3431,small,
+Practice at 13614 NORTHERN BLVD STE A,13614 NORTHERN BLVD STE A,FLUSHING,NY,113546511,1,"Dentist, General Practice",718-445-7030,small,
+Practice at 898 PARK AVE,898 PARK AVE,NEW YORK,NY,100750234,1,"Dentist, General Practice",212-988-2955,small,
+ABILITY BEYOND DISABILITY,480 BEDFORD ROAD,CHAPPAQUA,NY,10514,1,"Community Based Residential Treatment Facility, Intellectual and/or Developmental Disabilities",914-242-8720,small,1
+Practice at 400 E MAIN ST,400 E MAIN ST,MOUNT KISCO,NY,105493417,1,Student in an Organized Health Care Education/Training Program,914-666-1931,small,
+Practice at 400 E MAIN ST,400 E MAIN ST,MOUNT KISCO,NY,105493477,1,Student in an Organized Health Care Education/Training Program,914-666-1931,small,
+Practice at 37 MEMORIAL DR,37 MEMORIAL DR,CHAPPAQUA,NY,10514,1,Dentist,914-238-3600,small,
+"CHAPPAQUA DENTISTRY, P.C.",30 N GREELEY AVE,CHAPPAQUA,NY,105143410,2,"Clinic/Center, Dental; Dentist, Prosthodontics",914-238-8200,small,1
+Practice at 56 DOYER AVE STE 1A,56 DOYER AVE STE 1A,WHITE PLAINS,NY,106051642,1,"Dentist, Endodontics",914-948-3335,small,
+Practice at 8 HIGHLAND AVE,8 HIGHLAND AVE,CHAPPAQUA,NY,105143413,1,"Dentist, General Practice",914-238-8552,small,
+Practice at 59 S GREELEY AVE,59 S GREELEY AVE,CHAPPAQUA,NY,105143321,1,"Dentist, Pediatric Dentistry",917-612-0579,small,
+Practice at 229 KING ST,229 KING ST,CHAPPAQUA,NY,105143461,1,Dermatology,914-238-1500,small,
+Practice at 1101 MAIN STREET,1101 MAIN STREET,PEEKSKILL,NY,10566,1,Student in an Organized Health Care Education/Training Program,914-737-7338,small,
+HARBOR POINT DENTAL AT CHAPPAQUA CROSSING,480 BEDFORD RD # D4,CHAPPAQUA,NY,105141715,1,"Dentist, General Practice",203-548-0826,small,1
+Practice at 4802 10TH AVE,4802 10TH AVE,BROOKLYN,NY,112192916,1,Student in an Organized Health Care Education/Training Program,718-283-6000,small,
+Practice at 1 ATWELL RD,1 ATWELL RD,COOPERSTOWN,NY,133261301,1,Student in an Organized Health Care Education/Training Program,607-547-3456,small,
+"JEFFREY JACOBSON, M.D., P.C.",19 BRADHURST AVE,HAWTHORNE,NY,10532,2,Plastic Surgery,914-421-0123,small,1
+Practice at 360 FEDERAL RD,360 FEDERAL RD,BROOKFIELD,CT,068042406,1,"Dentist, Endodontics",203-775-3344,small,
+ADVANCED DENTISTRY OF WESTCHESTER,163 HALSTEAD AVE,HARRISON,NY,105283655,1,Dentist,914-835-0542,small,1
+Practice at 77 QUAKER RIDGE RD,77 QUAKER RIDGE RD,NEW ROCHELLE,NY,108042808,1,Dentist,914-636-4118,small,
+ARPITA PATEL DDS PLLC,5 DURHAM RD STE C3,GUILFORD,CT,064372076,1,"Dentist, Prosthodontics",347-749-0483,small,1
+Practice at 26 PONDFIELD RD WEST,26 PONDFIELD RD WEST,BRONXVILLE,NY,10708,1,"Dentist, Periodontics",914-779-7711,small,
+Practice at 550 MAMARONECK AVE STE 101,550 MAMARONECK AVE STE 101,HARRISON,NY,105281612,1,Dermatology,914-723-8100,small,
+Practice at 757 WESTWOOD PLZ,757 WESTWOOD PLZ,LOS ANGELES,CA,900958358,1,Student in an Organized Health Care Education/Training Program,310-267-9641,small,
+"BRADLEY SCHNEBEL, DMD, PLLC",450 MAMARONECK AVE,HARRISON,NY,105282400,1,"Dentist, Orthodontics and Dentofacial Orthopedics",914-732-3777,small,1
+Practice at 450 MAMARONECK AVE STE 403,450 MAMARONECK AVE STE 403,HARRISON,NY,105282430,1,"Dentist, Pediatric Dentistry",914-777-1140,small,
+Practice at 47-49 HALSTEAD AVE. #101,47-49 HALSTEAD AVE. #101,HARRISON,NY,10528,1,"Dentist, Prosthodontics",914-698-3800,small,
+"COSMETIC PHYSICIANS OF WESTCHESTER, PLLC",440 MAMARONECK AVE,HARRISON,NY,10528,1,Dermatology,914-777-1799,small,1
+Practice at 287 HARRISON AVE,287 HARRISON AVE,HARRISON,NY,105283301,1,"Dentist, General Practice",914-835-3232,small,
+"ABADIR ASSOCIATES, M.D., P.C.",90 S RIDGE ST # LL3,RYE BROOK,NY,105732867,1,Dermatology,914-937-5500,small,1
+Practice at 90 S RIDGE ST,90 S RIDGE ST,RYE BROOK,NY,105732867,1,Dermatology,914-937-5500,small,
+Practice at 1650 GRAND CONCOURSE,1650 GRAND CONCOURSE,BRONX,NY,104577606,2,Student in an Organized Health Care Education/Training Program,718-901-8203; 718-590-1800,small,
+Practice at 57 W 57TH ST,57 W 57TH ST,NEW YORK,NY,100192802,1,"Dentist, Prosthodontics",646-735-1575,small,
+Practice at 118 SOUTH RIDGE ST,118 SOUTH RIDGE ST,RYE BROOK,NY,10573,1,Dentist,914-937-6040,small,
+Practice at NYU LANGONE MEDICAL CENTER,NYU LANGONE MEDICAL CENTER,NEW YORK,NY,10010,1,Dermatology,212-263-5250,small,
+Practice at 210 WESTCHESTER AVE,210 WESTCHESTER AVE,WHITE PLAINS,NY,106042901,1,"Pathology, Dermatopathology",914-831-6813,small,
+Practice at 26 VALLEY TER,26 VALLEY TER,PORT CHESTER,NY,105732410,1,Student in an Organized Health Care Education/Training Program,347-361-7444,small,
+ASNIS DENTAL PLLC,90 S RIDGE ST,RYE BROOK,NY,105732811,1,Dentist,914-925-1099,small,1
+Practice at 90 S RIDGE ST STE LL-9A,90 S RIDGE ST STE LL-9A,RYE BROOK,NY,105732836,1,"Dentist, Pediatric Dentistry",914-925-1099,small,
+Practice at 10500 UNIVERSITY CENTER DR STE 200,10500 UNIVERSITY CENTER DR STE 200,TAMPA,FL,336126497,1,"Pathology, Dermatopathology",800-929-6694,small,
+Practice at 220 WESTCHESTER AVE,220 WESTCHESTER AVE,PORT CHESTER,NY,105734557,1,"Dentist, General Practice",914-935-0588,small,
+BRIJLALL DENTAL PLLC,20 WESTCHESTER AVE,PORT CHESTER,NY,105734325,2,"Dentist, Pediatric Dentistry",914-481-3978,small,1
+Practice at 100 MIDLAND AVE,100 MIDLAND AVE,PORT CHESTER,NY,105734943,1,"Pathology, Dermatopathology",800-942-3376,small,
+Practice at 24 WASHINGTON AVENUE,24 WASHINGTON AVENUE,SOUTH NYACK,NY,10960,1,"Dentist, Endodontics",845-727-4122,small,
+"CARLA WEISFELD DDS, P.C.",110 WILLETT AVE,PORT CHESTER,NY,105734282,1,Dentist,914-937-3733,small,1
+"CHI D FU, DDS, PLLC",395 WESTCHESTER AVE,PORT CHESTER,NY,105733651,2,"Clinic/Center, Dental; Dentist, General Practice",914-937-2810,small,1
+Practice at 550 1ST AVE,550 1ST AVE,NEW YORK,NY,100166402,2,Student in an Organized Health Care Education/Training Program,212-263-5506,small,
+260 MAIN ST PORTLAND INC,260 MAIN ST,PORTLAND,CT,064801859,1,"Clinic/Center, Dental",860-342-2176,small,1
+3885 MAIN ST BRIDGEPORT DENTAL INC,3885 MAIN ST STE 101,BRIDGEPORT,CT,066062814,1,"Dentist, General Practice",203-663-2772,small,1
+A & B SCARSDALE DENTAL PLLC,130 GARTH RD,SCARSDALE,NY,105833750,1,"Dentist, General Practice",914-472-1555,small,1
+"Practice at 1075 CENTRAL PARK AVENUE, SUITE 207","1075 CENTRAL PARK AVENUE, SUITE 207",SCARSDALE,NY,10553,1,"Dentist, Oral and Maxillofacial Surgery",914-472-5252,small,
+Practice at 1075 CENTRAL PARK AVE,1075 CENTRAL PARK AVE,SCARSDALE,NY,105833242,3,"Dentist, General Practice; Dentist, Pediatric Dentistry",914-722-0511; 914-713-0535; 914-722-5100,small,
+Practice at 185 S ORANGE AVE,185 S ORANGE AVE,NEWARK,NJ,071032757,1,Student in an Organized Health Care Education/Training Program,732-445-4636,small,
+Practice at 455 CENTRAL PARK AVE STE 2,455 CENTRAL PARK AVE STE 2,SCARSDALE,NY,105831034,1,"Dentist, General Practice",914-358-5700,small,
+Practice at 130 PONDFIELD RD STE 11,130 PONDFIELD RD STE 11,BRONXVILLE,NY,107084016,1,Plastic Surgery,914-776-0505,small,
+"AL-HUSAINI PLASTIC & RECONSTRUCTIVE SURGERY, P.C.",955 YONKERS AVE,YONKERS,NY,107043060,1,Plastic Surgery,914-776-0505,small,1
+"ALL COUNTY ENDODONTICS, PC",112 WESTMINSTER RD,SCARSDALE,NY,105832425,1,"Dentist, Endodontics",914-768-9017,small,1
+Practice at 4250 BROADWAY,4250 BROADWAY,NEW YORK,NY,100333750,1,"Dentist, General Practice",212-795-0765,small,
+Practice at 1775 DEMPSTER ST # 48,1775 DEMPSTER ST # 48,PARK RIDGE,IL,600681143,1,Student in an Organized Health Care Education/Training Program,847-723-2210,small,
+Practice at 2985 NAVAJO ST.,2985 NAVAJO ST.,YORKTOWN HEIGHTS,NY,10598,1,"Dentist, Pediatric Dentistry",914-243-2323,small,
+Practice at 14 HARWOOD CT,14 HARWOOD CT,SCARSDALE,NY,105834121,1,"Dentist, Periodontics",914-472-1190,small,
+Practice at 141 NORTH CENTRAL AVENUE,141 NORTH CENTRAL AVENUE,HARTSDALE,NY,10530,1,Student in an Organized Health Care Education/Training Program,914-949-7699,small,
+Practice at 688 POST RD,688 POST RD,SCARSDALE,NY,105835059,1,"Dentist, General Practice",914-472-1010,small,
+Practice at 99 FIELDSTONE DR,99 FIELDSTONE DR,HARTSDALE,NY,105301564,1,"Dentist, General Practice",914-761-1500,small,
+Practice at 2 OVERHILL RD,2 OVERHILL RD,SCARSDALE,NY,105835323,1,Dermatology,914-725-1800,small,
+Practice at 438 GRAHAM AVE,438 GRAHAM AVE,BROOKLYN,NY,112111415,1,Dentist,718-349-5912,small,
+Practice at 735 WHITE PLAINS RD,735 WHITE PLAINS RD,SCARSDALE,NY,10583,1,"Dentist, Periodontics",914-725-0434,small,
+BRIGHT DAYS DENTAL LLC,1194 DIXWELL AVE,HAMDEN,CT,065144732,1,"Dentist, General Practice",856-906-1578,small,1
+Practice at 30 POPHAM RD,30 POPHAM RD,SCARSDALE,NY,105834134,1,"Dentist, Prosthodontics",914-725-7100,small,
+Practice at 194 GARTH RD,194 GARTH RD,SCARSDALE,NY,105833867,1,"Dentist, Oral and Maxillofacial Pathology",914-722-4433,small,
+Practice at 1400 PELHAM PKWY S BUILDING 6,1400 PELHAM PKWY S BUILDING 6,BRONX,NY,104611138,1,Student in an Organized Health Care Education/Training Program,718-918-5820,small,
+Practice at 450 CENTRAL PARK AVE,450 CENTRAL PARK AVE,SCARSDALE,NY,105831078,1,"Dentist, Prosthodontics",914-722-6500,small,
+Practice at 323 HEATHCOTE RD,323 HEATHCOTE RD,SCARSDALE,NY,105837154,1,Dentist,914-450-7894,small,
+Practice at BOSTON MEDICAL CENTER,BOSTON MEDICAL CENTER,BOSTON,MA,02118,1,Student in an Organized Health Care Education/Training Program,617-638-8000,small,
+Practice at 487 S BROADWAY,487 S BROADWAY,YONKERS,NY,107053269,1,Student in an Organized Health Care Education/Training Program,914-423-4433,small,
+CARTER DENTISTRY PC,455 CENTRAL PARK AVE STE 309,SCARSDALE,NY,105831034,1,"Dentist, General Practice",914-874-5252,small,1
+Practice at 327 BEACH 19TH ST,327 BEACH 19TH ST,FAR ROCKAWAY,NY,116914423,1,Student in an Organized Health Care Education/Training Program,718-869-7238,small,
+MICHAEL AGHELIAN DDS PLLC,2005 NEREID AVE,BRONX,NY,104661228,2,"Dentist, General Practice; Clinic/Center, Dental",718-994-8282; 718-426-3000,small,1
+ALLURE SMILE DENTISTRY PLLC,16 HELEN LN,GREAT NECK,NY,110241827,1,Dentist,917-405-9437,small,1
+Practice at 5645 MAIN ST,5645 MAIN ST,FLUSHING,NY,113555045,1,Student in an Organized Health Care Education/Training Program,718-670-2871,small,
+Practice at 22 CRICKETT LN,22 CRICKETT LN,GREAT NECK,NY,110241003,1,"Dentist, General Practice",516-721-1516,small,
+Practice at 2035 RALPH AVE,2035 RALPH AVE,BROOKLYN,NY,112345300,1,"Dentist, General Practice",718-763-4522,small,
+Practice at 201 LYONS AVE,201 LYONS AVE,NEWARK,NJ,071122027,1,Student in an Organized Health Care Education/Training Program,516-286-9544,small,
+Practice at 139 CENTRE ST STE 513,139 CENTRE ST STE 513,NEW YORK,NY,100134555,1,"Dentist, Pediatric Dentistry",212-587-5640,small,
+Practice at 300 STEAMBOAT RD,300 STEAMBOAT RD,KINGS POINT,NY,110241634,2,"Dentist; Dentist, General Practice",516-726-5673; 516-773-5331,small,
+EXECUTIVE SMILES INC,460 ATLANTIC AVE,EAST ROCKAWAY,NY,115181547,1,"Dentist, General Practice",516-792-6533,small,1
+Practice at 1901 1ST AVE FL 15,1901 1ST AVE FL 15,NEW YORK,NY,100297491,1,Student in an Organized Health Care Education/Training Program,212-423-6271,small,
+FRANK LALEZAR MD PC,635 MADISON AVE FL 17,NEW YORK,NY,100221009,1,"Plastic Surgery, Surgery of the Hand",646-887-5533,small,1
+Practice at 200 OLD COUNTRY RD,200 OLD COUNTRY RD,MINEOLA,NY,115014235,1,Student in an Organized Health Care Education/Training Program,516-663-2752,small,
+Practice at 47 STEPPING STONE LN,47 STEPPING STONE LN,GREAT NECK,NY,110241313,1,Dentist,917-575-1165,small,
+Practice at 206 2ND ST E,206 2ND ST E,BRADENTON,FL,342081042,1,Student in an Organized Health Care Education/Training Program,941-745-7286,small,
+Practice at 8929 WILSHIRE BLVD,8929 WILSHIRE BLVD,BEVERLY HILLS,CA,902111938,1,Plastic Surgery,424-383-8111,small,
+Practice at 35 E 38TH ST APT 1C,35 E 38TH ST APT 1C,NEW YORK,NY,100162528,1,Dentist,212-776-4259,small,
+Practice at 135 W 27TH ST,135 W 27TH ST,NEW YORK,NY,100016226,1,"Dentist, General Practice",212-594-7171,small,
+Practice at 451 CLARKSON AVE,451 CLARKSON AVE,BROOKLYN,NY,112032054,1,Student in an Organized Health Care Education/Training Program,718-245-2299,small,
+JEREMY NIKFARJAM MD PC,1045 NORTHERN BLVD FL 2,ROSLYN,NY,115761502,1,Plastic Surgery,516-695-9344,small,1
+Practice at 11 CRICKETT LN,11 CRICKETT LN,GREAT NECK,NY,110241004,1,Dentist,516-466-5868,small,
+Practice at 17411 HORACE HARDING EXPY,17411 HORACE HARDING EXPY,FRESH MEADOWS,NY,113651527,1,Student in an Organized Health Care Education/Training Program,718-670-1060,small,
+Practice at 62 2ND PL,62 2ND PL,BROOKLYN,NY,112314106,1,"Dentist, Pediatric Dentistry",718-797-5437,small,
+Practice at 20101 HILLSIDE AVE,20101 HILLSIDE AVE,HOLLIS,NY,114232134,1,Dentist,718-479-2120,small,
+Practice at 15 FAIRFIELD RD,15 FAIRFIELD RD,GREAT NECK,NY,110241414,1,"Dentist, Periodontics",516-641-2643,small,
+Practice at 4422 3RD AVE,4422 3RD AVE,BRONX,NY,104572545,2,"Student in an Organized Health Care Education/Training Program; Dentist, Pediatric Dentistry",718-960-9000,small,
+Practice at 560 5TH AVE,560 5TH AVE,BROOKLYN,NY,112155435,1,"Dentist, General Practice",718-768-8400,small,
+Practice at 28 HENHAWK RD,28 HENHAWK RD,GREAT NECK,NY,110242040,1,"Dentist, Oral and Maxillofacial Surgery",516-589-1830,small,
+Practice at 176 STEAMBOAT RD,176 STEAMBOAT RD,GREAT NECK,NY,110241736,1,"Dentist, General Practice",917-767-3920,small,
+Practice at METROPOLITAN HOSPITAL DEPARTMENT OF DENTISTRY,METROPOLITAN HOSPITAL DEPARTMENT OF DENTISTRY,NEW YORK,NY,10029,1,"Dentist, General Practice",212-423-6271,small,
+Practice at 141 N FRANKLIN ST,141 N FRANKLIN ST,HEMPSTEAD,NY,115501314,1,"Dentist, General Practice",516-538-0100,small,
+Practice at 11316 76TH RD,11316 76TH RD,FOREST HILLS,NY,11375,1,Dentist,718-575-9548,small,
+Practice at 300 MANHASSET AVE,300 MANHASSET AVE,MANHASSET,NY,110302259,1,Student in an Organized Health Care Education/Training Program,718-470-4475,small,
+Practice at 300 COMMUNITY DR,300 COMMUNITY DR,MANHASSET,NY,110303816,27,Student in an Organized Health Care Education/Training Program; Plastic Surgery,516-562-2587; 516-266-5050; 516-562-0100; 516-562-4764; 515-562-0100; 516-562-2925; 516-622-5100,large,
+Practice at 9438 59TH AVE,9438 59TH AVE,ELMHURST,NY,113735151,1,"Dentist, General Practice",718-699-1100,small,
+Practice at 230 CENTRAL PARK S,230 CENTRAL PARK S,NEW YORK,NY,100191409,1,"Dentist, Periodontics",212-586-2890,small,
+Practice at 300 COMMUNITY DR STE 4DSU,300 COMMUNITY DR STE 4DSU,MANHASSET,NY,110303816,2,Student in an Organized Health Care Education/Training Program,516-562-4764; 516-562-0100,small,
+Practice at DEPARTMENT OF INTERNAL MEDICINE NORTH SHORE UNIVERSITY,DEPARTMENT OF INTERNAL MEDICINE NORTH SHORE UNIVERSITY,MANHASSET,NY,11030,1,Student in an Organized Health Care Education/Training Program,516-562-0100,small,
+Practice at 300 COMMUNITY DRIVE,300 COMMUNITY DRIVE,MANHASSET,NY,11030,2,Student in an Organized Health Care Education/Training Program,516-562-0100,small,
+Practice at 75 N COUNTRY RD,75 N COUNTRY RD,PORT JEFFERSON,NY,117772119,1,Student in an Organized Health Care Education/Training Program,631-473-1320,small,
+Practice at 300 COMMUNITY DR,300 COMMUNITY DR,MANHASSET,NY,110303876,3,Student in an Organized Health Care Education/Training Program,516-562-4300; 516-562-0100; 516-562-3047,small,
+Practice at 1201 NORTHERN BLVD,1201 NORTHERN BLVD,MANHASSET,NY,110303037,1,Dentist,330-265-7399,small,
+Practice at 600 COMMUNITY DR,600 COMMUNITY DR,MANHASSET,NY,110303802,1,Student in an Organized Health Care Education/Training Program,516-562-2461,small,
+Practice at 900 FRANKLIN AVE,900 FRANKLIN AVE,VALLEY STREAM,NY,115802145,1,Student in an Organized Health Care Education/Training Program,516-256-6000,small,
+ARNOLD S BREITBART MD FACS PLLC,1155 NORTHERN BLVD,MANHASSET,NY,110303040,1,Plastic Surgery,516-365-3511,small,1
+Practice at 194 HERON LN,194 HERON LN,MANHASSET,NY,110304012,1,"Otolaryngology, Facial Plastic Surgery",516-621-2470,small,
+Practice at 444 COMMUNITY DR,444 COMMUNITY DR,MANHASSET,NY,110303803,1,"Dentist, General Practice",516-500-7400,small,
+ASLEEP DENTISTRY,37 NORTH AVE,NORWALK,CT,068513827,1,"Dentist, Dentist Anesthesiologist Speciality",203-817-2534,small,1
+Practice at 300 COMMUNITY DR STE 4DSU,300 COMMUNITY DR STE 4DSU,MANHASSET,NY,110303876,1,Student in an Organized Health Care Education/Training Program,516-562-0100,small,
+Practice at 6910 AVENUE U,6910 AVENUE U,BROOKLYN,NY,112346119,1,"Dentist, Periodontics",516-880-5944,small,
+Practice at 1901 1ST AVE,1901 1ST AVE,NEW YORK,NY,100297491,1,"Dentist, General Practice",212-423-6271,small,
+ARCH DENTAL OF HUNTINGTON PC,800 WOODBURY RD STE D,WOODBURY,NY,117972503,1,"Dentist, Oral and Maxillofacial Surgery",516-921-8010,small,1
+Practice at 475 SEAVIEW AVE,475 SEAVIEW AVE,STATEN ISLAND,NY,103053436,1,Student in an Organized Health Care Education/Training Program,516-780-2907,small,
+Practice at 308 MAIN ST,308 MAIN ST,PORT WASHINGTON,NY,110502707,1,"Dentist, Pediatric Dentistry",516-944-3400,small,
+Practice at 101 NORTHERN BOULEVARD,101 NORTHERN BOULEVARD,BROOKLYN,NY,11545,1,Student in an Organized Health Care Education/Training Program,929-390-9893,small,
+Practice at 1 HEROES WAY,1 HEROES WAY,RIVERHEAD,NY,119012054,1,Student in an Organized Health Care Education/Training Program,631-548-6818,small,
+BARRTMENSCHDDSPC,40 RAILROAD AVE,GLEN HEAD,NY,115451839,1,Dentist,516-671-5641,small,1
+Practice at 45 GRAMERCY PARK N,45 GRAMERCY PARK N,NEW YORK,NY,100106345,1,"Dentist, General Practice",212-475-0060,small,
+BRIAN S. MARGOLIS DDS PC,333 GLEN HEAD RD,OLD BROOKVILLE,NY,11545,1,"Dentist, Periodontics",516-484-4741,small,1
+BROADWAY DENTAL GROUP PLLC,7410 BROADWAY,ELMHURST,NY,113735609,1,"Dentist, General Practice",516-476-4509,small,1
+Practice at 189 WHEATLEY ROAD,189 WHEATLEY ROAD,BROOKVILLE,NY,11545,1,"Dentist, General Practice",516-686-4400,small,
+Practice at 19 HUNT CT,19 HUNT CT,GLEN HEAD,NY,115452749,1,"Dentist, General Practice",516-625-6818,small,
+"CHARLES EVANS CENTER, INC.",550 GLEN COVE RD,GLEN HEAD,NY,115452233,1,"Community Based Residential Treatment Facility, Mental Illness",516-676-2388,small,1
+Practice at 521 GLEN COVE AVE,521 GLEN COVE AVE,GLEN HEAD,NY,115451432,1,Student in an Organized Health Care Education/Training Program,310-804-3220,small,
+DENTAL OGGI PLLC,250 E 63RD ST,NEW YORK,NY,100657661,1,Dentist,212-535-4600,small,1
+DR.ROY F.GHERARDI,8 GLENWOOD RD,GLEN HEAD,NY,115451310,1,Dentist,516-671-5858,small,1
+Practice at 101 NORTHERN BLVD,101 NORTHERN BLVD,GLEN HEAD,NY,11545,1,Student in an Organized Health Care Education/Training Program,815-501-0719,small,
+EMPIRE ORAL AND MAXILLOFACIAL SURGERY PLLC,4 PALISADES DR STE 250,ALBANY,NY,122051448,1,Oral & Maxillofacial Surgery,518-240-3750,small,1
+Practice at 1145 19TH ST NW STE 707,1145 19TH ST NW STE 707,WASHINGTON,DC,200363705,1,"Dentist, Periodontics",202-223-2211,small,
+Practice at 11 WILLOW PL,11 WILLOW PL,GLEN HEAD,NY,115451561,1,Student in an Organized Health Care Education/Training Program,516-528-0194,small,
+Practice at 268 W MERRICK RD,268 W MERRICK RD,FREEPORT,NY,115203347,1,Dentist,516-378-3200,small,
+Practice at 1626 BELL BLVD,1626 BELL BLVD,BAYSIDE,NY,113601640,1,Dentist,718-423-1210,small,
+"GOLD COAST DENTAL CARE, PC",673 GLEN COVE AVE,GLEN HEAD,NY,115451602,1,Dentist,516-200-5800,small,1
+Practice at 600 NORTHERN BLVD,600 NORTHERN BLVD,OLD WESTBURY,NY,11568,6,Student in an Organized Health Care Education/Training Program,516-686-1300,medium,
+Practice at 500 HOFSTRA BLVD,500 HOFSTRA BLVD,HEMPSTEAD,NY,115490001,1,Student in an Organized Health Care Education/Training Program,516-463-7516,small,
+Practice at 333B RED WOLF BLVD,333B RED WOLF BLVD,JONESBORO,AR,724059739,1,Student in an Organized Health Care Education/Training Program,870-972-2054,small,
+Practice at 600 NORTHERN BOULEVARD,600 NORTHERN BOULEVARD,OLD WESTBURY,NY,11568,2,Student in an Organized Health Care Education/Training Program,516-686-1300,small,
+AN DERMATOLOGY OF NEW YORK P C,110 E 40TH ST RM 703,NEW YORK,NY,100161806,1,Dermatology,516-945-9346,small,1
+Practice at 2001 MARCUS AVE,2001 MARCUS AVE,NEW HYDE PARK,NY,110421011,1,Dermatology,516-352-2700,small,
+Practice at 223 STORE HILL RD,223 STORE HILL RD,OLD WESTBURY,NY,115681717,1,Student in an Organized Health Care Education/Training Program,347-239-0285,small,
+Practice at 56-45 MAIN STREET,56-45 MAIN STREET,FLUSHING,NY,11355,1,Student in an Organized Health Care Education/Training Program,718-670-1507,small,
+Practice at 10721 QUEENS BLVD,10721 QUEENS BLVD,FOREST HILLS,NY,113754451,1,"Dentist, Oral and Maxillofacial Surgery",718-268-7400,small,
+Practice at 5606 BROADWAY,5606 BROADWAY,BRONX,NY,104635500,1,"Dentist, General Practice",718-549-5544,small,
+Practice at 8 THE PNES,8 THE PNES,OLD WESTBURY,NY,115681127,1,Student in an Organized Health Care Education/Training Program,516-626-7969,small,
+DR. VENKATESH DENTAL CARE P.C.,12 COACHMANS CT,OLD WESTBURY,NY,115681324,1,"Dentist, Periodontics",347-350-3889,small,1
+Practice at NORTHERN BOULEVARD,NORTHERN BOULEVARD,OLD WESTBURY,NY,11568,1,Student in an Organized Health Care Education/Training Program,516-686-3953,small,
+Practice at 22 PHEASANT RUN,22 PHEASANT RUN,OLD WESTBURY,NY,115681703,1,Oral & Maxillofacial Surgery,516-484-2959,small,
+Practice at 4502 MEDICAL DR,4502 MEDICAL DR,SAN ANTONIO,TX,782294402,1,Student in an Organized Health Care Education/Training Program,516-205-5770,small,
+Practice at 27005 76TH AVE,27005 76TH AVE,NEW HYDE PARK,NY,110401402,1,Student in an Organized Health Care Education/Training Program,516-469-8738,small,
+Practice at 5700 E HIGHWAY 90,5700 E HIGHWAY 90,SIERRA VISTA,AZ,856359110,1,Student in an Organized Health Care Education/Training Program,520-263-3190,small,
+"MIMI G BANSAL, MD",2001 MARCUS AVE,LAKE SUCCESS,NY,11042,1,"Dermatology, Procedural Dermatology",516-352-2700,small,1
+Practice at 600 NORTHERN BOULEVARD,600 NORTHERN BOULEVARD,OLD WESTBURY,NY,115688000,1,Student in an Organized Health Care Education/Training Program,516-686-3997,small,
+Practice at 26 GRACE DR,26 GRACE DR,OLD WESTBURY,NY,115681221,1,"Dentist, Periodontics",917-514-9539,small,
+Practice at PO BOX 8000,PO BOX 8000,OLD WESTBURY,NY,115688000,2,Student in an Organized Health Care Education/Training Program,516-686-3997; 516-686-1000,small,
+Practice at 1545 ATLANTIC AVE,1545 ATLANTIC AVE,BROOKLYN,NY,112131122,1,Student in an Organized Health Care Education/Training Program,718-613-7384,small,
+Practice at 79 MIDDLEVILLE RD,79 MIDDLEVILLE RD,NORTHPORT,NY,117682200,1,Student in an Organized Health Care Education/Training Program,631-261-4400,small,
+Practice at 8015 164TH ST,8015 164TH ST,JAMAICA,NY,114321116,1,"Dentist, General Practice",718-523-1525,small,
+"400 POST DENTAL, PC",400 POST AVE STE 103,WESTBURY,NY,115902226,1,"Dentist, General Practice",516-515-1041,small,1
+Practice at 1000 MONTAUK HWY,1000 MONTAUK HWY,WEST ISLIP,NY,117954927,1,Student in an Organized Health Care Education/Training Program,631-376-3000,small,
+Practice at 2 CARRIAGE RD,2 CARRIAGE RD,ROSLYN,NY,115763118,1,"Dentist, General Practice",516-248-7077,small,
+Practice at 535 PORT WASHINGTON BLVD,535 PORT WASHINGTON BLVD,PORT WASHINGTON,NY,110504217,1,"Dentist, General Practice",516-883-3400,small,
+Practice at 1025 NORTHERN BLVD,1025 NORTHERN BLVD,ROSLYN,NY,115761506,1,Dentist,516-365-7777,small,
+Practice at 3400 SPRUCE ST,3400 SPRUCE ST,PHILADELPHIA,PA,191044238,1,Student in an Organized Health Care Education/Training Program,516-851-9391,small,
+Practice at 1044 NORTHERN BLVD,1044 NORTHERN BLVD,ROSLYN,NY,115761514,1,"Dentist, Periodontics",516-672-1881,small,
+Practice at 410 W 10TH AVE,410 W 10TH AVE,COLUMBUS,OH,432101240,1,Student in an Organized Health Care Education/Training Program,614-293-8000,small,
+Practice at 2410 SAMPSON ST,2410 SAMPSON ST,NORTH CHICAGO,IL,600882942,1,Student in an Organized Health Care Education/Training Program,847-688-2469,small,
+Practice at ONE DIANAS TRAIL,ONE DIANAS TRAIL,ROSLYN,NY,115761823,1,Dentist,516-621-8615,small,
+Practice at 63 CRICKET CLUB DR,63 CRICKET CLUB DR,ROSLYN,NY,115762907,1,Dentist,516-458-6624,small,
+Practice at 1025 NORTHERN BLVD,1025 NORTHERN BLVD,ROSLYN,NY,11576,2,"Dentist, General Practice; Dentist, Endodontics",516-869-9787; 516-365-7777,small,
+Practice at 160 E 32ND ST,160 E 32ND ST,NEW YORK,NY,100166004,1,"Dentist, Periodontics",212-683-3328,small,
+Practice at 635 W 165TH ST,635 W 165TH ST,NEW YORK,NY,100323724,1,Student in an Organized Health Care Education/Training Program,212-543-6000,small,
+Practice at 1044 NORTHERN BLVD.,1044 NORTHERN BLVD.,ROSLYN,NY,11576,1,"Dentist, General Practice",516-466-1177,small,
+Practice at 2211 MERRICK RD,2211 MERRICK RD,MERRICK,NY,115664752,1,"Dentist, Pediatric Dentistry",516-365-5439,small,
+Practice at 2323 NE 26TH AVE STE 110,2323 NE 26TH AVE STE 110,POMPANO BEACH,FL,330621147,1,Dentist,754-238-1038,small,
+Practice at 2000 NORTH FEDERAL HIGHWAY #300,2000 NORTH FEDERAL HIGHWAY #300,POMPANO BEACH,FL,33062,1,Dentist,954-941-4410,small,
+AMERICAS BRIGHT SMILES OF POMPANO BEACH,2701 NE 14TH STREET CSWY STE 1,POMPANO BEACH,FL,330623535,1,"Clinic/Center, Dental",954-941-2490,small,1
+Practice at 2707 E. ATLANTIC BLVD,2707 E. ATLANTIC BLVD,POMPANO BEACH,FL,33062,1,"Dentist, Prosthodontics",954-782-8980,small,
+Practice at 50 NE 26TH AVE SUITE 403,50 NE 26TH AVE SUITE 403,POMPANO BEACH,FL,330625246,2,Dentist,954-946-6626,small,
+BEAUTIFUL SMILES FAMILY DENTISTRY,2631 E ATLANTIC BLVD,POMPANO BEACH,FL,330624939,1,Dentist,954-942-4048,small,1
+Practice at 950 NORTH FEDERAL HWY SUITE #202,950 NORTH FEDERAL HWY SUITE #202,POMPANO BEACH,FL,33062,1,Dentist,954-941-4070,small,
+Practice at 2122 NE 2ND STREET,2122 NE 2ND STREET,POMPANO BEACH,FL,33062,1,"Dentist, General Practice",954-941-4310,small,
+Practice at 2000 N FEDERAL HWY,2000 N FEDERAL HWY,POMPANO BEACH,FL,330621022,1,"Dentist, General Practice",954-943-0866,small,
+ADVANCED SURGICAL RECONSTRUCTION IN,110 WASHINGTON AVE APT 1623,MIAMI BEACH,FL,331397224,1,"Surgery, Plastic and Reconstructive Surgery",954-224-0555,small,1
+Practice at 450 ALTON RD APT 2803,450 ALTON RD APT 2803,MIAMI BEACH,FL,331396762,1,Health & Wellness Coach,917-470-4994,small,
+ALBERT CANAS MD AND ASSOCIATES AESTHETICS,1680 MICHIGAN AVE STE 901,MIAMI BEACH,FL,331392550,1,Dermatology,305-534-0565,small,1
+Practice at 1111 LINCOLN RD,1111 LINCOLN RD,MIAMI BEACH,FL,331392452,1,Dermatology,305-397-8622,small,
+Practice at 605 LINCOLN RD,605 LINCOLN RD,MIAMI BEACH,FL,331392900,1,Plastic Surgery,305-600-4146,small,
+AM DENTS CORP,1335 ALTON RD,MIAMI BEACH,FL,331393811,1,"Dentist, General Practice",305-534-7423,small,1
+Practice at 710 ALTON RD,710 ALTON RD,MIAMI BEACH,FL,331395504,1,Dentist,305-538-8835,small,
+Practice at 830 WASHINGTON AVE,830 WASHINGTON AVE,MIAMI BEACH,FL,331395803,2,Dentist,305-531-0063,small,
+Practice at 1611 NW 12TH AVE,1611 NW 12TH AVE,MIAMI,FL,331361005,2,Student in an Organized Health Care Education/Training Program,305-585-1111; 305-585-5215,small,
+Practice at 100 MACARTHUR CSWY,100 MACARTHUR CSWY,MAIMI BEACH,FL,33139,1,Dental Hygienist,305-535-4535,small,
+ASTORIA DENTAL AT THE BEACH INC.,1235 ALTON RD,MIAMI BEACH,FL,331393809,1,"Clinic/Center, Dental",305-674-0200,small,1
+Practice at 119 WASHINGTON AVE STE 601,119 WASHINGTON AVE STE 601,MIAMI BEACH,FL,331397232,1,"Dentist, General Practice",305-534-4440,small,
+Practice at 420 LINCOLN RD,420 LINCOLN RD,MIAMI BEACH,FL,331393019,1,"Dentist, General Practice",305-532-6795,small,
+Practice at 1370 WASHINGTON AVE,1370 WASHINGTON AVE,MIAMI BEACH,FL,331394261,1,Dentist,305-538-7362,small,
+BEACH DENTAL CENTER,1680 MICHIGAN AVE,MIAMI BEACH,FL,33139,1,Dentist,305-532-3300,small,1
+Practice at 1600 S ANDREWS AVE,1600 S ANDREWS AVE,FORT LAUDERDALE,FL,333162510,3,Student in an Organized Health Care Education/Training Program,954-355-4400; 954-876-2790,small,
+Practice at 1201 N STONEWALL AVE,1201 N STONEWALL AVE,OKLAHOMA CITY,OK,731171214,1,Dentist,405-271-6486,small,
+Practice at 1 ALHAMBRA PLZ STE 25,1 ALHAMBRA PLZ STE 25,CORAL GABLES,FL,331345216,1,"Dentist, General Practice",786-507-4440,small,
+Practice at 1201 NW 16TH ST,1201 NW 16TH ST,MIAMI,FL,331251624,1,Student in an Organized Health Care Education/Training Program,305-575-3214,small,
+"CAN COMMUNITY HEALTH, INC.",427 WASHINGTON AVE,MIAMI BEACH,FL,331396617,1,"Dentist, General Practice",305-514-0813,small,1
+Practice at 1680 MICHIGAN AVE,1680 MICHIGAN AVE,MIAMI BEACH,FL,331392538,1,"Dentist, General Practice",305-532-3300,small,
+Practice at 100 LINCOLN RD # CU7,100 LINCOLN RD # CU7,MIAMI BEACH,FL,331392013,1,"Dentist, General Practice",305-532-6977,small,
+Practice at 615 COLLINS AVE,615 COLLINS AVE,MIAMI BEACH,FL,331396213,1,"Dentist, General Practice",305-535-5540,small,
+Practice at 4300 ALTON RD OFC,4300 ALTON RD OFC,MIAMI BEACH,FL,331402948,1,Student in an Organized Health Care Education/Training Program,305-674-2310,small,
+Practice at 4300 ALTON RD,4300 ALTON RD,MIAMI BEACH,FL,331402948,26,Student in an Organized Health Care Education/Training Program,305-674-2273; 305-674-2121; 305-535-7901; 305-783-3074; 305-674-2816; 212-731-7950; 305-676-6464; 305-697-5183; 205-706-6896; 951-522-5443; 305-674-2277; 305-677-8297,large,
+Practice at 960 ARTHUR GODFREY RD,960 ARTHUR GODFREY RD,MIAMI BEACH,FL,331403326,1,"Dentist, Prosthodontics",305-532-4419,small,
+Practice at 939 ARTHUR GODFREY RD,939 ARTHUR GODFREY RD,MIAMI BEACH,FL,331403306,1,Dentist,305-534-2002,small,
+Practice at 4300 ALTON RD STE 2400,4300 ALTON RD STE 2400,MIAMI BEACH,FL,331402948,1,Student in an Organized Health Care Education/Training Program,305-674-2277,small,
+Practice at 1120 NW 14TH ST,1120 NW 14TH ST,MIAMI,FL,331362107,1,Student in an Organized Health Care Education/Training Program,305-243-8787,small,
+Practice at 106 MAYFIELD CIR,106 MAYFIELD CIR,DURHAM,NC,277056136,1,Student in an Organized Health Care Education/Training Program,919-744-9398,small,
+Practice at 4300 ALTON RD,4300 ALTON RD,MIAMI,FL,331402948,3,Student in an Organized Health Care Education/Training Program,305-535-7953; 305-695-1255; 305-674-2310,small,
+Practice at 101 NICOLLS RD,101 NICOLLS RD,STONY BROOK,NY,117940001,1,Student in an Organized Health Care Education/Training Program,631-444-8497,small,
+Practice at 400 ARTHUR GODFREY ROAD SUITE 410,400 ARTHUR GODFREY ROAD SUITE 410,MIAMI BEACH,FL,331403516,1,Dentist,305-538-3265,small,
+Practice at 504 BILTMORE WAY,504 BILTMORE WAY,CORAL GABLES,FL,331345720,1,Dental Hygienist,305-446-1584,small,
+Practice at 4300 ALTON ROAD,4300 ALTON ROAD,MIAMI BEACH,FL,33140,1,Student in an Organized Health Care Education/Training Program,305-674-2310,small,
+Practice at 960 ARTHUR GODFREY RD STE 400,960 ARTHUR GODFREY RD STE 400,MIAMI BEACH,FL,331403347,1,"Dentist, General Practice",305-842-3119,small,
+Practice at 4300 ALTON RD STE 2065,4300 ALTON RD STE 2065,MIAMI BEACH,FL,331402948,1,Student in an Organized Health Care Education/Training Program,305-674-2053,small,
+Practice at 4300 ALTON RD FL 33140,4300 ALTON RD FL 33140,MIAMI BEACH,FL,331402948,1,Student in an Organized Health Care Education/Training Program,305-674-2121,small,
+BARUCH JACOBS MDPA,400 ARTHUR GODFREY RD,MIAMI BEACH,FL,331403516,1,Plastic Surgery,305-674-8586,small,1
+"BENJAMIN J COUSINS, M.D. P.A.",4308 ALTON RD STE 720,MIAMI BEACH,FL,331404557,1,Plastic Surgery,786-637-3332,small,1
+4 KIDS DENTAL LLC,1096 W 49TH ST,HIALEAH,FL,330123322,1,"Dentist, General Practice",954-394-0658,small,1
+"A.DESROSIERS III, M.D., CORP",6705 S RED ROAD,CORAL GABLES,FL,33143,1,Plastic Surgery,305-403-2922,small,1
+"A.DESROSIERS III, M.D., CORP",6705 S RED RD,SOUTH MIAMI,FL,331433622,1,Plastic Surgery,305-403-2922,small,1
+Practice at 7031 SW 62ND AVE,7031 SW 62ND AVE,SOUTH MIAMI,FL,331434701,25,"Student in an Organized Health Care Education/Training Program; Dentist, General Practice",305-284-7761; 305-253-5100; 305-284-7500,large,
+Practice at 7231 SW 63RD AVE,7231 SW 63RD AVE,SOUTH MIAMI,FL,331434810,1,"Surgery, Plastic and Reconstructive Surgery",305-661-1996,small,
+Practice at 6705 RED ROAD,6705 RED ROAD,CORAL GABLES,FL,331433649,1,"Dentist, General Practice",305-668-1811,small,
+Practice at 820 E 41ST ST STE 202,820 E 41ST ST STE 202,HIALEAH,FL,330132463,1,Dentist,305-836-3635,small,
+AESTHETIC DENTISTRY OF SOUTH MIAMI,7600 SW 57TH AVE,SOUTH MIAMI,FL,331435428,1,"Dentist, General Practice",305-667-7543,small,1
+Practice at 6601 SW 80TH ST STE 213,6601 SW 80TH ST STE 213,SOUTH MIAMI,FL,331434661,1,Dentist,305-667-2334,small,
+Practice at 7000 SW 62ND AVE STE 401,7000 SW 62ND AVE STE 401,SOUTH MIAMI,FL,331434721,1,Student in an Organized Health Care Education/Training Program,305-284-7761,small,
+Practice at 7031 SW 62ND AVE,7031 SW 62ND AVE,SOUTH MIAMI,FL,33143,1,Student in an Organized Health Care Education/Training Program,305-284-7761,small,
+"ALLISON HIDALGO-GONZALEZ, DMD, PL",8585 SW 72 ST,MIAMI,FL,33143,1,"Dentist, General Practice",305-270-0171,small,1
+Practice at 6705 S RED RD STE 518,6705 S RED RD STE 518,SOUTH MIAMI,FL,331433649,1,Dermatology,305-403-1181,small,
+ALSMILE LLC,7550 SW 57TH AVE STE 214,SOUTH MIAMI,FL,331435336,1,"Dentist, General Practice",305-667-9860,small,1
+Practice at 653-1 W 8TH ST,653-1 W 8TH ST,JACKSONVILLE,FL,322096511,1,Student in an Organized Health Care Education/Training Program,904-244-2000,small,
+"ALVAREZ & GARCIA, PA.",6641-A SOUTH DIXIE HIGHWAY,MIAMI,FL,331437919,1,"Dentist, General Practice",305-667-0306,small,1
+Practice at 7000 SW 62ND AVE STE 300,7000 SW 62ND AVE STE 300,SOUTH MIAMI,FL,331434719,1,Student in an Organized Health Care Education/Training Program,305-665-6501,small,
+Practice at 6641 S DIXIE HWY,6641 S DIXIE HWY,MIAMI,FL,331437919,1,"Dentist, General Practice",305-667-0306,small,
+Practice at 800 E MERRITT ISLAND CSWY STE 105,800 E MERRITT ISLAND CSWY STE 105,MERRITT ISLAND,FL,329523514,1,Dentist,321-453-8882,small,
+Practice at 33497 S DIXIE HWY,33497 S DIXIE HWY,HOMESTEAD,FL,330345642,1,"Dentist, General Practice",305-874-7509,small,
+Practice at 9333 SW 152ND STREET,9333 SW 152ND STREET,MIAMI,FL,33157,1,"Dentist, Oral and Maxillofacial Surgery",305-251-2500,small,
+ANABEL PAYA DMD PA,6641 S DIXIE HWY UNIT A,MIAMI,FL,331437919,1,Dentist,305-667-0306,small,1
+Practice at 7000 SW 62ND AVE PH 7,7000 SW 62ND AVE PH 7,SOUTH MIAMI,FL,331434716,1,Dermatology,305-243-6704,small,
+Practice at 8940 N KENDALL DR,8940 N KENDALL DR,MIAMI,FL,331762148,1,"Dentist, Endodontics",305-275-8875,small,
+"AOS MIAMI, PLLC",6641 S DIXIE HWY STE A,MIAMI,FL,331437919,1,"Dentist, Oral and Maxillofacial Surgery",305-762-9746,small,1
+Practice at 232 N ORANGE BLOSSOM TRL,232 N ORANGE BLOSSOM TRL,ORLANDO,FL,328051612,1,Student in an Organized Health Care Education/Training Program,407-428-5751,small,
+Practice at 5965 PONCE DE LEON BLVD.,5965 PONCE DE LEON BLVD.,CORAL GABLES,FL,33146,1,"Dentist, Pediatric Dentistry",305-502-3955,small,
+"AMY L.S. BEKANICH, M.D., P.A.",3850 BIRD ROAD,MIAMI,FL,33146,1,Plastic Surgery,305-476-9772,small,1
+Practice at 3815 SW 8TH ST,3815 SW 8TH ST,CORAL GABLES,FL,331343001,1,"Dentist, General Practice",305-443-7501,small,
+"ARMIN DAEE D.M.D., P.A.",4950 S LE JEUNE RD,CORAL GABLES,FL,331462231,1,"Dentist, General Practice",305-670-1011,small,1
+Practice at 3850 BIRD RD STE 301,3850 BIRD RD STE 301,MIAMI,FL,331461515,1,"Dentist, Pediatric Dentistry",305-445-9244,small,
+Practice at 921 ALAVA AVE,921 ALAVA AVE,CORAL GABLES,FL,331461217,1,"Dentist, General Practice",786-439-9906,small,
+Practice at 4425 PONCE DE LEON BLVD,4425 PONCE DE LEON BLVD,CORAL GABLES,FL,33146,1,Plastic Surgery,305-381-8837,small,
+Practice at 135 SAN LORENZO AVE,135 SAN LORENZO AVE,CORAL GABLES,FL,331461513,1,"Dentist, General Practice",305-271-8321,small,
+Practice at 1475 W 49TH PL,1475 W 49TH PL,HIALEAH,FL,330123113,1,Student in an Organized Health Care Education/Training Program,305-284-7774,small,
+"BERNARD H COHEN, MD PA",4425 PONCE DE LEON BLVD,CORAL GABLES,FL,331461837,1,"Dermatology, Procedural Dermatology",305-476-9544,small,1
+Practice at 1320 S DIXIE HWY,1320 S DIXIE HWY,CORAL GABLES,FL,331462926,1,Student in an Organized Health Care Education/Training Program,818-815-8817,small,
+Practice at 5821 SAN AMARO DR,5821 SAN AMARO DR,CORAL GABLES,FL,331462402,1,Student in an Organized Health Care Education/Training Program,305-284-4131,small,
+ADVANCED ENDODONTIC GROUP,1045 KANE CONCOURSE STE 204,BAY HARBOR ISLANDS,FL,331542119,1,"Dentist, Endodontics",305-615-6300,small,1
+FAMILY & COSMETIC DENTISTRY AMD,1048 KANE CONCOURSE,BAY HARBOR ISLANDS,FL,331542132,5,"Dentist; Dentist, Periodontics; Dentist, General Practice; Dentist, Endodontics",305-615-5722; 305-865-0328,medium,1
+"FLORIDA DENTAL PROFESSIONALS, P.A.",260 95TH ST STE 202,SURFSIDE,FL,331542807,2,"Dentist, General Practice",305-865-0453; 305-440-4229,small,1
+"BARRY SHIPMAN DMD, PA",951 NE 167TH ST,NORTH MIAMI BEACH,FL,331623711,1,"Dentist, Prosthodontics",305-864-5557,small,1
+BAY HARBOR DERMATOLOGY & COSMETIC CENTER,1045 95TH ST STE 300,BAY HARBOR ISLANDS,FL,331542108,1,Dermatology,305-403-6100,small,1
+DENTAL ASSOCIATES OF BAL HARBOUR,260 95TH ST,SURFSIDE,FL,331542807,2,"Dentist; Clinic/Center, Dental",305-865-0453; 305-866-8290,small,1
+Practice at 100 WOODS RD,100 WOODS RD,VALHALLA,NY,105951530,1,Student in an Organized Health Care Education/Training Program,914-493-7000,small,
+Practice at 1111 KANE CONCOURSE STE 100,1111 KANE CONCOURSE STE 100,BAY HARBOR ISLANDS,FL,331542010,1,Dermatology,305-866-2177,small,
+"CHILDREN'S HOSPITAL DENTISTRY, INC.",1411 N FLAGLER DR,WEST PALM BEACH,FL,334013404,1,"Clinic/Center, Dental",561-685-7020,small,1
+Practice at 1160 KANE CONCOURSE,1160 KANE CONCOURSE,BAY HARBOR ISLANDS,FL,331542053,1,Dentist,305-861-9200,small,
+COSMETIC SMILES DENTAL CARE LLC,11300 NW 87TH CT STE 166,HIALEAH GARDENS,FL,330184521,1,"Clinic/Center, Dental",305-364-9322,small,1
+Practice at 1209 W BROWARD BLVD # 33312,1209 W BROWARD BLVD # 33312,FORT LAUDERDALE,FL,333121640,1,Dentist,954-763-3358,small,
+Practice at 1611 NW 12 AVENUE,1611 NW 12 AVENUE,MIAMI,FL,33136,1,Student in an Organized Health Care Education/Training Program,305-585-6970,small,
+"EDWARD A. KRUKOWSKI, DMD, PA",9801 COLLINS AVE,BAL HARBOUR,FL,331541815,1,"Clinic/Center, Dental",305-866-6662,small,1
+Practice at 7975 NW 154TH ST STE 250,7975 NW 154TH ST STE 250,MIAMI LAKES,FL,330165806,1,"Dentist, Endodontics",305-615-6300,small,
+ICOM BAY HARBOR LLC,1160 KANE CONCOURSE STE 203,BAY HARBOR ISLANDS,FL,331542020,2,Dental Hygienist; Dentist,305-560-5859,small,1
+Practice at 18999 BISCAYNE BLVD STE 210,18999 BISCAYNE BLVD STE 210,AVENTURA,FL,331802814,1,"Dentist, General Practice",305-466-1444,small,
+Practice at 9526 HARDING AVE,9526 HARDING AVE,SURFSIDE,FL,331542502,1,Dermatology,305-315-6526,small,
+"Practice at GILBERT JACOBSON D.D,S. PA","GILBERT JACOBSON D.D,S. PA",BAY HARBOR,FL,33154,1,"Dentist, Periodontics",305-865-0328,small,
+Practice at 9507 S DIXIE HWY,9507 S DIXIE HWY,MIAMI,FL,331562802,1,Dentist,305-849-7949,small,
+"JEREMY B. FREEDMAN M.D., P.A.",1160 96TH ST STE 403,BAY HARBOR ISLANDS,FL,331542059,1,"Dermatology, MOHS-Micrographic Surgery",305-861-4439,small,1
+JONATHAN TUMAN DDS PA,1111 KANE CONCOURSE STE 515,BAY HARBOR ISLANDS,FL,331542043,1,"Dentist, General Practice",305-865-7166,small,1
+Practice at 9751 E. BAY HARBOR DR.,9751 E. BAY HARBOR DR.,MIAMI,FL,331543827,1,"Dentist, Pediatric Dentistry",305-867-3913,small,
+"A. Y. YAZBACK, DMD, PA",9350 S DIXIE HWY STE 920,MIAMI,FL,331562996,1,"Clinic/Center, Dental",605-670-5100,small,1
+Practice at 10201 HAMMOCKS BLVD,10201 HAMMOCKS BLVD,MIAMI,FL,331964712,1,"Dentist, General Practice",305-382-5000,small,
+Practice at 348 ALHAMBRA CIR STE A,348 ALHAMBRA CIR STE A,CORAL GABLES,FL,331345004,1,Dentist,305-317-9887,small,
+ALEXANDER D TRUJILLO DDS PA,8441 SW 132ND ST,MIAMI,FL,331566505,1,"Dentist, General Practice",305-235-9321,small,1
+Practice at 7700 N KENDALL DR STE 302,7700 N KENDALL DR STE 302,MIAMI,FL,331567559,1,Student in an Organized Health Care Education/Training Program,305-299-0917,small,
+Practice at 7400 N KENDALL DR,7400 N KENDALL DR,MIAMI,FL,331567706,1,Dentist,305-670-6662,small,
+ANNA CHACON MD PA,8525 SW 92ND ST STE C11A,MIAMI,FL,331567386,1,Dermatology,305-902-5733,small,1
+Practice at 10105 SW 78TH CT,10105 SW 78TH CT,MIAMI,FL,331562624,1,Dentist,305-301-7089,small,
+ARTHUR SHAPIRO DMD PA,12035 S DIXIE HWY,MIAMI,FL,331565234,1,"Clinic/Center, Dental",305-233-8000,small,1
+"B & Y DENTAL SPECIALISTS, LLC",8500 SW 92 STREET,MIAMI,FL,33156,1,"Dentist, General Practice",305-271-0861,small,1
+Practice at 600 S ANDREWS AVE,600 S ANDREWS AVE,FORT LAUDERDALE,FL,333012851,1,Student in an Organized Health Care Education/Training Program,954-941-8300,small,
+ADVANCED DENTAL WELLNESS CENTER,104 SE 1ST ST,FORT LAUDERDALE,FL,333011924,1,Dentist,954-525-5662,small,1
+Practice at 350 E LAS OLAS BLVD STE 110,350 E LAS OLAS BLVD STE 110,FT LAUDERDALE,FL,333014214,1,Dermatology,954-765-3005,small,
+Practice at 3333 NORTHLAKE BLVD STE 6,3333 NORTHLAKE BLVD STE 6,PALM BEACH GARDENS,FL,334031717,1,"Dentist, General Practice",561-508-8461,small,
+Practice at 2300 E LAS OLAS BLVD STE 3W,2300 E LAS OLAS BLVD STE 3W,FORT LAUDERDALE,FL,333011578,1,"Dentist, Prosthodontics",954-467-0303,small,
+"B HARVEY WIENER, DDS., PA",800 E BROWARD BLVD,FORT LAUDERDALE,FL,333012008,1,"Dentist, Endodontics",954-463-9191,small,1
+Practice at 800 EAST BROWARD BLVD,800 EAST BROWARD BLVD,FORT LAUDERDALE,FL,333012020,1,Dermatology,954-463-5406,small,
+Practice at 2701 W OAKLAND PARK BLVD STE 205B,2701 W OAKLAND PARK BLVD STE 205B,OAKLAND PARK,FL,333111330,1,Dentist,727-543-1077,small,
+Practice at 1601 E BROWARD BLVD,1601 E BROWARD BLVD,FORT LAUDERDALE,FL,333012160,1,Dermatology,954-463-3421,small,
+Practice at 800 E BROWARD BLVD STE 410,800 E BROWARD BLVD STE 410,FT LAUDERDALE,FL,333012033,1,Dentist,954-463-4794,small,
+Practice at 8320 W SUNRISE BLVD,8320 W SUNRISE BLVD,PLANTATION,FL,333225435,1,"Dentist, Endodontics",954-474-9660,small,
+Practice at 1500 E BROWARD BLVD,1500 E BROWARD BLVD,FT LAUDERDALE,FL,33301,1,"Dentist, Orthodontics and Dentofacial Orthopedics",954-463-4653,small,
+Practice at 500 E LAS OLAS BLVD APT 1601,500 E LAS OLAS BLVD APT 1601,FORT LAUDERDALE,FL,333012576,1,Student in an Organized Health Care Education/Training Program,607-226-2266,small,
+Practice at 4725 N FEDERAL HWY,4725 N FEDERAL HWY,FORT LAUDERDALE,FL,333084603,1,Student in an Organized Health Care Education/Training Program,954-771-8000,small,
+Practice at 1625 E LAS OLAS BLVD,1625 E LAS OLAS BLVD,FORT LAUDERDALE,FL,333012357,1,"Dentist, General Practice",954-463-5051,small,
+Practice at 3501 JOHNSON ST,3501 JOHNSON ST,HOLLYWOOD,FL,330215421,1,Student in an Organized Health Care Education/Training Program,860-334-6266,small,
+CHARLES F HALFPENNY MD LLC,12 NE 12TH AVE,FT LAUDERDALE,FL,333011604,1,Independent Medical Examiner,954-463-3416,small,1
+Practice at 137 NW 100 AVENUE,137 NW 100 AVENUE,PLANTATION,FL,33324,1,Dermatology,954-577-5161,small,
+BEAUTYSMART DERMATOLOGY CLINIC AND MEDICAL SPA LLC,94 S FEDERAL HWY,BOCA RATON,FL,334324825,1,"Dermatology, Procedural Dermatology",561-990-7294,small,1
+Practice at 3000 N UNIVERSITY DR STE K,3000 N UNIVERSITY DR STE K,CORAL SPRINGS,FL,330655082,1,Dermatology,954-752-2630,small,
+Practice at 3319 FL-7 #202,3319 FL-7 #202,WELLINGTON,FL,33449,1,Dermatology,561-847-4751,small,
+"BOCA DENTAL, INC",925 S FEDERAL HWY STE 315,BOCA RATON,FL,334326100,1,"Dentist, General Practice",561-226-0100,small,1
+BRILLIANT SMILES OF BOCA RATON LLC,315 SE MIZNER BLVD STE 216,BOCA RATON,FL,334326086,2,"Dentist; Dentist, General Practice",561-338-5005,small,1
+Practice at 2151 S ALTERNATE A1A STE 1300,2151 S ALTERNATE A1A STE 1300,JUPITER,FL,334773900,1,Dentist,561-575-5599,small,
+"FRIEDMAN DENTAL GROUP PALM BEACH, PLLC",254 SUNSET AVE,PALM BEACH,FL,334803815,2,"Dentist, Prosthodontics",561-655-2347; 561-655-2910,small,1
+Practice at 235 PERUVIAN AVE,235 PERUVIAN AVE,PALM BEACH,FL,334804695,2,"Dentist, Prosthodontics; Dentist, General Practice",561-802-4424,small,
+"LAYNE D. NISENBAUM, DO, PA",50 COCOANUT ROW,PALM BEACH,FL,334804025,2,"Dentist, General Practice; Dermatology",561-833-2611; 561-832-1950,small,1
+"EAST COAST PLASTIC SURGERY OF FLORIDA, PLLC",175 BRADLEY PL,PALM BEACH,FL,334803785,1,"Surgery, Plastic and Reconstructive Surgery",212-628-7300,small,1
+Practice at 340 ROYAL POINCIANA WAY,340 ROYAL POINCIANA WAY,PALM BEACH,FL,334804048,1,"Dentist, General Practice",561-832-6647,small,
+Practice at 44 COCOANUT ROW STE 206,44 COCOANUT ROW STE 206,PALM BEACH,FL,334804069,1,Dentist,561-832-4675,small,
+Practice at 44 COCOANUT ROW,44 COCOANUT ROW,PALM BEACH,FL,334804069,1,"Dentist, General Practice",561-832-4675,small,
+Practice at 100 STEIN PLAZA,100 STEIN PLAZA,LOS ANGELES,CA,90095,1,"Surgery, Plastic and Reconstructive Surgery",310-825-3090,small,
+THE OFFICES OF DR PAUL MELCHIORRE PLLC,249 PERUVIAN AVE STE R2,PALM BEACH,FL,334806036,2,"Dentist, General Practice; Clinic/Center, Dental",561-655-0666,small,1
+Practice at 4201 S OCEAN BLVD APT K3,4201 S OCEAN BLVD APT K3,SOUTH PALM BEACH,FL,334805860,1,Health & Wellness Coach,561-838-6589,small,
+Practice at 249 PERUVIAN AVE,249 PERUVIAN AVE,PALM BEACH,FL,334806034,1,"Dentist, General Practice",561-655-0666,small,
+"RISIN PLASTIC SURGERY ASSOCIATES, PLLC",44 COCOANUT ROW STE B126,PALM BEACH,FL,334804069,1,Plastic Surgery,561-515-5787,small,1
+Practice at 3476 NW FEDERAL HWY,3476 NW FEDERAL HWY,JENSEN BEACH,FL,349574441,1,"Dentist, Oral and Maxillofacial Surgery",772-692-4002,small,
+Practice at 139 N COUNTY RD,139 N COUNTY RD,PALM BEACH,FL,334803908,1,Dermatology,561-835-1915,small,
+TILLINGER DENTAL PLLC,4300 ALTON RD # 1190,MIAMI BEACH,FL,331402948,1,"Clinic/Center, Dental",954-770-3300,small,1
+Practice at 333 BORTHWICK AVE,333 BORTHWICK AVE,PORTSMOUTH,NH,038017128,1,Student in an Organized Health Care Education/Training Program,212-203-0975,small,
+Practice at 160 SE 6TH AVE STE B-1,160 SE 6TH AVE STE B-1,DELRAY BEACH,FL,334835264,1,Dentist,561-276-6684,small,
+Practice at 160 SE 6TH AVE # B1,160 SE 6TH AVE # B1,DELRAY BEACH,FL,33483,1,Dentist,561-276-6684,small,
+"BRENT SCHILLINGER, M.D. PA",3100 S FEDERAL HWY STE 8,DELRAY BEACH,FL,334833320,1,Dermatology,561-278-1362,small,1
+CARE ONE DENTAL LLC,2275 S FEDERAL HWY,DELRAY BEACH,FL,334833337,1,"Dentist, General Practice",561-440-4866,small,1
+CARE ONE DENTAL OF BOYNTON PA,8135 S MILITARY TRL STE 105,BOYNTON BEACH,FL,334361504,1,"Clinic/Center, Dental",561-704-0555,small,1
+Practice at 550 SE 6TH AVE STE 100,550 SE 6TH AVE STE 100,DELRAY BEACH,FL,334835306,1,"Surgery, Plastic and Reconstructive Surgery",561-440-8020,small,
+Practice at 1640 S FEDERAL HWY,1640 S FEDERAL HWY,DELRAY BEACH,FL,334835030,2,"Dentist; Dentist, General Practice",561-276-5800,small,
+Practice at 845 NE 6TH AVE,845 NE 6TH AVE,DELRAY BEACH,FL,334835734,1,Dentist,561-272-0040,small,
+Practice at 1010 S FEDERAL HWY,1010 S FEDERAL HWY,DELRAY BEACH,FL,334835132,1,Plastic Surgery,561-414-2575,small,
+Practice at 505 NE 3RD ST STE 2,505 NE 3RD ST STE 2,DELRAY BEACH,FL,334835541,1,"Dentist, Periodontics",561-276-3889,small,
+Practice at 2275 S FEDERAL HWY STE 310,2275 S FEDERAL HWY STE 310,DELRAY BEACH,FL,334833332,1,Dentist,561-894-4299,small,
+DELRAY DERMATOLOGY LLC,550 SE 6TH AVE,DELRAY BEACH,FL,334835252,1,Dermatology,561-440-8020,small,1
+DENTAL TEAM OF ATLANTIS,109 JOHN F KENNEDY DR STE E,ATLANTIS,FL,334626617,1,"Clinic/Center, Dental",561-612-7931,small,1
+Practice at 505 SE 6TH AVENUE,505 SE 6TH AVENUE,DELRAY BEACH,FL,33483,1,"Dentist, Endodontics",561-243-0100,small,
+Practice at 3223 SAINT ANNES DR,3223 SAINT ANNES DR,BOCA RATON,FL,334962517,1,Dentist,561-241-4782,small,
+Practice at 5183 NW 25TH WAY,5183 NW 25TH WAY,BOCA RATON,FL,334962209,1,Student in an Organized Health Care Education/Training Program,561-866-9235,small,
+BRUSH BOCA,2901 CLINT MOORE RD STE 6,BOCA RATON,FL,334962044,1,Dentist,561-997-0061,small,1
+Practice at 8918 LANTANA RD STE B,8918 LANTANA RD STE B,LAKE WORTH,FL,334676136,1,"Dentist, General Practice",347-742-0342,small,
+Practice at 6001 NW 24TH TER,6001 NW 24TH TER,BOCA RATON,FL,334963642,1,Dentist,404-502-4953,small,
+Practice at 9101 LAKERIDGE BLVD STE 9,9101 LAKERIDGE BLVD STE 9,BOCA RATON,FL,334962147,1,"Dentist, General Practice",561-852-7700,small,
+"DANIEL S. KOVACS, M.D., P.A.",1905 CLINT MOORE RD,BOCA RATON,FL,334962658,1,Plastic Surgery,561-912-9191,small,1
+Practice at 11119 HEARTH RD,11119 HEARTH RD,SPRING HILL,FL,346083727,1,Dentist,352-683-2283,small,
+Practice at 1905 CLINT MOORE RD,1905 CLINT MOORE RD,BOCA RATON,FL,33496,1,Plastic Surgery,561-998-3333,small,
+EPIC SMILE CENTERS OF MICHIGAN PLLC,30969 ORCHARD LAKE RD,FARMINGTON HILLS,MI,483341338,1,"Clinic/Center, Dental",866-374-2764,small,1
+Practice at 7200 CAMBRIDGE ST STE 10A,7200 CAMBRIDGE ST STE 10A,HOUSTON,TX,770304202,1,Student in an Organized Health Care Education/Training Program,713-986-7396,small,
+Practice at 5629 REGENCY CIR E,5629 REGENCY CIR E,BOCA RATON,FL,334962722,1,"Dentist, Pediatric Dentistry",516-314-7411,small,
+Practice at 350 7TH ST N,350 7TH ST N,NAPLES,FL,341025754,7,Student in an Organized Health Care Education/Training Program,239-624-0940; 239-624-5000; 239-624-9040,medium,
+ADVANCED DERMATOLOGY & SKIN SURGERY SPECIALISTS PA,1000 GOODLETTE RD N,NAPLES,FL,341025474,1,Dermatology,239-529-3376,small,1
+Practice at 1008 GOODLETTE RD STE 100,1008 GOODLETTE RD STE 100,NAPLES,FL,341025406,1,"Dentist, General Practice",239-307-5445,small,
+AMERICAN SMILE INC,681 GOODLETTE RD STE 110,NAPLES,FL,341025612,2,"Clinic/Center, Dental",239-298-2519,small,1
+Practice at 1333 3RD AVE S STE 501,1333 3RD AVE S STE 501,NAPLES,FL,341026538,1,Dermatology,239-300-9767,small,
+Practice at 900 5TH AVE S,900 5TH AVE S,NAPLES,FL,341026483,1,Dentist,239-732-9000,small,
+"AEGEAN DENTAL OF NAPLES, LLC",987 HIGH POINT DR,NAPLES,FL,341033877,1,Dentist,239-231-4089,small,1
+AMERICAN DENTAL GROUP,5100 TAMIAMI TRAIL N,NAPLES,FL,34103,1,Dentist,239-406-4334,small,1
+Practice at 12692 TAMIAMI TRL E,12692 TAMIAMI TRL E,NAPLES,FL,341138431,1,Dental Hygienist,239-417-6453,small,
+COLLIER DENTAL STUDIO,3400 TAMIAMI TRL N,NAPLES,FL,341033717,2,"Dentist, General Practice",239-234-6368,small,1
+"BOE, PAGE & PAGE DENTAL GROUP PLLC",4953 CASTELLO DR,NAPLES,FL,341038927,2,"Dentist, General Practice; Dentist",239-263-2122,small,1
+BRACHO DENTAL SOLUTIONS LLC,925 HIGH POINT DR,NAPLES,FL,341033879,2,"Dentist, General Practice",239-262-1535,small,1
+"BRADLEY T. PIOTROWSKI, DDS, MSD, LLC",1044 CASTELLO DR,NAPLES,FL,341038901,1,"Dentist, Periodontics",239-263-6003,small,1
+Practice at 4619 TAMIAMI TRL N,4619 TAMIAMI TRL N,NAPLES,FL,341033004,1,Dentist,239-262-3202,small,
+Practice at 1459 RIDGE ST,1459 RIDGE ST,NAPLES,FL,341034211,1,"Dentist, Oral and Maxillofacial Surgery",239-263-7474,small,
+Practice at 2500 TAMIAMI TRL N,2500 TAMIAMI TRL N,NAPLES,FL,341034470,1,"Dentist, General Practice",239-775-5588,small,
+Practice at 5200 TAMIAMI TRL N,5200 TAMIAMI TRL N,NAPLES,FL,341032817,1,Plastic Surgery,239-263-6766,small,
+Practice at 4933 TAMIAMI TRL N,4933 TAMIAMI TRL N,NAPLES,FL,341033028,2,"Dentist, Orthodontics and Dentofacial Orthopedics; Dentist, Periodontics",239-434-0030; 239-649-7766,small,
+Practice at 5185 CASTELLO DR,5185 CASTELLO DR,NAPLES,FL,341038903,1,"Dentist, Prosthodontics",239-262-1404,small,
+DENTAL DESIGNS OF NAPLES LLC,5048 TAMIAMI TRL N STE A,NAPLES,FL,341032836,1,"Clinic/Center, Oral and Maxillofacial Surgery",239-262-7970,small,1

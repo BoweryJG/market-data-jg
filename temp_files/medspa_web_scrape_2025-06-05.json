@@ -1,0 +1,15 @@
+{
+  "summary": {
+    "total": 0,
+    "byState": {
+      "NY": 0,
+      "FL": 0
+    },
+    "sources": {
+      "google": 0,
+      "realself": 0,
+      "groupon": 0
+    }
+  },
+  "medspas": []
+}

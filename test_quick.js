@@ -1,0 +1,1 @@
+import fetch from "node-fetch"; async function test() { const r = await fetch("https://npiregistry.cms.hhs.gov/api/?version=2.1&state=NY&limit=5"); const d = await r.json(); console.log("NPI API Test:", d.result_count, "providers found"); } test();
