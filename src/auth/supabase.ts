@@ -24,15 +24,23 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKe
 
 // Helper to get the current app URL for redirects
 export const getAppUrl = () => {
-  if (typeof window === 'undefined') return '';
-  
-  // In production, use the actual domain
-  if (window.location.hostname !== 'localhost') {
-    return window.location.origin;
+  if (typeof window === 'undefined') {
+    // Fallback for server-side rendering
+    return 'https://marketdata.repspheres.com';
   }
   
-  // In development, use the correct port
-  return window.location.origin; // This will be http://localhost:5173 for Vite
+  // For localhost development
+  if (window.location.hostname === 'localhost') {
+    return window.location.origin; // http://localhost:5173
+  }
+  
+  // For production - force the market data subdomain
+  if (window.location.hostname.includes('repspheres.com')) {
+    return 'https://marketdata.repspheres.com';
+  }
+  
+  // Fallback to current origin
+  return window.location.origin;
 };
 
 // Get redirect URL for OAuth

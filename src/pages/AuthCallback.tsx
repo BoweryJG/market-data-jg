@@ -11,8 +11,24 @@ export default function AuthCallback() {
       try {
         // Check if we have auth tokens in the URL hash
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
+        let accessToken = hashParams.get('access_token');
+        let refreshToken = hashParams.get('refresh_token');
+        
+        // If no tokens in URL, check localStorage (from auth-handler.html)
+        if (!accessToken || !refreshToken) {
+          const storedTokens = localStorage.getItem('supabase.auth.token');
+          if (storedTokens) {
+            try {
+              const tokens = JSON.parse(storedTokens);
+              accessToken = tokens.access_token;
+              refreshToken = tokens.refresh_token;
+              // Clean up stored tokens
+              localStorage.removeItem('supabase.auth.token');
+            } catch (e) {
+              console.error('Error parsing stored tokens:', e);
+            }
+          }
+        }
         
         if (accessToken && refreshToken) {
           // Set the session from URL parameters

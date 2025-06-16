@@ -5,6 +5,7 @@ import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } 
 import DashboardUpdated from './components/Dashboard/DashboardUpdated';
 import SimpleLogin from './pages/SimpleLogin';
 import AuthCallback from './pages/AuthCallback';
+import ManualAuthHandler from './pages/ManualAuthHandler';
 import { PublicMarketDashboard } from './components/Dashboard/PublicMarketDashboard';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
@@ -77,6 +78,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<MarketCommandCenter />} />
                     <Route path="/login" element={<SimpleLogin />} />
                     <Route path="/auth/callback" element={<AuthCallback />} />
+                    <Route path="/auth/manual" element={<ManualAuthHandler />} />
                     <Route path="/dashboard" element={<MarketCommandCenter />} />
                     <Route path="/enhanced" element={<EnhancedMarketDashboard />} />
                     <Route path="/updated" element={<DashboardUpdated />} />
