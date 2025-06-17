@@ -6,7 +6,7 @@ import DashboardUpdated from './components/Dashboard/DashboardUpdated';
 import SimpleLogin from './pages/SimpleLogin';
 import AuthCallback from './pages/AuthCallback';
 import ManualAuthHandler from './pages/ManualAuthHandler';
-import { SimpleProceduresList } from './components/procedures/SimpleProceduresList';
+import { PublicProceduresList } from './components/procedures/PublicProceduresList';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
@@ -39,8 +39,8 @@ const App: React.FC = () => {
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
                   {/* Public Routes - No Auth Required */}
-                  <Route path="/" element={<SimpleProceduresList />} />
-                  <Route path="/procedures" element={<SimpleProceduresList />} />
+                  <Route path="/" element={<PublicProceduresList />} />
+                  <Route path="/procedures" element={<PublicProceduresList />} />
                   <Route path="/login" element={<SimpleLogin />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/auth/manual" element={<ManualAuthHandler />} />
