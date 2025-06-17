@@ -9,6 +9,7 @@
   NETLIFY_USE_YARN = "false"
   NETLIFY_SKIP_CACHE = "true"
 
+# SPA redirect - MUST be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
