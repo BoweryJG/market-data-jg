@@ -39,7 +39,7 @@ const App: React.FC = () => {
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
                   {/* Public Routes - No Auth Required */}
-                  <Route path="/" element={<PublicProceduresList />} />
+                  <Route path="/" element={<MarketCommandCenter />} />
                   <Route path="/procedures" element={<PublicProceduresList />} />
                   <Route path="/login" element={<SimpleLogin />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
