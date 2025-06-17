@@ -1,8 +1,2 @@
-# Handle auth callback redirects
-/auth/callback  /auth/callback  200
-
 # SPA redirects - all routes go to index.html
 /*  /index.html  200
-
-# API proxy rules (if needed)
-# /api/*  https://your-api-domain.com/api/:splat  200
