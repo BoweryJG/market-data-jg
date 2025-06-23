@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useSpring, animated, config } from '@react-spring/web';
+import { motion, useAnimation } from 'framer-motion';
 
 interface SimpleGaugeProps {
   value: number;
@@ -20,77 +20,75 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
   size = 150 
 }) => {
   const percentage = Math.min((value / max) * 100, 100);
-  const targetAngle = -90 + (percentage / 100) * 180; // Start at -90, sweep to +90
   const radius = size / 2 - 20;
   
   const [isHovered, setIsHovered] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const animationRef = useRef<number>();
+  const controls = useAnimation();
   
-  // Debug hover state
-  useEffect(() => {
-    console.log(`Gauge ${label} hover state:`, isHovered);
-  }, [isHovered, label]);
+  // Calculate the final rotation based on value (0-100)
+  // -90 degrees is the starting position, +90 is the end position (180 degree sweep)
+  const calculateRotation = (val: number) => {
+    const percent = Math.min((val / max) * 100, 100);
+    return -90 + (percent / 100) * 180;
+  };
   
-  // Main needle animation with physics
-  const [{ angle }, api] = useSpring(() => ({
-    angle: -90,
-    config: {
-      tension: 40,  // Lower = heavier feel
-      friction: 12, // Higher = more damping  
-      mass: 2.5,    // Higher = more inertia
-      clamp: false  // Allow overshoot
-    }
-  }));
-  
-  // Initial load animation sequence
+  // Initial load animation with 3 spins then land
   useEffect(() => {
     if (!hasLoaded) {
-      // Delay the animation slightly to ensure component is fully mounted
+      const finalRotation = calculateRotation(value);
+      // Delay slightly to ensure smooth mount
       const timer = setTimeout(() => {
-        // Start from left (-90) and animate to target with overshoot
-        api.start({
-          from: { angle: -90 },
-          to: { angle: targetAngle },
-          config: { 
-            tension: 50,    // Medium tension for smooth motion
-            friction: 8,    // Low friction for nice overshoot
-            mass: 1.5,      // Medium mass for responsive feel
-            clamp: false    // Allow overshoot for realistic effect
-          }
+        controls.start({
+          rotate: 1080 + finalRotation, // 3 full spins + final position
+          transition: {
+            duration: 1.8,
+            ease: [0.17, 0.67, 0.83, 0.67], // elastic-like easing
+          },
         });
-      }, 100); // Small delay to ensure smooth load
+      }, 100);
       
       setHasLoaded(true);
       return () => clearTimeout(timer);
     } else {
-      // Subsequent value changes
-      api.start({ 
-        angle: targetAngle,
-        config: { tension: 40, friction: 12, mass: 2.5 }
+      // Subsequent value changes - direct animation to new position
+      const finalRotation = calculateRotation(value);
+      controls.start({
+        rotate: finalRotation,
+        transition: {
+          duration: 0.8,
+          ease: [0.25, 0.46, 0.45, 0.94], // easeOutQuad
+        },
       });
     }
-  }, [targetAngle, api, hasLoaded]);
+  }, [value, max, hasLoaded, controls]);
   
-  // Hover spinning effect
+  // Hover effect - gentle wobble
   useEffect(() => {
     if (isHovered) {
-      // Continuous spinning on hover
-      api.start({
-        from: { angle: targetAngle },
-        to: { angle: targetAngle + 360 },
-        loop: true,
-        config: { duration: 2000, easing: t => t } // Linear easing for smooth spin
+      const currentRotation = calculateRotation(value);
+      controls.start({
+        rotate: [currentRotation, currentRotation + 5, currentRotation - 5, currentRotation],
+        transition: {
+          duration: 0.4,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }
       });
     } else {
-      // Stop spinning and return to target angle
-      api.stop();
-      api.start({ 
-        angle: targetAngle,
-        config: { tension: 40, friction: 12, mass: 2.5 }
+      // Return to normal position
+      controls.stop();
+      const finalRotation = calculateRotation(value);
+      controls.start({
+        rotate: finalRotation,
+        transition: {
+          duration: 0.3,
+          ease: "easeOut"
+        }
       });
     }
-  }, [isHovered, targetAngle, api]);
+  }, [isHovered, value, max, controls]);
   
   return (
     <Box 
@@ -180,9 +178,14 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
         />
         
         {/* ANIMATED NEEDLE GROUP - ONLY NEEDLE ROTATES */}
-        <animated.g 
-          transform={angle.to(a => `rotate(${a} ${size / 2} ${size / 2})`)}
-          style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
+        <motion.g 
+          animate={controls}
+          initial={{ rotate: -90 }}
+          style={{ 
+            transformOrigin: `${size / 2}px ${size / 2}px`,
+            originX: `${size / 2}px`,
+            originY: `${size / 2}px`
+          }}
         >
           {/* Needle with filter */}
           <line
@@ -204,7 +207,7 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
             fill="#E74C3C"
             filter={isHovered ? `url(#needleGlow-${label})` : ''}
           />
-        </animated.g>
+        </motion.g>
         
         {/* Center cap - on top of everything */}
         <circle

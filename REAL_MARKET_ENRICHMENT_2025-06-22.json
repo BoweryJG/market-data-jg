@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-22T13:01:08.000Z",
+  "summary": {
+    "totalProcessed": 261,
+    "successfullyUpdated": 60,
+    "highConfidenceData": 17,
+    "errors": 0
+  },
+  "dataSource": "Perplexity AI Deep Research + Industry Reports",
+  "methodology": "Real market data from Grand View Research, Fortune Business Insights, Market.us, and other authoritative sources",
+  "confidenceLevels": {
+    "5": "Industry average baseline",
+    "6": "Generic category estimate",
+    "7": "Category-based estimation with industry validation",
+    "8": "Derived from parent market with known share",
+    "9": "Direct market data from single authoritative source",
+    "10": "Direct market data from multiple sources"
+  }
+}

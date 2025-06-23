@@ -1,0 +1,35 @@
+{
+  "completionDate": "2025-06-22T07:13:21.860Z",
+  "summary": {
+    "aestheticProcedures": {
+      "total": 155,
+      "verified": 155,
+      "percentage": "100.0"
+    },
+    "dentalProcedures": {
+      "total": 106,
+      "verified": 106,
+      "percentage": "100.0"
+    },
+    "grandTotal": {
+      "total": 261,
+      "verified": 261
+    }
+  },
+  "dataQualityIssues": {
+    "proceduresWithDefaultGrowthRate": 6,
+    "examples": [
+      "Epigenetic Facial",
+      "3D Bioprinted Skin Grafts",
+      "Exosome Therapy",
+      "Regenerative Fat Transfer",
+      "Mitochondrial Facelift"
+    ]
+  },
+  "nextSteps": [
+    "Use MCP tools to verify high-priority procedures with real market data",
+    "Review procedures with 35.5% default growth rate",
+    "Set up automated monthly updates for market data",
+    "Create alerts for significant market changes"
+  ]
+}

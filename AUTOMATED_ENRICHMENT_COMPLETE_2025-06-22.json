@@ -1,0 +1,22 @@
+{
+  "executionSummary": {
+    "startTime": "2025-06-22T13:19:50.042Z",
+    "endTime": "2025-06-22T13:21:23.630Z",
+    "durationMinutes": "1.6",
+    "totalProcedures": 36,
+    "processedProcedures": 36,
+    "jobsCompleted": 4,
+    "jobsFailed": 0
+  },
+  "dataQuality": {
+    "highConfidenceProcedures": 147,
+    "totalAestheticProcedures": 155,
+    "totalDentalProcedures": 106
+  },
+  "methodology": "Automated AI research using Perplexity Deep Research API",
+  "nextSteps": [
+    "Review high-value procedures for accuracy",
+    "Set up monthly refresh schedule",
+    "Monitor market changes and update accordingly"
+  ]
+}
