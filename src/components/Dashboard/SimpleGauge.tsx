@@ -161,20 +161,24 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
         </defs>
         
         {/* STATIC CENTER BASE - OUTSIDE ROTATING GROUP */}
+        {/* Outer ring */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r="12"
+          fill={`url(#baseGradient-${label})`}
+          stroke="#2C3E50"
+          strokeWidth="2"
+        />
+        
+        {/* Inner circle */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r="8"
-          fill={`url(#baseGradient-${label})`}
-          stroke="#34495E"
+          fill="#34495E"
+          stroke="#2C3E50"
           strokeWidth="1"
-        />
-        
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r="4"
-          fill="#2C3E50"
         />
         
         {/* ANIMATED NEEDLE GROUP - ONLY NEEDLE ROTATES */}
@@ -183,27 +187,23 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
           initial={{ rotate: -90 }}
           style={{ 
             transformOrigin: `${size / 2}px ${size / 2}px`,
-            originX: `${size / 2}px`,
-            originY: `${size / 2}px`
           }}
         >
-          {/* Needle with filter */}
+          {/* Needle shaft */}
           <line
             x1={size / 2}
             y1={size / 2}
-            x2={size / 2 + radius - 10}
-            y2={size / 2}
+            x2={size / 2}
+            y2={size / 2 - radius + 15}
             stroke={`url(#needleGradient-${label})`}
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
             filter={isHovered ? `url(#needleGlow-${label})` : `url(#needleShadow-${label})`}
           />
           
-          {/* Needle tip */}
-          <circle
-            cx={size / 2 + radius - 10}
-            cy={size / 2}
-            r="2"
+          {/* Needle tip pointer */}
+          <polygon
+            points={`${size / 2 - 3},${size / 2 - radius + 20} ${size / 2},${size / 2 - radius + 10} ${size / 2 + 3},${size / 2 - radius + 20}`}
             fill="#E74C3C"
             filter={isHovered ? `url(#needleGlow-${label})` : ''}
           />
@@ -213,8 +213,10 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
         <circle
           cx={size / 2}
           cy={size / 2}
-          r="2"
+          r="5"
           fill="#1a1a1a"
+          stroke="#E74C3C"
+          strokeWidth="1"
         />
         
         {/* Invisible hover area covering entire gauge */}
