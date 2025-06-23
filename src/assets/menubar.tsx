@@ -623,7 +623,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
         </Drawer>
       </Toolbar>
     </AppBar>
-    <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
+    <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />
     <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SuperSearch open={searchOpen} onClose={() => setSearchOpen(false)} />

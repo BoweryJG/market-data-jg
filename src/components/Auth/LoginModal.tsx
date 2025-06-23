@@ -2,11 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import './LoginModal.css';
 
-const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth }) => {
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onGoogleAuth?: () => void;
+  onFacebookAuth?: () => void;
+  onEmailAuth?: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const modalRef = useRef(null);
-  const modalOverlayRef = useRef(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const modalOverlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,9 +51,10 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
     });
 
     // Hover effects for social buttons
-    const socialBtns = modalRef.current.querySelectorAll('.social-btn');
-    socialBtns.forEach(btn => {
-      btn.addEventListener('mouseenter', (e) => {
+    if (modalRef.current) {
+      const socialBtns = modalRef.current.querySelectorAll('.social-btn');
+      socialBtns.forEach((btn: Element) => {
+        btn.addEventListener('mouseenter', (e: Event) => {
         gsap.to(e.target, {
           duration: 0.3,
           y: -2,
@@ -53,7 +62,7 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
         });
       });
 
-      btn.addEventListener('mouseleave', (e) => {
+      btn.addEventListener('mouseleave', (e: Event) => {
         gsap.to(e.target, {
           duration: 0.3,
           y: 0,
@@ -64,7 +73,7 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
 
     // Screw rotation on hover
     const screws = modalRef.current.querySelectorAll('.screw');
-    screws.forEach((screw) => {
+    screws.forEach((screw: Element) => {
       screw.addEventListener('mouseenter', () => {
         gsap.to(screw, {
           duration: 0.4,
@@ -73,12 +82,14 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
         });
       });
     });
+    }
 
     // 3D tilt effect on modal
     const modal = modalRef.current;
-    let modalRect = modal.getBoundingClientRect();
+    if (modal) {
+      let modalRect = modal.getBoundingClientRect();
 
-    const handleMouseMove = (e) => {
+      const handleMouseMove = (e: MouseEvent) => {
       const x = e.clientX - modalRect.left - modalRect.width / 2;
       const y = e.clientY - modalRect.top - modalRect.height / 2;
       const rotateX = (y / modalRect.height) * 5;
@@ -116,11 +127,12 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
       modal.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);
     };
+    }
   }, [isOpen]);
 
   // Keyboard navigation
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         handleClose();
       }
@@ -201,10 +213,10 @@ const LoginModal = ({ isOpen, onClose, onGoogleAuth, onFacebookAuth, onEmailAuth
           </div>
 
           {/* 4-Point Luxury Screws */}
-          <div className="screw screw-tl" style={{'--screw-index': 0}}></div>
-          <div className="screw screw-tr" style={{'--screw-index': 1}}></div>
-          <div className="screw screw-bl" style={{'--screw-index': 2}}></div>
-          <div className="screw screw-br" style={{'--screw-index': 3}}></div>
+          <div className="screw screw-tl" style={{'--screw-index': 0} as React.CSSProperties}></div>
+          <div className="screw screw-tr" style={{'--screw-index': 1} as React.CSSProperties}></div>
+          <div className="screw screw-bl" style={{'--screw-index': 2} as React.CSSProperties}></div>
+          <div className="screw screw-br" style={{'--screw-index': 3} as React.CSSProperties}></div>
 
           {/* Close Button */}
           <button className="close-btn" aria-label="Close" onClick={handleClose}></button>
