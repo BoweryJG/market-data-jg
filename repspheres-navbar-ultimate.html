@@ -1,153 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-const NavBar: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-  const [statusIndex, setStatusIndex] = useState(0);
-  const navContainerRef = useRef<HTMLElement>(null);
-  const logoRef = useRef<HTMLAnchorElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const statusMessages = [
-    '⏱ AI SYNC 97%',
-    '🔗 NEURAL LINK ACTIVE',
-    '⚡ QUANTUM CORE 100%',
-    '📊 DATA STREAM LIVE',
-    '🛡️ SECURITY OPTIMAL',
-    '🌐 NETWORK STABLE',
-    '💎 GEMS ALIGNED',
-    '🔮 PREDICTION MODE'
-  ];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY * 0.05;
-      document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
-      
-      setScrolled(window.scrollY > 50);
-      
-      updateThemeColors();
-      updateActiveNav();
-    };
-
-    const updateThemeColors = () => {
-      const y = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const root = document.documentElement;
-      const body = document.body;
-      
-      const section = Math.floor(y / windowHeight);
-      
-      const themes = [
-        { impossible: '255, 0, 255', shift: '0, 255, 255', deep: '255, 0, 170' },
-        { impossible: '77, 212, 142', shift: '255, 170, 0', deep: '0, 255, 136' },
-        { impossible: '255, 107, 53', shift: '255, 204, 224', deep: '245, 57, 105' },
-        { impossible: '75, 150, 220', shift: '159, 88, 250', deep: '0, 212, 255' },
-        { impossible: '245, 57, 105', shift: '255, 0, 255', deep: '159, 88, 250' }
-      ];
-      
-      const currentTheme = themes[Math.min(section, themes.length - 1)];
-      
-      root.style.setProperty('--gem-impossible', `rgb(${currentTheme.impossible})`);
-      root.style.setProperty('--gem-shift', `rgb(${currentTheme.shift})`);
-      root.style.setProperty('--gem-deep', `rgb(${currentTheme.deep})`);
-      
-      body.style.setProperty('--gem-impossible', currentTheme.impossible);
-      body.style.setProperty('--gem-shift', currentTheme.shift);
-      body.style.setProperty('--gem-deep', currentTheme.deep);
-    };
-
-    const updateActiveNav = () => {
-      const sections = document.querySelectorAll('section[id]');
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY >= (sectionTop - 200)) {
-          current = section.getAttribute('id') || '';
-        }
-      });
-      setActiveSection(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    updateThemeColors();
-    updateActiveNav();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStatusIndex((prev) => (prev + 1) % statusMessages.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [statusMessages.length]);
-
-  useEffect(() => {
-    const logo = logoRef.current;
-    if (!logo) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = logo.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      const rotateX = (y / rect.height) * 10;
-      const rotateY = -(x / rect.width) * 10;
-      logo.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    };
-
-    const handleMouseLeave = () => {
-      logo.style.transform = '';
-    };
-
-    const handleMouseEnter = () => {
-      const jewel = logo.querySelector('.logo-jewel');
-      if (jewel) {
-        (jewel as HTMLElement).style.filter = 'brightness(1.5)';
-        setTimeout(() => {
-          (jewel as HTMLElement).style.filter = '';
-        }, 150);
-      }
-    };
-
-    logo.addEventListener('mousemove', handleMouseMove);
-    logo.addEventListener('mouseleave', handleMouseLeave);
-    logo.addEventListener('mouseenter', handleMouseEnter);
-
-    return () => {
-      logo.removeEventListener('mousemove', handleMouseMove);
-      logo.removeEventListener('mouseleave', handleMouseLeave);
-      logo.removeEventListener('mouseenter', handleMouseEnter);
-    };
-  }, []);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const link = e.currentTarget;
-    link.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      link.style.transform = '';
-    }, 100);
-
-    if (href.startsWith('#')) {
-      const targetId = href.substring(1);
-      const target = document.getElementById(targetId);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else if (href.startsWith('http')) {
-      window.open(href, '_blank');
-    } else {
-      navigate(href);
-    }
-  };
-
-  return (
-    <>
-      <style>{`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepSpheres | The Collaborative AI Sales Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -196,6 +54,7 @@ const NavBar: React.FC = () => {
             transition: background 0.5s ease;
         }
 
+        /* Gutter Shadow Behind Nav */
         body::before {
             content: '';
             position: fixed;
@@ -210,6 +69,7 @@ const NavBar: React.FC = () => {
             z-index: 0;
         }
 
+        /* Award-Winning Navigation Bar - Floating Bezel Design */
         .nav-container {
             position: fixed;
             top: 12px;
@@ -242,6 +102,7 @@ const NavBar: React.FC = () => {
             overflow: hidden;
         }
 
+        /* Edge Mount Indicators */
         .nav-edge {
             position: absolute;
             top: 10px;
@@ -268,6 +129,7 @@ const NavBar: React.FC = () => {
             border-radius: 0 2px 2px 0; 
         }
 
+        /* Hover Reveal Glow Fins */
         .nav-edge::after {
             content: '';
             position: absolute;
@@ -291,6 +153,7 @@ const NavBar: React.FC = () => {
             transform: scaleY(1.1);
         }
 
+        /* Parallax Background Grid */
         .nav-container::before {
             content: '';
             position: absolute;
@@ -316,6 +179,7 @@ const NavBar: React.FC = () => {
             transition: transform 0.1s linear;
         }
 
+        /* Enhanced Float on Scroll */
         .nav-container.scrolled {
             top: 8px;
             box-shadow:
@@ -336,6 +200,7 @@ const NavBar: React.FC = () => {
             transform: translateX(-50%) scale(0.98) translateZ(30px);
         }
 
+        /* Glass Refraction Overlay */
         .nav-container::after {
             content: '';
             position: absolute;
@@ -358,6 +223,7 @@ const NavBar: React.FC = () => {
             50% { opacity: 0.3; transform: scale(1.02); }
         }
 
+        /* Metallic Screws */
         .nav-screws {
             position: absolute;
             top: 0;
@@ -386,6 +252,7 @@ const NavBar: React.FC = () => {
             border: 0.5px solid rgba(0,0,0,0.2);
         }
 
+        /* Jeweled Screw Caps */
         .screw::after {
             content: '';
             position: absolute;
@@ -405,6 +272,7 @@ const NavBar: React.FC = () => {
             50% { opacity: 0.6; }
         }
 
+        /* 4-Point Luxury Bezel - Perfect Mechanical Symmetry */
         .screw-top-left { 
             top: 12px; 
             left: 12px; 
@@ -437,6 +305,7 @@ const NavBar: React.FC = () => {
             position: relative;
         }
 
+        /* Logo Section with 3D Tilt */
         .nav-logo {
             display: flex;
             align-items: center;
@@ -459,6 +328,7 @@ const NavBar: React.FC = () => {
             position: relative;
         }
 
+        /* Animated Jewel Core in Logo */
         @keyframes gemPulse {
             0%, 100% { 
                 transform: scale(1) rotate(0deg);
@@ -485,6 +355,7 @@ const NavBar: React.FC = () => {
             position: relative;
         }
 
+        /* Quantum Flicker Effect */
         .logo-jewel-wrapper {
             position: relative;
             display: inline-block;
@@ -519,6 +390,7 @@ const NavBar: React.FC = () => {
             letter-spacing: -0.5px;
         }
 
+        /* Nav Rail Container */
         .nav-rail-container {
             display: flex;
             align-items: center;
@@ -526,6 +398,7 @@ const NavBar: React.FC = () => {
             margin: 0 20px;
         }
 
+        /* Dynamic Power Rail */
         .nav-rail {
             flex: 1;
             height: 2px;
@@ -542,6 +415,7 @@ const NavBar: React.FC = () => {
             overflow: hidden;
         }
 
+        /* Data flow effect on rail */
         .nav-rail::after {
             content: '';
             position: absolute;
@@ -567,6 +441,7 @@ const NavBar: React.FC = () => {
             50% { opacity: 0.7; transform: scaleX(1.05); }
         }
 
+        /* Power Nodes */
         .rail-node {
             width: 6px;
             height: 6px;
@@ -611,6 +486,7 @@ const NavBar: React.FC = () => {
         .rail-node.left { margin-right: 8px; }
         .rail-node.right { margin-left: 8px; }
 
+        /* System Status Display */
         .nav-status {
             font-size: 11px;
             color: var(--text-muted);
@@ -635,6 +511,7 @@ const NavBar: React.FC = () => {
             text-shadow: 0 0 5px rgba(var(--gem-impossible), 0.5);
         }
 
+        /* Navigation Links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -690,6 +567,7 @@ const NavBar: React.FC = () => {
                 0 0 0 1px rgba(var(--gem-impossible), 0.1) inset;
         }
 
+        /* Laser Target Active Indicator */
         .nav-link.active {
             color: var(--text-primary);
             background: linear-gradient(135deg, 
@@ -742,6 +620,7 @@ const NavBar: React.FC = () => {
             }
         }
 
+        /* Icon for nav links */
         .nav-link-icon {
             width: 18px;
             height: 18px;
@@ -767,32 +646,38 @@ const NavBar: React.FC = () => {
             50% { transform: scale(1.5); opacity: 0.3; }
         }
 
+        /* Market Data Icon */
         .icon-market::before {
             background: var(--green-accent);
             box-shadow: 0 0 10px var(--green-accent);
         }
 
+        /* Canvas Icon */
         .icon-canvas::before {
             background: var(--purple-primary);
             box-shadow: 0 0 10px var(--purple-primary);
         }
 
+        /* Sphere OS Icon */
         .icon-sphere::before {
             background: var(--blue-accent);
             box-shadow: 0 0 10px var(--blue-accent);
         }
 
+        /* Podcasts Icon */
         .icon-podcasts::before {
             background: var(--pink-accent);
             box-shadow: 0 0 10px var(--pink-accent);
         }
 
+        /* Right Actions */
         .nav-actions {
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
+        /* Premium CTA Button with Forcefield */
         .nav-cta {
             position: relative;
             padding: 10px 24px;
@@ -809,6 +694,7 @@ const NavBar: React.FC = () => {
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         }
 
+        /* Forcefield Ring */
         .nav-cta::after {
             content: '';
             position: absolute;
@@ -863,6 +749,7 @@ const NavBar: React.FC = () => {
             filter: brightness(1.1);
         }
 
+        /* More Menu with Radar Animation */
         .nav-more {
             position: relative;
             width: 44px;
@@ -932,135 +819,376 @@ const NavBar: React.FC = () => {
             transform: translateX(2px);
         }
 
+        /* Sections with different themes */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero {
+            background: radial-gradient(ellipse at center, rgba(159, 88, 250, 0.1) 0%, transparent 70%);
+        }
+
+        #market-data {
+            background: radial-gradient(ellipse at center, rgba(77, 212, 142, 0.1) 0%, transparent 70%);
+        }
+
+        #canvas {
+            background: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+        }
+
+        #sphere-os {
+            background: radial-gradient(ellipse at center, rgba(75, 150, 220, 0.1) 0%, transparent 70%);
+        }
+
+        #podcasts {
+            background: radial-gradient(ellipse at center, rgba(245, 57, 105, 0.1) 0%, transparent 70%);
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, var(--gem-impossible) 50%, var(--gem-shift) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        /* Mobile */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
+            
+            h1 {
+                font-size: 3rem;
+            }
         }
-      `}</style>
-      
-      <nav className={`nav-container ${scrolled ? 'scrolled' : ''}`} ref={navContainerRef}>
-        <div className="nav-edge left-edge"></div>
-        <div className="nav-edge right-edge"></div>
+    </style>
+</head>
+<body>
+    <!-- Award-Winning Navigation Bar with Ultimate Features -->
+    <nav class="nav-container">
+        <!-- Edge Mount Indicators -->
+        <div class="nav-edge left-edge"></div>
+        <div class="nav-edge right-edge"></div>
 
-        <div className="nav-screws">
-          <div className="screw screw-top-left"></div>
-          <div className="screw screw-top-right"></div>
-          <div className="screw screw-bot-left"></div>
-          <div className="screw screw-bot-right"></div>
+        <!-- Metallic Screws - 4-Point Luxury Bezel -->
+        <div class="nav-screws">
+            <div class="screw screw-top-left"></div>
+            <div class="screw screw-top-right"></div>
+            <div class="screw screw-bot-left"></div>
+            <div class="screw screw-bot-right"></div>
         </div>
 
-        <div className="nav-inner">
-          <a href="#" className="nav-logo" ref={logoRef} onClick={(e) => handleNavClick(e, '/')}>
-            <div className="nav-logo-icon">
-              <div className="logo-jewel-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ position: 'relative', zIndex: 1 }}>
-                  <defs>
-                    <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style={{ stopColor: '#9f58fa', stopOpacity: 1 }} />
-                      <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 1 }} />
-                    </linearGradient>
-                    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.8 }} />
-                      <stop offset="50%" style={{ stopColor: '#9f58fa', stopOpacity: 0.5 }} />
-                      <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 0 }} />
-                    </radialGradient>
-                    <radialGradient id="jewelGradient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" style={{ stopColor: 'var(--gem-impossible)', stopOpacity: 1 }} />
-                      <stop offset="50%" style={{ stopColor: 'var(--gem-deep)', stopOpacity: 0.8 }} />
-                      <stop offset="100%" style={{ stopColor: 'var(--gem-shift)', stopOpacity: 0.6 }} />
-                    </radialGradient>
-                  </defs>
-                  
-                  <circle cx="16" cy="16" r="12" fill="none" stroke="url(#sphereGradient)" strokeWidth="2" opacity="0.8"/>
-                  
-                  <circle cx="16" cy="16" r="8" fill="none" stroke="url(#sphereGradient)" strokeWidth="1.5" opacity="0.6"/>
-                  
-                  <circle cx="16" cy="16" r="6" fill="url(#centerGlow)" opacity="0.8"/>
-                  
-                  <circle cx="16" cy="16" r="3" fill="url(#jewelGradient)" className="logo-jewel">
-                    <animate attributeName="r" values="3;4;3" dur="2s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
-                  </circle>
-                  
-                  <circle cx="16" cy="4" r="1.5" fill="#9f58fa"/>
-                  <circle cx="28" cy="16" r="1.5" fill="#4B96DC"/>
-                  <circle cx="16" cy="28" r="1.5" fill="#4bd48e"/>
-                  <circle cx="4" cy="16" r="1.5" fill="#00d4ff"/>
-                </svg>
-                <div className="quantum-flicker"></div>
-              </div>
+        <div class="nav-inner">
+            <!-- Logo with Animated Jewel Core -->
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <div class="logo-jewel-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="position: relative; z-index: 1;">
+                            <defs>
+                                <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#9f58fa;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#4B96DC;stop-opacity:1" />
+                                </linearGradient>
+                                <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+                                    <stop offset="50%" style="stop-color:#9f58fa;stop-opacity:0.5" />
+                                    <stop offset="100%" style="stop-color:#4B96DC;stop-opacity:0" />
+                                </radialGradient>
+                                <radialGradient id="jewelGradient" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style="stop-color:var(--gem-impossible);stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:var(--gem-deep);stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:var(--gem-shift);stop-opacity:0.6" />
+                                </radialGradient>
+                            </defs>
+                            
+                            <!-- Outer sphere ring -->
+                            <circle cx="16" cy="16" r="12" fill="none" stroke="url(#sphereGradient)" stroke-width="2" opacity="0.8"/>
+                            
+                            <!-- Inner sphere ring -->
+                            <circle cx="16" cy="16" r="8" fill="none" stroke="url(#sphereGradient)" stroke-width="1.5" opacity="0.6"/>
+                            
+                            <!-- Center glow -->
+                            <circle cx="16" cy="16" r="6" fill="url(#centerGlow)" opacity="0.8"/>
+                            
+                            <!-- Animated Jewel Core -->
+                            <circle cx="16" cy="16" r="3" fill="url(#jewelGradient)" class="logo-jewel">
+                                <animate attributeName="r" values="3;4;3" dur="2s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Orbital dots -->
+                            <circle cx="16" cy="4" r="1.5" fill="#9f58fa"/>
+                            <circle cx="28" cy="16" r="1.5" fill="#4B96DC"/>
+                            <circle cx="16" cy="28" r="1.5" fill="#4bd48e"/>
+                            <circle cx="4" cy="16" r="1.5" fill="#00d4ff"/>
+                        </svg>
+                        <div class="quantum-flicker"></div>
+                    </div>
+                </div>
+                <span class="nav-logo-text">RepSpheres</span>
+            </a>
+
+            <!-- Dynamic Nav Rail with Power Nodes -->
+            <div class="nav-rail-container">
+                <div class="rail-node left"></div>
+                <div class="nav-rail"></div>
+                <div class="nav-status" id="navStatus">⏱ AI SYNC 97%</div>
+                <div class="rail-node right"></div>
             </div>
-            <span className="nav-logo-text">RepSpheres</span>
-          </a>
 
-          <div className="nav-rail-container">
-            <div className="rail-node left"></div>
-            <div className="nav-rail"></div>
-            <div 
-              className="nav-status" 
-              id="navStatus"
-              style={{
-                opacity: statusIndex % 2 === 0 ? '0.6' : '0.8',
-                transition: 'opacity 0.3s'
-              }}
-            >
-              {statusMessages[statusIndex]}
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a href="#market-data" class="nav-link">
+                    <span class="nav-link-icon icon-market"></span>
+                    <span>Market Data</span>
+                </a>
+                <a href="#canvas" class="nav-link">
+                    <span class="nav-link-icon icon-canvas"></span>
+                    <span>Canvas</span>
+                </a>
+                <a href="#sphere-os" class="nav-link">
+                    <span class="nav-link-icon icon-sphere"></span>
+                    <span>Sphere oS</span>
+                </a>
+                <a href="#podcasts" class="nav-link">
+                    <span class="nav-link-icon icon-podcasts"></span>
+                    <span>Podcasts</span>
+                </a>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="nav-actions">
+                <a href="#get-started" class="nav-cta">Get Started</a>
+                <button class="nav-more" aria-label="More options">
+                    <div class="nav-more-icon">
+                        <span class="nav-more-dot"></span>
+                        <span class="nav-more-dot"></span>
+                        <span class="nav-more-dot"></span>
+                    </div>
+                </button>
             </div>
-            <div className="rail-node right"></div>
-          </div>
-
-          <nav className="nav-links">
-            <a 
-              href="#market-data" 
-              className={`nav-link ${activeSection === 'market-data' ? 'active' : ''}`}
-              onClick={(e) => handleNavClick(e, '#market-data')}
-            >
-              <span className="nav-link-icon icon-market"></span>
-              <span>Market Data</span>
-            </a>
-            <a 
-              href="#canvas" 
-              className={`nav-link ${activeSection === 'canvas' ? 'active' : ''}`}
-              onClick={(e) => handleNavClick(e, '#canvas')}
-            >
-              <span className="nav-link-icon icon-canvas"></span>
-              <span>Canvas</span>
-            </a>
-            <a 
-              href="#sphere-os" 
-              className={`nav-link ${activeSection === 'sphere-os' ? 'active' : ''}`}
-              onClick={(e) => handleNavClick(e, '#sphere-os')}
-            >
-              <span className="nav-link-icon icon-sphere"></span>
-              <span>Sphere oS</span>
-            </a>
-            <a 
-              href="#podcasts" 
-              className={`nav-link ${activeSection === 'podcasts' ? 'active' : ''}`}
-              onClick={(e) => handleNavClick(e, '#podcasts')}
-            >
-              <span className="nav-link-icon icon-podcasts"></span>
-              <span>Podcasts</span>
-            </a>
-          </nav>
-
-          <div className="nav-actions">
-            <a href="#get-started" className="nav-cta" onClick={(e) => handleNavClick(e, '#get-started')}>
-              Get Started
-            </a>
-            <button className="nav-more" aria-label="More options">
-              <div className="nav-more-icon">
-                <span className="nav-more-dot"></span>
-                <span className="nav-more-dot"></span>
-                <span className="nav-more-dot"></span>
-              </div>
-            </button>
-          </div>
         </div>
-      </nav>
-    </>
-  );
-};
+    </nav>
 
-export default NavBar;
+    <!-- Hero Section -->
+    <section class="hero section">
+        <div>
+            <h1>RepSpheres</h1>
+            <p>Ultimate Navigation Experience</p>
+            <p style="color: var(--text-muted); font-size: 1rem;">
+                🔧 Edge mount indicators • 🌌 Floating bezel • ✨ Complete premium package
+            </p>
+        </div>
+    </section>
+
+    <!-- Market Data Section -->
+    <section id="market-data" class="section">
+        <div>
+            <h1>Market Data</h1>
+            <p>Real-time insights and analytics</p>
+        </div>
+    </section>
+
+    <!-- Canvas Section -->
+    <section id="canvas" class="section">
+        <div>
+            <h1>Canvas</h1>
+            <p>Creative workspace for your ideas</p>
+        </div>
+    </section>
+
+    <!-- Sphere OS Section -->
+    <section id="sphere-os" class="section">
+        <div>
+            <h1>Sphere oS</h1>
+            <p>Advanced operating system for sales</p>
+        </div>
+    </section>
+
+    <!-- Podcasts Section -->
+    <section id="podcasts" class="section">
+        <div>
+            <h1>Podcasts</h1>
+            <p>Listen to industry insights and interviews</p>
+        </div>
+    </section>
+
+    <script>
+        // Parallax scroll effect
+        window.addEventListener('scroll', () => {
+            const offset = window.scrollY * 0.05;
+            document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
+            
+            // Floating bezel
+            const navContainer = document.querySelector('.nav-container');
+            navContainer.classList.toggle('scrolled', window.scrollY > 50);
+            
+            // Update theme colors
+            updateThemeColors();
+        });
+
+        // Dynamic color theme based on scroll position
+        function updateThemeColors() {
+            const y = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const body = document.body;
+            const root = document.documentElement;
+            
+            // Calculate which section we're in
+            const section = Math.floor(y / windowHeight);
+            
+            // Define color themes for each section
+            const themes = [
+                { impossible: '255, 0, 255', shift: '0, 255, 255', deep: '255, 0, 170' }, // Hero - Magenta/Cyan
+                { impossible: '77, 212, 142', shift: '255, 170, 0', deep: '0, 255, 136' }, // Market - Green/Orange
+                { impossible: '255, 107, 53', shift: '255, 204, 224', deep: '245, 57, 105' }, // Canvas - Orange/Pink
+                { impossible: '75, 150, 220', shift: '159, 88, 250', deep: '0, 212, 255' }, // Sphere OS - Blue/Purple
+                { impossible: '245, 57, 105', shift: '255, 0, 255', deep: '159, 88, 250' }  // Podcasts - Pink/Magenta
+            ];
+            
+            const currentTheme = themes[Math.min(section, themes.length - 1)];
+            
+            // Update CSS variables
+            root.style.setProperty('--gem-impossible', `rgb(${currentTheme.impossible})`);
+            root.style.setProperty('--gem-shift', `rgb(${currentTheme.shift})`);
+            root.style.setProperty('--gem-deep', `rgb(${currentTheme.deep})`);
+            
+            // For rgba() usage in CSS
+            body.style.setProperty('--gem-impossible', currentTheme.impossible);
+            body.style.setProperty('--gem-shift', currentTheme.shift);
+            body.style.setProperty('--gem-deep', currentTheme.deep);
+        }
+
+        // Initial theme update
+        updateThemeColors();
+
+        // 3D Tilt Effect on Logo with sound trigger simulation
+        const logo = document.querySelector('.nav-logo');
+        if (logo) {
+            logo.addEventListener('mousemove', e => {
+                const rect = logo.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                const rotateX = (y / rect.height) * 10;
+                const rotateY = -(x / rect.width) * 10;
+                logo.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            logo.addEventListener('mouseleave', () => {
+                logo.style.transform = '';
+            });
+
+            // Simulate hover sound (visual feedback)
+            logo.addEventListener('mouseenter', () => {
+                const jewel = logo.querySelector('.logo-jewel');
+                if (jewel) {
+                    jewel.style.filter = 'brightness(1.5)';
+                    setTimeout(() => {
+                        jewel.style.filter = '';
+                    }, 150);
+                }
+            });
+        }
+
+        // Lock-in click effect on nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Visual feedback for click
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+
+        // Smooth scroll and active nav update
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId !== '#') {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Update active nav on scroll
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav(); // Initial call
+
+        // Dynamic Status Updates
+        const statusMessages = [
+            '⏱ AI SYNC 97%',
+            '🔗 NEURAL LINK ACTIVE',
+            '⚡ QUANTUM CORE 100%',
+            '📊 DATA STREAM LIVE',
+            '🛡️ SECURITY OPTIMAL',
+            '🌐 NETWORK STABLE',
+            '💎 GEMS ALIGNED',
+            '🔮 PREDICTION MODE'
+        ];
+
+        let statusIndex = 0;
+        const statusElement = document.getElementById('navStatus');
+        
+        if (statusElement) {
+            setInterval(() => {
+                statusIndex = (statusIndex + 1) % statusMessages.length;
+                statusElement.style.opacity = '0';
+                
+                setTimeout(() => {
+                    statusElement.textContent = statusMessages[statusIndex];
+                    statusElement.style.opacity = '';
+                }, 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
