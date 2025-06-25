@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme, Theme, responsiveFontSizes } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import GlobalStyles from '@mui/material/GlobalStyles';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -138,6 +139,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     <ThemeContext.Provider value={{ mode, toggleTheme }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
+        <GlobalStyles
+          styles={{
+            body: {
+              paddingTop: '84px', // 60px navbar + 24px top padding
+            },
+          }}
+        />
         {children}
       </MuiThemeProvider>
     </ThemeContext.Provider>
