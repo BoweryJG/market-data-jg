@@ -500,17 +500,27 @@ const EnhancedMarketCommandCenter: React.FC = () => {
     <Box sx={{ 
       paddingTop: '120px', // Add space for navbar
       minHeight: '100vh',
-      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` 
+      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+      padding: '0 1rem', // Add 1rem padding on left and right
     }}>
-      {/* Sticky Header */}
-      <AppBar 
+      <PremiumContainer sx={{ 
+        width: '100%',
+        maxWidth: '1600px',
+        margin: '0 auto',
+        minHeight: 'calc(100vh - 120px)',
+        p: 0,
+      }}>
+        {/* Sticky Header */}
+        <AppBar 
         position="sticky" 
         color="default" 
-        elevation={headerCollapsed ? 2 : 0}
+        elevation={0}
         sx={{
           transition: 'all 0.3s',
-          backgroundColor: alpha(theme.palette.background.paper, 0.95),
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'transparent',
+          backdropFilter: 'none',
+          boxShadow: 'none',
+          borderBottom: headerCollapsed ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none',
         }}
       >
         <Toolbar sx={{ minHeight: headerCollapsed ? 64 : 'auto', py: headerCollapsed ? 0 : 2 }}>
@@ -745,7 +755,16 @@ const EnhancedMarketCommandCenter: React.FC = () => {
       {/* Main Content */}
       <Box sx={{ p: 3 }}>
         {/* Data Table */}
-        <TableContainer component={Paper} sx={{ maxHeight: '60vh', mt: 3 }}>
+        <TableContainer 
+          component={Paper} 
+          sx={{ 
+            maxHeight: '60vh', 
+            mt: 3,
+            backgroundColor: alpha(theme.palette.background.paper, 0.6),
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -955,6 +974,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
         procedure={selectedProcedure}
         industry={selectedIndustry === 'dental' ? 'dental' : 'aesthetic'}
       />
+      </PremiumContainer>
     </Box>
   );
 };
