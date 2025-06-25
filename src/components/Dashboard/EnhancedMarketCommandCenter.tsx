@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
+import PremiumContainer from '../common/PremiumContainer';
 import {
   Box,
   Typography,
@@ -255,8 +256,7 @@ const CompactCategories: React.FC<{
     .slice(0, expanded ? undefined : 6);
   
   return (
-    <Card sx={{ height: expanded ? 'auto' : 250, transition: 'height 0.3s' }}>
-      <CardContent sx={{ p: 2 }}>
+    <PremiumContainer sx={{ height: expanded ? 'auto' : 250, transition: 'height 0.3s', p: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
             Categories
@@ -292,8 +292,7 @@ const CompactCategories: React.FC<{
             );
           })}
         </Box>
-      </CardContent>
-    </Card>
+    </PremiumContainer>
   );
 };
 
@@ -498,7 +497,11 @@ const EnhancedMarketCommandCenter: React.FC = () => {
   }
 
   return (
-    <Box sx={{ background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` }}>
+    <Box sx={{ 
+      paddingTop: '120px', // Add space for navbar
+      minHeight: '100vh',
+      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` 
+    }}>
       {/* Sticky Header */}
       <AppBar 
         position="sticky" 
@@ -665,7 +668,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                 {/* Gauges */}
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={8}>
-                    <Card sx={{ p: 3 }}>
+                    <PremiumContainer sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2 }}>
                         <EnhancedCockpitGauge
                           value={marketMetrics.totalMarketSize}
@@ -720,7 +723,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                           trendData={[140, 145, 150, 156, 162, 170]}
                         />
                       </Box>
-                    </Card>
+                    </PremiumContainer>
                   </Grid>
                   
                   <Grid item xs={12} md={4}>
