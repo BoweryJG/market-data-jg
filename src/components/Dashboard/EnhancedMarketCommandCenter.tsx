@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import PremiumContainer from '../common/PremiumContainer';
+import HTMLGauge from './HTMLGauge';
 import {
   Box,
   Typography,
@@ -80,129 +81,14 @@ import {
   ExpandMore,
   ShowChart,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
+// Removed framer-motion for better performance
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import { getCategoryIconConfig } from './CategoryIcons';
-import SimpleGauge from './SimpleGauge';
 import IntegrationCostBadge from './IntegrationCostBadge';
 import { getIntegrationCost, estimateIntegrationCost } from '../../services/integrationCostData';
 
-// Enhanced Gauge Component with Confidence Indicator
-const EnhancedCockpitGauge: React.FC<{
-  value: number;
-  max: number;
-  label: string;
-  unit: string;
-  color: string;
-  size?: number;
-  isLive?: boolean;
-  industry?: 'dental' | 'aesthetic' | 'all';
-  selectedYear?: number;
-  confidence?: number;
-  trendData?: number[];
-}> = ({ value, max, label, unit, color, size = 120, isLive = false, industry = 'all', selectedYear = 2025, confidence = 85, trendData = [] }) => {
-  const theme = useTheme();
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Get confidence color
-  const getConfidenceColor = (score: number) => {
-    if (score >= 80) return theme.palette.success.main;
-    if (score >= 60) return theme.palette.warning.main;
-    return theme.palette.error.main;
-  };
-  
-  const confidenceColor = getConfidenceColor(confidence);
-  
-  return (
-    <Box 
-      sx={{ 
-        position: 'relative', 
-        width: size + 40, 
-        height: size / 2 + 80,
-        cursor: 'pointer',
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Confidence Badge */}
-      <Tooltip title={`Data Confidence: ${confidence}%`}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            px: 1,
-            py: 0.5,
-            borderRadius: 1,
-            background: alpha(confidenceColor, 0.1),
-            border: `1px solid ${alpha(confidenceColor, 0.3)}`,
-          }}
-        >
-          {confidence >= 80 ? <VerifiedUser sx={{ fontSize: 14, color: confidenceColor }} /> :
-           confidence >= 60 ? <Warning sx={{ fontSize: 14, color: confidenceColor }} /> :
-           <Error sx={{ fontSize: 14, color: confidenceColor }} />}
-          <Typography variant="caption" sx={{ color: confidenceColor, fontWeight: 'bold' }}>
-            {confidence}%
-          </Typography>
-        </Box>
-      </Tooltip>
-      
-      {/* Use SimpleGauge */}
-      <SimpleGauge
-        value={value}
-        max={max}
-        label={label}
-        unit={unit}
-        color={color}
-        size={size}
-      />
-      
-      {/* Trend Sparkline */}
-      {trendData.length > 0 && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 10,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: size * 0.6,
-            height: 20,
-            opacity: isHovered ? 1 : 0.5,
-            transition: 'opacity 0.3s',
-          }}
-        >
-          <svg width="100%" height="100%" viewBox="0 0 100 20">
-            <polyline
-              fill="none"
-              stroke={color}
-              strokeWidth="2"
-              points={trendData.map((val, i) => `${(i / (trendData.length - 1)) * 100},${20 - (val / Math.max(...trendData)) * 20}`).join(' ')}
-            />
-          </svg>
-        </Box>
-      )}
-      
-      {/* Year indicator */}
-      <Typography
-        variant="caption"
-        sx={{
-          position: 'absolute',
-          bottom: -5,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          color: theme.palette.text.secondary,
-          fontSize: 10,
-        }}
-      >
-        {selectedYear}
-      </Typography>
-    </Box>
-  );
-};
+// Removed EnhancedCockpitGauge - using HTMLGauge instead for better performance
 
 // Year Selector Component
 const YearSelector: React.FC<{
@@ -365,21 +251,17 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <PinDrop sx={{ mr: 1, color: theme.palette.warning.main }} />
         <Typography variant="h6">Territory Intelligence</Typography>
-        <motion.div
-          animate={{ opacity: [1, 0.3, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ marginLeft: 8 }}
-        >
-          <Chip
-            label="LIVE"
-            size="small"
-            sx={{
-              background: theme.palette.success.main,
-              color: 'white',
-              fontSize: 10,
-            }}
-          />
-        </motion.div>
+        <Chip
+          label="LIVE"
+          size="small"
+          sx={{
+            ml: 1,
+            background: theme.palette.success.main,
+            color: 'white',
+            fontSize: 10,
+            opacity: 0.9,
+          }}
+        />
       </Box>
       
       {territories.map((territory, index) => (
@@ -585,24 +467,29 @@ const EnhancedMarketCommandCenter: React.FC = () => {
       paddingTop: '120px', // Add space for navbar
       minHeight: '100vh',
       background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-      padding: '0 1rem', // Add 1rem padding on left and right
+      padding: '0 2rem', // Increased padding for more space
     }}>
       <PremiumContainer sx={{ 
         width: '100%',
-        maxWidth: '1600px',
+        maxWidth: '1400px', // Same as navbar
         margin: '0 auto',
         minHeight: 'calc(100vh - 120px)',
         p: 0,
       }}>
-        {/* Sticky Header */}
+        {/* Fixed Header for better performance */}
         <AppBar 
-        position="sticky" 
+        position="fixed" 
         color="default" 
         elevation={0}
         sx={{
+          top: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          maxWidth: '1400px',
+          margin: '0 auto',
           transition: 'all 0.3s',
           backgroundColor: 'transparent',
-          backdropFilter: 'none',
           boxShadow: 'none',
           borderBottom: headerCollapsed ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none',
         }}
@@ -683,20 +570,16 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                     <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
                       Enhanced Market Command Center
                     </Typography>
-                    <motion.div
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <Chip
-                        icon={<RadioButtonChecked />}
-                        label="LIVE DATA"
-                        sx={{
-                          background: theme.palette.success.main,
-                          color: 'white',
-                          fontWeight: 'bold',
-                        }}
-                      />
-                    </motion.div>
+                    <Chip
+                      icon={<RadioButtonChecked />}
+                      label="LIVE DATA"
+                      sx={{
+                        background: theme.palette.success.main,
+                        color: 'white',
+                        fontWeight: 'bold',
+                        opacity: 0.95,
+                      }}
+                    />
                   </Box>
                   
                   <FormControlLabel
@@ -764,7 +647,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   <Grid item xs={12} md={8}>
                     <PremiumContainer sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2 }}>
-                        <EnhancedCockpitGauge
+                        <HTMLGauge
                           value={marketMetrics.totalMarketSize}
                           max={200000}
                           label="Market Size"
@@ -772,12 +655,8 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                           color={theme.palette.primary.main}
                           size={140}
                           isLive={liveData}
-                          industry={selectedIndustry}
-                          selectedYear={selectedYear}
-                          confidence={85}
-                          trendData={[120000, 125000, 130000, 134866, 140000, 145000]}
                         />
-                        <EnhancedCockpitGauge
+                        <HTMLGauge
                           value={marketMetrics.averageGrowth}
                           max={30}
                           label="Avg Growth"
@@ -785,12 +664,8 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                           color={theme.palette.success.main}
                           size={140}
                           isLive={liveData}
-                          industry={selectedIndustry}
-                          selectedYear={selectedYear}
-                          confidence={92}
-                          trendData={[10.5, 11.2, 11.8, 12.5, 13.1, 13.8]}
                         />
-                        <EnhancedCockpitGauge
+                        <HTMLGauge
                           value={marketMetrics.totalProcedures}
                           max={1000}
                           label="Procedures"
@@ -798,12 +673,8 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                           color={theme.palette.info.main}
                           size={140}
                           isLive={liveData}
-                          industry={selectedIndustry}
-                          selectedYear={selectedYear}
-                          confidence={78}
-                          trendData={[320, 340, 355, 367, 385, 400]}
                         />
-                        <EnhancedCockpitGauge
+                        <HTMLGauge
                           value={marketMetrics.totalCompanies}
                           max={300}
                           label="Companies"
@@ -811,17 +682,22 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                           color={theme.palette.warning.main}
                           size={140}
                           isLive={liveData}
-                          industry={selectedIndustry}
-                          selectedYear={selectedYear}
-                          confidence={88}
-                          trendData={[140, 145, 150, 156, 162, 170]}
                         />
                       </Box>
                     </PremiumContainer>
                   </Grid>
                   
                   <Grid item xs={12} md={4}>
-                    <TerritoryPremiumData territories={marketData?.territories || []} />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <TerritoryPremiumData territories={marketData?.territories || []} />
+                      <CompactCategories
+                        categories={marketData?.categories || []}
+                        selectedCategory={selectedCategory}
+                        onCategorySelect={setSelectedCategory}
+                        selectedIndustry={selectedIndustry}
+                        procedures={marketData?.procedures || []}
+                      />
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
@@ -1027,12 +903,11 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <motion.div
-                        animate={{ opacity: [1, 0.3, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <Circle sx={{ color: theme.palette.success.main, fontSize: 12 }} />
-                      </motion.div>
+                      <Circle sx={{ 
+                        color: theme.palette.success.main, 
+                        fontSize: 12,
+                        opacity: 0.8,
+                      }} />
                     </TableCell>
                   </TableRow>
                 );
