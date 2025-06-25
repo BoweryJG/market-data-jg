@@ -17,7 +17,7 @@
     "@mui/material": "^5.15.16",
     "@react-three/drei": "^9.105.4",
     "@react-three/fiber": "^8.16.8",
-    "@supabase/supabase-js": "^2.39.7",
+    "@supabase/supabase-js": "^2.50.1",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.0.0",

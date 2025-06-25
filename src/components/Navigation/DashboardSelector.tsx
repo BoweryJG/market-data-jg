@@ -42,6 +42,15 @@ const DashboardSelector: React.FC<{ open: boolean; onClose: () => void }> = ({ o
 
   const dashboards: DashboardOption[] = [
     {
+      path: '/enhanced-command',
+      label: 'Enhanced Command Center',
+      description: 'Multi-year data with confidence scores and advanced filtering',
+      icon: <Dashboard />,
+      features: ['2025-2030 Data', 'Confidence Scores', 'Sticky Header', 'Industry Filter'],
+      isNew: true,
+      isPremium: true,
+    },
+    {
       path: '/',
       label: 'Market Command Center',
       description: 'Comprehensive real-time market intelligence with ALL data',

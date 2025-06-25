@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
+import ProcedureDetailsModal from './ProcedureDetailsModal';
 import {
   Box,
   Typography,
@@ -740,6 +741,8 @@ const MarketCommandCenter: React.FC = () => {
   });
   const [liveData, setLiveData] = useState(true);
   const [dataDiscoveryMode, setDataDiscoveryMode] = useState(false);
+  const [selectedProcedure, setSelectedProcedure] = useState<any | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   // Fetch all comprehensive data
   const fetchAllData = useCallback(async () => {
@@ -1209,7 +1212,7 @@ const MarketCommandCenter: React.FC = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
                               <MonetizationOn sx={{ fontSize: 12, mr: 0.5, color: theme.palette.text.secondary }} />
                               <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
-                                ${procedureCount > 0 ? `${(procedureCount * 84.2).toFixed(0)}M` : '0M'}
+                                ${procedureCount > 0 ? `${(procedureCount * 84.2).toFixed(1)}M` : '0M'}
                               </Typography>
                             </Box>
                           </Box>
@@ -1323,7 +1326,12 @@ const MarketCommandCenter: React.FC = () => {
                 <TableRow
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
+                  onClick={() => {
+                    setSelectedProcedure(procedure);
+                    setDetailsModalOpen(true);
+                  }}
                   sx={{
+                    cursor: 'pointer',
                     '&:hover': {
                       background: alpha(theme.palette.primary.main, 0.05),
                     },
@@ -1352,7 +1360,7 @@ const MarketCommandCenter: React.FC = () => {
                   <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
                   <TableCell align="right">
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toLocaleString()}M
+                      ${(procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0).toFixed(1)}M
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -1485,6 +1493,17 @@ const MarketCommandCenter: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      
+      {/* Procedure Details Modal */}
+      <ProcedureDetailsModal
+        open={detailsModalOpen}
+        onClose={() => {
+          setDetailsModalOpen(false);
+          setSelectedProcedure(null);
+        }}
+        procedure={selectedProcedure}
+        industry={selectedIndustry === 'dental' ? 'dental' : 'aesthetic'}
+      />
     </Box>
   );
 };

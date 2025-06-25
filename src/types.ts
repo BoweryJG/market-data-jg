@@ -82,6 +82,24 @@ export interface DentalProcedure {
   yearly_growth_percentage?: number;
   cpt_cdt_code?: string;
   market_size_2025?: number;
+  market_size_2025_usd_millions?: number;
+  market_size_2026_usd_millions?: number;
+  market_size_2027_usd_millions?: number;
+  market_size_2028_usd_millions?: number;
+  market_size_2029_usd_millions?: number;
+  market_size_2030_usd_millions?: number;
+  confidence_score?: number; // 0-100
+  data_source?: 'primary' | 'estimated' | 'projected';
+  last_verified?: string;
+  // Integration costs
+  integration_cost_min?: number;
+  integration_cost_max?: number;
+  integration_equipment_min?: number;
+  integration_equipment_max?: number;
+  integration_training_cost?: number;
+  integration_confidence?: 'verified' | 'researched' | 'calculated' | 'estimated';
+  integration_updated?: string;
+  integration_roi_months?: number;
   description?: string;
   popularity?: number;
   imageUrl?: string;
@@ -100,6 +118,24 @@ export interface AestheticProcedure {
   trend_score?: number;
   body_areas_applicable?: string[];
   market_size_2025?: number;
+  market_size_2025_usd_millions?: number;
+  market_size_2026_usd_millions?: number;
+  market_size_2027_usd_millions?: number;
+  market_size_2028_usd_millions?: number;
+  market_size_2029_usd_millions?: number;
+  market_size_2030_usd_millions?: number;
+  confidence_score?: number; // 0-100
+  data_source?: 'primary' | 'estimated' | 'projected';
+  last_verified?: string;
+  // Integration costs
+  integration_cost_min?: number;
+  integration_cost_max?: number;
+  integration_equipment_min?: number;
+  integration_equipment_max?: number;
+  integration_training_cost?: number;
+  integration_confidence?: 'verified' | 'researched' | 'calculated' | 'estimated';
+  integration_updated?: string;
+  integration_roi_months?: number;
   description?: string;
   popularity?: number;
   yearly_growth_percentage?: number;

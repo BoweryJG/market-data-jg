@@ -202,11 +202,23 @@ class ComprehensiveDataService {
         supabase.from('search_analytics').select('*').limit(100),
       ]);
 
-      // Combine all procedures
+      // Combine all procedures with industry tagging
       const allProcedures = [
-        ...(proceduresResponse.status === 'fulfilled' ? proceduresResponse.value.data || [] : []),
-        ...(dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : []),
-        ...(aestheticProceduresResponse.status === 'fulfilled' ? aestheticProceduresResponse.value.data || [] : []),
+        // Main procedures table may already have industry field
+        ...(proceduresResponse.status === 'fulfilled' ? 
+          (proceduresResponse.value.data || []).map((p: any) => ({
+            ...p,
+            // Keep existing industry if present, otherwise try to infer from source
+            industry: p.industry || (p.procedure_source === 'dental' ? 'dental' : 
+                                   p.procedure_source === 'aesthetic' ? 'aesthetic' : 
+                                   p.source || 'unknown')
+          })) : []),
+        // Dental procedures explicitly tagged
+        ...(dentalProceduresResponse.status === 'fulfilled' ? 
+          (dentalProceduresResponse.value.data || []).map((p: any) => ({ ...p, industry: 'dental' })) : []),
+        // Aesthetic procedures explicitly tagged
+        ...(aestheticProceduresResponse.status === 'fulfilled' ? 
+          (aestheticProceduresResponse.value.data || []).map((p: any) => ({ ...p, industry: 'aesthetic' })) : []),
       ];
 
       // Combine all companies
@@ -217,10 +229,12 @@ class ComprehensiveDataService {
           (aestheticCompaniesResponse.value.data || []).map((c: any) => ({ ...c, industry: 'aesthetic' })) : []),
       ];
 
-      // Combine all categories
+      // Combine all categories with industry tagging
       const allCategories = [
-        ...(dentalCategoriesResponse.status === 'fulfilled' ? dentalCategoriesResponse.value.data || [] : []),
-        ...(aestheticCategoriesResponse.status === 'fulfilled' ? aestheticCategoriesResponse.value.data || [] : []),
+        ...(dentalCategoriesResponse.status === 'fulfilled' ? 
+          (dentalCategoriesResponse.value.data || []).map((c: any) => ({ ...c, industry: 'dental' })) : []),
+        ...(aestheticCategoriesResponse.status === 'fulfilled' ? 
+          (aestheticCategoriesResponse.value.data || []).map((c: any) => ({ ...c, industry: 'aesthetic' })) : []),
       ];
 
       // Extract territory data from procedures regional_popularity
