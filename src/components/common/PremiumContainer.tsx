@@ -3,27 +3,25 @@ import { Box, BoxProps } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
 import { navbarColors, navbarStyles, getPremiumContainerStyles } from '../../styles/navbarStyles';
 
-// Keyframe animations
+// Keyframe animations - optimized for performance
 const glassOscillate = keyframes`
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.02); }
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.25; }
 `;
 
 const screwGlow = keyframes`
   0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.5; }
 `;
 
 const edgeGlow = keyframes`
   0%, 100% { 
     opacity: 0.6; 
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.15); 
-    transform: scaleY(1);
   }
   50% { 
-    opacity: 1; 
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.3); 
-    transform: scaleY(1.05);
+    opacity: 0.8; 
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); 
   }
 `;
 
@@ -43,8 +41,8 @@ const Screw = styled(Box)<{ position: 'topLeft' | 'topRight' | 'bottomLeft' | 'b
       position: 'absolute',
       top: '50%',
       left: '50%',
-      width: '3px',
-      height: '3px',
+      width: '2.1px',  // Reduced by 30% from 3px
+      height: '2.1px', // Reduced by 30% from 3px
       transform: 'translate(-50%, -50%)',
       background: `radial-gradient(circle at center, ${navbarColors.gemImpossible}80, ${navbarColors.gemDeep}40, transparent)`,
       borderRadius: '50%',
@@ -65,15 +63,16 @@ const EdgeMount = styled(Box)<{ side: 'left' | 'right' }>(({ side }) => ({
 
 const GlassOverlay = styled(Box)({
   ...navbarStyles.glassOverlay,
-  animation: `${glassOscillate} 8s ease-in-out infinite`,
+  animation: `${glassOscillate} 12s ease-in-out infinite`, // Slower animation for performance
+  willChange: 'opacity', // Optimize for GPU
 });
 
-const GridBackground = styled(Box)<{ scrollOffset?: number }>(({ scrollOffset = 0 }) => ({
+const GridBackground = styled(Box)({
   position: 'absolute',
   inset: 0,
   backgroundImage: `
-    radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.02) 0%, transparent 50%),
     repeating-linear-gradient(
       0deg,
       transparent 0px,
@@ -87,18 +86,15 @@ const GridBackground = styled(Box)<{ scrollOffset?: number }>(({ scrollOffset = 
       rgba(255, 255, 255, 0.01) 20px
     )
   `,
-  opacity: 0.5,
-  transform: `translateY(${scrollOffset}px)`,
+  opacity: 0.3,
   pointerEvents: 'none',
-  transition: 'transform 0.1s linear',
-}));
+});
 
 interface PremiumContainerProps extends BoxProps {
   children: React.ReactNode;
   showScrews?: boolean;
   showEdgeMounts?: boolean;
   enableHover?: boolean;
-  scrollOffset?: number;
   className?: string;
 }
 
@@ -107,7 +103,6 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
   showScrews = true,
   showEdgeMounts = true,
   enableHover = true,
-  scrollOffset = 0,
   className,
   sx,
   ...otherProps
@@ -122,12 +117,13 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
       className={className}
       sx={{
         ...sx,
-        transform: isHovered ? 'translateY(-2px) scale(1.01)' : 'translateY(0) scale(1)',
+        transform: isHovered ? 'translateY(-1px)' : 'translateY(0)', // Removed scale for better performance
+        transition: 'transform 0.2s ease', // Faster transition
       }}
       {...otherProps}
     >
-      {/* Grid background with parallax */}
-      <GridBackground scrollOffset={scrollOffset} />
+      {/* Grid background */}
+      <GridBackground />
       
       {/* Edge mount indicators */}
       {showEdgeMounts && (

@@ -65,8 +65,8 @@ export const navbarStyles = {
   // Metallic screw styles
   screw: {
     position: 'absolute' as const,
-    width: '8px',
-    height: '8px',
+    width: '5.6px',  // Reduced by 30% from 8px
+    height: '5.6px', // Reduced by 30% from 8px
     background: `
       radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%),
       linear-gradient(135deg, #ccc 0%, #666 100%)

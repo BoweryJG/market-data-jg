@@ -49,6 +49,7 @@ import {
   TrendingUp,
   TrendingDown,
   Search,
+  PinDrop,
   FilterList,
   LocationOn,
   AttachMoney,
@@ -328,6 +329,89 @@ const ConfidenceBadge: React.FC<{ score?: number }> = ({ score = 75 }) => {
         }}
       />
     </Tooltip>
+  );
+};
+
+// Territory data component with premium styling
+const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories }) => {
+  const theme = useTheme();
+  
+  return (
+    <PremiumContainer
+      sx={{
+        background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.05)} 0%, ${alpha(theme.palette.error.main, 0.05)} 100%)`,
+        position: 'relative',
+        overflow: 'visible',
+        p: 2,
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: -10,
+          right: -10,
+          background: theme.palette.warning.main,
+          color: 'white',
+          px: 1,
+          py: 0.5,
+          borderRadius: 1,
+          fontSize: 12,
+          fontWeight: 'bold',
+          zIndex: 2,
+        }}
+      >
+        PREMIUM
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <PinDrop sx={{ mr: 1, color: theme.palette.warning.main }} />
+        <Typography variant="h6">Territory Intelligence</Typography>
+        <motion.div
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{ marginLeft: 8 }}
+        >
+          <Chip
+            label="LIVE"
+            size="small"
+            sx={{
+              background: theme.palette.success.main,
+              color: 'white',
+              fontSize: 10,
+            }}
+          />
+        </motion.div>
+      </Box>
+      
+      {territories.map((territory, index) => (
+        <Box key={index} sx={{ mb: 2, p: 1, background: alpha(theme.palette.background.paper, 0.5), borderRadius: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+              {territory.name}
+            </Typography>
+            <Chip
+              label={`$${territory.marketSize}M`}
+              size="small"
+              sx={{ background: theme.palette.warning.main, color: 'white' }}
+            />
+          </Box>
+          <Typography variant="caption" color="text.secondary">
+            {territory.procedures} procedures • {territory.companies} companies
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={territory.saturation}
+            sx={{
+              mt: 1,
+              height: 4,
+              backgroundColor: alpha(theme.palette.warning.main, 0.2),
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: theme.palette.warning.main,
+              },
+            }}
+          />
+        </Box>
+      ))}
+    </PremiumContainer>
   );
 };
 
@@ -737,13 +821,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   </Grid>
                   
                   <Grid item xs={12} md={4}>
-                    <CompactCategories
-                      categories={marketData?.categories || []}
-                      selectedCategory={selectedCategory}
-                      onCategorySelect={setSelectedCategory}
-                      selectedIndustry={selectedIndustry}
-                      procedures={marketData?.procedures || []}
-                    />
+                    <TerritoryPremiumData territories={marketData?.territories || []} />
                   </Grid>
                 </Grid>
               </Box>
