@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
 import ProcedureDetailsModal from './ProcedureDetailsModal';
+import PremiumContainer from '../common/PremiumContainer';
 import {
   Box,
   Typography,
@@ -957,7 +958,12 @@ const MarketCommandCenter: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3, background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)` }}>
+    <Box sx={{ 
+      p: 3, 
+      paddingTop: '120px', // Add space for navbar
+      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+      minHeight: '100vh'
+    }}>
       {/* Header with live indicator */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -995,8 +1001,8 @@ const MarketCommandCenter: React.FC = () => {
       {/* Cockpit-style gauges */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={8}>
-          <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
-            <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
+          <PremiumContainer sx={{ p: 3 }}>
+            <Typography variant="h5" sx={{ mb: 3, textAlign: 'center', color: theme.palette.text.primary }}>
               Market Intelligence Dashboard
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 3, py: 2 }}>
@@ -1065,7 +1071,7 @@ const MarketCommandCenter: React.FC = () => {
                 />
               </motion.div>
             </Box>
-          </Card>
+          </PremiumContainer>
         </Grid>
         
         <Grid item xs={12} md={4}>
@@ -1129,10 +1135,11 @@ const MarketCommandCenter: React.FC = () => {
         </Box>
       </Card>
 
-      {/* Clean Categories Sidebar */}
-      {viewMode === 'procedures' && marketData?.procedures && (
-        <Card sx={{ mb: 3, width: 280, background: alpha(theme.palette.background.paper, 0.95) }}>
-          <CardContent sx={{ p: 2 }}>
+      {/* Main content area with sidebar */}
+      <Box sx={{ display: 'flex', gap: 3 }}>
+        {/* Clean Categories Sidebar */}
+        {viewMode === 'procedures' && marketData?.procedures && (
+          <PremiumContainer sx={{ width: 320, p: 2, flexShrink: 0 }}>
             <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', color: theme.palette.primary.main }}>
               <Category sx={{ mr: 1 }} />
               Categories
@@ -1222,12 +1229,11 @@ const MarketCommandCenter: React.FC = () => {
                   );
                 })}
             </List>
-          </CardContent>
-        </Card>
-      )}
+          </PremiumContainer>
+        )}
 
-      {/* Procedures/Companies table */}
-      <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+        {/* Procedures/Companies table */}
+        <TableContainer component={Paper} sx={{ maxHeight: '60vh', flex: 1 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -1493,6 +1499,7 @@ const MarketCommandCenter: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
       
       {/* Procedure Details Modal */}
       <ProcedureDetailsModal
