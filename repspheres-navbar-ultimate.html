@@ -53,6 +53,12 @@
             padding-top: calc(var(--nav-height) + 24px);
             transition: background 0.5s ease;
         }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px; /* Extra space for stacked navbar on mobile */
+            }
+        }
 
         /* Gutter Shadow Behind Nav */
         body::before {
@@ -875,8 +881,46 @@
 
         /* Mobile */
         @media (max-width: 768px) {
+            .nav-container {
+                height: auto;
+                min-height: var(--nav-height);
+                padding: 12px;
+            }
+            
+            .nav-inner {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+            }
+            
+            .nav-logo {
+                margin-bottom: 8px;
+            }
+            
+            .nav-rail-container {
+                display: none; /* Hide rail on mobile to save space */
+            }
+            
             .nav-links {
                 display: none;
+            }
+            
+            .nav-actions {
+                width: 100%;
+                justify-content: center;
+                order: 3;
+                margin-top: 8px;
+            }
+            
+            .nav-cta {
+                width: 100%;
+                max-width: 200px;
+                text-align: center;
+            }
+            
+            .nav-status {
+                font-size: 10px;
             }
             
             h1 {
