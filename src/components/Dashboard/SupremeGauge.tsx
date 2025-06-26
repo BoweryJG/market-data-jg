@@ -34,13 +34,13 @@ const GaugeContainer = styled(Box)(({ theme }) => ({
 }));
 
 // Chrome cylindrical bezel
-const ChromeBezel = styled(Box)(({ size = 200 }) => ({
+const ChromeBezel = styled(Box)<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: size,
-  height: size,
+  width: $size,
+  height: $size,
   borderRadius: '50%',
   background: `
     conic-gradient(
@@ -127,39 +127,39 @@ const DigitalDisplay = styled(Box)(({ theme }) => ({
   },
 }));
 
-const DigitalText = styled(Typography)<{ gaugeColor: string }>(({ gaugeColor }) => ({
+const DigitalText = styled(Typography)<{ $gaugeColor: string }>(({ $gaugeColor }) => ({
   fontFamily: "'Orbitron', 'Digital-7', monospace",
   fontSize: '24px',
   fontWeight: 'bold',
-  color: gaugeColor,
+  color: $gaugeColor,
   textShadow: `
-    0 0 10px ${gaugeColor},
-    0 0 20px ${gaugeColor}80,
-    0 0 30px ${gaugeColor}40
+    0 0 10px ${$gaugeColor},
+    0 0 20px ${$gaugeColor}80,
+    0 0 30px ${$gaugeColor}40
   `,
   letterSpacing: '3px',
   lineHeight: 1,
 }));
 
 // Gauge face
-const GaugeFace = styled('svg')(({ size = 200 }) => ({
+const GaugeFace = styled('svg')<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: size * 0.9,
-  height: size * 0.9,
+  width: $size * 0.9,
+  height: $size * 0.9,
   zIndex: 1,
 }));
 
 // Glass cover overlay
-const GlassCover = styled(Box)(({ size = 200 }) => ({
+const GlassCover = styled(Box)<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: size * 0.85,
-  height: size * 0.85,
+  width: $size * 0.85,
+  height: $size * 0.85,
   borderRadius: '50%',
   background: `
     radial-gradient(
@@ -289,7 +289,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         }}
       >
         {/* Chrome bezel with studs */}
-        <ChromeBezel className="chrome-bezel" size={size}>
+        <ChromeBezel className="chrome-bezel" $size={size}>
           {[...Array(12)].map((_, i) => (
             <Stud key={i} angle={i * 30} />
           ))}
@@ -297,13 +297,13 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
 
         {/* Digital display */}
         <DigitalDisplay>
-          <DigitalText gaugeColor={gaugeColor}>
+          <DigitalText $gaugeColor={gaugeColor}>
             {displayValue.toString().padStart(3, '0')}{unit}
           </DigitalText>
         </DigitalDisplay>
 
         {/* Gauge face */}
-        <GaugeFace size={size}>
+        <GaugeFace $size={size}>
           <defs>
             <radialGradient id={`face-gradient-${label}`}>
               <stop offset="0%" stopColor="#2a2a2a" />
@@ -419,7 +419,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         </GaugeFace>
 
         {/* Glass cover */}
-        <GlassCover size={size} />
+        <GlassCover $size={size} />
 
         {/* Label */}
         <Typography

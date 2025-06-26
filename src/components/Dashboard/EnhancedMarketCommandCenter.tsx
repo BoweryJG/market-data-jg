@@ -49,6 +49,7 @@ import type { EstimatedMarketData, EstimatedProcedure } from '../../services/mar
 import PremiumContainer from '../common/PremiumContainer';
 import IntegrationCalculator from './IntegrationCalculator';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
+import SupremeGauge from './SupremeGauge';
 
 const pulseAnimation = keyframes`
   0% {
@@ -423,7 +424,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   
                   {/* Market Overview Cards */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
-                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                    <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <AttachMoney sx={{ mr: 1, color: theme.palette.primary.main }} />
                         <Typography variant="subtitle2" color="text.secondary">Total Market Size</Typography>
@@ -434,9 +435,9 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         {selectedYear} Projection
                       </Typography>
-                    </Paper>
+                    </PremiumContainer>
                     
-                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                    <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <TrendingUp sx={{ mr: 1, color: theme.palette.success.main }} />
                         <Typography variant="subtitle2" color="text.secondary">Average Growth</Typography>
@@ -447,9 +448,9 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         YoY CAGR
                       </Typography>
-                    </Paper>
+                    </PremiumContainer>
                     
-                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                    <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <Assessment sx={{ mr: 1, color: theme.palette.info.main }} />
                         <Typography variant="subtitle2" color="text.secondary">Active Procedures</Typography>
@@ -460,9 +461,9 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         Tracked Categories
                       </Typography>
-                    </Paper>
+                    </PremiumContainer>
                     
-                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                    <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <Business sx={{ mr: 1, color: theme.palette.warning.main }} />
                         <Typography variant="subtitle2" color="text.secondary">Top Companies</Typography>
@@ -473,7 +474,7 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         Market Leaders
                       </Typography>
-                    </Paper>
+                    </PremiumContainer>
                   </Box>
                 </Box>
               </Collapse>
@@ -496,9 +497,60 @@ const EnhancedMarketCommandCenter: React.FC = () => {
             </Alert>
           )}
           
+          {/* Supreme Gauges Section */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, color: 'text.primary', fontWeight: 'bold' }}>
+              Real-Time Market Intelligence
+            </Typography>
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 3,
+              justifyItems: 'center'
+            }}>
+              <SupremeGauge
+                value={marketMetrics.totalMarketSize / 1e9}
+                max={500}
+                label="Market Size"
+                unit="B"
+                color="#9f58fa"
+                size={180}
+                isLive={liveData}
+              />
+              <SupremeGauge
+                value={marketMetrics.averageGrowth}
+                max={25}
+                label="Avg Growth"
+                unit="%"
+                color="#4bd48e"
+                size={180}
+                isLive={liveData}
+              />
+              <SupremeGauge
+                value={marketMetrics.procedureCount}
+                max={100}
+                label="Procedures"
+                unit=""
+                color="#4B96DC"
+                size={180}
+                isLive={liveData}
+              />
+              <SupremeGauge
+                value={marketMetrics.totalCompanies}
+                max={1000}
+                label="Companies"
+                unit=""
+                color="#ff6b35"
+                size={180}
+                isLive={liveData}
+              />
+            </Box>
+          </Box>
+          
           {/* Data Table */}
-          <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 400px)' }}>
-            <Table stickyHeader>
+          <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ maxHeight: 'calc(100vh - 400px)', overflow: 'auto' }}>
+            <TableContainer sx={{ maxHeight: 'calc(100vh - 400px)' }}>
+              <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   <TableCell>Procedure</TableCell>
@@ -602,8 +654,9 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   );
                 })}
               </TableBody>
-            </Table>
-          </TableContainer>
+              </Table>
+            </TableContainer>
+          </PremiumContainer>
         </Box>
         
         {/* Procedure Details Modal */}

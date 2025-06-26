@@ -26,17 +26,17 @@ const edgeGlow = keyframes`
 `;
 
 // Styled components
-const ContainerBox = styled(Box)<{ isHovered?: boolean }>(({ isHovered = false }) => ({
-  ...getPremiumContainerStyles(isHovered),
+const ContainerBox = styled(Box)<{ $isHovered?: boolean }>(({ $isHovered = false }) => ({
+  ...getPremiumContainerStyles($isHovered),
   // Removed 3D transforms for better scroll performance
   // transformStyle: 'preserve-3d',
   // perspective: '1000px',
 }));
 
-const Screw = styled(Box)<{ position: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' }>(
-  ({ position }) => ({
+const Screw = styled(Box)<{ screwPosition: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' }>(
+  ({ screwPosition }) => ({
     ...navbarStyles.screw,
-    ...navbarStyles.screwPositions[position],
+    ...navbarStyles.screwPositions[screwPosition],
     '&::after': {
       content: '""',
       position: 'absolute',
@@ -112,7 +112,7 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
 
   return (
     <ContainerBox
-      isHovered={enableHover && isHovered}
+      $isHovered={enableHover && isHovered}
       onMouseEnter={() => enableHover && setIsHovered(true)}
       onMouseLeave={() => enableHover && setIsHovered(false)}
       className={className}
@@ -138,10 +138,10 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
       {/* Metallic screws */}
       {showScrews && (
         <>
-          <Screw position="topLeft" />
-          <Screw position="topRight" />
-          <Screw position="bottomLeft" />
-          <Screw position="bottomRight" />
+          <Screw screwPosition="topLeft" />
+          <Screw screwPosition="topRight" />
+          <Screw screwPosition="bottomLeft" />
+          <Screw screwPosition="bottomRight" />
         </>
       )}
       
