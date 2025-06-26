@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { luxuryAudio } from '../../utils/audioUtils';
 
 interface SupremeGaugeProps {
   value: number;
@@ -353,6 +354,8 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
                 jewelCap.style.animation = '';
               }, 600);
             }
+            // 🎵 Play kinetic audio sequence for authentic luxury watch experience
+            luxuryAudio.playKineticSequence();
           }, 100);
         }
       }
@@ -369,6 +372,9 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
   }, [value, max, label]);
 
   const handleClick = () => {
+    // 🎵 Play luxury watch interaction sounds
+    luxuryAudio.playBezelClick();
+    
     // Spin animation on click
     const startAngle = needleAngle;
     const startTime = Date.now();
@@ -385,10 +391,18 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         requestAnimationFrame(spin);
       } else {
         setNeedleAngle((value / max) * 180 - 90);
+        // Play settlement sound
+        setTimeout(() => luxuryAudio.playCrystalTing(), 200);
       }
     };
 
     spin();
+  };
+
+  // 🧭 Handle precision screw interactions
+  const handleScrewClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    luxuryAudio.playBezelClick();
   };
 
   return (
@@ -414,6 +428,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
               key={`screw-${index}`}
               angle={angle}
               rotation={Math.random() * 360} // Slight rotational variation for authenticity
+              onClick={handleScrewClick}
             />
           ))}
         </ChromeBezel>
