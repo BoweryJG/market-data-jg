@@ -34,7 +34,9 @@ const GaugeContainer = styled(Box)(({ theme }) => ({
 }));
 
 // Chrome cylindrical bezel
-const ChromeBezel = styled(Box)<{ $size?: number }>(({ $size = 200 }) => ({
+const ChromeBezel = styled(Box, {
+  shouldForwardProp: (prop) => prop !== '$size',
+})<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -127,7 +129,9 @@ const DigitalDisplay = styled(Box)(({ theme }) => ({
   },
 }));
 
-const DigitalText = styled(Typography)<{ $gaugeColor: string }>(({ $gaugeColor }) => ({
+const DigitalText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== '$gaugeColor',
+})<{ $gaugeColor: string }>(({ $gaugeColor }) => ({
   fontFamily: "'Orbitron', 'Digital-7', monospace",
   fontSize: '24px',
   fontWeight: 'bold',
@@ -141,8 +145,10 @@ const DigitalText = styled(Typography)<{ $gaugeColor: string }>(({ $gaugeColor }
   lineHeight: 1,
 }));
 
-// Gauge face
-const GaugeFace = styled('svg')<{ $size?: number }>(({ $size = 200 }) => ({
+// Gauge face with proper viewBox
+const GaugeFace = styled('svg', {
+  shouldForwardProp: (prop) => prop !== '$size',
+})<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -153,7 +159,9 @@ const GaugeFace = styled('svg')<{ $size?: number }>(({ $size = 200 }) => ({
 }));
 
 // Glass cover overlay
-const GlassCover = styled(Box)<{ $size?: number }>(({ $size = 200 }) => ({
+const GlassCover = styled(Box, {
+  shouldForwardProp: (prop) => prop !== '$size',
+})<{ $size?: number }>(({ $size = 200 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -303,118 +311,204 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         </DigitalDisplay>
 
         {/* Gauge face */}
-        <GaugeFace $size={size}>
+        <GaugeFace $size={size} viewBox="0 0 100 100">
           <defs>
             <radialGradient id={`face-gradient-${label}`}>
               <stop offset="0%" stopColor="#2a2a2a" />
-              <stop offset="100%" stopColor="#1a1a1a" />
+              <stop offset="30%" stopColor="#1a1a1a" />
+              <stop offset="100%" stopColor="#0a0a0a" />
+            </radialGradient>
+            
+            <radialGradient id={`needle-gradient-${label}`}>
+              <stop offset="0%" stopColor={gaugeColor} />
+              <stop offset="70%" stopColor="#ff4444" />
+              <stop offset="100%" stopColor="#cc0000" />
             </radialGradient>
             
             <filter id={`needle-glow-${label}`}>
-              <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
+            
+            <linearGradient id={`zone-gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#4CAF50" stopOpacity="0.3" />
+              <stop offset="60%" stopColor="#FFC107" stopOpacity="0.3" />
+              <stop offset="85%" stopColor="#FF5722" stopOpacity="0.3" />
+            </linearGradient>
           </defs>
 
-          {/* Face background */}
+          {/* Gauge background with zones */}
           <circle
-            cx="50%"
-            cy="50%"
-            r="45%"
+            cx="50"
+            cy="50"
+            r="42"
             fill={`url(#face-gradient-${label})`}
             stroke="#333"
-            strokeWidth="1"
+            strokeWidth="0.5"
+          />
+          
+          {/* Color zones arc */}
+          <path
+            d="M 15 50 A 35 35 0 0 1 85 50"
+            fill="none"
+            stroke={`url(#zone-gradient-${label})`}
+            strokeWidth="6"
+            opacity="0.6"
           />
 
-          {/* Tick marks */}
-          {[...Array(11)].map((_, i) => {
-            const angle = (i / 10) * 180 - 90;
+          {/* Outer rim */}
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke="#555"
+            strokeWidth="1"
+            opacity="0.8"
+          />
+
+          {/* Tick marks - Major and Minor */}
+          {[...Array(21)].map((_, i) => {
+            const angle = (i / 20) * 180 - 90; // 21 ticks for 180 degrees
             const radian = (angle * Math.PI) / 180;
-            const isMain = i % 2 === 0;
-            const tickLength = isMain ? 0.15 : 0.1;
-            const innerRadius = 0.35;
-            const outerRadius = innerRadius - tickLength;
+            const isMajor = i % 4 === 0; // Every 4th tick is major
+            const isMiddle = i % 2 === 0 && !isMajor; // Every 2nd (but not major) is middle
             
-            const x1 = 0.5 + Math.cos(radian) * innerRadius;
-            const y1 = 0.5 + Math.sin(radian) * innerRadius;
-            const x2 = 0.5 + Math.cos(radian) * outerRadius;
-            const y2 = 0.5 + Math.sin(radian) * outerRadius;
+            let tickLength, strokeWidth, opacity, color;
+            if (isMajor) {
+              tickLength = 8;
+              strokeWidth = 2;
+              opacity = 1;
+              color = "#fff";
+            } else if (isMiddle) {
+              tickLength = 5;
+              strokeWidth = 1.5;
+              opacity = 0.8;
+              color = "#ccc";
+            } else {
+              tickLength = 3;
+              strokeWidth = 1;
+              opacity = 0.6;
+              color = "#999";
+            }
+            
+            const outerRadius = 42;
+            const innerRadius = outerRadius - tickLength;
+            
+            const x1 = 50 + Math.cos(radian) * outerRadius;
+            const y1 = 50 + Math.sin(radian) * outerRadius;
+            const x2 = 50 + Math.cos(radian) * innerRadius;
+            const y2 = 50 + Math.sin(radian) * innerRadius;
 
             return (
               <g key={i}>
                 <line
-                  x1={`${x1 * 100}%`}
-                  y1={`${y1 * 100}%`}
-                  x2={`${x2 * 100}%`}
-                  y2={`${y2 * 100}%`}
-                  stroke="#fff"
-                  strokeWidth={isMain ? 2 : 1}
-                  opacity={isMain ? 0.9 : 0.5}
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke={color}
+                  strokeWidth={strokeWidth}
+                  opacity={opacity}
                 />
-                {isMain && (
+                {isMajor && (
                   <text
-                    x={`${(0.5 + Math.cos(radian) * (outerRadius - 0.05)) * 100}%`}
-                    y={`${(0.5 + Math.sin(radian) * (outerRadius - 0.05)) * 100}%`}
+                    x={50 + Math.cos(radian) * (innerRadius - 4)}
+                    y={50 + Math.sin(radian) * (innerRadius - 4)}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize="10"
+                    fontSize="4"
                     fill="#fff"
-                    opacity="0.8"
+                    opacity="0.9"
                     fontWeight="bold"
+                    fontFamily="'Orbitron', monospace"
                   >
-                    {Math.round((i / 10) * max)}
+                    {Math.round((i / 20) * max)}
                   </text>
                 )}
               </g>
             );
           })}
 
-          {/* Center hub */}
+          {/* Center hub with gradient */}
           <circle
-            cx="50%"
-            cy="50%"
-            r="5%"
+            cx="50"
+            cy="50"
+            r="4"
             fill="#2C3E50"
             stroke="#1a1a1a"
-            strokeWidth="2"
+            strokeWidth="1"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="2"
+            fill="#34495E"
+            opacity="0.8"
           />
 
-          {/* Needle */}
+          {/* Needle - Professional design */}
           <g
-            transform={`rotate(${needleAngle} ${size * 0.45} ${size * 0.45})`}
+            transform={`rotate(${needleAngle} 50 50)`}
             style={{
-              transformOrigin: 'center',
               transition: 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
           >
+            {/* Needle shadow */}
             <polygon
-              points={`${size * 0.45},${size * 0.45} ${size * 0.44},${size * 0.25} ${size * 0.46},${size * 0.25}`}
-              fill="#ff0000"
-              filter={`url(#needle-glow-${label})`}
+              points="50,50 48,20 52,20 51,48"
+              fill="#000"
+              opacity="0.3"
+              transform="translate(0.5, 0.5)"
             />
-            <circle
-              cx={`${size * 0.45}`}
-              cy={`${size * 0.45}`}
-              r="3"
-              fill="#ff0000"
+            
+            {/* Main needle */}
+            <polygon
+              points="50,50 48.5,22 51.5,22 50.8,48"
+              fill={`url(#needle-gradient-${label})`}
+              filter={`url(#needle-glow-${label})`}
+              stroke="#fff"
+              strokeWidth="0.2"
+            />
+            
+            {/* Needle tip highlight */}
+            <polygon
+              points="50,22 49,24 51,24"
+              fill="#fff"
+              opacity="0.8"
             />
           </g>
 
           {/* Brand text */}
           <text
-            x="50%"
-            y="70%"
+            x="50"
+            y="75"
             textAnchor="middle"
-            fontSize="8"
+            fontSize="3"
             fill="#666"
-            fontFamily="Arial, sans-serif"
-            letterSpacing="1"
+            fontFamily="'Orbitron', monospace"
+            letterSpacing="0.5"
             opacity="0.8"
+            fontWeight="bold"
           >
             REPSPHERES
+          </text>
+          
+          {/* Premium indicator */}
+          <text
+            x="50"
+            y="80"
+            textAnchor="middle"
+            fontSize="2"
+            fill={gaugeColor}
+            fontFamily="'Orbitron', monospace"
+            letterSpacing="0.3"
+            opacity="0.6"
+          >
+            SUPREME
           </text>
         </GaugeFace>
 

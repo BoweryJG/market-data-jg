@@ -26,14 +26,18 @@ const edgeGlow = keyframes`
 `;
 
 // Styled components
-const ContainerBox = styled(Box)<{ $isHovered?: boolean }>(({ $isHovered = false }) => ({
+const ContainerBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== '$isHovered',
+})<{ $isHovered?: boolean }>(({ $isHovered = false }) => ({
   ...getPremiumContainerStyles($isHovered),
   // Removed 3D transforms for better scroll performance
   // transformStyle: 'preserve-3d',
   // perspective: '1000px',
 }));
 
-const Screw = styled(Box)<{ screwPosition: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' }>(
+const Screw = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screwPosition',
+})<{ screwPosition: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' }>(
   ({ screwPosition }) => ({
     ...navbarStyles.screw,
     ...navbarStyles.screwPositions[screwPosition],
