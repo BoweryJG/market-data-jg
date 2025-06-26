@@ -222,37 +222,58 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
 
   const gaugeColor = getGaugeColor();
 
-  // Animate value and needle
+  // Kinetic needle animation with luxury watch physics
   useEffect(() => {
     const targetAngle = (value / max) * 180 - 90;
     const startValue = displayValue;
-    const startAngle = needleAngle;
     const startTime = Date.now();
-    const duration = 1500;
-
-    const animate = () => {
+    
+    // Luxury watch kinetic animation: 2-3 full spins + settle
+    const spinRounds = 2 + Math.floor(Math.random() * 2); // 2-3 spins
+    const spinTarget = (360 * spinRounds) + targetAngle;
+    
+    // Phase 1: Multi-revolution spin (mechanical momentum)
+    const spinDuration = 2000;
+    const settleDuration = 1200;
+    
+    const animateKinetic = () => {
       const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
       
-      // Easing function
-      const easeInOutCubic = (t: number) => 
-        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      const easedProgress = easeInOutCubic(progress);
-
-      // Update needle angle
-      const currentAngle = startAngle + (targetAngle - startAngle) * easedProgress;
-      setNeedleAngle(currentAngle);
-
-      // Update display value
-      const currentValue = startValue + (value - startValue) * easedProgress;
-      setDisplayValue(Math.round(currentValue));
-
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
+      if (elapsed < spinDuration) {
+        // Spinning phase with mechanical momentum
+        const progress = elapsed / spinDuration;
+        const easeOut = 1 - Math.pow(1 - progress, 3); // Deceleration
+        
+        const currentAngle = -90 + (spinTarget + 90) * easeOut;
+        setNeedleAngle(currentAngle);
+        
+        // Update value during spin
+        const currentValue = startValue + (value - startValue) * progress;
+        setDisplayValue(Math.round(currentValue));
+        
+        animationRef.current = requestAnimationFrame(animateKinetic);
+      } else if (elapsed < spinDuration + settleDuration) {
+        // Settlement phase with elastic bounce
+        const settleProgress = (elapsed - spinDuration) / settleDuration;
+        const elasticOut = 1 - Math.pow(2, -10 * settleProgress) * Math.cos((settleProgress * 10 - 0.75) * (2 * Math.PI) / 3);
+        
+        const overshoot = 15; // Degrees of overshoot
+        const settleAngle = spinTarget + overshoot * (1 - elasticOut);
+        const finalAngle = targetAngle + (settleAngle - targetAngle) * (1 - elasticOut);
+        
+        setNeedleAngle(finalAngle);
+        setDisplayValue(value);
+        
+        if (settleProgress < 1) {
+          animationRef.current = requestAnimationFrame(animateKinetic);
+        } else {
+          setNeedleAngle(targetAngle); // Ensure final position
+        }
       }
     };
 
-    animate();
+    // Start the kinetic animation
+    animateKinetic();
 
     return () => {
       if (animationRef.current) {
@@ -319,14 +340,31 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
               <stop offset="100%" stopColor="#0a0a0a" />
             </radialGradient>
             
-            <radialGradient id={`needle-gradient-${label}`}>
+            <linearGradient id={`needle-gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#E8E8E8" />
+              <stop offset="30%" stopColor="#C0C0C0" />
+              <stop offset="70%" stopColor="#A0A0A0" />
+              <stop offset="100%" stopColor="#808080" />
+            </linearGradient>
+            
+            <radialGradient id={`jewel-gradient-${label}`}>
               <stop offset="0%" stopColor={gaugeColor} />
-              <stop offset="70%" stopColor="#ff4444" />
-              <stop offset="100%" stopColor="#cc0000" />
+              <stop offset="30%" stopColor="#4A90E2" />
+              <stop offset="70%" stopColor="#2E5C8A" />
+              <stop offset="100%" stopColor="#1A365D" />
             </radialGradient>
             
             <filter id={`needle-glow-${label}`}>
-              <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="0.3" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            
+            <filter id={`jewel-glow-${label}`}>
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+              <feColorMatrix values="1 0 0 0 0  0 0 1 0 0  0 0 0 1 0  0 0 0 1 0"/>
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -450,34 +488,62 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
             opacity="0.8"
           />
 
-          {/* Needle - Professional design */}
+          {/* Needle - Luxury Watch Design */}
           <g
             transform={`rotate(${needleAngle} 50 50)`}
             style={{
-              transition: 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transition: needleAngle === (value / max) * 180 - 90 ? 'none' : 'transform 0.1s ease-out',
             }}
           >
-            {/* Needle shadow */}
+            {/* Needle shadow for depth */}
             <polygon
-              points="50,50 48,20 52,20 51,48"
+              points="50,50 48,18 52,18 50.5,48"
               fill="#000"
-              opacity="0.3"
-              transform="translate(0.5, 0.5)"
+              opacity="0.4"
+              transform="translate(1, 1)"
             />
             
-            {/* Main needle */}
+            {/* Chrome needle shaft - tapered from 10px base to 1px tip */}
             <polygon
-              points="50,50 48.5,22 51.5,22 50.8,48"
+              points="50,50 47,20 53,20 51,48"
               fill={`url(#needle-gradient-${label})`}
               filter={`url(#needle-glow-${label})`}
-              stroke="#fff"
+              stroke="#C0C0C0"
+              strokeWidth="0.3"
+            />
+            
+            {/* Chrome highlight strip */}
+            <polygon
+              points="50,50 48.5,20 49.5,20 49.5,48"
+              fill="rgba(255,255,255,0.6)"
+              opacity="0.8"
+            />
+            
+            {/* Needle tip - sharp precision point */}
+            <polygon
+              points="50,20 48.5,22 51.5,22"
+              fill="#E8E8E8"
+              stroke="#C0C0C0"
               strokeWidth="0.2"
             />
             
-            {/* Needle tip highlight */}
-            <polygon
-              points="50,22 49,24 51,24"
-              fill="#fff"
+            {/* Jeweled center cap - luxury watch style */}
+            <circle
+              cx="50"
+              cy="50"
+              r="3"
+              fill={`url(#jewel-gradient-${label})`}
+              stroke="#C0C0C0"
+              strokeWidth="0.5"
+              filter={`url(#jewel-glow-${label})`}
+            />
+            
+            {/* Inner jewel highlight */}
+            <circle
+              cx="50"
+              cy="50"
+              r="1.5"
+              fill="rgba(255,255,255,0.4)"
               opacity="0.8"
             />
           </g>
