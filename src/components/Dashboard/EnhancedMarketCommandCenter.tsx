@@ -46,7 +46,7 @@ import { keyframes } from '@mui/system';
 import YearSelector from './YearSelector';
 import { getEstimatedMarketData } from '../../services/marketDataEstimator';
 import type { EstimatedMarketData, EstimatedProcedure } from '../../services/marketDataEstimator';
-import PremiumContainer from '../Premium/PremiumContainer';
+import PremiumContainer from '../common/PremiumContainer';
 import IntegrationCalculator from './IntegrationCalculator';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 
