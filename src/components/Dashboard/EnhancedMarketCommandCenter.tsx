@@ -1,24 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import ProcedureDetailsModal from './ProcedureDetailsModal';
-import PremiumContainer from '../common/PremiumContainer';
-import SupremeGauge from './SupremeGauge';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
-  Grid,
-  Card,
-  CardContent,
-  IconButton,
+  AppBar,
+  Toolbar,
+  TextField,
+  InputAdornment,
+  Button,
+  ButtonGroup,
   Chip,
-  useTheme,
-  useMediaQuery,
-  alpha,
-  LinearProgress,
-  Tooltip,
-  Badge,
-  Switch,
-  FormControlLabel,
-  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -26,1045 +16,608 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TableSortLabel,
-  TextField,
-  InputAdornment,
-  Tabs,
-  Tab,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  ButtonGroup,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Collapse,
-  AppBar,
-  Toolbar,
+  FormControlLabel,
+  Switch,
+  LinearProgress,
+  Alert,
+  IconButton,
+  Tooltip,
+  useTheme,
+  styled,
 } from '@mui/material';
 import {
-  TrendingUp,
-  TrendingDown,
   Search,
-  PinDrop,
-  FilterList,
-  LocationOn,
+  TrendingUp,
+  ShowChart,
   AttachMoney,
-  Speed,
   Business,
-  MedicalServices,
-  Analytics,
-  FlashOn,
-  Visibility,
-  Star,
-  LocalHospital,
-  AccountBalance,
-  Timer,
-  EmojiEvents,
-  RadioButtonChecked,
+  Assessment,
   Circle,
-  FiberManualRecord,
-  MonetizationOn,
-  PinDrop,
-  Category,
-  Info,
-  CalendarToday,
-  VerifiedUser,
+  Download,
+  RadioButtonChecked,
+  Refresh,
   Warning,
   CheckCircle,
-  Error,
-  ExpandLess,
-  ExpandMore,
-  ShowChart,
+  Info,
+  OpenInNew,
 } from '@mui/icons-material';
-// Custom scroll hook for impressive animations
-const useScrollTransitions = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  
-  useEffect(() => {
-    let ticking = false;
-    
-    const updateScroll = () => {
-      setScrollY(window.scrollY);
-      // Calculate scroll progress for first 600px of scroll
-      const progress = Math.min(window.scrollY / 600, 1);
-      setScrollProgress(progress);
-      ticking = false;
-    };
-    
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateScroll);
-        ticking = true;
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
-  return { scrollY, scrollProgress };
-};
-import { supabase } from '../../services/supabaseClient';
-import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
-import { getCategoryIconConfig } from './CategoryIcons';
-import IntegrationCostBadge from './IntegrationCostBadge';
-import { getIntegrationCost, estimateIntegrationCost } from '../../services/integrationCostData';
+import { keyframes } from '@mui/system';
+import YearSelector from './YearSelector';
+import { getEstimatedMarketData } from '../../services/marketDataEstimator';
+import type { EstimatedMarketData, EstimatedProcedure } from '../../services/marketDataEstimator';
+import PremiumContainer from '../Premium/PremiumContainer';
+import IntegrationCalculator from './IntegrationCalculator';
+import ProcedureDetailsModal from './ProcedureDetailsModal';
 
-// Removed EnhancedCockpitGauge - using SupremeGauge for exact supremedash replica
+const pulseAnimation = keyframes`
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+`;
 
-// Year Selector Component
-const YearSelector: React.FC<{
-  selectedYear: number;
-  onChange: (year: number) => void;
-}> = ({ selectedYear, onChange }) => {
-  const theme = useTheme();
-  const years = [2025, 2026, 2027, 2028, 2029, 2030];
-  
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <CalendarToday sx={{ fontSize: 20, color: theme.palette.text.secondary }} />
-      <ButtonGroup size="small" variant="outlined">
-        {years.map(year => (
-          <Button
-            key={year}
-            variant={selectedYear === year ? 'contained' : 'outlined'}
-            onClick={() => onChange(year)}
-            sx={{
-              minWidth: 60,
-              fontSize: '0.75rem',
-              py: 0.5,
-            }}
-          >
-            {year}
-          </Button>
-        ))}
-      </ButtonGroup>
-    </Box>
-  );
-};
+const PulsingDot = styled(Circle)(({ theme }) => ({
+  animation: `${pulseAnimation} 2s ease-in-out infinite`,
+}));
 
-// Compact Categories Component - Memoized for performance
-const CompactCategories = React.memo<{
-  categories: any[];
-  selectedCategory: string | null;
-  onCategorySelect: (category: string | null) => void;
-  selectedIndustry: 'all' | 'dental' | 'aesthetic';
-  procedures: any[];
-}>(({ categories, selectedCategory, onCategorySelect, selectedIndustry, procedures }) => {
-  const theme = useTheme();
-  const [expanded, setExpanded] = useState(false);
-  
-  const filteredCategories = categories
-    .filter(cat => selectedIndustry === 'all' || cat.industry === selectedIndustry)
-    .filter(cat => {
-      const procedureCount = procedures
-        .filter(p => p.category === cat.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
-        .length;
-      return procedureCount > 0;
-    })
-    .slice(0, expanded ? undefined : 6);
-  
-  return (
-    <PremiumContainer sx={{ height: expanded ? 'auto' : 250, transition: 'height 0.3s', p: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-            Categories
-          </Typography>
-          <IconButton size="small" onClick={() => setExpanded(!expanded)}>
-            {expanded ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </Box>
-        
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {filteredCategories.map((category, index) => {
-            const procedureCount = procedures
-              .filter(p => p.category === category.name && (selectedIndustry === 'all' || p.industry === selectedIndustry))
-              .length;
-            const iconConfig = getCategoryIconConfig(category.name);
-            const IconComponent = iconConfig.icon;
-            
-            return (
-              <Chip
-                key={`${category.id}-${index}`}
-                icon={<IconComponent sx={{ fontSize: 16 }} />}
-                label={`${category.name} (${procedureCount})`}
-                onClick={() => onCategorySelect(selectedCategory === category.name ? null : category.name)}
-                sx={{
-                  bgcolor: selectedCategory === category.name ? alpha(iconConfig.color, 0.2) : 'transparent',
-                  border: `1px solid ${selectedCategory === category.name ? iconConfig.color : alpha(theme.palette.divider, 0.3)}`,
-                  '&:hover': {
-                    bgcolor: alpha(iconConfig.color, 0.1),
-                    borderColor: iconConfig.color,
-                  },
-                }}
-              />
-            );
-          })}
-        </Box>
-    </PremiumContainer>
-  );
-});
+interface IntegrationData {
+  upfront_cost: number;
+  ongoing_cost: number;
+  commission_percentage: number;
+  projected_revenue: number;
+  roi_percentage: number;
+  roi_months: number;
+}
 
-// Confidence Badge Component
-const ConfidenceBadge: React.FC<{ score?: number }> = ({ score = 75 }) => {
-  const theme = useTheme();
-  
-  const getConfig = (score: number) => {
-    if (score >= 80) return { color: theme.palette.success.main, icon: CheckCircle, label: 'High' };
-    if (score >= 60) return { color: theme.palette.warning.main, icon: Warning, label: 'Medium' };
-    return { color: theme.palette.error.main, icon: Error, label: 'Low' };
+const calculateIntegrationData = (
+  averageProcedureCost: number,
+  growthRate: number,
+  proceduresPerMonth: number = 50
+): IntegrationData => {
+  const upfrontCost = 15000 + Math.random() * 10000;
+  const ongoingCost = 2000 + Math.random() * 1000;
+  const commissionPercentage = 12 + Math.random() * 3;
+  const monthlyRevenue = proceduresPerMonth * averageProcedureCost * (commissionPercentage / 100);
+  const yearlyRevenue = monthlyRevenue * 12 * (1 + growthRate / 100);
+  const totalCost = upfrontCost + (ongoingCost * 12);
+  const netRevenue = yearlyRevenue - totalCost;
+  const roiPercentage = (netRevenue / totalCost) * 100;
+  const roiMonths = Math.ceil(totalCost / monthlyRevenue);
+
+  return {
+    upfront_cost: Math.round(upfrontCost),
+    ongoing_cost: Math.round(ongoingCost),
+    commission_percentage: Math.round(commissionPercentage * 10) / 10,
+    projected_revenue: Math.round(yearlyRevenue),
+    roi_percentage: Math.round(roiPercentage),
+    roi_months: roiMonths,
   };
-  
-  const config = getConfig(score);
-  const Icon = config.icon;
-  
-  return (
-    <Tooltip title={`Confidence Score: ${score}%`}>
-      <Chip
-        icon={<Icon sx={{ fontSize: 14 }} />}
-        label={`${score}%`}
-        size="small"
-        sx={{
-          height: 20,
-          fontSize: '0.7rem',
-          bgcolor: alpha(config.color, 0.1),
-          color: config.color,
-          border: `1px solid ${alpha(config.color, 0.3)}`,
-          '& .MuiChip-icon': {
-            fontSize: 14,
-            marginLeft: '4px',
-          },
-        }}
-      />
-    </Tooltip>
-  );
 };
-
-// Territory data component with premium styling
-const TerritoryPremiumData = React.memo<{ territories: any[] }>(({ territories }) => {
-  const theme = useTheme();
-  
-  return (
-    <PremiumContainer
-      sx={{
-        background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.05)} 0%, ${alpha(theme.palette.error.main, 0.05)} 100%)`,
-        position: 'relative',
-        overflow: 'visible',
-        p: 2,
-      }}
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: -10,
-          right: -10,
-          background: theme.palette.warning.main,
-          color: 'white',
-          px: 1,
-          py: 0.5,
-          borderRadius: 1,
-          fontSize: 12,
-          fontWeight: 'bold',
-          zIndex: 2,
-        }}
-      >
-        PREMIUM
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <PinDrop sx={{ mr: 1, color: theme.palette.warning.main }} />
-        <Typography variant="h6">Territory Intelligence</Typography>
-        <Chip
-          label="LIVE"
-          size="small"
-          sx={{
-            ml: 1,
-            background: theme.palette.success.main,
-            color: 'white',
-            fontSize: 10,
-            opacity: 0.9,
-          }}
-        />
-      </Box>
-      
-      {territories.map((territory, index) => (
-        <Box key={index} sx={{ mb: 2, p: 1, background: alpha(theme.palette.background.paper, 0.5), borderRadius: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-              {territory.name}
-            </Typography>
-            <Chip
-              label={`$${territory.marketSize}M`}
-              size="small"
-              sx={{ background: theme.palette.warning.main, color: 'white' }}
-            />
-          </Box>
-          <Typography variant="caption" color="text.secondary">
-            {territory.procedures} procedures • {territory.companies} companies
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={territory.saturation}
-            sx={{
-              mt: 1,
-              height: 4,
-              backgroundColor: alpha(theme.palette.warning.main, 0.2),
-              '& .MuiLinearProgress-bar': {
-                backgroundColor: theme.palette.warning.main,
-              },
-            }}
-          />
-        </Box>
-      ))}
-    </PremiumContainer>
-  );
-});
 
 const EnhancedMarketCommandCenter: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { scrollY, scrollProgress } = useScrollTransitions();
-  const [marketData, setMarketData] = useState<ComprehensiveMarketData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState(2025);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState<'all' | 'dental' | 'aesthetic'>('all');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const [viewMode, setViewMode] = useState<'procedures' | 'companies'>('procedures');
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'market_size_2025_usd_millions',
-    direction: 'desc',
-  });
-  const [liveData, setLiveData] = useState(true);
-  const [selectedProcedure, setSelectedProcedure] = useState<any | null>(null);
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [marketData, setMarketData] = useState<EstimatedMarketData | null>(null);
+  const [liveData, setLiveData] = useState(false);
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
-  
-  // Calculate animation values based on scroll
-  const gaugeScale = useMemo(() => 1 - (scrollProgress * 0.15), [scrollProgress]);
-  const gaugeOpacity = useMemo(() => 1 - (scrollProgress * 1.2), [scrollProgress]);
-  const territoryTranslateX = useMemo(() => -scrollProgress * 100, [scrollProgress]);
-  const categoryTranslateX = useMemo(() => scrollProgress * 100, [scrollProgress]);
-  const componentBlur = useMemo(() => scrollProgress * 10, [scrollProgress]);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedProcedure, setSelectedProcedure] = useState<EstimatedProcedure | null>(null);
 
-  // Handle scroll to collapse header
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setHeaderCollapsed(scrollY > 200);
+      setHeaderCollapsed(window.scrollY > 100);
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch data
-  const fetchAllData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const comprehensiveData = await comprehensiveDataService.getComprehensiveMarketData();
-      setMarketData(comprehensiveData);
-    } catch (error) {
-      console.error('Error fetching comprehensive data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const data = getEstimatedMarketData(selectedYear);
+        setMarketData(data);
+        setLastUpdate(new Date());
+      } catch (error) {
+        console.error('Error loading market data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [selectedYear]);
 
   useEffect(() => {
-    fetchAllData();
-    
-    const interval = setInterval(() => {
-      if (liveData) {
-        fetchAllData();
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [fetchAllData, liveData]);
-
-  // Calculate market metrics with year filtering
-  const marketMetrics = useMemo(() => {
-    if (!marketData || marketData.procedures.length === 0) {
-      return {
-        totalMarketSize: 134866,
-        averageGrowth: 12.5,
-        totalCompanies: 156,
-        averageCost: 2850,
-        totalProcedures: 367,
-      };
+    if (liveData) {
+      const interval = setInterval(() => {
+        if (marketData) {
+          const updatedData = { ...marketData };
+          updatedData.procedures = updatedData.procedures.map(proc => ({
+            ...proc,
+            market_size_usd: proc.market_size_usd * (0.98 + Math.random() * 0.04),
+            growth_rate: proc.growth_rate + (Math.random() - 0.5) * 0.5,
+          }));
+          setMarketData(updatedData);
+          setLastUpdate(new Date());
+        }
+      }, 5000);
+      return () => clearInterval(interval);
     }
+  }, [liveData, marketData]);
 
-    // Filter by industry and calculate for selected year
-    const filteredProcedures = marketData.procedures.filter(p => 
-      selectedIndustry === 'all' || p.industry === selectedIndustry
-    );
+  const filteredProcedures = useMemo(() => {
+    if (!marketData) return [];
+    
+    return marketData.procedures.filter(proc => {
+      const matchesSearch = searchTerm === '' || 
+        proc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        proc.category.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesIndustry = selectedIndustry === 'all' || proc.industry === selectedIndustry;
+      
+      return matchesSearch && matchesIndustry;
+    });
+  }, [marketData, searchTerm, selectedIndustry]);
 
-    const marketSizeField = `market_size_${selectedYear}_usd_millions`;
-    const totalMarketSize = filteredProcedures.reduce((sum, p) => 
-      sum + (p[marketSizeField] || p.market_size_2025_usd_millions || 0), 0
-    );
-
-    const averageGrowth = filteredProcedures.length > 0
-      ? filteredProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / filteredProcedures.length
+  const marketMetrics = useMemo(() => {
+    const procedures = selectedIndustry === 'all' 
+      ? marketData?.procedures || []
+      : marketData?.procedures.filter(p => p.industry === selectedIndustry) || [];
+    
+    const totalMarketSize = procedures.reduce((sum, proc) => sum + proc.market_size_usd, 0);
+    const averageGrowth = procedures.length > 0
+      ? procedures.reduce((sum, proc) => sum + proc.growth_rate, 0) / procedures.length
       : 0;
-
-    const averageCost = filteredProcedures.length > 0
-      ? filteredProcedures.reduce((sum, p) => sum + (p.average_cost_usd || 0), 0) / filteredProcedures.length
-      : 0;
-
-    const filteredCompanies = marketData.companies.filter(c =>
-      selectedIndustry === 'all' || c.industry === selectedIndustry
-    );
-
+    const totalCompanies = procedures.reduce((sum, proc) => sum + proc.top_companies.length, 0);
+    
     return {
       totalMarketSize,
       averageGrowth,
-      totalCompanies: filteredCompanies.length,
-      averageCost,
-      totalProcedures: filteredProcedures.length,
+      totalCompanies,
+      procedureCount: procedures.length,
     };
-  }, [marketData, selectedIndustry, selectedYear]);
+  }, [marketData, selectedIndustry]);
 
-  // Filter procedures
-  const filteredProcedures = useMemo(() => {
-    const procedures = marketData?.procedures || [];
-    
-    let filtered = procedures.filter(p => {
-      const procedureName = p.procedure_name || p.name || '';
-      const category = p.category || p.normalized_category || p.clinical_category || '';
-      
-      const matchesSearch = procedureName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           category.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesIndustry = selectedIndustry === 'all' || p.industry === selectedIndustry;
-      const matchesCategory = !selectedCategory || category === selectedCategory;
-      
-      return matchesSearch && matchesIndustry && matchesCategory;
-    });
-
-    // Sort
-    filtered.sort((a, b) => {
-      let aValue = a[sortConfig.key];
-      let bValue = b[sortConfig.key];
-      
-      // Handle year-specific market size
-      if (sortConfig.key === 'market_size') {
-        const field = `market_size_${selectedYear}_usd_millions`;
-        aValue = a[field] || a.market_size_2025_usd_millions || 0;
-        bValue = b[field] || b.market_size_2025_usd_millions || 0;
+  const handleRefresh = () => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const data = getEstimatedMarketData(selectedYear);
+        setMarketData(data);
+        setLastUpdate(new Date());
+      } catch (error) {
+        console.error('Error loading market data:', error);
+      } finally {
+        setLoading(false);
       }
-      
-      // Handle integration cost sorting
-      if (sortConfig.key === 'integration_cost') {
-        const aName = a.procedure_name || a.name || '';
-        const bName = b.procedure_name || b.name || '';
-        const aData = getIntegrationCost(aName) || estimateIntegrationCost(a.category || '', 5);
-        const bData = getIntegrationCost(bName) || estimateIntegrationCost(b.category || '', 5);
-        aValue = aData.max || 0;
-        bValue = bData.max || 0;
-      }
-      
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-      
-      return sortConfig.direction === 'asc' 
-        ? String(aValue || '').localeCompare(String(bValue || ''))
-        : String(bValue || '').localeCompare(String(aValue || ''));
-    });
-
-    return filtered;
-  }, [marketData, searchTerm, selectedIndustry, selectedCategory, sortConfig, selectedYear]);
-
-  const handleSort = (key: string) => {
-    setSortConfig(prev => ({
-      key,
-      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
+    };
+    loadData();
   };
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        <CircularProgress size={60} />
-        <Typography variant="h6" sx={{ ml: 2 }}>
-          Loading Enhanced Market Intelligence...
-        </Typography>
-      </Box>
-    );
-  }
+  const handleProcedureClick = (procedure: EstimatedProcedure) => {
+    setSelectedProcedure(procedure);
+    setDetailsModalOpen(true);
+  };
+
+  const formatMarketSize = (size: number): string => {
+    if (size >= 1e9) return `$${(size / 1e9).toFixed(2)}B`;
+    if (size >= 1e6) return `$${(size / 1e6).toFixed(2)}M`;
+    return `$${(size / 1e3).toFixed(2)}K`;
+  };
 
   return (
-    <Box sx={{ 
-      paddingTop: '120px', // Add space for navbar
-      minHeight: '100vh',
-      background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-      padding: '0 2rem', // Increased padding for more space
-    }}>
-      <PremiumContainer sx={{ 
-        width: '100%',
-        maxWidth: '1400px', // Same as navbar
-        margin: '0 auto',
-        minHeight: 'calc(100vh - 120px)',
-        p: 0,
-      }}>
-        {/* Fixed Header for better performance */}
+    <PremiumContainer sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Header with gradient background */}
         <AppBar 
-        position="fixed" 
-        color="default" 
-        elevation={0}
-        sx={{
-          top: 0,
-          left: 0,
-          right: 0,
-          width: '100%',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          transition: 'all 0.3s',
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
-          borderBottom: headerCollapsed ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none',
-        }}
-      >
-        <Toolbar sx={{ minHeight: headerCollapsed ? 64 : 'auto', py: headerCollapsed ? 0 : 2 }}>
-          <Box sx={{ width: '100%' }}>
-            {/* Collapsed State */}
-            <Collapse in={headerCollapsed}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-                <Typography variant="h6" sx={{ 
-                  fontWeight: 'bold',
-                  fontFamily: "'Orbitron', monospace",
-                  letterSpacing: '-0.5px',
-                }}>
-                  Medical Device Sales Intelligence
-                </Typography>
-                
-                <TextField
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  size="small"
-                  sx={{ flex: 1, maxWidth: 400 }}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
-                  }}
-                />
-                
-                <ButtonGroup size="small">
-                  <Button
-                    variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
-                    onClick={() => setSelectedIndustry('all')}
-                  >
-                    All
-                  </Button>
-                  <Button
-                    variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
-                    onClick={() => setSelectedIndustry('dental')}
-                  >
-                    Dental
-                  </Button>
-                  <Button
-                    variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
-                    onClick={() => setSelectedIndustry('aesthetic')}
-                  >
-                    Aesthetic
-                  </Button>
-                </ButtonGroup>
-                
-                <YearSelector selectedYear={selectedYear} onChange={setSelectedYear} />
-                
-                {/* Quick Stats */}
-                <Box sx={{ display: 'flex', gap: 2, ml: 'auto' }}>
-                  <Chip
-                    icon={<AttachMoney />}
-                    label={`$${(marketMetrics.totalMarketSize / 1000).toFixed(1)}B`}
-                    color="primary"
-                    size="small"
-                  />
-                  <Chip
-                    icon={<ShowChart />}
-                    label={`${marketMetrics.averageGrowth.toFixed(1)}%`}
-                    color="success"
-                    size="small"
-                  />
-                  <Chip
-                    icon={<Business />}
-                    label={marketMetrics.totalCompanies}
-                    color="info"
-                    size="small"
-                  />
-                </Box>
-              </Box>
-            </Collapse>
-            
-            {/* Expanded State */}
-            <Collapse in={!headerCollapsed}>
-              <Box>
-                {/* Title Row */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h3" sx={{ 
-                      fontWeight: 'bold', 
-                      mr: 2,
-                      fontFamily: "'Orbitron', monospace",
-                      letterSpacing: '-0.5px',
-                      background: 'linear-gradient(135deg, #9f58fa 0%, #4B96DC 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}>
-                      Medical Device Sales Intelligence 2025-30
-                    </Typography>
-                    <Chip
-                      icon={<RadioButtonChecked />}
-                      label="LIVE DATA"
-                      sx={{
-                        background: theme.palette.success.main,
-                        color: 'white',
-                        fontWeight: 'bold',
-                        opacity: 0.95,
-                      }}
-                    />
-                  </Box>
+          position="static" 
+          elevation={0}
+          sx={{ 
+            background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)',
+            borderRadius: headerCollapsed ? '8px' : '16px 16px 0 0',
+            transition: 'all 0.3s ease',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'linear-gradient(45deg, transparent 30%, rgba(159, 88, 250, 0.1) 50%, transparent 70%)',
+              animation: 'scan 4s ease-in-out infinite',
+              pointerEvents: 'none',
+            },
+            '@keyframes scan': {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' },
+            },
+          }}
+        >
+          <Toolbar sx={{ minHeight: headerCollapsed ? 64 : 'auto', py: headerCollapsed ? 1 : 2 }}>
+            <Box sx={{ width: '100%' }}>
+              {/* Collapsed State */}
+              <Collapse in={headerCollapsed}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                  <Typography variant="h6" sx={{ 
+                    fontWeight: 'bold',
+                    fontFamily: "'Orbitron', monospace",
+                    letterSpacing: '-0.5px',
+                    flexShrink: 0,
+                  }}>
+                    Medical Device Sales Intelligence
+                  </Typography>
                   
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={liveData}
-                        onChange={(e) => setLiveData(e.target.checked)}
-                        color="success"
-                      />
-                    }
-                    label="Live Updates"
-                  />
-                </Box>
-                
-                {/* Search and Filters Row */}
-                <Box sx={{ 
-                  display: 'flex', 
-                  gap: 2, 
-                  alignItems: 'center', 
-                  mb: 3,
-                  flexWrap: { xs: 'wrap', md: 'nowrap' },
-                }}>
                   <TextField
-                    placeholder="Search procedures, categories..."
+                    placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    size="small"
+                    sx={{ flex: 1, maxWidth: 400 }}
                     InputProps={{
                       startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
                     }}
-                    sx={{ 
-                      minWidth: { xs: '100%', sm: 400 },
-                      mb: { xs: 2, md: 0 }
-                    }}
                   />
                   
-                  <ButtonGroup>
+                  <ButtonGroup size="small">
                     <Button
                       variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
                       onClick={() => setSelectedIndustry('all')}
                     >
-                      All ({marketData?.procedures.length || 0})
+                      All
                     </Button>
                     <Button
                       variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
                       onClick={() => setSelectedIndustry('dental')}
                     >
-                      Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
+                      Dental
                     </Button>
                     <Button
                       variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
                       onClick={() => setSelectedIndustry('aesthetic')}
                     >
-                      Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
+                      Aesthetic
                     </Button>
                   </ButtonGroup>
                   
                   <YearSelector selectedYear={selectedYear} onChange={setSelectedYear} />
                   
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={viewMode === 'companies'}
-                        onChange={(e) => setViewMode(e.target.checked ? 'companies' : 'procedures')}
-                        color="primary"
-                      />
-                    }
-                    label={viewMode === 'companies' ? 'Companies' : 'Procedures'}
-                    sx={{ ml: 'auto' }}
-                  />
-                </Box>
-                
-                {/* Components now moved to main content area with animations */}
-              </Box>
-            </Collapse>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      
-      {/* Main Content with Animated Sections */}
-      <Box sx={{ mt: headerCollapsed ? 8 : 0, transition: 'margin-top 0.3s' }}>
-        {/* Glass Morphism Overlay */}
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '100vh',
-            background: `linear-gradient(to bottom, 
-              transparent 0%, 
-              ${alpha(theme.palette.background.default, scrollProgress * 0.7)} 50%,
-              ${alpha(theme.palette.background.default, scrollProgress * 0.9)} 100%
-            )`,
-            pointerEvents: 'none',
-            zIndex: 5,
-            transition: 'opacity 0.6s ease',
-            opacity: scrollProgress > 0.1 ? 1 : 0,
-          }}
-        />
-        
-        {/* Animated Components Section */}
-        <Box 
-          sx={{ 
-            position: 'sticky',
-            top: headerCollapsed ? '80px' : '0px',
-            zIndex: 10,
-            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-            opacity: gaugeOpacity > 0 ? 1 : 0,
-            pointerEvents: gaugeOpacity > 0.1 ? 'auto' : 'none',
-            transform: `translateY(${scrollY > 100 ? -scrollY * 0.3 : 0}px)`,
-          }}
-        >
-          {/* Gauges Section with Parallax */}
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  transform: `scale(${gaugeScale}) translateZ(0)`,
-                  filter: `blur(${componentBlur}px)`,
-                  opacity: gaugeOpacity,
-                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  willChange: 'transform, opacity, filter',
-                }}
-              >
-                <PremiumContainer sx={{ p: 3, background: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.8) : alpha(theme.palette.background.paper, 0.95) }}>
-                  <Box sx={{ 
-                    display: 'grid',
-                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
-                    gap: 2,
-                    justifyItems: 'center',
-                  }}>
-                    <SupremeGauge
-                      value={marketMetrics.totalMarketSize}
-                      max={200000}
-                      label="Market Size"
-                      unit="M"
-                      color={theme.palette.primary.main}
-                      size={isMobile ? 140 : 180}
-                      isLive={liveData}
+                  {/* Quick Stats */}
+                  <Box sx={{ display: 'flex', gap: 2, ml: 'auto' }}>
+                    <Chip
+                      icon={<AttachMoney />}
+                      label={`$${(marketMetrics.totalMarketSize / 1000).toFixed(1)}B`}
+                      color="primary"
+                      size="small"
                     />
-                    <SupremeGauge
-                      value={marketMetrics.averageGrowth}
-                      max={30}
-                      label="Avg Growth"
-                      unit="%"
-                      color={theme.palette.success.main}
-                      size={isMobile ? 140 : 180}
-                      isLive={liveData}
+                    <Chip
+                      icon={<ShowChart />}
+                      label={`${marketMetrics.averageGrowth.toFixed(1)}%`}
+                      color="success"
+                      size="small"
                     />
-                    <SupremeGauge
-                      value={marketMetrics.totalProcedures}
-                      max={1000}
-                      label="Procedures"
-                      unit=""
-                      color={theme.palette.info.main}
-                      size={isMobile ? 140 : 180}
-                      isLive={liveData}
-                    />
-                    <SupremeGauge
-                      value={marketMetrics.totalCompanies}
-                      max={300}
-                      label="Companies"
-                      unit=""
-                      color={theme.palette.warning.main}
-                      size={isMobile ? 140 : 180}
-                      isLive={liveData}
+                    <Chip
+                      icon={<Business />}
+                      label={marketMetrics.totalCompanies}
+                      color="info"
+                      size="small"
                     />
                   </Box>
-                </PremiumContainer>
-              </Box>
-            </Grid>
-          </Grid>
+                </Box>
+              </Collapse>
+              
+              {/* Expanded State */}
+              <Collapse in={!headerCollapsed}>
+                <Box>
+                  {/* Title Row */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="h3" sx={{ 
+                        fontWeight: 'bold', 
+                        mr: 2,
+                        fontFamily: "'Orbitron', monospace",
+                        letterSpacing: '-0.5px',
+                        background: 'linear-gradient(135deg, #9f58fa 0%, #4B96DC 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                      }}>
+                        Medical Device Sales Intelligence 2025-30
+                      </Typography>
+                      <Chip
+                        icon={<RadioButtonChecked />}
+                        label={liveData ? "LIVE" : "STATIC"}
+                        color={liveData ? "success" : "default"}
+                        sx={{ 
+                          fontWeight: 'bold',
+                          animation: liveData ? `${pulseAnimation} 2s ease-in-out infinite` : 'none',
+                        }}
+                      />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Last updated: {lastUpdate.toLocaleTimeString()}
+                      </Typography>
+                      <Tooltip title="Refresh data">
+                        <IconButton onClick={handleRefresh} size="small">
+                          <Refresh />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Export data">
+                        <IconButton size="small">
+                          <Download />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </Box>
+                  
+                  {/* Controls Row */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 2, 
+                    mb: 3,
+                    flexWrap: 'wrap',
+                    alignItems: 'center'
+                  }}>
+                    <TextField
+                      placeholder="Search procedures, categories..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      fullWidth
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
+                      }}
+                      sx={{ maxWidth: { xs: '100%', md: 500 } }}
+                    />
+                    
+                    <ButtonGroup>
+                      <Button
+                        variant={selectedIndustry === 'all' ? 'contained' : 'outlined'}
+                        onClick={() => setSelectedIndustry('all')}
+                      >
+                        All ({marketData?.procedures.length || 0})
+                      </Button>
+                      <Button
+                        variant={selectedIndustry === 'dental' ? 'contained' : 'outlined'}
+                        onClick={() => setSelectedIndustry('dental')}
+                      >
+                        Dental ({marketData?.procedures.filter(p => p.industry === 'dental').length || 0})
+                      </Button>
+                      <Button
+                        variant={selectedIndustry === 'aesthetic' ? 'contained' : 'outlined'}
+                        onClick={() => setSelectedIndustry('aesthetic')}
+                      >
+                        Aesthetic ({marketData?.procedures.filter(p => p.industry === 'aesthetic').length || 0})
+                      </Button>
+                    </ButtonGroup>
+                    
+                    <YearSelector selectedYear={selectedYear} onChange={setSelectedYear} />
+                    
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={liveData}
+                          onChange={(e) => setLiveData(e.target.checked)}
+                          color="success"
+                        />
+                      }
+                      label="Live Updates"
+                      sx={{ ml: 'auto' }}
+                    />
+                  </Box>
+                  
+                  {/* Market Overview Cards */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
+                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <AttachMoney sx={{ mr: 1, color: theme.palette.primary.main }} />
+                        <Typography variant="subtitle2" color="text.secondary">Total Market Size</Typography>
+                      </Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                        ${(marketMetrics.totalMarketSize / 1e9).toFixed(2)}B
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {selectedYear} Projection
+                      </Typography>
+                    </Paper>
+                    
+                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <TrendingUp sx={{ mr: 1, color: theme.palette.success.main }} />
+                        <Typography variant="subtitle2" color="text.secondary">Average Growth</Typography>
+                      </Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold', color: theme.palette.success.main }}>
+                        {marketMetrics.averageGrowth.toFixed(1)}%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        YoY CAGR
+                      </Typography>
+                    </Paper>
+                    
+                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Assessment sx={{ mr: 1, color: theme.palette.info.main }} />
+                        <Typography variant="subtitle2" color="text.secondary">Active Procedures</Typography>
+                      </Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                        {marketMetrics.procedureCount}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Tracked Categories
+                      </Typography>
+                    </Paper>
+                    
+                    <Paper sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Business sx={{ mr: 1, color: theme.palette.warning.main }} />
+                        <Typography variant="subtitle2" color="text.secondary">Top Companies</Typography>
+                      </Box>
+                      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                        {marketMetrics.totalCompanies}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Market Leaders
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </Box>
+              </Collapse>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        
+        {/* Main Content */}
+        <Box sx={{ flexGrow: 1, p: 3, backgroundColor: theme.palette.background.default }}>
+          {loading && <LinearProgress sx={{ mb: 2 }} />}
           
-          {/* Territory and Categories with Slide Effects */}
-          <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: 3 }}>
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  transform: `translateX(${territoryTranslateX}px) translateZ(0)`,
-                  filter: `blur(${componentBlur}px)`,
-                  opacity: gaugeOpacity,
-                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                  willChange: 'transform, opacity, filter',
-                }}
-              >
-                <TerritoryPremiumData territories={marketData?.territories || []} />
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box
-                sx={{
-                  transform: `translateX(${categoryTranslateX}px) translateZ(0)`,
-                  filter: `blur(${componentBlur}px)`,
-                  opacity: gaugeOpacity,
-                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                  willChange: 'transform, opacity, filter',
-                }}
-              >
-                <CompactCategories
-                  categories={marketData?.categories || []}
-                  selectedCategory={selectedCategory}
-                  onCategorySelect={setSelectedCategory}
-                  selectedIndustry={selectedIndustry}
-                  procedures={marketData?.procedures || []}
-                />
-              </Box>
-            </Grid>
-          </Grid>
+          {/* Alerts */}
+          {liveData && (
+            <Alert 
+              severity="info" 
+              icon={<Info />}
+              sx={{ mb: 2 }}
+            >
+              Live data updates are enabled. Market values refresh every 5 seconds with simulated real-time changes.
+            </Alert>
+          )}
+          
+          {/* Data Table */}
+          <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 400px)' }}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Procedure</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell align="right">Market Size ({selectedYear})</TableCell>
+                  <TableCell align="right">Growth Rate</TableCell>
+                  <TableCell align="right">Avg. Cost</TableCell>
+                  <TableCell>Top Companies</TableCell>
+                  <TableCell align="center">ROI Analysis</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredProcedures.map((procedure, index) => {
+                  const integrationData = calculateIntegrationData(
+                    procedure.average_cost_usd,
+                    procedure.growth_rate
+                  );
+                  const procedureName = `${procedure.name} (${procedure.industry})`;
+                  
+                  return (
+                    <TableRow 
+                      key={`${procedure.name}-${procedure.industry}-${index}`}
+                      hover
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => handleProcedureClick(procedure)}
+                    >
+                      <TableCell>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                            {procedure.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {procedure.industry === 'dental' ? '🦷' : '💉'} {procedure.industry}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={procedure.category} size="small" variant="outlined" />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                          {formatMarketSize(procedure.market_size_usd)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                          <TrendingUp sx={{ fontSize: 16, mr: 0.5, color: procedure.growth_rate > 10 ? theme.palette.success.main : theme.palette.text.secondary }} />
+                          <Typography 
+                            variant="body2" 
+                            color={procedure.growth_rate > 10 ? 'success.main' : 'text.primary'}
+                            sx={{ fontWeight: procedure.growth_rate > 10 ? 'bold' : 'normal' }}
+                          >
+                            {procedure.growth_rate.toFixed(1)}%
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="right">
+                        ${procedure.average_cost_usd.toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                          {procedure.top_companies.slice(0, 3).map((company, idx) => (
+                            <Chip
+                              key={idx}
+                              label={company}
+                              size="small"
+                              sx={{ fontSize: '0.75rem' }}
+                            />
+                          ))}
+                          {procedure.top_companies.length > 3 && (
+                            <Chip
+                              label={`+${procedure.top_companies.length - 3}`}
+                              size="small"
+                              variant="outlined"
+                              sx={{ fontSize: '0.75rem' }}
+                            />
+                          )}
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IntegrationCalculator
+                          upfrontCost={integrationData.upfront_cost}
+                          ongoingCost={integrationData.ongoing_cost}
+                          commissionPercentage={integrationData.commission_percentage}
+                          projectedRevenue={integrationData.projected_revenue}
+                          roi_percentage={integrationData.roi_percentage}
+                          roi_months={integrationData.roi_months}
+                          procedureName={procedureName}
+                          averageProcedureCost={procedure.average_cost_usd}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Circle sx={{ 
+                          color: theme.palette.success.main, 
+                          fontSize: 12,
+                          opacity: 0.8,
+                        }} />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
         
-        {/* Data Table */}
-        <TableContainer 
-          component={Paper} 
-          sx={{ 
-            maxHeight: '60vh', 
-            mt: 3,
-            mx: 3,
-            mb: 3,
-            backgroundColor: alpha(theme.palette.background.paper, 0.6),
-            backdropFilter: 'blur(10px)',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            transition: 'all 0.3s ease',
-          }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {viewMode === 'procedures' ? (
-                  <>
-                    <TableCell>
-                      <TableSortLabel
-                        active={sortConfig.key === 'procedure_name'}
-                        direction={sortConfig.direction}
-                        onClick={() => handleSort('procedure_name')}
-                      >
-                        Procedure
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>Industry</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell align="center">Confidence</TableCell>
-                    <TableCell align="right">
-                      <TableSortLabel
-                        active={sortConfig.key === 'market_size'}
-                        direction={sortConfig.direction}
-                        onClick={() => handleSort('market_size')}
-                      >
-                        Market Size ({selectedYear})
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell align="right">
-                      <TableSortLabel
-                        active={sortConfig.key === 'yearly_growth_percentage'}
-                        direction={sortConfig.direction}
-                        onClick={() => handleSort('yearly_growth_percentage')}
-                      >
-                        Growth %
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell align="right">5-Year CAGR</TableCell>
-                    <TableCell align="right">
-                      <TableSortLabel
-                        active={sortConfig.key === 'average_cost_usd'}
-                        direction={sortConfig.direction}
-                        onClick={() => handleSort('average_cost_usd')}
-                      >
-                        Avg Cost
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell align="center">
-                      <TableSortLabel
-                        active={sortConfig.key === 'integration_cost'}
-                        direction={sortConfig.direction}
-                        onClick={() => handleSort('integration_cost')}
-                      >
-                        Integration Cost
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell align="center">Status</TableCell>
-                  </>
-                ) : (
-                  <>
-                    <TableCell>Company</TableCell>
-                    <TableCell>Industry</TableCell>
-                    <TableCell>Headquarters</TableCell>
-                    <TableCell align="center">Confidence</TableCell>
-                    <TableCell align="right">Market Size</TableCell>
-                    <TableCell align="right">Growth %</TableCell>
-                    <TableCell align="right">Market Share</TableCell>
-                    <TableCell align="center">Status</TableCell>
-                  </>
-                )}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredProcedures.map((procedure, index) => {
-                const marketSizeField = `market_size_${selectedYear}_usd_millions`;
-                const marketSize = procedure[marketSizeField] || procedure.market_size_2025_usd_millions || 0;
-                const confidence = procedure.confidence_score || Math.floor(Math.random() * 40) + 60;
-                
-                // Calculate 5-year CAGR
-                const startSize = procedure.market_size_2025_usd_millions || marketSize;
-                const endSize = procedure.market_size_2030_usd_millions || marketSize * 1.5;
-                const cagr = startSize > 0 ? (Math.pow(endSize / startSize, 1/5) - 1) * 100 : 0;
-                
-                // Get integration cost data
-                const procedureName = procedure.procedure_name || procedure.name || '';
-                const integrationData = procedure.integration_cost_min && procedure.integration_cost_max 
-                  ? {
-                      min: procedure.integration_cost_min,
-                      max: procedure.integration_cost_max,
-                      equipment_min: procedure.integration_equipment_min,
-                      equipment_max: procedure.integration_equipment_max,
-                      training: procedure.integration_training_cost,
-                      confidence: procedure.integration_confidence,
-                      roi_months: procedure.integration_roi_months
-                    }
-                  : getIntegrationCost(procedureName) || estimateIntegrationCost(procedure.category || '', 5);
-                
-                return (
-                  <TableRow
-                    key={`procedure-${procedure.id || index}`}
-                    hover
-                    onClick={() => {
-                      setSelectedProcedure(procedure);
-                      setDetailsModalOpen(true);
-                    }}
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': {
-                        background: alpha(theme.palette.primary.main, 0.05),
-                      },
-                    }}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <MedicalServices 
-                          sx={{ 
-                            mr: 1, 
-                            color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
-                          }} 
-                        />
-                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                          {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={procedure.industry === 'dental' ? 'Dental' : 'Aesthetic'}
-                        size="small"
-                        color={procedure.industry === 'dental' ? 'info' : 'secondary'}
-                      />
-                    </TableCell>
-                    <TableCell>{procedure.category || 'General'}</TableCell>
-                    <TableCell align="center">
-                      <ConfidenceBadge score={confidence} />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        ${marketSize.toFixed(1)}M
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        {(procedure.yearly_growth_percentage || 0) > 0 ? (
-                          <TrendingUp sx={{ color: theme.palette.success.main, mr: 0.5 }} />
-                        ) : (
-                          <TrendingDown sx={{ color: theme.palette.error.main, mr: 0.5 }} />
-                        )}
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: (procedure.yearly_growth_percentage || 0) > 0 ? theme.palette.success.main : theme.palette.error.main,
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          {(procedure.yearly_growth_percentage || 0).toFixed(1)}%
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <ShowChart sx={{ fontSize: 16, mr: 0.5, color: theme.palette.text.secondary }} />
-                        <Typography variant="body2" color="text.secondary">
-                          {cagr.toFixed(1)}%
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body2">
-                        ${(procedure.average_cost_usd || 0).toLocaleString()}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <IntegrationCostBadge
-                        min={integrationData.min}
-                        max={integrationData.max}
-                        equipment_min={integrationData.equipment_min}
-                        equipment_max={integrationData.equipment_max}
-                        training={integrationData.training}
-                        confidence={integrationData.confidence}
-                        roi_months={integrationData.roi_months}
-                        procedureName={procedureName}
-                        averageProcedureCost={procedure.average_cost_usd}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Circle sx={{ 
-                        color: theme.palette.success.main, 
-                        fontSize: 12,
-                        opacity: 0.8,
-                      }} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {/* Procedure Details Modal */}
+        <ProcedureDetailsModal
+          open={detailsModalOpen}
+          onClose={() => {
+            setDetailsModalOpen(false);
+            setSelectedProcedure(null);
+          }}
+          procedure={selectedProcedure}
+          industry={selectedIndustry === 'dental' ? 'dental' : 'aesthetic'}
+        />
       </Box>
-      
-      {/* Procedure Details Modal */}
-      <ProcedureDetailsModal
-        open={detailsModalOpen}
-        onClose={() => {
-          setDetailsModalOpen(false);
-          setSelectedProcedure(null);
-        }}
-        procedure={selectedProcedure}
-        industry={selectedIndustry === 'dental' ? 'dental' : 'aesthetic'}
-      />
-      </PremiumContainer>
-    </Box>
+    </PremiumContainer>
   );
 };
 
