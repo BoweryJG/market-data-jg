@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import PremiumContainer from '../common/PremiumContainer';
-import HTMLGauge from './HTMLGauge';
+import SupremeGauge from './SupremeGauge';
 import {
   Box,
   Typography,
@@ -88,7 +88,7 @@ import { getCategoryIconConfig } from './CategoryIcons';
 import IntegrationCostBadge from './IntegrationCostBadge';
 import { getIntegrationCost, estimateIntegrationCost } from '../../services/integrationCostData';
 
-// Removed EnhancedCockpitGauge - using HTMLGauge instead for better performance
+// Removed EnhancedCockpitGauge - using SupremeGauge for exact supremedash replica
 
 // Year Selector Component
 const YearSelector: React.FC<{
@@ -647,40 +647,40 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   <Grid item xs={12} md={8}>
                     <PremiumContainer sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2 }}>
-                        <HTMLGauge
+                        <SupremeGauge
                           value={marketMetrics.totalMarketSize}
                           max={200000}
                           label="Market Size"
                           unit="M"
                           color={theme.palette.primary.main}
-                          size={140}
+                          size={180}
                           isLive={liveData}
                         />
-                        <HTMLGauge
+                        <SupremeGauge
                           value={marketMetrics.averageGrowth}
                           max={30}
                           label="Avg Growth"
                           unit="%"
                           color={theme.palette.success.main}
-                          size={140}
+                          size={180}
                           isLive={liveData}
                         />
-                        <HTMLGauge
+                        <SupremeGauge
                           value={marketMetrics.totalProcedures}
                           max={1000}
                           label="Procedures"
                           unit=""
                           color={theme.palette.info.main}
-                          size={140}
+                          size={180}
                           isLive={liveData}
                         />
-                        <HTMLGauge
+                        <SupremeGauge
                           value={marketMetrics.totalCompanies}
                           max={300}
                           label="Companies"
                           unit=""
                           color={theme.palette.warning.main}
-                          size={140}
+                          size={180}
                           isLive={liveData}
                         />
                       </Box>

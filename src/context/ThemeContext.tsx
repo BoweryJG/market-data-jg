@@ -141,8 +141,31 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         <CssBaseline />
         <GlobalStyles
           styles={{
+            html: {
+              scrollBehavior: 'smooth',
+            },
             body: {
               paddingTop: '84px', // 60px navbar + 24px top padding
+              overflowX: 'hidden',
+              scrollBehavior: 'smooth',
+            },
+            '*': {
+              scrollbarWidth: 'thin',
+              scrollbarColor: mode === 'dark' ? '#666 #1a1a1a' : '#ccc #f5f5f5',
+            },
+            '::-webkit-scrollbar': {
+              width: '8px',
+              height: '8px',
+            },
+            '::-webkit-scrollbar-track': {
+              background: mode === 'dark' ? '#1a1a1a' : '#f5f5f5',
+            },
+            '::-webkit-scrollbar-thumb': {
+              background: mode === 'dark' ? '#666' : '#ccc',
+              borderRadius: '4px',
+            },
+            '::-webkit-scrollbar-thumb:hover': {
+              background: mode === 'dark' ? '#888' : '#aaa',
             },
           }}
         />

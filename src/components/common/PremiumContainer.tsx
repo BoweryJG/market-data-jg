@@ -28,8 +28,9 @@ const edgeGlow = keyframes`
 // Styled components
 const ContainerBox = styled(Box)<{ isHovered?: boolean }>(({ isHovered = false }) => ({
   ...getPremiumContainerStyles(isHovered),
-  transformStyle: 'preserve-3d',
-  perspective: '1000px',
+  // Removed 3D transforms for better scroll performance
+  // transformStyle: 'preserve-3d',
+  // perspective: '1000px',
 }));
 
 const Screw = styled(Box)<{ position: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' }>(
@@ -117,8 +118,9 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
       className={className}
       sx={{
         ...sx,
-        transform: isHovered ? 'translateY(-1px)' : 'translateY(0)', // Removed scale for better performance
-        transition: 'transform 0.2s ease', // Faster transition
+        // Removed transform on hover for better scroll performance
+        // transform: isHovered ? 'translateY(-1px)' : 'translateY(0)',
+        // transition: 'transform 0.2s ease',
       }}
       {...otherProps}
     >

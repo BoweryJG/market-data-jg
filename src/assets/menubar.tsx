@@ -15,8 +15,9 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const offset = window.scrollY * 0.05;
-      document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
+      // Removed parallax effect for better scroll performance
+      // const offset = window.scrollY * 0.05;
+      // document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
       
       setScrolled(window.scrollY > 50);
       
@@ -277,9 +278,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                     rgba(255, 255, 255, 0.01) 20px
                 );
             opacity: 0.5;
-            transform: translateY(var(--scroll-offset));
+            /* Removed parallax transform for better scroll performance */
             pointer-events: none;
-            transition: transform 0.1s linear;
         }
 
         /* Enhanced Float on Scroll */
@@ -299,7 +299,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 rgba(32, 32, 32, 0.95) 90%,
                 rgba(26, 26, 26, 0.98) 100%
             );
-            transform: translateX(-50%) scale(0.98) translateZ(30px);
+            transform: translateX(-50%); /* Removed scale and 3D transform for better scroll */
         }
 
         /* Glass Refraction Overlay */
