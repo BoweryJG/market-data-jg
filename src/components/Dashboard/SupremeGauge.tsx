@@ -33,7 +33,7 @@ const GaugeContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-// Chrome cylindrical bezel
+// 🧭 1. Real Bezel & Precision Screws - Heavy-metal bezel with machined steel simulation
 const ChromeBezel = styled(Box, {
   shouldForwardProp: (prop) => prop !== '$size',
 })<{ $size?: number }>(({ $size = 200 }) => ({
@@ -44,6 +44,7 @@ const ChromeBezel = styled(Box, {
   width: $size,
   height: $size,
   borderRadius: '50%',
+  // Heavy-metal bezel using border + box-shadow to simulate machined steel
   background: `
     conic-gradient(
       from 0deg at 50% 50%,
@@ -60,25 +61,48 @@ const ChromeBezel = styled(Box, {
       #808080 300deg,
       #c0c0c0 330deg,
       #e8e8e8 360deg
-    )
+    ),
+    radial-gradient(circle at 30% 30%, #f0f0f0, #b0b0b0)
   `,
+  border: '4px solid #888',
   boxShadow: `
-    0 10px 30px rgba(0,0,0,0.5),
-    0 0 40px rgba(0,0,0,0.3),
-    inset 0 0 15px rgba(255,255,255,0.1),
-    inset 0 -5px 10px rgba(0,0,0,0.3)
+    0 15px 40px rgba(0,0,0,0.7),
+    0 0 50px rgba(0,0,0,0.4),
+    inset 0 4px 12px rgba(255,255,255,0.2),
+    inset 0 -6px 15px rgba(0,0,0,0.4),
+    0 3px 10px rgba(0,0,0,0.6)
   `,
   transition: 'all 0.3s ease',
   '&::before': {
     content: '""',
     position: 'absolute',
-    top: '5%',
-    left: '5%',
-    right: '5%',
-    bottom: '5%',
+    top: '8%',
+    left: '8%',
+    right: '8%',
+    bottom: '8%',
     borderRadius: '50%',
-    background: '#1a1a1a',
-    boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)',
+    // 🎨 2. Engraved Dial Texture with radial metal engraving
+    background: `
+      radial-gradient(circle at center, #666, #222),
+      repeating-conic-gradient(#777 0deg 6deg, transparent 6deg 20deg),
+      #1a1a1a
+    `,
+    // Enhanced ambient inner shadow for depth and realism
+    boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.8)',
+  },
+  // 🧊 6. Sapphire Glass Layer overlay
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    inset: '8%',
+    borderRadius: '50%',
+    background: `
+      radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.04), transparent),
+      linear-gradient(135deg, rgba(255,255,255,0.03), transparent)
+    `,
+    mixBlendMode: 'screen',
+    pointerEvents: 'none',
+    zIndex: 10,
   },
 }));
 
@@ -100,6 +124,56 @@ const Stud = styled(Box)<{ angle: number }>(({ angle }) => ({
     rotate(${angle}deg)
     translateY(-48%)
   `,
+}));
+
+// 🧭 1. Four miniature precision screws at compass positions with slight rotational variation
+const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle, rotation }) => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  width: 12,
+  height: 12,
+  borderRadius: '50%',
+  // 🎯 7. Jewel tokens for screw highlighting with gold screws + shadow
+  background: `
+    radial-gradient(circle at 30% 30%, var(--gem-shift, #ffd700), var(--gem-deep, #ffb000), #cc8800),
+    linear-gradient(135deg, #fff, #ddd)
+  `,
+  border: '2px solid #666',
+  boxShadow: `
+    0 0 8px var(--gem-impossible, rgba(255,215,0,0.6)),
+    inset 0 3px 5px rgba(255,255,255,0.9),
+    inset 0 -3px 4px rgba(0,0,0,0.4),
+    0 2px 6px rgba(0,0,0,0.5)
+  `,
+  transform: `
+    translate(-50%, -50%)
+    rotate(${angle}deg)
+    translateY(-46%)
+    rotate(${rotation}deg)
+  `,
+  zIndex: 3,
+  // Add cross-hatch screw pattern
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: '70%',
+    height: '2px',
+    background: '#666',
+    transform: 'translate(-50%, -50%) rotate(45deg)',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: '70%',
+    height: '2px',
+    background: '#666',
+    transform: 'translate(-50%, -50%) rotate(-45deg)',
+  },
 }));
 
 // Digital LED display
@@ -132,8 +206,9 @@ const DigitalDisplay = styled(Box)(({ theme }) => ({
 const DigitalText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== '$gaugeColor',
 })<{ $gaugeColor: string }>(({ $gaugeColor }) => ({
-  fontFamily: "'Orbitron', 'Digital-7', monospace",
-  fontSize: '24px',
+  // 📐 3. Heritage-Inspired Typography with classic serif reminiscent of Shelby instrumentation
+  fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+  fontSize: '22px',
   fontWeight: 'bold',
   color: $gaugeColor,
   textShadow: `
@@ -141,7 +216,7 @@ const DigitalText = styled(Typography, {
     0 0 20px ${$gaugeColor}80,
     0 0 30px ${$gaugeColor}40
   `,
-  letterSpacing: '3px',
+  letterSpacing: '2px',
   lineHeight: 1,
 }));
 
@@ -222,29 +297,29 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
 
   const gaugeColor = getGaugeColor();
 
-  // Kinetic needle animation with luxury watch physics
+  // 🔁 5. Full Kinetic Spin on Load - Enhanced luxury watch physics
   useEffect(() => {
     const targetAngle = (value / max) * 180 - 90;
     const startValue = displayValue;
     const startTime = Date.now();
     
-    // Luxury watch kinetic animation: 2-3 full spins + settle
+    // 🔁 5. Luxury watch kinetic animation: 2-3 full spins + settle with enhanced physics
     const spinRounds = 2 + Math.floor(Math.random() * 2); // 2-3 spins
     const spinTarget = (360 * spinRounds) + targetAngle;
     
-    // Phase 1: Multi-revolution spin (mechanical momentum)
-    const spinDuration = 2000;
-    const settleDuration = 1200;
+    // Phase 1: Multi-revolution spin (mechanical momentum) - Enhanced durations
+    const spinDuration = 3000; // Longer spin for dramatic effect
+    const settleDuration = 1500; // Extended elastic settlement
     
     const animateKinetic = () => {
       const elapsed = Date.now() - startTime;
       
       if (elapsed < spinDuration) {
-        // Spinning phase with mechanical momentum
+        // Spinning phase with "power2.out" easing for dramatic mechanical momentum
         const progress = elapsed / spinDuration;
-        const easeOut = 1 - Math.pow(1 - progress, 3); // Deceleration
+        const powerOut = 1 - Math.pow(1 - progress, 2); // power2.out easing
         
-        const currentAngle = -90 + (spinTarget + 90) * easeOut;
+        const currentAngle = -90 + (spinTarget + 90) * powerOut;
         setNeedleAngle(currentAngle);
         
         // Update value during spin
@@ -253,11 +328,11 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         
         animationRef.current = requestAnimationFrame(animateKinetic);
       } else if (elapsed < spinDuration + settleDuration) {
-        // Settlement phase with elastic bounce
+        // Settlement phase with "elastic.out" easing for dramatic effect
         const settleProgress = (elapsed - spinDuration) / settleDuration;
         const elasticOut = 1 - Math.pow(2, -10 * settleProgress) * Math.cos((settleProgress * 10 - 0.75) * (2 * Math.PI) / 3);
         
-        const overshoot = 15; // Degrees of overshoot
+        const overshoot = 20; // Increased degrees of overshoot for dramatic effect
         const settleAngle = spinTarget + overshoot * (1 - elasticOut);
         const finalAngle = targetAngle + (settleAngle - targetAngle) * (1 - elasticOut);
         
@@ -268,6 +343,17 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
           animationRef.current = requestAnimationFrame(animateKinetic);
         } else {
           setNeedleAngle(targetAngle); // Ensure final position
+          // Add a soft pulse to the jewel cap when the needle arrives
+          setTimeout(() => {
+            // Trigger jewel cap pulse effect
+            const jewelCap = document.querySelector(`#jewel-cap-${label}`) as HTMLElement;
+            if (jewelCap) {
+              jewelCap.style.animation = 'jewelPulse 0.6s ease-out';
+              setTimeout(() => {
+                jewelCap.style.animation = '';
+              }, 600);
+            }
+          }, 100);
         }
       }
     };
@@ -280,7 +366,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [value, max]);
+  }, [value, max, label]);
 
   const handleClick = () => {
     // Spin animation on click
@@ -317,10 +403,18 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
           transformStyle: 'preserve-3d',
         }}
       >
-        {/* Chrome bezel with studs */}
+        {/* Chrome bezel with studs and precision screws */}
         <ChromeBezel className="chrome-bezel" $size={size}>
           {[...Array(12)].map((_, i) => (
             <Stud key={i} angle={i * 30} />
+          ))}
+          {/* 🧭 1. Four miniature precision screws at compass positions */}
+          {[0, 90, 180, 270].map((angle, index) => (
+            <PrecisionScrew
+              key={`screw-${index}`}
+              angle={angle}
+              rotation={Math.random() * 360} // Slight rotational variation for authenticity
+            />
           ))}
         </ChromeBezel>
 
