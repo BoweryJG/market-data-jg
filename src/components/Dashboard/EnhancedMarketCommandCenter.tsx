@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import PremiumContainer from '../common/PremiumContainer';
 import SupremeGauge from './SupremeGauge';
@@ -11,6 +11,7 @@ import {
   IconButton,
   Chip,
   useTheme,
+  useMediaQuery,
   alpha,
   LinearProgress,
   Tooltip,
@@ -81,7 +82,35 @@ import {
   ExpandMore,
   ShowChart,
 } from '@mui/icons-material';
-// Removed framer-motion for better performance
+// Custom scroll hook for impressive animations
+const useScrollTransitions = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  
+  useEffect(() => {
+    let ticking = false;
+    
+    const updateScroll = () => {
+      setScrollY(window.scrollY);
+      // Calculate scroll progress for first 600px of scroll
+      const progress = Math.min(window.scrollY / 600, 1);
+      setScrollProgress(progress);
+      ticking = false;
+    };
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return { scrollY, scrollProgress };
+};
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import { getCategoryIconConfig } from './CategoryIcons';
@@ -121,14 +150,14 @@ const YearSelector: React.FC<{
   );
 };
 
-// Compact Categories Component
-const CompactCategories: React.FC<{
+// Compact Categories Component - Memoized for performance
+const CompactCategories = React.memo<{
   categories: any[];
   selectedCategory: string | null;
   onCategorySelect: (category: string | null) => void;
   selectedIndustry: 'all' | 'dental' | 'aesthetic';
   procedures: any[];
-}> = ({ categories, selectedCategory, onCategorySelect, selectedIndustry, procedures }) => {
+}>(({ categories, selectedCategory, onCategorySelect, selectedIndustry, procedures }) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
   
@@ -181,7 +210,7 @@ const CompactCategories: React.FC<{
         </Box>
     </PremiumContainer>
   );
-};
+});
 
 // Confidence Badge Component
 const ConfidenceBadge: React.FC<{ score?: number }> = ({ score = 75 }) => {
@@ -219,7 +248,7 @@ const ConfidenceBadge: React.FC<{ score?: number }> = ({ score = 75 }) => {
 };
 
 // Territory data component with premium styling
-const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories }) => {
+const TerritoryPremiumData = React.memo<{ territories: any[] }>(({ territories }) => {
   const theme = useTheme();
   
   return (
@@ -295,10 +324,12 @@ const TerritoryPremiumData: React.FC<{ territories: any[] }> = ({ territories })
       ))}
     </PremiumContainer>
   );
-};
+});
 
 const EnhancedMarketCommandCenter: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { scrollY, scrollProgress } = useScrollTransitions();
   const [marketData, setMarketData] = useState<ComprehensiveMarketData | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -314,6 +345,13 @@ const EnhancedMarketCommandCenter: React.FC = () => {
   const [selectedProcedure, setSelectedProcedure] = useState<any | null>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
+  
+  // Calculate animation values based on scroll
+  const gaugeScale = useMemo(() => 1 - (scrollProgress * 0.15), [scrollProgress]);
+  const gaugeOpacity = useMemo(() => 1 - (scrollProgress * 1.2), [scrollProgress]);
+  const territoryTranslateX = useMemo(() => -scrollProgress * 100, [scrollProgress]);
+  const categoryTranslateX = useMemo(() => scrollProgress * 100, [scrollProgress]);
+  const componentBlur = useMemo(() => scrollProgress * 10, [scrollProgress]);
 
   // Handle scroll to collapse header
   useEffect(() => {
@@ -499,8 +537,12 @@ const EnhancedMarketCommandCenter: React.FC = () => {
             {/* Collapsed State */}
             <Collapse in={headerCollapsed}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  Market Command Center
+                <Typography variant="h6" sx={{ 
+                  fontWeight: 'bold',
+                  fontFamily: "'Orbitron', monospace",
+                  letterSpacing: '-0.5px',
+                }}>
+                  Medical Device Sales Intelligence
                 </Typography>
                 
                 <TextField
@@ -567,8 +609,17 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                 {/* Title Row */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
-                      Enhanced Market Command Center
+                    <Typography variant="h3" sx={{ 
+                      fontWeight: 'bold', 
+                      mr: 2,
+                      fontFamily: "'Orbitron', monospace",
+                      letterSpacing: '-0.5px',
+                      background: 'linear-gradient(135deg, #9f58fa 0%, #4B96DC 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}>
+                      Medical Device Sales Intelligence 2025-30
                     </Typography>
                     <Chip
                       icon={<RadioButtonChecked />}
@@ -595,7 +646,13 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                 </Box>
                 
                 {/* Search and Filters Row */}
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 3 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 2, 
+                  alignItems: 'center', 
+                  mb: 3,
+                  flexWrap: { xs: 'wrap', md: 'nowrap' },
+                }}>
                   <TextField
                     placeholder="Search procedures, categories..."
                     value={searchTerm}
@@ -603,7 +660,10 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                     InputProps={{
                       startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
                     }}
-                    sx={{ minWidth: 400 }}
+                    sx={{ 
+                      minWidth: { xs: '100%', sm: 400 },
+                      mb: { xs: 2, md: 0 }
+                    }}
                   />
                   
                   <ButtonGroup>
@@ -642,82 +702,158 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                   />
                 </Box>
                 
-                {/* Gauges */}
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={8}>
-                    <PremiumContainer sx={{ p: 3 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2 }}>
-                        <SupremeGauge
-                          value={marketMetrics.totalMarketSize}
-                          max={200000}
-                          label="Market Size"
-                          unit="M"
-                          color={theme.palette.primary.main}
-                          size={180}
-                          isLive={liveData}
-                        />
-                        <SupremeGauge
-                          value={marketMetrics.averageGrowth}
-                          max={30}
-                          label="Avg Growth"
-                          unit="%"
-                          color={theme.palette.success.main}
-                          size={180}
-                          isLive={liveData}
-                        />
-                        <SupremeGauge
-                          value={marketMetrics.totalProcedures}
-                          max={1000}
-                          label="Procedures"
-                          unit=""
-                          color={theme.palette.info.main}
-                          size={180}
-                          isLive={liveData}
-                        />
-                        <SupremeGauge
-                          value={marketMetrics.totalCompanies}
-                          max={300}
-                          label="Companies"
-                          unit=""
-                          color={theme.palette.warning.main}
-                          size={180}
-                          isLive={liveData}
-                        />
-                      </Box>
-                    </PremiumContainer>
-                  </Grid>
-                  
-                  <Grid item xs={12} md={4}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <TerritoryPremiumData territories={marketData?.territories || []} />
-                      <CompactCategories
-                        categories={marketData?.categories || []}
-                        selectedCategory={selectedCategory}
-                        onCategorySelect={setSelectedCategory}
-                        selectedIndustry={selectedIndustry}
-                        procedures={marketData?.procedures || []}
-                      />
-                    </Box>
-                  </Grid>
-                </Grid>
+                {/* Components now moved to main content area with animations */}
               </Box>
             </Collapse>
           </Box>
         </Toolbar>
       </AppBar>
       
-      {/* Main Content */}
-      <Box sx={{ p: 3 }}>
+      {/* Main Content with Animated Sections */}
+      <Box sx={{ mt: headerCollapsed ? 8 : 0, transition: 'margin-top 0.3s' }}>
+        {/* Glass Morphism Overlay */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '100vh',
+            background: `linear-gradient(to bottom, 
+              transparent 0%, 
+              ${alpha(theme.palette.background.default, scrollProgress * 0.7)} 50%,
+              ${alpha(theme.palette.background.default, scrollProgress * 0.9)} 100%
+            )`,
+            pointerEvents: 'none',
+            zIndex: 5,
+            transition: 'opacity 0.6s ease',
+            opacity: scrollProgress > 0.1 ? 1 : 0,
+          }}
+        />
+        
+        {/* Animated Components Section */}
+        <Box 
+          sx={{ 
+            position: 'sticky',
+            top: headerCollapsed ? '80px' : '0px',
+            zIndex: 10,
+            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: gaugeOpacity > 0 ? 1 : 0,
+            pointerEvents: gaugeOpacity > 0.1 ? 'auto' : 'none',
+            transform: `translateY(${scrollY > 100 ? -scrollY * 0.3 : 0}px)`,
+          }}
+        >
+          {/* Gauges Section with Parallax */}
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  transform: `scale(${gaugeScale}) translateZ(0)`,
+                  filter: `blur(${componentBlur}px)`,
+                  opacity: gaugeOpacity,
+                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                  willChange: 'transform, opacity, filter',
+                }}
+              >
+                <PremiumContainer sx={{ p: 3, background: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.8) : alpha(theme.palette.background.paper, 0.95) }}>
+                  <Box sx={{ 
+                    display: 'grid',
+                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                    gap: 2,
+                    justifyItems: 'center',
+                  }}>
+                    <SupremeGauge
+                      value={marketMetrics.totalMarketSize}
+                      max={200000}
+                      label="Market Size"
+                      unit="M"
+                      color={theme.palette.primary.main}
+                      size={isMobile ? 140 : 180}
+                      isLive={liveData}
+                    />
+                    <SupremeGauge
+                      value={marketMetrics.averageGrowth}
+                      max={30}
+                      label="Avg Growth"
+                      unit="%"
+                      color={theme.palette.success.main}
+                      size={isMobile ? 140 : 180}
+                      isLive={liveData}
+                    />
+                    <SupremeGauge
+                      value={marketMetrics.totalProcedures}
+                      max={1000}
+                      label="Procedures"
+                      unit=""
+                      color={theme.palette.info.main}
+                      size={isMobile ? 140 : 180}
+                      isLive={liveData}
+                    />
+                    <SupremeGauge
+                      value={marketMetrics.totalCompanies}
+                      max={300}
+                      label="Companies"
+                      unit=""
+                      color={theme.palette.warning.main}
+                      size={isMobile ? 140 : 180}
+                      isLive={liveData}
+                    />
+                  </Box>
+                </PremiumContainer>
+              </Box>
+            </Grid>
+          </Grid>
+          
+          {/* Territory and Categories with Slide Effects */}
+          <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: 3 }}>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  transform: `translateX(${territoryTranslateX}px) translateZ(0)`,
+                  filter: `blur(${componentBlur}px)`,
+                  opacity: gaugeOpacity,
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  willChange: 'transform, opacity, filter',
+                }}
+              >
+                <TerritoryPremiumData territories={marketData?.territories || []} />
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  transform: `translateX(${categoryTranslateX}px) translateZ(0)`,
+                  filter: `blur(${componentBlur}px)`,
+                  opacity: gaugeOpacity,
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  willChange: 'transform, opacity, filter',
+                }}
+              >
+                <CompactCategories
+                  categories={marketData?.categories || []}
+                  selectedCategory={selectedCategory}
+                  onCategorySelect={setSelectedCategory}
+                  selectedIndustry={selectedIndustry}
+                  procedures={marketData?.procedures || []}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+        
         {/* Data Table */}
         <TableContainer 
           component={Paper} 
           sx={{ 
             maxHeight: '60vh', 
             mt: 3,
+            mx: 3,
+            mb: 3,
             backgroundColor: alpha(theme.palette.background.paper, 0.6),
             backdropFilter: 'blur(10px)',
             borderRadius: '12px',
             overflow: 'hidden',
+            transition: 'all 0.3s ease',
           }}>
           <Table stickyHeader>
             <TableHead>
