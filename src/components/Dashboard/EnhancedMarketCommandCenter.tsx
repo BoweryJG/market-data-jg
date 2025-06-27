@@ -612,8 +612,16 @@ const EnhancedMarketCommandCenter: React.FC = () => {
           </Toolbar>
         </AppBar>
         
-        {/* Main Content */}
-        <Box sx={{ flexGrow: 1, p: 3, backgroundColor: theme.palette.background.default }}>
+        {/* Main Content - Narrower than navbar for visual hierarchy */}
+        <Box sx={{
+          flexGrow: 1,
+          p: 3,
+          backgroundColor: theme.palette.background.default,
+          maxWidth: 'calc(100% - 120px)', // Narrower than navbar
+          mx: 'auto', // Center the content
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
           {loading && <LinearProgress sx={{ mb: 2 }} />}
           
           {/* Alerts */}
@@ -679,7 +687,25 @@ const EnhancedMarketCommandCenter: React.FC = () => {
           
           {/* Data Table */}
           <PremiumContainer showScrews={true} showEdgeMounts={true}>
-            <TableContainer sx={{ maxHeight: 'calc(100vh - 400px)', overflow: 'auto' }}>
+            <TableContainer sx={{
+              maxHeight: 'calc(100vh - 450px)',
+              overflow: 'auto',
+              scrollBehavior: 'smooth',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: '#f1f1f1',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: '#888',
+                borderRadius: '4px',
+                '&:hover': {
+                  background: '#555',
+                },
+              },
+            }}>
               <Table stickyHeader>
               <TableHead>
                 <TableRow>

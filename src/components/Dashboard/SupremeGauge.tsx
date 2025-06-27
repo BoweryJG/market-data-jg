@@ -292,23 +292,24 @@ const Needle = styled(Box)(() => ({
   left: '50%',
   width: 0,
   height: 0,
-  borderLeft: '6px solid transparent',
-  borderRight: '6px solid transparent',
-  borderTop: '80px solid #ccc', // needle body color
+  // 🔧 Inverted needle: thick part at center, thin point towards bezel - reduced by 50%
+  borderLeft: '3px solid transparent',
+  borderRight: '3px solid transparent',
+  borderBottom: '40px solid #ccc', // inverted: thick part at center
   transform: 'translateX(-50%)',
   filter: 'drop-shadow(0 0 2px #fff)',
 }));
 
 const NeedleCap = styled(Box)(() => ({
-  width: '12px',
-  height: '12px',
+  width: '6px',  // reduced by 50%
+  height: '6px', // reduced by 50%
   borderRadius: '50%',
   background: 'radial-gradient(circle, var(--gem-shift), var(--gem-deep))',
   position: 'absolute',
-  bottom: '-6px',
+  bottom: '-3px', // adjusted for smaller cap
   left: '50%',
   transform: 'translateX(-50%)',
-  boxShadow: '0 0 8px var(--gem-impossible)',
+  boxShadow: '0 0 4px var(--gem-impossible)', // reduced shadow
 }));
 
 const SupremeGauge: React.FC<SupremeGaugeProps> = ({
