@@ -41,6 +41,11 @@ import {
   CheckCircle,
   Info,
   OpenInNew,
+  Map as MapIcon,
+  LocationOn,
+  People,
+  Star,
+  TrendingDown,
 } from '@mui/icons-material';
 import { keyframes } from '@mui/system';
 import YearSelector from './YearSelector';
@@ -116,6 +121,17 @@ const EnhancedMarketCommandCenter: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<EstimatedProcedure | null>(null);
+  
+  // Territory functionality for paid users
+  const [territoryView, setTerritoryView] = useState(false);
+  const [territoryStats] = useState({
+    totalAccounts: 124,
+    totalRevenue: 8.5,
+    marketPenetration: 42,
+    growthRate: 18.5,
+    atRiskAccounts: 3,
+    topOpportunity: 'Digital Dentistry expansion connected to procedures database'
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -409,6 +425,21 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                     
                     <YearSelector selectedYear={selectedYear} onChange={setSelectedYear} />
                     
+                    {/* Territory Toggle for Paid Users */}
+                    <Button
+                      variant={territoryView ? 'contained' : 'outlined'}
+                      onClick={() => setTerritoryView(!territoryView)}
+                      startIcon={<MapIcon />}
+                      color="secondary"
+                      sx={{
+                        fontFamily: "'Orbitron', monospace",
+                        fontWeight: 'bold',
+                        background: territoryView ? 'linear-gradient(135deg, #9f58fa 0%, #4B96DC 100%)' : 'transparent',
+                      }}
+                    >
+                      Territory Intelligence
+                    </Button>
+                    
                     <FormControlLabel
                       control={
                         <Switch
@@ -421,6 +452,105 @@ const EnhancedMarketCommandCenter: React.FC = () => {
                       sx={{ ml: 'auto' }}
                     />
                   </Box>
+                  
+                  {/* Territory Intelligence Section - For Paid Users */}
+                  <Collapse in={territoryView}>
+                    <Box sx={{ mb: 3 }}>
+                      <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ p: 3, background: 'linear-gradient(135deg, #2A2635 0%, #1A1625 100%)' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                          <MapIcon sx={{ mr: 1, color: theme.palette.secondary.main }} />
+                          <Typography variant="h5" sx={{
+                            fontWeight: 'bold',
+                            fontFamily: "'Orbitron', monospace",
+                            background: 'linear-gradient(135deg, #9f58fa 0%, #4B96DC 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                          }}>
+                            Territory Intelligence Dashboard
+                          </Typography>
+                          <Chip
+                            icon={<Star />}
+                            label="PREMIUM"
+                            color="secondary"
+                            size="small"
+                            sx={{ ml: 2, fontWeight: 'bold' }}
+                          />
+                        </Box>
+                        
+                        {/* Territory Stats Grid */}
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 3 }}>
+                          <Paper sx={{ p: 2, background: 'rgba(159, 88, 250, 0.1)', border: '1px solid rgba(159, 88, 250, 0.3)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                              <People sx={{ mr: 1, color: theme.palette.primary.main }} />
+                              <Typography variant="subtitle2" color="text.secondary">Total Accounts</Typography>
+                            </Box>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold', fontFamily: "'Orbitron', monospace" }}>
+                              {territoryStats.totalAccounts}
+                            </Typography>
+                            <Typography variant="caption" color="success.main">
+                              Connected to {marketData?.procedures.length || 0} procedures
+                            </Typography>
+                          </Paper>
+                          
+                          <Paper sx={{ p: 2, background: 'rgba(75, 150, 220, 0.1)', border: '1px solid rgba(75, 150, 220, 0.3)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                              <AttachMoney sx={{ mr: 1, color: theme.palette.info.main }} />
+                              <Typography variant="subtitle2" color="text.secondary">Territory Revenue</Typography>
+                            </Box>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold', fontFamily: "'Orbitron', monospace" }}>
+                              ${territoryStats.totalRevenue}M
+                            </Typography>
+                            <Typography variant="caption" color="success.main">
+                              +{territoryStats.growthRate}% growth
+                            </Typography>
+                          </Paper>
+                          
+                          <Paper sx={{ p: 2, background: 'rgba(46, 125, 50, 0.1)', border: '1px solid rgba(46, 125, 50, 0.3)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                              <TrendingUp sx={{ mr: 1, color: theme.palette.success.main }} />
+                              <Typography variant="subtitle2" color="text.secondary">Market Penetration</Typography>
+                            </Box>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold', fontFamily: "'Orbitron', monospace" }}>
+                              {territoryStats.marketPenetration}%
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Across all categories
+                            </Typography>
+                          </Paper>
+                          
+                          <Paper sx={{ p: 2, background: 'rgba(244, 67, 54, 0.1)', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                              <Warning sx={{ mr: 1, color: theme.palette.error.main }} />
+                              <Typography variant="subtitle2" color="text.secondary">At-Risk Accounts</Typography>
+                            </Box>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold', fontFamily: "'Orbitron', monospace" }}>
+                              {territoryStats.atRiskAccounts}
+                            </Typography>
+                            <Typography variant="caption" color="error.main">
+                              Need immediate attention
+                            </Typography>
+                          </Paper>
+                        </Box>
+                        
+                        {/* Top Opportunity Alert */}
+                        <Alert
+                          severity="info"
+                          sx={{
+                            background: 'linear-gradient(135deg, rgba(159, 88, 250, 0.1) 0%, rgba(75, 150, 220, 0.1) 100%)',
+                            border: '1px solid rgba(159, 88, 250, 0.3)',
+                            '& .MuiAlert-icon': { color: theme.palette.secondary.main }
+                          }}
+                        >
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                            🎯 Top Territory Opportunity
+                          </Typography>
+                          <Typography variant="body2">
+                            {territoryStats.topOpportunity}
+                          </Typography>
+                        </Alert>
+                      </PremiumContainer>
+                    </Box>
+                  </Collapse>
                   
                   {/* Market Overview Cards */}
                   <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 2, mb: 3 }}>
@@ -548,8 +678,8 @@ const EnhancedMarketCommandCenter: React.FC = () => {
           </Box>
           
           {/* Data Table */}
-          <PremiumContainer showScrews={true} showEdgeMounts={true} sx={{ maxHeight: 'calc(100vh - 400px)', overflow: 'auto' }}>
-            <TableContainer sx={{ maxHeight: 'calc(100vh - 400px)' }}>
+          <PremiumContainer showScrews={true} showEdgeMounts={true}>
+            <TableContainer sx={{ maxHeight: 'calc(100vh - 400px)', overflow: 'auto' }}>
               <Table stickyHeader>
               <TableHead>
                 <TableRow>

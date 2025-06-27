@@ -207,8 +207,8 @@ const DigitalDisplay = styled(Box)(({ theme }) => ({
 const DigitalText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== '$gaugeColor',
 })<{ $gaugeColor: string }>(({ $gaugeColor }) => ({
-  // 📐 3. Heritage-Inspired Typography with classic serif reminiscent of Shelby instrumentation
-  fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+  // 📐 3. Heritage-Inspired Typography with Orbitron font matching navbar consistency
+  fontFamily: "'Orbitron', monospace",
   fontSize: '22px',
   fontWeight: 'bold',
   color: $gaugeColor,
