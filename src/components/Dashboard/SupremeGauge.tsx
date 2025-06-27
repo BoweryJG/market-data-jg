@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { gsap } from 'gsap';
 import { luxuryAudio } from '../../utils/audioUtils';
 
 interface SupremeGaugeProps {
@@ -273,6 +274,43 @@ const GlassCover = styled(Box, {
   },
 }));
 
+// 🔧 Enhanced CSS-based needle components for luxury tapered styling
+const NeedleContainer = styled(Box)(() => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  width: 0,
+  height: 0,
+  transformOrigin: 'center bottom',
+  transform: 'translate(-50%, -100%) rotate(-135deg)', // start angle
+  zIndex: 5,
+}));
+
+const Needle = styled(Box)(() => ({
+  position: 'absolute',
+  bottom: 0,
+  left: '50%',
+  width: 0,
+  height: 0,
+  borderLeft: '6px solid transparent',
+  borderRight: '6px solid transparent',
+  borderTop: '80px solid #ccc', // needle body color
+  transform: 'translateX(-50%)',
+  filter: 'drop-shadow(0 0 2px #fff)',
+}));
+
+const NeedleCap = styled(Box)(() => ({
+  width: '12px',
+  height: '12px',
+  borderRadius: '50%',
+  background: 'radial-gradient(circle, var(--gem-shift), var(--gem-deep))',
+  position: 'absolute',
+  bottom: '-6px',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  boxShadow: '0 0 8px var(--gem-impossible)',
+}));
+
 const SupremeGauge: React.FC<SupremeGaugeProps> = ({
   value,
   max,
@@ -285,6 +323,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
   const [displayValue, setDisplayValue] = useState(0);
   const [needleAngle, setNeedleAngle] = useState(-90);
   const animationRef = useRef<number>();
+  const needleContainerRef = useRef<HTMLDivElement>(null);
 
   // Calculate dynamic color based on value
   const getGaugeColor = () => {
@@ -298,56 +337,65 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
 
   const gaugeColor = getGaugeColor();
 
-  // 🔁 5. Full Kinetic Spin on Load - Enhanced luxury watch physics
+  // 🔁 Enhanced GSAP Kinetic Animation - Luxury Watch Physics
   useEffect(() => {
+    if (!needleContainerRef.current) return;
+    
     const targetAngle = (value / max) * 180 - 90;
     const startValue = displayValue;
-    const startTime = Date.now();
     
-    // 🔁 5. Luxury watch kinetic animation: 2-3 full spins + settle with enhanced physics
+    // 🔁 Luxury watch kinetic animation: 2-3 full spins + settle with GSAP
     const spinRounds = 2 + Math.floor(Math.random() * 2); // 2-3 spins
     const spinTarget = (360 * spinRounds) + targetAngle;
     
-    // Phase 1: Multi-revolution spin (mechanical momentum) - Enhanced durations
-    const spinDuration = 3000; // Longer spin for dramatic effect
-    const settleDuration = 1500; // Extended elastic settlement
+    // Trigger luxury audio sequence
+    luxuryAudio.playKineticSequence();
     
-    const animateKinetic = () => {
-      const elapsed = Date.now() - startTime;
-      
-      if (elapsed < spinDuration) {
-        // Spinning phase with "power2.out" easing for dramatic mechanical momentum
-        const progress = elapsed / spinDuration;
-        const powerOut = 1 - Math.pow(1 - progress, 2); // power2.out easing
-        
-        const currentAngle = -90 + (spinTarget + 90) * powerOut;
-        setNeedleAngle(currentAngle);
-        
-        // Update value during spin
-        const currentValue = startValue + (value - startValue) * progress;
-        setDisplayValue(Math.round(currentValue));
-        
-        animationRef.current = requestAnimationFrame(animateKinetic);
-      } else if (elapsed < spinDuration + settleDuration) {
-        // Settlement phase with "elastic.out" easing for dramatic effect
-        const settleProgress = (elapsed - spinDuration) / settleDuration;
-        const elasticOut = 1 - Math.pow(2, -10 * settleProgress) * Math.cos((settleProgress * 10 - 0.75) * (2 * Math.PI) / 3);
-        
-        const overshoot = 20; // Increased degrees of overshoot for dramatic effect
-        const settleAngle = spinTarget + overshoot * (1 - elasticOut);
-        const finalAngle = targetAngle + (settleAngle - targetAngle) * (1 - elasticOut);
-        
-        setNeedleAngle(finalAngle);
+    // GSAP Timeline for complete animation sequence
+    const tl = gsap.timeline({
+      onComplete: () => {
         setDisplayValue(value);
-        
-        if (settleProgress < 1) {
-          animationRef.current = requestAnimationFrame(animateKinetic);
-        } else {
-          setNeedleAngle(targetAngle); // Ensure final position
-          // Add a soft pulse to the jewel cap when the needle arrives
-          setTimeout(() => {
-            // Trigger jewel cap pulse effect
-            const jewelCap = document.querySelector(`#jewel-cap-${label}`) as HTMLElement;
+        setNeedleAngle(targetAngle);
+        // Trigger jewel cap pulse effect
+        setTimeout(() => {
+          luxuryAudio.playCrystalTing();
+        }, 200);
+      }
+    });
+    
+    // Phase 1: Multi-revolution spin with power3.inOut easing
+    tl.fromTo(needleContainerRef.current,
+      { rotation: -135 },
+      {
+        rotation: spinTarget,
+        duration: 2.4,
+        ease: "power3.inOut",
+        onUpdate: () => {
+          // Update display value during spin
+          const progress = tl.progress();
+          const currentValue = startValue + (value - startValue) * progress;
+          setDisplayValue(Math.round(currentValue));
+        }
+      }
+    );
+    
+    // Phase 2: Elastic settlement to final position
+    tl.to(needleContainerRef.current, {
+      rotation: targetAngle,
+      duration: 1.2,
+      ease: "elastic.out(1, 0.3)",
+      onComplete: () => {
+        setNeedleAngle(targetAngle);
+      }
+    });
+    
+    // Cleanup function
+    return () => {
+      tl.kill();
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
             if (jewelCap) {
               jewelCap.style.animation = 'jewelPulse 0.6s ease-out';
               setTimeout(() => {
@@ -597,65 +645,6 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
             opacity="0.8"
           />
 
-          {/* Needle - Luxury Watch Design */}
-          <g
-            transform={`rotate(${needleAngle} 50 50)`}
-            style={{
-              transition: needleAngle === (value / max) * 180 - 90 ? 'none' : 'transform 0.1s ease-out',
-            }}
-          >
-            {/* Needle shadow for depth */}
-            <polygon
-              points="50,50 48,18 52,18 50.5,48"
-              fill="#000"
-              opacity="0.4"
-              transform="translate(1, 1)"
-            />
-            
-            {/* Chrome needle shaft - tapered from 10px base to 1px tip */}
-            <polygon
-              points="50,50 47,20 53,20 51,48"
-              fill={`url(#needle-gradient-${label})`}
-              filter={`url(#needle-glow-${label})`}
-              stroke="#C0C0C0"
-              strokeWidth="0.3"
-            />
-            
-            {/* Chrome highlight strip */}
-            <polygon
-              points="50,50 48.5,20 49.5,20 49.5,48"
-              fill="rgba(255,255,255,0.6)"
-              opacity="0.8"
-            />
-            
-            {/* Needle tip - sharp precision point */}
-            <polygon
-              points="50,20 48.5,22 51.5,22"
-              fill="#E8E8E8"
-              stroke="#C0C0C0"
-              strokeWidth="0.2"
-            />
-            
-            {/* Jeweled center cap - luxury watch style */}
-            <circle
-              cx="50"
-              cy="50"
-              r="3"
-              fill={`url(#jewel-gradient-${label})`}
-              stroke="#C0C0C0"
-              strokeWidth="0.5"
-              filter={`url(#jewel-glow-${label})`}
-            />
-            
-            {/* Inner jewel highlight */}
-            <circle
-              cx="50"
-              cy="50"
-              r="1.5"
-              fill="rgba(255,255,255,0.4)"
-              opacity="0.8"
-            />
-          </g>
 
           {/* Brand text */}
           <text
@@ -686,6 +675,12 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
             SUPREME
           </text>
         </GaugeFace>
+
+        {/* 🔧 Enhanced CSS-based Needle - Luxury Tapered Design */}
+        <NeedleContainer ref={needleContainerRef}>
+          <Needle />
+          <NeedleCap />
+        </NeedleContainer>
 
         {/* Glass cover */}
         <GlassCover $size={size} />
