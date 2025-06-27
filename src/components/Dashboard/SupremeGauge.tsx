@@ -396,27 +396,6 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-            if (jewelCap) {
-              jewelCap.style.animation = 'jewelPulse 0.6s ease-out';
-              setTimeout(() => {
-                jewelCap.style.animation = '';
-              }, 600);
-            }
-            // 🎵 Play kinetic audio sequence for authentic luxury watch experience
-            luxuryAudio.playKineticSequence();
-          }, 100);
-        }
-      }
-    };
-
-    // Start the kinetic animation
-    animateKinetic();
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
   }, [value, max, label]);
 
   const handleClick = () => {
