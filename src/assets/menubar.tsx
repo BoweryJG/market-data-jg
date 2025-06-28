@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-// Load GSAP dynamically
-declare global {
-  interface Window {
-    gsap: any;
-    ScrollTrigger: any;
-  }
-}
+import { gsap } from 'gsap';
 
 interface NavBarProps {
   onSalesModeToggle?: () => void;
@@ -75,7 +68,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
       const sections = document.querySelectorAll('section[id]');
       let current = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop;
+        const sectionTop = (section as HTMLElement).offsetTop;
         if (window.scrollY >= (sectionTop - 200)) {
           current = section.getAttribute('id') || '';
         }
@@ -83,61 +76,69 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
       setActiveSection(current);
     };
 
-    // Load GSAP library
-    const loadGSAP = async () => {
-      if (!window.gsap) {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
-        script.async = true;
-        document.head.appendChild(script);
+    // Initialize GSAP animations
+    const initKineticAnimations = () => {
+      // Enhanced logo jewel rotation and scale
+      const logoJewel = document.querySelector('.logo-jewel');
+      if (logoJewel) {
+        gsap.set(logoJewel, { transformOrigin: "center" });
         
-        return new Promise((resolve) => {
-          script.onload = () => {
-            // Initialize kinetic animations after GSAP loads
-            setTimeout(() => {
-              if (window.gsap) {
-                // Enhanced logo jewel rotation and scale
-                const logoJewel = document.querySelector('.logo-jewel');
-                if (logoJewel) {
-                  window.gsap.set(logoJewel, { transformOrigin: "center" });
-                  
-                  // Continuous rotation
-                  window.gsap.to(logoJewel, {
-                    rotation: 360,
-                    duration: 8,
-                    ease: "none",
-                    repeat: -1
-                  });
-                  
-                  // Pulsing scale effect
-                  window.gsap.to(logoJewel, {
-                    scale: 1.15,
-                    duration: 2,
-                    ease: "power2.inOut",
-                    yoyo: true,
-                    repeat: -1
-                  });
-                }
-
-                // Animate nav links entrance
-                const navLinks = document.querySelectorAll('.nav-link');
-                window.gsap.fromTo(navLinks,
-                  { opacity: 0, y: 20 },
-                  {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    stagger: 0.1,
-                    ease: "back.out(1.7)"
-                  }
-                );
-              }
-              resolve(true);
-            }, 100);
-          };
+        // Continuous rotation
+        gsap.to(logoJewel, {
+          rotation: 360,
+          duration: 8,
+          ease: "none",
+          repeat: -1
+        });
+        
+        // Pulsing scale effect
+        gsap.to(logoJewel, {
+          scale: 1.15,
+          duration: 2,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: -1
         });
       }
-      return Promise.resolve(true);
+
+      // Animate nav links entrance
+      const navLinks = document.querySelectorAll('.nav-link');
+      gsap.fromTo(navLinks,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "back.out(1.7)"
+        }
+      );
+
+      // Enhanced logo hover effects
+      const logo = document.querySelector('.nav-logo');
+      if (logo) {
+        logo.addEventListener('mouseenter', () => {
+          const jewel = logo.querySelector('.logo-jewel');
+          if (jewel) {
+            gsap.to(jewel, {
+              scale: 1.3,
+              duration: 0.3,
+              ease: "back.out(1.7)"
+            });
+          }
+        });
+
+        logo.addEventListener('mouseleave', () => {
+          const jewel = logo.querySelector('.logo-jewel');
+          if (jewel) {
+            gsap.to(jewel, {
+              scale: 1.15,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          }
+        });
+      }
     };
 
     const updateLogoColor = () => {
@@ -170,7 +171,10 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
       updateLogoColor();
     };
 
-    loadGSAP();
+    // Initialize animations after component mounts
+    setTimeout(() => {
+      initKineticAnimations();
+    }, 500);
 
     window.addEventListener('scroll', enhancedHandleScroll);
     updateThemeColors();
@@ -227,16 +231,31 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const link = e.currentTarget;
-    link.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      link.style.transform = '';
-    }, 100);
+    
+    // Smooth click animation with GSAP
+    gsap.to(link, {
+      scale: 0.95,
+      duration: 0.1,
+      ease: "power2.out",
+      onComplete: () => {
+        gsap.to(link, {
+          scale: 1,
+          duration: 0.1,
+          ease: "back.out(1.7)"
+        });
+      }
+    });
 
     if (href.startsWith('#')) {
       const targetId = href.substring(1);
       const target = document.getElementById(targetId);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        // Smooth GSAP scroll instead of browser scroll
+        gsap.to(window, {
+          duration: 1.5,
+          scrollTo: { y: target, offsetY: 100 },
+          ease: "power2.inOut"
+        });
       }
     } else if (href.startsWith('http')) {
       window.open(href, '_blank');
