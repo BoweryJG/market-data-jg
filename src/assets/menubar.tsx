@@ -8,16 +8,27 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [statusIndex, setStatusIndex] = useState(0);
   const navContainerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
+  const statusMessages = [
+    '⏱ AI SYNC 97%',
+    '🔗 NEURAL LINK ACTIVE',
+    '⚡ QUANTUM CORE 100%',
+    '📊 DATA STREAM LIVE',
+    '🛡️ SECURITY OPTIMAL',
+    '🌐 NETWORK STABLE',
+    '💎 GEMS ALIGNED',
+    '🔮 PREDICTION MODE'
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
-      // Removed parallax effect for better scroll performance
-      // const offset = window.scrollY * 0.05;
-      // document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
+      const offset = window.scrollY * 0.05;
+      document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
       
       setScrolled(window.scrollY > 50);
       
@@ -89,7 +100,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
     };
 
     const handleMouseEnter = () => {
-      const jewel = logo.querySelector('circle[fill="url(#jewelGradient)"]');
+      const jewel = logo.querySelector('.logo-jewel');
       if (jewel) {
         (jewel as SVGElement).style.filter = 'brightness(1.5)';
         setTimeout(() => {
@@ -108,6 +119,13 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
       logo.removeEventListener('mouseenter', handleMouseEnter);
     };
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStatusIndex((prev) => (prev + 1) % statusMessages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [statusMessages.length]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -161,7 +179,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             --gem-impossible: #ff00ff;
             --gem-shift: #00ffff;
             --gem-deep: #ff00aa;
-            --nav-height: 60px;
+            --nav-height: 80px;
             --scroll-offset: 0px;
         }
 
@@ -172,7 +190,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             left: 0;
             right: 0;
             z-index: 1000;
-            padding-top: 24px;
+            padding-top: 12px;
         }
 
         /* Award-Winning Navigation Bar - Floating Bezel Design */
@@ -206,57 +224,6 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             overflow: hidden;
         }
 
-        /* Edge Mount Indicators */
-        .nav-edge {
-            position: absolute;
-            top: 10px;
-            bottom: 10px;
-            width: 3px;
-            background: linear-gradient(to bottom,
-                rgba(var(--gem-impossible), 0.2),
-                rgba(var(--gem-shift), 0.1)
-            );
-            box-shadow: 0 0 8px rgba(var(--gem-shift), 0.15);
-            opacity: 0.6;
-            z-index: 1;
-            transition: all 0.3s ease;
-            transform: scaleY(1);
-        }
-
-        .left-edge { 
-            left: -4px; 
-            border-radius: 2px 0 0 2px; 
-        }
-        
-        .right-edge { 
-            right: -4px; 
-            border-radius: 0 2px 2px 0; 
-        }
-
-        /* Hover Reveal Glow Fins */
-        .nav-edge::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 80%;
-            background: radial-gradient(circle, rgba(var(--gem-deep), 0.4), transparent);
-            transform: translate(-50%, -50%);
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-container:hover .nav-edge::after {
-            opacity: 0.5;
-        }
-
-        .nav-container:hover .nav-edge {
-            opacity: 1;
-            box-shadow: 0 0 12px rgba(var(--gem-shift), 0.3);
-            transform: scaleY(1.1);
-        }
-
         /* Parallax Background Grid */
         .nav-container::before {
             content: '';
@@ -278,8 +245,9 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                     rgba(255, 255, 255, 0.01) 20px
                 );
             opacity: 0.5;
-            /* Removed parallax transform for better scroll performance */
+            transform: translateY(var(--scroll-offset));
             pointer-events: none;
+            transition: transform 0.1s linear;
         }
 
         /* Enhanced Float on Scroll */
@@ -299,7 +267,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 rgba(32, 32, 32, 0.95) 90%,
                 rgba(26, 26, 26, 0.98) 100%
             );
-            transform: translateX(-50%); /* Removed scale and 3D transform for better scroll */
+            transform: translateX(-50%) scale(0.98);
         }
 
         /* Glass Refraction Overlay */
@@ -325,7 +293,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             50% { opacity: 0.3; transform: scale(1.02); }
         }
 
-        /* Advanced Metallic Screws Container */
+        /* Metallic Screws */
         .nav-screws {
             position: absolute;
             top: 0;
@@ -336,29 +304,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             z-index: 2;
         }
 
-        /* Screw Wrapper with Bezel Inset */
-        .screw-wrapper {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, 
-                rgba(0,0,0,0.3) 0%, 
-                rgba(0,0,0,0.15) 40%, 
-                transparent 70%
-            );
-            box-shadow: 
-                inset 0 1px 2px rgba(0,0,0,0.5),
-                inset 0 -1px 1px rgba(255,255,255,0.1),
-                0 1px 1px rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Advanced Screw with Idle Rotation */
         .screw {
-            position: relative;
+            position: absolute;
             width: 5px;
             height: 5px;
             background: 
@@ -373,112 +320,58 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 0 0 3px rgba(0,0,0,0.3);
             transform: rotate(var(--angle, 10deg));
             border: 0.5px solid rgba(0,0,0,0.2);
-            animation: screwWiggle 5s ease-in-out infinite;
         }
 
-        /* Phillips Head Screw Groove */
-        .screw::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 70%;
-            height: 0.5px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(0,0,0,0.7) 20%, 
-                rgba(0,0,0,0.7) 80%, 
-                transparent
-            );
-            transform: translate(-50%, -50%) rotate(0deg);
-            box-shadow: 0 0 1px rgba(255,255,255,0.15);
-        }
-
-        /* Cross groove for Phillips head */
+        /* Jeweled Screw Caps */
         .screw::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0.5px;
-            height: 70%;
-            background: linear-gradient(180deg, 
-                transparent, 
-                rgba(0,0,0,0.7) 20%, 
-                rgba(0,0,0,0.7) 80%, 
-                transparent
-            );
+            width: 2px;
+            height: 2px;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 1px rgba(255,255,255,0.15);
-        }
-
-        /* Jeweled Center Dot */
-        .screw-jewel {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 1.5px;
-            height: 1.5px;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle at center, 
-                rgba(255,255,255,0.8), 
-                rgba(var(--gem-impossible), 0.6), 
-                rgba(var(--gem-deep), 0.4), 
-                transparent
-            );
+            background: radial-gradient(circle at center, rgba(var(--gem-impossible), 0.8), rgba(var(--gem-deep), 0.4), transparent);
             border-radius: 50%;
-            opacity: 0.7;
-            animation: jewelPulse 3s infinite;
+            opacity: 0.5;
+            animation: screwGlow 3s infinite;
         }
 
-        @keyframes jewelPulse {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        /* Idle Rotation Animation */
-        @keyframes screwWiggle {
-            0%, 100% { transform: rotate(var(--angle, 10deg)); }
-            25% { transform: rotate(calc(var(--angle, 10deg) + 1.5deg)); }
-            50% { transform: rotate(calc(var(--angle, 10deg) - 1deg)); }
-            75% { transform: rotate(calc(var(--angle, 10deg) + 0.5deg)); }
+        @keyframes screwGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         /* 4-Point Luxury Bezel - Perfect Mechanical Symmetry */
-        .screw-wrapper-top-left { 
-            top: 10px; 
-            left: 10px; 
-            --angle: 10deg;
-            animation-delay: 0s; 
+        .screw-top-left { 
+            top: 12px; 
+            left: 12px; 
+            --angle: 10deg; 
         }
-        .screw-wrapper-top-right { 
-            top: 10px; 
-            right: 10px; 
-            --angle: 22deg;
-            animation-delay: 1.2s; 
+        .screw-top-right { 
+            top: 12px; 
+            right: 12px; 
+            --angle: 22deg; 
         }
-        .screw-wrapper-bot-left { 
-            bottom: 10px; 
-            left: 10px; 
-            --angle: -12deg;
-            animation-delay: 2.4s; 
+        .screw-bot-left { 
+            bottom: 12px; 
+            left: 12px; 
+            --angle: -12deg; 
         }
-        .screw-wrapper-bot-right { 
-            bottom: 10px; 
-            right: 10px; 
-            --angle: 18deg;
-            animation-delay: 3.6s; 
+        .screw-bot-right { 
+            bottom: 12px; 
+            right: 12px; 
+            --angle: 18deg; 
         }
 
-        /* Main nav inner - single row */
         .nav-inner {
+            height: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
             position: relative;
         }
 
@@ -500,25 +393,65 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         }
 
         .nav-logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             position: relative;
         }
 
-        .nav-logo-icon svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 1px 2px rgba(255,255,255,0.1));
-            transition: transform 0.3s ease;
+        /* Animated Jewel Core in Logo */
+        @keyframes gemPulse {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1) hue-rotate(0deg);
+            }
+            25% { 
+                transform: scale(1.2) rotate(90deg);
+                filter: brightness(1.3) hue-rotate(30deg);
+            }
+            50% { 
+                transform: scale(1.1) rotate(180deg);
+                filter: brightness(1.5) hue-rotate(60deg);
+            }
+            75% { 
+                transform: scale(1.15) rotate(270deg);
+                filter: brightness(1.2) hue-rotate(90deg);
+            }
         }
 
-        .nav-logo:hover svg {
-            transform: scale(1.08);
+        .logo-jewel {
+            animation: gemPulse 4s infinite;
+            transform-origin: center;
+            transition: fill 0.5s ease;
+            position: relative;
+        }
+
+        /* Quantum Flicker Effect */
+        .logo-jewel-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .quantum-flicker {
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--gem-impossible), transparent 30%, var(--gem-shift));
+            mix-blend-mode: color-dodge;
+            opacity: 0.05;
+            animation: flickerGrid 1.6s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes flickerGrid {
+            0%, 100% { opacity: 0.05; transform: scale(1) rotate(0deg); }
+            25% { opacity: 0.08; transform: scale(1.05) rotate(90deg); }
+            50% { opacity: 0.12; transform: scale(1.08) rotate(180deg); }
+            75% { opacity: 0.08; transform: scale(1.05) rotate(270deg); }
         }
 
         .nav-logo-text {
             font-family: 'Orbitron', monospace;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
             -webkit-background-clip: text;
@@ -527,27 +460,148 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             letter-spacing: -0.5px;
         }
 
+        /* Nav Rail Container */
+        .nav-rail-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin: 0 20px;
+        }
+
+        /* Dynamic Power Rail */
+        .nav-rail {
+            flex: 1;
+            height: 2px;
+            margin: 0 16px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(var(--gem-shift), 0.25), 
+                rgba(var(--gem-impossible), 0.25), 
+                transparent);
+            box-shadow: 0 0 6px rgba(var(--gem-impossible), 0.3);
+            animation: pulseRail 4s infinite ease-in-out;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Data flow effect on rail */
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(var(--gem-shift), 0.5),
+                transparent
+            );
+            animation: railFlow 3s infinite linear;
+        }
+
+        @keyframes railFlow {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        @keyframes pulseRail {
+            0%, 100% { opacity: 0.3; transform: scaleX(1); }
+            50% { opacity: 0.7; transform: scaleX(1.05); }
+        }
+
+        /* Power Nodes */
+        .rail-node {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(var(--gem-impossible), 1), 
+                rgba(var(--gem-deep), 0.8),
+                transparent
+            );
+            box-shadow: 
+                0 0 6px rgba(var(--gem-shift), 0.8),
+                inset 0 0 2px rgba(255,255,255,0.5);
+            animation: nodePulse 3s infinite ease-in-out;
+            position: relative;
+        }
+
+        .rail-node::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                transparent 30%,
+                rgba(var(--gem-shift), 0.2)
+            );
+            animation: nodeRing 2s infinite ease-in-out;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+
+        @keyframes nodeRing {
+            0%, 100% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        .rail-node.left { margin-right: 8px; }
+        .rail-node.right { margin-left: 8px; }
+
+        /* System Status Display */
+        .nav-status {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            padding: 0 12px;
+            font-family: 'Orbitron', monospace;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            animation: statusUpdate 8s infinite;
+        }
+
+        @keyframes statusUpdate {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.8; color: var(--text-secondary); }
+        }
+
+        .nav-status:hover {
+            opacity: 1;
+            color: var(--gem-impossible);
+            text-shadow: 0 0 5px rgba(var(--gem-impossible), 0.5);
+        }
+
         /* Navigation Links */
         .nav-links {
             display: flex;
             align-items: center;
             gap: 8px;
-            justify-content: center;
-            flex: 1;
+            justify-content: flex-end;
+            margin-right: 20px;
         }
 
         .nav-link {
             position: relative;
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 12px;
             text-decoration: none;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid transparent;
             overflow: hidden;
@@ -577,16 +631,62 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(var(--gem-impossible), 0.3);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 
                 0 4px 20px rgba(var(--gem-impossible), 0.2),
                 0 0 0 1px rgba(var(--gem-impossible), 0.1) inset;
         }
 
+        /* Laser Target Active Indicator */
+        .nav-link.active {
+            color: var(--text-primary);
+            background: linear-gradient(135deg, 
+                rgba(var(--gem-impossible), 0.15) 0%,
+                rgba(var(--gem-shift), 0.15) 100%
+            );
+            border-color: rgba(var(--gem-impossible), 0.4);
+            box-shadow: 
+                0 0 20px rgba(var(--gem-impossible), 0.3),
+                0 0 0 1px rgba(var(--gem-impossible), 0.2) inset;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, 
+                transparent,
+                var(--gem-impossible) 20%,
+                var(--gem-shift) 50%,
+                var(--gem-impossible) 80%,
+                transparent
+            );
+            animation: laserSweep 1.5s infinite linear;
+            box-shadow: 0 0 10px var(--gem-impossible);
+        }
+
+        @keyframes laserSweep {
+            0% { 
+                filter: brightness(1);
+                transform: scaleX(0.8);
+            }
+            50% { 
+                filter: brightness(1.5);
+                transform: scaleX(1);
+            }
+            100% { 
+                filter: brightness(1);
+                transform: scaleX(0.8);
+            }
+        }
+
         /* Icon for nav links */
         .nav-link-icon {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -596,8 +696,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         .nav-link-icon::before {
             content: '';
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
             background: currentColor;
             border-radius: 50%;
             opacity: 0.6;
@@ -637,7 +737,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
         /* Premium CTA Button with Forcefield */
@@ -657,6 +757,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         }
 
+        /* Forcefield Ring */
         .nav-cta::after {
             content: '';
             position: absolute;
@@ -714,9 +815,9 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         /* More Menu with Radar Animation */
         .nav-more {
             position: relative;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
@@ -727,10 +828,32 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             overflow: hidden;
         }
 
+        .nav-more::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--gem-impossible), 0.05) 0%, transparent 70%);
+            animation: flickerRadar 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes flickerRadar {
+            0%, 100% { 
+                opacity: 0.2; 
+                transform: scale(1); 
+            }
+            50% { 
+                opacity: 0.4; 
+                transform: scale(1.5); 
+            }
+        }
+
         .nav-more:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(var(--gem-impossible), 0.3);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .nav-more-icon {
@@ -740,8 +863,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         }
 
         .nav-more-dot {
-            width: 3px;
-            height: 3px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: var(--text-secondary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -751,113 +874,139 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             background: var(--text-primary);
         }
 
+        .nav-more:hover .nav-more-dot:nth-child(1) {
+            transform: translateX(-2px);
+        }
+
+        .nav-more:hover .nav-more-dot:nth-child(3) {
+            transform: translateX(2px);
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
+            
+            .nav-rail-container {
+                margin: 0 10px;
+            }
+
+            .nav-status {
+                font-size: 9px;
+                padding: 0 8px;
+            }
         }
       `}</style>
-      
       <div className={`header-container ${scrolled ? 'scrolled' : ''}`}>
         <nav className="nav-container" ref={navContainerRef}>
-          {/* Edge Mount Indicators */}
-          <div className="nav-edge left-edge"></div>
-          <div className="nav-edge right-edge"></div>
-
-          {/* Advanced Metallic Screws with Wrappers */}
+          {/* Metallic Screws - 4-Point Luxury Bezel */}
           <div className="nav-screws">
-            <div className="screw-wrapper screw-wrapper-top-left">
-              <div className="screw">
-                <div className="screw-jewel"></div>
-              </div>
-            </div>
-            <div className="screw-wrapper screw-wrapper-top-right">
-              <div className="screw">
-                <div className="screw-jewel"></div>
-              </div>
-            </div>
-            <div className="screw-wrapper screw-wrapper-bot-left">
-              <div className="screw">
-                <div className="screw-jewel"></div>
-              </div>
-            </div>
-            <div className="screw-wrapper screw-wrapper-bot-right">
-              <div className="screw">
-                <div className="screw-jewel"></div>
-              </div>
-            </div>
+            <div className="screw screw-top-left"></div>
+            <div className="screw screw-top-right"></div>
+            <div className="screw screw-bot-left"></div>
+            <div className="screw screw-bot-right"></div>
           </div>
 
           <div className="nav-inner">
-            {/* Identity */}
-            <div className="nav-logo" ref={logoRef} onClick={(e) => handleNavClick(e, '/')}>
+            {/* Logo with Animated Jewel Core */}
+            <a href="#" className="nav-logo" ref={logoRef} onClick={(e) => handleNavClick(e, '/')}>
               <div className="nav-logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                  <defs>
-                    <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#9f58fa" />
-                      <stop offset="100%" stopColor="#4B96DC" />
-                    </linearGradient>
-                    <radialGradient id="jewelGradient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#fff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#ff00ff" stopOpacity="1" />
-                      <stop offset="60%" stopColor="#00ffff" stopOpacity="1" />
-                      <stop offset="100%" stopColor="#ff00aa" stopOpacity="0.9" />
-                    </radialGradient>
-                    <filter id="glowTrail">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <circle cx="16" cy="16" r="12" fill="none" stroke="url(#sphereGradient)" strokeWidth="2" opacity="0.8" />
-                  <circle cx="16" cy="16" r="8" fill="none" stroke="url(#sphereGradient)" strokeWidth="1.5" opacity="0.5" />
-                  <circle cx="16" cy="16" r="3" fill="url(#jewelGradient)">
-                    <animate attributeName="r" values="3;4;3" dur="2s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="16" cy="4" r="1.5" fill="#9f58fa" filter="url(#glowTrail)">
-                    <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="6s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="28" cy="16" r="1.5" fill="#4B96DC" filter="url(#glowTrail)">
-                    <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="8s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="16" cy="28" r="1.5" fill="#4bd48e" filter="url(#glowTrail)">
-                    <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="10s" repeatCount="indefinite"/>
-                  </circle>
-                </svg>
+                <div className="logo-jewel-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ position: 'relative', zIndex: 1 }}>
+                    <defs>
+                      <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#9f58fa', stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 1 }} />
+                      </linearGradient>
+                      <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.8 }} />
+                        <stop offset="50%" style={{ stopColor: '#9f58fa', stopOpacity: 0.5 }} />
+                        <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 0 }} />
+                      </radialGradient>
+                      <radialGradient id="jewelGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: 'var(--gem-impossible)', stopOpacity: 1 }} />
+                        <stop offset="50%" style={{ stopColor: 'var(--gem-deep)', stopOpacity: 0.8 }} />
+                        <stop offset="100%" style={{ stopColor: 'var(--gem-shift)', stopOpacity: 0.6 }} />
+                      </radialGradient>
+                    </defs>
+                    
+                    {/* Outer sphere ring */}
+                    <circle cx="16" cy="16" r="12" fill="none" stroke="url(#sphereGradient)" strokeWidth="2" opacity="0.8"/>
+                    
+                    {/* Inner sphere ring */}
+                    <circle cx="16" cy="16" r="8" fill="none" stroke="url(#sphereGradient)" strokeWidth="1.5" opacity="0.6"/>
+                    
+                    {/* Center glow */}
+                    <circle cx="16" cy="16" r="6" fill="url(#centerGlow)" opacity="0.8"/>
+                    
+                    {/* Animated Jewel Core */}
+                    <circle cx="16" cy="16" r="3" fill="url(#jewelGradient)" className="logo-jewel">
+                      <animate attributeName="r" values="3;4;3" dur="2s" repeatCount="indefinite"/>
+                      <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    
+                    {/* Orbital dots */}
+                    <circle cx="16" cy="4" r="1.5" fill="#9f58fa"/>
+                    <circle cx="28" cy="16" r="1.5" fill="#4B96DC"/>
+                    <circle cx="16" cy="28" r="1.5" fill="#4bd48e"/>
+                    <circle cx="4" cy="16" r="1.5" fill="#00d4ff"/>
+                  </svg>
+                  <div className="quantum-flicker"></div>
+                </div>
               </div>
               <span className="nav-logo-text">RepSpheres</span>
+            </a>
+
+            {/* Dynamic Nav Rail with Power Nodes */}
+            <div className="nav-rail-container">
+              <div className="rail-node left"></div>
+              <div className="nav-rail"></div>
+              <div className="nav-status" style={{ opacity: statusIndex === 0 ? 1 : 0.8 }}>
+                {statusMessages[statusIndex]}
+              </div>
+              <div className="rail-node right"></div>
             </div>
 
             {/* Navigation Links */}
             <nav className="nav-links">
-              <a href="#market-data" className="nav-link" onClick={(e) => handleNavClick(e, '#market-data')}>
+              <a 
+                href="/dashboard" 
+                className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/dashboard')}
+              >
                 <span className="nav-link-icon icon-market"></span>
                 <span>Market Data</span>
               </a>
-              <a href="#canvas" className="nav-link" onClick={(e) => handleNavClick(e, '#canvas')}>
+              <a 
+                href="/quantum" 
+                className={`nav-link ${location.pathname === '/quantum' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/quantum')}
+              >
                 <span className="nav-link-icon icon-canvas"></span>
-                <span>Canvas</span>
+                <span>Quantum</span>
               </a>
-              <a href="#sphere-os" className="nav-link" onClick={(e) => handleNavClick(e, '#sphere-os')}>
+              <a 
+                href="/enhanced" 
+                className={`nav-link ${location.pathname === '/enhanced' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/enhanced')}
+              >
                 <span className="nav-link-icon icon-sphere"></span>
-                <span>Sphere oS</span>
+                <span>Enhanced</span>
               </a>
-              <a href="#podcasts" className="nav-link" onClick={(e) => handleNavClick(e, '#podcasts')}>
+              <a 
+                href="/workspace" 
+                className={`nav-link ${location.pathname === '/workspace' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/workspace')}
+              >
                 <span className="nav-link-icon icon-podcasts"></span>
-                <span>Podcasts</span>
+                <span>Workspace</span>
               </a>
             </nav>
 
             {/* Right Actions */}
             <div className="nav-actions">
-              <a href="#get-started" className="nav-cta" onClick={(e) => handleNavClick(e, '#get-started')}>
-                Get Started
-              </a>
+              <a href="#get-started" className="nav-cta" onClick={(e) => onSalesModeToggle?.()}>Sales Mode</a>
               <button className="nav-more" aria-label="More options">
                 <div className="nav-more-icon">
                   <span className="nav-more-dot"></span>
