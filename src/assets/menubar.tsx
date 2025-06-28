@@ -460,12 +460,18 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             letter-spacing: -0.5px;
         }
 
-        /* Nav Rail Container */
+        /* Nav Rail Container - Now on its own line */
         .nav-rail-container {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
-            flex: 1;
-            margin: 0 20px;
+            justify-content: center;
+            width: 300px;
+            margin-top: 8px;
+            z-index: 1;
         }
 
         /* Dynamic Power Rail */
@@ -556,13 +562,13 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         .rail-node.left { margin-right: 8px; }
         .rail-node.right { margin-left: 8px; }
 
-        /* System Status Display */
+        /* System Status Display - Reduced by 20% and more subtle */
         .nav-status {
-            font-size: 11px;
+            font-size: 8.8px;
             color: var(--text-muted);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             text-transform: uppercase;
-            opacity: 0.6;
+            opacity: 0.5;
             padding: 0 12px;
             font-family: 'Orbitron', monospace;
             white-space: nowrap;
@@ -571,14 +577,14 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         }
 
         @keyframes statusUpdate {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.8; color: var(--text-secondary); }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.7; color: var(--text-secondary); }
         }
 
         .nav-status:hover {
-            opacity: 1;
+            opacity: 0.8;
             color: var(--gem-impossible);
-            text-shadow: 0 0 5px rgba(var(--gem-impossible), 0.5);
+            text-shadow: 0 0 3px rgba(var(--gem-impossible), 0.3);
         }
 
         /* Navigation Links */
@@ -958,16 +964,6 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
               <span className="nav-logo-text">RepSpheres</span>
             </a>
 
-            {/* Dynamic Nav Rail with Power Nodes */}
-            <div className="nav-rail-container">
-              <div className="rail-node left"></div>
-              <div className="nav-rail"></div>
-              <div className="nav-status" style={{ opacity: statusIndex === 0 ? 1 : 0.8 }}>
-                {statusMessages[statusIndex]}
-              </div>
-              <div className="rail-node right"></div>
-            </div>
-
             {/* Navigation Links */}
             <nav className="nav-links">
               <a 
@@ -1015,6 +1011,16 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 </div>
               </button>
             </div>
+          </div>
+
+          {/* Dynamic Nav Rail with Power Nodes - Now on its own line */}
+          <div className="nav-rail-container">
+            <div className="rail-node left"></div>
+            <div className="nav-rail"></div>
+            <div className="nav-status" style={{ opacity: statusIndex === 0 ? 1 : 0.8 }}>
+              {statusMessages[statusIndex]}
+            </div>
+            <div className="rail-node right"></div>
           </div>
         </nav>
       </div>
