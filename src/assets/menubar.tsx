@@ -921,38 +921,38 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                 <div className="logo-jewel-wrapper">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ position: 'relative', zIndex: 1 }}>
                     <defs>
-                      <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient id="navSphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style={{ stopColor: '#9f58fa', stopOpacity: 1 }} />
                         <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 1 }} />
                       </linearGradient>
-                      <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                      <radialGradient id="navCenterGlow" cx="50%" cy="50%" r="50%">
                         <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.8 }} />
                         <stop offset="50%" style={{ stopColor: '#9f58fa', stopOpacity: 0.5 }} />
                         <stop offset="100%" style={{ stopColor: '#4B96DC', stopOpacity: 0 }} />
                       </radialGradient>
-                      <radialGradient id="jewelGradient" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" style={{ stopColor: 'var(--gem-impossible)', stopOpacity: 1 }} />
-                        <stop offset="50%" style={{ stopColor: 'var(--gem-deep)', stopOpacity: 0.8 }} />
-                        <stop offset="100%" style={{ stopColor: 'var(--gem-shift)', stopOpacity: 0.6 }} />
+                      <radialGradient id="navJewelGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: '#ff00ff', stopOpacity: 1 }} />
+                        <stop offset="50%" style={{ stopColor: '#ff00aa', stopOpacity: 0.8 }} />
+                        <stop offset="100%" style={{ stopColor: '#00ffff', stopOpacity: 0.6 }} />
                       </radialGradient>
                     </defs>
                     
                     {/* Outer sphere ring */}
-                    <circle cx="16" cy="16" r="12" fill="none" stroke="url(#sphereGradient)" strokeWidth="2" opacity="0.8"/>
+                    <circle cx="16" cy="16" r="12" fill="none" stroke="url(#navSphereGradient)" strokeWidth="2" opacity="0.8"/>
                     
                     {/* Inner sphere ring */}
-                    <circle cx="16" cy="16" r="8" fill="none" stroke="url(#sphereGradient)" strokeWidth="1.5" opacity="0.6"/>
+                    <circle cx="16" cy="16" r="8" fill="none" stroke="url(#navSphereGradient)" strokeWidth="1.5" opacity="0.6"/>
                     
                     {/* Center glow */}
-                    <circle cx="16" cy="16" r="6" fill="url(#centerGlow)" opacity="0.8"/>
+                    <circle cx="16" cy="16" r="6" fill="url(#navCenterGlow)" opacity="0.8"/>
                     
                     {/* Animated Jewel Core */}
-                    <circle cx="16" cy="16" r="3" fill="url(#jewelGradient)" className="logo-jewel">
+                    <circle cx="16" cy="16" r="3" fill="url(#navJewelGradient)" className="logo-jewel">
                       <animate attributeName="r" values="3;4;3" dur="2s" repeatCount="indefinite"/>
                       <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
                     </circle>
                     
-                    {/* Orbital dots */}
+                    {/* Orbital dots representing network nodes */}
                     <circle cx="16" cy="4" r="1.5" fill="#9f58fa"/>
                     <circle cx="28" cy="16" r="1.5" fill="#4B96DC"/>
                     <circle cx="16" cy="28" r="1.5" fill="#4bd48e"/>
