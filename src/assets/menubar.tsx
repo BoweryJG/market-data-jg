@@ -1,6 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+// Load GSAP dynamically
+declare global {
+  interface Window {
+    gsap: any;
+    ScrollTrigger: any;
+  }
+}
+
 interface NavBarProps {
   onSalesModeToggle?: () => void;
 }
@@ -75,11 +83,100 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
       setActiveSection(current);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Load GSAP library
+    const loadGSAP = async () => {
+      if (!window.gsap) {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+        script.async = true;
+        document.head.appendChild(script);
+        
+        return new Promise((resolve) => {
+          script.onload = () => {
+            // Initialize kinetic animations after GSAP loads
+            setTimeout(() => {
+              if (window.gsap) {
+                // Enhanced logo jewel rotation and scale
+                const logoJewel = document.querySelector('.logo-jewel');
+                if (logoJewel) {
+                  window.gsap.set(logoJewel, { transformOrigin: "center" });
+                  
+                  // Continuous rotation
+                  window.gsap.to(logoJewel, {
+                    rotation: 360,
+                    duration: 8,
+                    ease: "none",
+                    repeat: -1
+                  });
+                  
+                  // Pulsing scale effect
+                  window.gsap.to(logoJewel, {
+                    scale: 1.15,
+                    duration: 2,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                    repeat: -1
+                  });
+                }
+
+                // Animate nav links entrance
+                const navLinks = document.querySelectorAll('.nav-link');
+                window.gsap.fromTo(navLinks,
+                  { opacity: 0, y: 20 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: "back.out(1.7)"
+                  }
+                );
+              }
+              resolve(true);
+            }, 100);
+          };
+        });
+      }
+      return Promise.resolve(true);
+    };
+
+    const updateLogoColor = () => {
+      const logoJewel = document.querySelector('.logo-jewel');
+      const activeLink = document.querySelector('.nav-link.active');
+      
+      if (logoJewel && activeLink) {
+        const icon = activeLink.querySelector('.nav-link-icon');
+        if (icon?.classList.contains('icon-market')) {
+          (logoJewel as SVGElement).style.fill = 'url(#marketGradient)';
+        } else if (icon?.classList.contains('icon-canvas')) {
+          (logoJewel as SVGElement).style.fill = 'url(#canvasGradient)';
+        } else if (icon?.classList.contains('icon-sphere')) {
+          (logoJewel as SVGElement).style.fill = 'url(#sphereGradient)';
+        } else {
+          (logoJewel as SVGElement).style.fill = 'url(#navJewelGradient)';
+        }
+      }
+    };
+
+    // Enhanced scroll handler with logo color updates
+    const enhancedHandleScroll = () => {
+      const offset = window.scrollY * 0.05;
+      document.documentElement.style.setProperty('--scroll-offset', `${offset}px`);
+      
+      setScrolled(window.scrollY > 50);
+      
+      updateThemeColors();
+      updateActiveNav();
+      updateLogoColor();
+    };
+
+    loadGSAP();
+
+    window.addEventListener('scroll', enhancedHandleScroll);
     updateThemeColors();
     updateActiveNav();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', enhancedHandleScroll);
   }, []);
 
   useEffect(() => {
@@ -419,10 +516,16 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         }
 
         .logo-jewel {
-            animation: gemPulse 4s infinite;
+            animation: gemPulse 4s infinite, logoRotate 8s linear infinite;
             transform-origin: center;
             transition: fill 0.5s ease;
             position: relative;
+            filter: drop-shadow(0 0 8px rgba(var(--gem-impossible), 0.5));
+        }
+
+        @keyframes logoRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Quantum Flicker Effect */
@@ -453,11 +556,18 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             font-family: 'Orbitron', monospace;
             font-size: 22px;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+            background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent), var(--gem-impossible));
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
+            animation: textShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         /* Nav Rail Container - Now on its own line */
@@ -479,16 +589,23 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             flex: 1;
             height: 2px;
             margin: 0 16px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(var(--gem-shift), 0.25), 
-                rgba(var(--gem-impossible), 0.25), 
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(var(--gem-shift), 0.35),
+                rgba(var(--gem-impossible), 0.45),
+                rgba(var(--gem-shift), 0.35),
                 transparent);
-            box-shadow: 0 0 6px rgba(var(--gem-impossible), 0.3);
-            animation: pulseRail 4s infinite ease-in-out;
+            background-size: 200% 100%;
+            box-shadow: 0 0 8px rgba(var(--gem-impossible), 0.4);
+            animation: pulseRail 4s infinite ease-in-out, railFlow 3s infinite linear;
             border-radius: 2px;
             position: relative;
             overflow: hidden;
+        }
+
+        @keyframes railFlow {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         /* Data flow effect on rail */
@@ -604,6 +721,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             color: var(--text-secondary);
             font-size: 14px;
             font-weight: 500;
+            font-family: 'Orbitron', monospace;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
@@ -611,6 +729,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid transparent;
             overflow: hidden;
+            transform-style: preserve-3d;
         }
 
         .nav-link::before {
@@ -934,6 +1053,18 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
                         <stop offset="0%" style={{ stopColor: '#ff00ff', stopOpacity: 1 }} />
                         <stop offset="50%" style={{ stopColor: '#ff00aa', stopOpacity: 0.8 }} />
                         <stop offset="100%" style={{ stopColor: '#00ffff', stopOpacity: 0.6 }} />
+                      </radialGradient>
+                      <radialGradient id="marketGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: '#4bd48e', stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: '#00ff88', stopOpacity: 0.6 }} />
+                      </radialGradient>
+                      <radialGradient id="canvasGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: '#9f58fa', stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 0.6 }} />
+                      </radialGradient>
+                      <radialGradient id="sphereGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style={{ stopColor: '#4B96DC', stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: '#60a5fa', stopOpacity: 0.6 }} />
                       </radialGradient>
                     </defs>
                     
