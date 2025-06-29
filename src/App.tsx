@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter, EnhancedMarketCommandCenter, TerritoryIntelligenceDashboard } from './components/Dashboard';
+import EnhancedMarketCommandCenterWithWidget from './components/Dashboard/EnhancedMarketCommandCenterWithWidget';
 import TestDashboard from './components/Dashboard/TestDashboard';
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import NavBar from './assets/menubar';
@@ -48,8 +49,8 @@ const App: React.FC = () => {
               <>
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
-                  <Route path="/" element={<EnhancedMarketCommandCenter />} />
-                  <Route path="/enhanced-command" element={<EnhancedMarketCommandCenter />} />
+                  <Route path="/" element={<EnhancedMarketCommandCenterWithWidget />} />
+                  <Route path="/enhanced-command" element={<EnhancedMarketCommandCenterWithWidget />} />
                   <Route path="/territory-intelligence" element={<TerritoryIntelligenceDashboard />} />
                   <Route path="/test" element={<TestDashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />
