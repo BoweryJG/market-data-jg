@@ -871,6 +871,12 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             box-shadow: 0 0 10px var(--blue-accent);
         }
 
+        /* Territory Icon */
+        .icon-territory::before {
+            background: var(--cyan-accent);
+            box-shadow: 0 0 10px var(--cyan-accent);
+        }
+
         /* Podcasts Icon */
         .icon-podcasts::before {
             background: var(--pink-accent);
@@ -1116,32 +1122,40 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
 
             {/* Navigation Links */}
             <nav className="nav-links">
-              <a 
-                href="/dashboard" 
+              <a
+                href="/dashboard"
                 className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '/dashboard')}
               >
                 <span className="nav-link-icon icon-market"></span>
                 <span>Market Data</span>
               </a>
-              <a 
-                href="/quantum" 
+              <a
+                href="/territory-intelligence"
+                className={`nav-link ${location.pathname === '/territory-intelligence' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/territory-intelligence')}
+              >
+                <span className="nav-link-icon icon-territory"></span>
+                <span>Territory Intel</span>
+              </a>
+              <a
+                href="/quantum"
                 className={`nav-link ${location.pathname === '/quantum' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '/quantum')}
               >
                 <span className="nav-link-icon icon-canvas"></span>
                 <span>Quantum</span>
               </a>
-              <a 
-                href="/enhanced" 
+              <a
+                href="/enhanced"
                 className={`nav-link ${location.pathname === '/enhanced' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '/enhanced')}
               >
                 <span className="nav-link-icon icon-sphere"></span>
                 <span>Enhanced</span>
               </a>
-              <a 
-                href="/workspace" 
+              <a
+                href="/workspace"
                 className={`nav-link ${location.pathname === '/workspace' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '/workspace')}
               >
