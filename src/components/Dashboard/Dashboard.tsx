@@ -507,7 +507,7 @@ const Dashboard: React.FC = () => {
         {/* Industry Toggle Switch */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Select Industry</FormLabel>
+            <FormLabel component="legend" sx={{ color: '#94a3b8' }}>Select Industry</FormLabel>
             <RadioGroup
               row
               aria-label="industry"
@@ -515,32 +515,23 @@ const Dashboard: React.FC = () => {
               value={selectedIndustry}
               onChange={handleIndustryChange}
             >
-              <FormControlLabel value="dental" control={<Radio />} label="Dental" />
-              <FormControlLabel value="aesthetic" control={<Radio />} label="Aesthetic" />
+              <FormControlLabel
+                value="dental"
+                control={<Radio sx={{ color: '#4bd48e' }} />}
+                label={<Typography sx={{ color: '#ffffff' }}>Dental</Typography>}
+              />
+              <FormControlLabel
+                value="aesthetic"
+                control={<Radio sx={{ color: '#9f58fa' }} />}
+                label={<Typography sx={{ color: '#ffffff' }}>Aesthetic</Typography>}
+              />
             </RadioGroup>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" sx={{ color: '#94a3b8' }}>Select Industry</FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="industry"
-                  name="industry"
-                  value={selectedIndustry}
-                  onChange={handleIndustryChange}
-                >
-                  <FormControlLabel
-                    value="dental"
-                    control={<Radio sx={{ color: '#4bd48e' }} />}
-                    label={<Typography sx={{ color: '#ffffff' }}>Dental</Typography>}
-                  />
-                  <FormControlLabel
-                    value="aesthetic"
-                    control={<Radio sx={{ color: '#9f58fa' }} />}
-                    label={<Typography sx={{ color: '#ffffff' }}>Aesthetic</Typography>}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Box>
+          </FormControl>
+        </Box>
 
+        {/* Main Content Grid */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} lg={8}>
             {/* Beautiful Categories Section */}
             <Card elevation={12} sx={{
               background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(30, 30, 30, 0.9) 100%)',
