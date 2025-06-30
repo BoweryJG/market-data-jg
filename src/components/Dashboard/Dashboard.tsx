@@ -3,6 +3,7 @@ import MarketSizeOverview from './MarketSizeOverview';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 import { TerritoryIntelligenceWidget } from '../Widgets';
+import SupremeGauge from './SupremeGauge';
 import { 
   Container,
   Grid,
@@ -517,10 +518,266 @@ const Dashboard: React.FC = () => {
               <FormControlLabel value="dental" control={<Radio />} label="Dental" />
               <FormControlLabel value="aesthetic" control={<Radio />} label="Aesthetic" />
             </RadioGroup>
-          </FormControl>
-        </Box>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" sx={{ color: '#94a3b8' }}>Select Industry</FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="industry"
+                  name="industry"
+                  value={selectedIndustry}
+                  onChange={handleIndustryChange}
+                >
+                  <FormControlLabel
+                    value="dental"
+                    control={<Radio sx={{ color: '#4bd48e' }} />}
+                    label={<Typography sx={{ color: '#ffffff' }}>Dental</Typography>}
+                  />
+                  <FormControlLabel
+                    value="aesthetic"
+                    control={<Radio sx={{ color: '#9f58fa' }} />}
+                    label={<Typography sx={{ color: '#ffffff' }}>Aesthetic</Typography>}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Box>
 
-        {/* Categories Section */}
+            {/* Beautiful Categories Section */}
+            <Card elevation={12} sx={{
+              background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(30, 30, 30, 0.9) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 3,
+              mb: 4,
+              overflow: 'hidden'
+            }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{
+                  color: '#ffffff',
+                  fontWeight: 'bold',
+                  mb: 3
+                }}>
+                  {selectedIndustry === 'dental' ? 'Dental Procedure Categories' : 'Aesthetic Procedure Categories'}
+                </Typography>
+                
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                  {categoriesWithCounts.map((category) => (
+                    <Chip
+                      key={category.id}
+                      label={`${category.name} (${category.procedure_count || 0})`}
+                      onClick={() => handleCategorySelect(category.id)}
+                      variant={selectedCategory === category.id ? "filled" : "outlined"}
+                      sx={{
+                        backgroundColor: selectedCategory === category.id
+                          ? (selectedIndustry === 'dental' ? '#4bd48e' : '#9f58fa')
+                          : 'rgba(255, 255, 255, 0.05)',
+                        color: selectedCategory === category.id ? '#000000' : '#ffffff',
+                        borderColor: selectedIndustry === 'dental' ? '#4bd48e' : '#9f58fa',
+                        '&:hover': {
+                          backgroundColor: selectedCategory === category.id
+                            ? (selectedIndustry === 'dental' ? '#4bd48e' : '#9f58fa')
+                            : 'rgba(255, 255, 255, 0.1)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                        },
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        height: '40px'
+                      }}
+                    />
+                  ))}
+                  {selectedCategory && (
+                    <Chip
+                      label="Clear Filter"
+                      onClick={() => handleCategorySelect(null)}
+                      sx={{
+                        backgroundColor: 'rgba(255, 107, 53, 0.2)',
+                        color: '#ff6b35',
+                        borderColor: '#ff6b35',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 107, 53, 0.3)',
+                        }
+                      }}
+                      variant="outlined"
+                    />
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+
+            {/* All Procedures Section */}
+            <Card elevation={12} sx={{
+              background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(30, 30, 30, 0.9) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 3,
+              overflow: 'hidden'
+            }}>
+              <CardContent sx={{ p: 0 }}>
+                <Box sx={{ p: 3, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <Typography variant="h6" sx={{
+                    color: '#ffffff',
+                    fontWeight: 'bold'
+                  }}>
+                    All Procedures ({currentProcedures.length})
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    {selectedCategory ? 'Filtered by category' : 'Showing all procedures'} • Real-time data from Supabase
+                  </Typography>
+                </Box>
+
+                <TableContainer component={Paper} elevation={0} sx={{
+                  backgroundColor: 'transparent',
+                  maxHeight: 600,
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: 'rgba(0, 212, 255, 0.5)',
+                    borderRadius: '4px',
+                  },
+                }}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{
+                          backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                          color: '#ffffff',
+                          fontWeight: 'bold',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}>
+                          Procedure Name
+                        </TableCell>
+                        <TableCell sx={{
+                          backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                          color: '#ffffff',
+                          fontWeight: 'bold',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}>
+                          Category
+                        </TableCell>
+                        <TableCell sx={{
+                          backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                          color: '#ffffff',
+                          fontWeight: 'bold',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}>
+                          Market Size
+                        </TableCell>
+                        <TableCell sx={{
+                          backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                          color: '#ffffff',
+                          fontWeight: 'bold',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}>
+                          Growth Rate
+                        </TableCell>
+                        <TableCell sx={{
+                          backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                          color: '#ffffff',
+                          fontWeight: 'bold',
+                          borderBottom: '1px solid rgba(0, 212, 255, 0.3)'
+                        }}>
+                          Avg Cost
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {paginatedProcedures.length > 0 ? (
+                        paginatedProcedures.map((procedure, index) => (
+                          <TableRow
+                            key={`${selectedIndustry}-${procedure.id || index}`}
+                            hover
+                            sx={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                              '&:hover': {
+                                backgroundColor: 'rgba(0, 212, 255, 0.05)',
+                                transform: 'translateX(4px)',
+                                transition: 'all 0.2s ease'
+                              },
+                              cursor: 'pointer',
+                              borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+                            }}
+                            onClick={() => {
+                              setSelectedProcedure(procedure);
+                              setProcedureModalOpen(true);
+                            }}
+                          >
+                            <TableCell sx={{ color: '#ffffff' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                  {procedure.name || procedure.procedure_name || 'N/A'}
+                                </Typography>
+                                <IconButton size="small" sx={{ color: '#00d4ff' }}>
+                                  <InfoIcon fontSize="small" />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                            <TableCell sx={{ color: '#94a3b8' }}>
+                              {procedure.category || procedure.clinical_category || 'N/A'}
+                            </TableCell>
+                            <TableCell sx={{ color: '#4bd48e', fontWeight: 'bold' }}>
+                              {formatMarketSize(procedure.market_size_2025_usd_millions)}
+                            </TableCell>
+                            <TableCell sx={{ color: '#9f58fa', fontWeight: 'bold' }}>
+                              {formatGrowthRate(procedure.yearly_growth_percentage)}
+                            </TableCell>
+                            <TableCell sx={{ color: '#ff6b35', fontWeight: 'bold' }}>
+                              {procedure.average_cost_usd ? `$${procedure.average_cost_usd.toLocaleString()}` : 'N/A'}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center" sx={{
+                            color: '#94a3b8',
+                            py: 4,
+                            fontSize: '1.1rem'
+                          }}>
+                            <Typography>No procedures found</Typography>
+                            <Button
+                              variant="outlined"
+                              sx={{ mt: 2, color: '#00d4ff', borderColor: '#00d4ff' }}
+                              onClick={() => window.location.reload()}
+                            >
+                              Refresh Data
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+
+                <TablePagination
+                  component="div"
+                  count={filteredProcedures.length}
+                  page={currentPage}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{
+                    color: '#ffffff',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                    '& .MuiSelect-icon': { color: '#ffffff' },
+                    '& .MuiTablePagination-select': { color: '#ffffff' },
+                    '& .MuiTablePagination-displayedRows': { color: '#94a3b8' }
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Right Sidebar - Territory Intelligence Widget */}
+          <Grid item xs={12} lg={4}>
+            <Box sx={{ position: 'sticky', top: 20 }}>
+              <TerritoryIntelligenceWidget />
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* Companies Section */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12}>
             <Card elevation={3}>
