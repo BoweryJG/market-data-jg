@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, ChangeEvent } from 'react';
 import MarketSizeOverview from './MarketSizeOverview';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
+import { TerritoryIntelligenceWidget } from '../Widgets';
 import { 
   Container,
   Grid,
@@ -467,6 +468,40 @@ const Dashboard: React.FC = () => {
         <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold', mb: 4 }}>
           Market Intelligence Dashboard
         </Typography>
+
+        {/* Territory Intelligence Widget */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} md={4}>
+            <TerritoryIntelligenceWidget />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Card elevation={3}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Market Overview
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Procedures
+                    </Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4bd48e' }}>
+                      {currentProcedures.length}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Companies
+                    </Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#00d4ff' }}>
+                      {currentCompanies.length}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
         {/* Industry Toggle Switch */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>

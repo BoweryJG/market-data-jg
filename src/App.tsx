@@ -49,15 +49,12 @@ const App: React.FC = () => {
               <>
                 <NavBar onSalesModeToggle={() => setSalesMode(true)} />
                 <Routes>
-                  <Route path="/" element={<EnhancedMarketCommandCenterWithWidget />} />
-                  <Route path="/enhanced-command" element={<EnhancedMarketCommandCenterWithWidget />} />
+                  <Route path="/" element={<Dashboard />} />
                   <Route path="/territory-intelligence" element={<TerritoryIntelligenceDashboard />} />
+                  <Route path="/canvas" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>Canvas - Coming Soon</h2></div>} />
+                  <Route path="/podcasts" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>Podcasts - Coming Soon</h2></div>} />
+                  <Route path="/crm" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>CRM - Coming Soon</h2></div>} />
                   <Route path="/test" element={<TestDashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/enhanced" element={<EnhancedMarketDashboard />} />
-                  <Route path="/actionable" element={<Dashboard />} />
-                  <Route path="/quantum" element={<QuantumMarketDashboard />} />
-                  <Route path="/workspace" element={<SalesWorkspace />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>

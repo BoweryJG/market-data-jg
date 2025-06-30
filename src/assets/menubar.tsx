@@ -1123,44 +1123,36 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             {/* Navigation Links */}
             <nav className="nav-links">
               <a
-                href="/dashboard"
-                className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '/dashboard')}
+                href="/"
+                className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/')}
               >
                 <span className="nav-link-icon icon-market"></span>
                 <span>Market Data</span>
               </a>
               <a
-                href="/territory-intelligence"
-                className={`nav-link ${location.pathname === '/territory-intelligence' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '/territory-intelligence')}
-              >
-                <span className="nav-link-icon icon-territory"></span>
-                <span>Territory Intel</span>
-              </a>
-              <a
-                href="/quantum"
-                className={`nav-link ${location.pathname === '/quantum' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '/quantum')}
+                href="/canvas"
+                className={`nav-link ${location.pathname === '/canvas' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/canvas')}
               >
                 <span className="nav-link-icon icon-canvas"></span>
-                <span>Quantum</span>
+                <span>Canvas</span>
               </a>
               <a
-                href="/enhanced"
-                className={`nav-link ${location.pathname === '/enhanced' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '/enhanced')}
-              >
-                <span className="nav-link-icon icon-sphere"></span>
-                <span>Enhanced</span>
-              </a>
-              <a
-                href="/workspace"
-                className={`nav-link ${location.pathname === '/workspace' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '/workspace')}
+                href="/podcasts"
+                className={`nav-link ${location.pathname === '/podcasts' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/podcasts')}
               >
                 <span className="nav-link-icon icon-podcasts"></span>
-                <span>Workspace</span>
+                <span>Podcasts</span>
+              </a>
+              <a
+                href="/crm"
+                className={`nav-link ${location.pathname === '/crm' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '/crm')}
+              >
+                <span className="nav-link-icon icon-sphere"></span>
+                <span>CRM</span>
               </a>
             </nav>
 
