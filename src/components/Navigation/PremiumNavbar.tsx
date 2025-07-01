@@ -302,15 +302,15 @@ const NavActions = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-// Premium CTA Button
+// Premium CTA Button - Smaller size
 const NavCTA = styled(Button)(({ theme }) => ({
   position: 'relative',
-  padding: '10px 24px',
-  borderRadius: '12px',
+  padding: '8px 20px',
+  borderRadius: '10px',
   background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
   color: 'white',
   fontWeight: 600,
-  fontSize: '14px',
+  fontSize: '13px',
   textDecoration: 'none',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   overflow: 'hidden',
@@ -416,13 +416,13 @@ const NavEdge = styled(Box)<{ side: 'left' | 'right' }>(({ side }) => ({
   },
 }));
 
-// Precision Screw Component
+// Precision Screw Component - Reduced size
 const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle, rotation }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
-  width: '8px',
-  height: '8px',
+  width: '6px',
+  height: '6px',
   borderRadius: '50%',
   background: `radial-gradient(circle at center, 
     rgba(0,0,0,0.3) 0%, 
@@ -450,8 +450,8 @@ const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle
 // Screw Inner
 const ScrewInner = styled(Box)(({ theme }) => ({
   position: 'relative',
-  width: '5px',
-  height: '5px',
+  width: '4px',
+  height: '4px',
   background: `
     radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%),
     linear-gradient(135deg, #ccc 0%, #666 100%)
@@ -558,6 +558,12 @@ const TelemetryNode = styled(Box)(({ theme }) => ({
   `,
   animation: `${jewelPulse} 3s infinite ease-in-out`,
   position: 'relative',
+  '&.left': {
+    animationDelay: '0s',
+  },
+  '&.right': {
+    animationDelay: '1.5s',
+  },
 }));
 
 // Telemetry Status
@@ -716,10 +722,7 @@ const PremiumNavbar: React.FC = () => {
                 Welcome, {user.email}
               </Typography>
             ) : (
-              <>
-                <NavCTA onClick={() => setLoginModalOpen(true)}>Login</NavCTA>
-                <NavCTA onClick={() => setSignupModalOpen(true)}>Sign Up</NavCTA>
-              </>
+              <NavCTA onClick={() => setLoginModalOpen(true)}>Get Started</NavCTA>
             )}
             <NavMore>
               <Box sx={{ display: 'flex', gap: '3px' }}>
@@ -745,9 +748,9 @@ const PremiumNavbar: React.FC = () => {
       <TelemetryContainer>
         <TelemetryRailSystem>
           <TelemetryRailWrapper>
-            <TelemetryNode />
+            <TelemetryNode className="left" />
             <TelemetryStatus>{statusMessages[statusIndex]}</TelemetryStatus>
-            <TelemetryNode />
+            <TelemetryNode className="right" />
           </TelemetryRailWrapper>
         </TelemetryRailSystem>
       </TelemetryContainer>

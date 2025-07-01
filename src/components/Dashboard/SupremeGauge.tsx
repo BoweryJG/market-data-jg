@@ -355,7 +355,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
     // GSAP Timeline for complete animation sequence
     const tl = gsap.timeline({
       onComplete: () => {
-        setDisplayValue(value);
+        setDisplayValue(unit === 'B' ? parseFloat(value.toFixed(1)) : Math.round(value));
         setNeedleAngle(targetAngle);
         // Trigger jewel cap pulse effect
         setTimeout(() => {
@@ -375,7 +375,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
           // Update display value during spin
           const progress = tl.progress();
           const currentValue = startValue + (value - startValue) * progress;
-          setDisplayValue(Math.round(currentValue));
+          setDisplayValue(unit === 'B' ? parseFloat(currentValue.toFixed(1)) : Math.round(currentValue));
         }
       }
     );
@@ -464,7 +464,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         {/* Digital display */}
         <DigitalDisplay>
           <DigitalText $gaugeColor={gaugeColor}>
-            {displayValue.toString().padStart(3, '0')}{unit}
+            {unit === 'B' ? '$' : ''}{unit === 'B' && displayValue < 100 ? displayValue.toFixed(1) : displayValue.toString().padStart(3, '0')}{unit}
           </DigitalText>
         </DigitalDisplay>
 

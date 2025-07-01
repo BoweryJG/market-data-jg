@@ -463,7 +463,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
                 }}>
-                  Market Command Center V2.0
+                  US Medical Aesthetics Market 2025-2030
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <LEDIndicator color={isLiveMode ? '#00ff00' : '#ff0000'} />
@@ -494,10 +494,10 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
               {/* Supreme Gauges */}
               <GaugeContainer>
                 <SupremeGauge
-                  value={gaugeValues.marketSize}
-                  max={200000}
+                  value={gaugeValues.marketSize / 1000}
+                  max={25}
                   label="Market Size"
-                  unit="M"
+                  unit="B"
                   color={gemColors.greenAccent}
                   size={180}
                   isLive={isLiveMode}
@@ -522,7 +522,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                 />
                 <SupremeGauge
                   value={gaugeValues.companies}
-                  max={100}
+                  max={1000}
                   label="Companies"
                   unit=""
                   color={gemColors.orangeAccent}
