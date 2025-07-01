@@ -350,7 +350,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
     const spinTarget = (360 * spinRounds) + targetAngle;
     
     // Trigger luxury audio sequence
-    luxuryAudio.playKineticSequence();
+    // luxuryAudio.playKineticSequence(); // Disabled per user request
     
     // GSAP Timeline for complete animation sequence
     const tl = gsap.timeline({
@@ -358,9 +358,9 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         setDisplayValue(unit === 'B' ? parseFloat(value.toFixed(1)) : Math.round(value));
         setNeedleAngle(targetAngle);
         // Trigger jewel cap pulse effect
-        setTimeout(() => {
-          luxuryAudio.playCrystalTing();
-        }, 200);
+        // setTimeout(() => {
+        //   luxuryAudio.playCrystalTing();
+        // }, 200); // Disabled per user request
       }
     });
     
@@ -401,7 +401,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
 
   const handleClick = () => {
     // 🎵 Play luxury watch interaction sounds
-    luxuryAudio.playBezelClick();
+    // luxuryAudio.playBezelClick(); // Disabled per user request
     
     // Spin animation on click
     const startAngle = needleAngle;
@@ -420,7 +420,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
       } else {
         setNeedleAngle((value / max) * 180 - 90);
         // Play settlement sound
-        setTimeout(() => luxuryAudio.playCrystalTing(), 200);
+        // setTimeout(() => luxuryAudio.playCrystalTing(), 200); // Disabled per user request
       }
     };
 
@@ -430,7 +430,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
   // 🧭 Handle precision screw interactions
   const handleScrewClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    luxuryAudio.playBezelClick();
+    // luxuryAudio.playBezelClick(); // Disabled per user request
   };
 
   return (

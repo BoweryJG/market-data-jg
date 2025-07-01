@@ -722,7 +722,21 @@ const PremiumNavbar: React.FC = () => {
                 Welcome, {user.email}
               </Typography>
             ) : (
-              <NavCTA onClick={() => setLoginModalOpen(true)}>Get Started</NavCTA>
+              <>
+                <NavCTA onClick={() => setSignupModalOpen(true)}>Sign Up</NavCTA>
+                <NavCTA 
+                  onClick={() => setLoginModalOpen(true)}
+                  sx={{
+                    background: 'transparent',
+                    border: `1px solid ${gemColors.purplePrimary}`,
+                    '&:hover': {
+                      background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
+                    },
+                  }}
+                >
+                  Login
+                </NavCTA>
+              </>
             )}
             <NavMore>
               <Box sx={{ display: 'flex', gap: '3px' }}>

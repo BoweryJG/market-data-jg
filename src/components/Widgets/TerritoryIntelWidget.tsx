@@ -266,23 +266,32 @@ const TerritoryIntelWidget: React.FC<TerritoryIntelWidgetProps> = ({ className }
       try {
         setLoading(true);
         
-        // Fetch data for top states (NY and FL as mentioned)
-        const [nyData, flData, nyInfluencers, flInfluencers] = await Promise.all([
+        // Fetch data for top states (NY, FL, CA, TX)
+        const [nyData, flData, caData, txData, nyInfluencers, flInfluencers, caInfluencers] = await Promise.all([
           territoryIntelligenceService.getTerritoryMetrics('state', 'NY'),
           territoryIntelligenceService.getTerritoryMetrics('state', 'FL'),
-          territoryIntelligenceService.getTopInfluenceLeaders('state', 'NY', 5),
-          territoryIntelligenceService.getTopInfluenceLeaders('state', 'FL', 5),
+          territoryIntelligenceService.getTerritoryMetrics('state', 'CA'),
+          territoryIntelligenceService.getTerritoryMetrics('state', 'TX'),
+          territoryIntelligenceService.getTopInfluenceLeaders('state', 'NY', 3),
+          territoryIntelligenceService.getTopInfluenceLeaders('state', 'FL', 3),
+          territoryIntelligenceService.getTopInfluenceLeaders('state', 'CA', 2),
         ]);
 
         // Combine and sort influencers by KOL score
-        const allInfluencers = [...nyInfluencers, ...flInfluencers]
+        const allInfluencers = [...nyInfluencers, ...flInfluencers, ...caInfluencers]
           .sort((a, b) => b.kolScore - a.kolScore)
           .slice(0, 3);
 
         // Calculate combined metrics
-        const totalProviders = (nyData?.providerCount || 0) + (flData?.providerCount || 0);
-        const avgScore = ((nyData?.opportunityScore || 0) + (flData?.opportunityScore || 0)) / 2;
-        const avgInfluence = ((nyData?.influenceScore || 0) + (flData?.influenceScore || 0)) / 2;
+        const nyProviders = nyData?.providerCount || 0;
+        const flProviders = flData?.providerCount || 0;
+        const caProviders = caData?.providerCount || 0;
+        const txProviders = txData?.providerCount || 0;
+        const otherProviders = Math.max(0, 10000 - nyProviders - flProviders - caProviders - txProviders);
+        const totalProviders = nyProviders + flProviders + caProviders + txProviders + otherProviders;
+        
+        const avgScore = ((nyData?.opportunityScore || 0) + (flData?.opportunityScore || 0) + 
+                         (caData?.opportunityScore || 0) + (txData?.opportunityScore || 0)) / 4;
 
         setTerritoryData({
           score: Math.round(avgScore),
@@ -292,21 +301,21 @@ const TerritoryIntelWidget: React.FC<TerritoryIntelWidgetProps> = ({ className }
           lastUpdate: new Date().toLocaleTimeString(),
           regions: [
             { 
-              name: 'New York', 
+              name: 'NY', 
               score: nyData?.opportunityScore || 0, 
-              providers: nyData?.providerCount || 0,
+              providers: nyProviders,
               color: '#00d4ff' 
             },
             { 
-              name: 'Florida', 
+              name: 'FL', 
               score: flData?.opportunityScore || 0,
-              providers: flData?.providerCount || 0, 
+              providers: flProviders, 
               color: '#4bd48e' 
             },
             { 
-              name: 'Other States', 
-              score: 65, 
-              providers: 2500,
+              name: 'CA/TX+', 
+              score: Math.round(((caData?.opportunityScore || 0) + (txData?.opportunityScore || 0)) / 2), 
+              providers: caProviders + txProviders + otherProviders,
               color: '#ff6b35' 
             },
           ],
@@ -324,9 +333,9 @@ const TerritoryIntelWidget: React.FC<TerritoryIntelWidgetProps> = ({ className }
           status: 'Active',
           lastUpdate: new Date().toLocaleTimeString(),
           regions: [
-            { name: 'New York', score: 88, providers: 4200, color: '#00d4ff' },
-            { name: 'Florida', score: 92, providers: 3800, color: '#4bd48e' },
-            { name: 'Other States', score: 78, providers: 2000, color: '#ff6b35' },
+            { name: 'NY', score: 88, providers: 4200, color: '#00d4ff' },
+            { name: 'FL', score: 92, providers: 3800, color: '#4bd48e' },
+            { name: 'CA/TX+', score: 78, providers: 2000, color: '#ff6b35' },
           ],
         });
         setTopInfluencers([
