@@ -181,7 +181,7 @@ const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle
 // Digital LED display
 const DigitalDisplay = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: '20%',
+  bottom: '25%',
   left: '50%',
   transform: 'translateX(-50%)',
   background: '#000',
@@ -192,6 +192,7 @@ const DigitalDisplay = styled(Box)(({ theme }) => ({
     inset 0 2px 8px rgba(0,0,0,0.9),
     0 2px 4px rgba(0,0,0,0.5)
   `,
+  zIndex: 10,
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -321,7 +322,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
   size = 200,
   isLive = false,
 }) => {
-  const [displayValue, setDisplayValue] = useState(0);
+  const [displayValue, setDisplayValue] = useState(unit === 'B' ? parseFloat(value.toFixed(1)) : Math.round(value));
   const [needleAngle, setNeedleAngle] = useState(-90);
   const animationRef = useRef<number>();
   const needleContainerRef = useRef<HTMLDivElement>(null);

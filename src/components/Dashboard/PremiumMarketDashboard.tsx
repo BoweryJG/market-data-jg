@@ -395,12 +395,15 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
       ? relevantProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / relevantProcedures.length
       : 0;
     
-    return {
+    const values = {
       marketSize,
       avgGrowth,
       procedures: relevantProcedures.length,
       companies: relevantCompanies.length,
     };
+    
+    console.log('Gauge values:', values);
+    return values;
   }, [filteredProcedures, filteredCompanies, marketData]);
   
   // Sort handler
