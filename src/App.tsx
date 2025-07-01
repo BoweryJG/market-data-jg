@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import PremiumMarketDashboard from './components/Dashboard/PremiumMarketDashboard';
 import Dashboard from './components/Dashboard/Dashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter, EnhancedMarketCommandCenter, TerritoryIntelligenceDashboard } from './components/Dashboard';
 import EnhancedMarketCommandCenterWithWidget from './components/Dashboard/EnhancedMarketCommandCenterWithWidget';
 import TestDashboard from './components/Dashboard/TestDashboard';
+import GaugeShowcase from './components/Dashboard/GaugeShowcase';
 import { OrbContextProvider } from './assets/OrbContextProvider';
+import PremiumNavbar from './components/Navigation/PremiumNavbar';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
@@ -47,14 +50,16 @@ const App: React.FC = () => {
               </>
             ) : (
               <>
-                <NavBar onSalesModeToggle={() => setSalesMode(true)} />
+                <PremiumNavbar />
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/" element={<PremiumMarketDashboard />} />
                   <Route path="/territory-intelligence" element={<TerritoryIntelligenceDashboard />} />
-                  <Route path="/canvas" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>Canvas - Coming Soon</h2></div>} />
-                  <Route path="/podcasts" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>Podcasts - Coming Soon</h2></div>} />
-                  <Route path="/crm" element={<div style={{ padding: '2rem', textAlign: 'center' }}><h2>CRM - Coming Soon</h2></div>} />
+                  <Route path="/canvas" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Canvas - Coming Soon</h2></div>} />
+                  <Route path="/podcasts" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Podcasts - Coming Soon</h2></div>} />
+                  <Route path="/sphere-os" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Sphere oS - Coming Soon</h2></div>} />
                   <Route path="/test" element={<TestDashboard />} />
+                  <Route path="/gauges" element={<GaugeShowcase />} />
+                  <Route path="/old-dashboard" element={<Dashboard />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </>
