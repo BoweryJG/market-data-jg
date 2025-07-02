@@ -402,9 +402,13 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
       companies: relevantCompanies.length,
     };
     
-    console.log('Gauge values:', values);
+    console.log('Gauge values for', selectedIndustry, ':', {
+      ...values,
+      marketSizeInBillions: marketSize / 1000,
+      procedureNames: relevantProcedures.slice(0, 3).map(p => p.procedure_name)
+    });
     return values;
-  }, [filteredProcedures, filteredCompanies, marketData]);
+  }, [filteredProcedures, filteredCompanies, marketData, selectedIndustry]);
   
   // Sort handler
   const handleSort = (key: string) => {
@@ -497,6 +501,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
               {/* Supreme Gauges */}
               <GaugeContainer>
                 <SupremeGauge
+                  key={`market-${selectedIndustry}-${gaugeValues.marketSize}`}
                   value={gaugeValues.marketSize / 1000}
                   max={25}
                   label="Market Size"
@@ -506,6 +511,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                   isLive={isLiveMode}
                 />
                 <SupremeGauge
+                  key={`growth-${selectedIndustry}-${gaugeValues.avgGrowth}`}
                   value={gaugeValues.avgGrowth}
                   max={20}
                   label="Avg Growth"
@@ -515,6 +521,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                   isLive={isLiveMode}
                 />
                 <SupremeGauge
+                  key={`procedures-${selectedIndustry}-${gaugeValues.procedures}`}
                   value={gaugeValues.procedures}
                   max={500}
                   label="Procedures"
@@ -524,6 +531,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                   isLive={isLiveMode}
                 />
                 <SupremeGauge
+                  key={`companies-${selectedIndustry}-${gaugeValues.companies}`}
                   value={gaugeValues.companies}
                   max={1000}
                   label="Companies"

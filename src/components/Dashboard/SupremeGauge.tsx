@@ -398,7 +398,7 @@ const SupremeGauge: React.FC<SupremeGaugeProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [value, max, label]);
+  }, [value, max, label, unit]);
 
   const handleClick = () => {
     // 🎵 Play luxury watch interaction sounds
