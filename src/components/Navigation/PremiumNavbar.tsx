@@ -542,22 +542,34 @@ const TelemetryRailWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: { width: '600px' },
 }));
 
-// Telemetry Node
+// Telemetry Node - Enhanced LED visibility
 const TelemetryNode = styled(Box)(({ theme }) => ({
-  width: '4px',
-  height: '4px',
+  width: '8px',
+  height: '8px',
   borderRadius: '50%',
-  background: `radial-gradient(circle, 
+  background: `radial-gradient(circle at 30% 30%, 
     ${gemColors.impossible}, 
     ${gemColors.deep}CC,
-    transparent
+    ${gemColors.shift}80
   )`,
   boxShadow: `
-    0 0 4px ${gemColors.shift}99,
-    inset 0 0 1px rgba(255,255,255,0.5)
+    0 0 12px ${gemColors.shift},
+    0 0 6px ${gemColors.impossible},
+    inset 0 0 2px rgba(255,255,255,0.8)
   `,
   animation: `${jewelPulse} 3s infinite ease-in-out`,
   position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: '20%',
+    left: '20%',
+    width: '40%',
+    height: '40%',
+    background: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: '50%',
+    filter: 'blur(1px)',
+  },
   '&.left': {
     animationDelay: '0s',
   },
@@ -641,7 +653,7 @@ const PremiumNavbar: React.FC = () => {
         <NavInner>
           {/* Logo */}
           <NavLogo onClick={() => navigate('/')}>
-            <Box sx={{ width: 36, height: 36, position: 'relative' }}>
+            <Box sx={{ width: 36, height: 36, position: 'relative', display: 'flex', alignItems: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="100%" height="100%">
                 <defs>
                   <linearGradient id="sphereGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -679,20 +691,36 @@ const PremiumNavbar: React.FC = () => {
                 </circle>
               </svg>
             </Box>
-            <Typography
-              sx={{
-                fontFamily: "'Orbitron', monospace",
-                fontSize: '20px',
-                fontWeight: 800,
-                background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                letterSpacing: '-0.5px',
-              }}
-            >
-              RepSpheres
-            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <Typography
+                sx={{
+                  fontFamily: "'Orbitron', monospace",
+                  fontSize: '20px',
+                  fontWeight: 800,
+                  background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1,
+                }}
+              >
+                RepSpheres
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "'Orbitron', monospace",
+                  fontSize: '9px',
+                  fontWeight: 600,
+                  color: gemColors.textMuted,
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  mt: '-2px',
+                }}
+              >
+                Market Data
+              </Typography>
+            </Box>
           </NavLogo>
           
           {/* Navigation Links */}
@@ -770,7 +798,22 @@ const PremiumNavbar: React.FC = () => {
       </TelemetryContainer>
       
       {/* Auth Modals */}
-      <LoginModal open={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
+      <LoginModal 
+        isOpen={loginModalOpen} 
+        onClose={() => setLoginModalOpen(false)} 
+        onGoogleAuth={() => {
+          console.log('Google auth');
+          setLoginModalOpen(false);
+        }}
+        onFacebookAuth={() => {
+          console.log('Facebook auth');
+          setLoginModalOpen(false);
+        }}
+        onEmailAuth={() => {
+          console.log('Email auth');
+          setLoginModalOpen(false);
+        }}
+      />
       <SignupModal open={signupModalOpen} onClose={() => setSignupModalOpen(false)} />
     </HeaderContainer>
   );
