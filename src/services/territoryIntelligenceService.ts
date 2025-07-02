@@ -99,7 +99,7 @@ class TerritoryIntelligenceService {
           published_articles_count, speaking_engagements_count,
           training_courses_offered
         `)
-        .in('provider_id', providerIds.slice(0, 1000)); // Limit for performance
+        .in('provider_id', providerIds.length > 0 ? providerIds.slice(0, 1000) : ['dummy']); // Limit for performance
 
       if (influenceError) throw influenceError;
 
@@ -148,12 +148,12 @@ class TerritoryIntelligenceService {
       if (error) throw error;
 
       // Get corresponding social influence data
-      const providerNames = data?.map(p => p.provider_name) || [];
+      const providerIds = data?.map(p => p.id) || [];
       
       const { data: socialData, error: socialError } = await supabase
         .from('provider_social_influence')
         .select('*')
-        .in('provider_id', providerNames.slice(0, 100));
+        .in('provider_id', providerIds.length > 0 ? providerIds.slice(0, 100) : ['dummy']);
 
       if (socialError) throw socialError;
 

@@ -187,10 +187,8 @@ class ComprehensiveDataService {
         dentalCategoriesResponse,
         aestheticCategoriesResponse,
         providersResponse,
-        trendsResponse,
-        analyticsResponse,
       ] = await Promise.allSettled([
-        supabase.from('procedures').select('*').order('market_size_2025_usd_millions', { ascending: false }),
+        supabase.from('procedures').select('*'),
         supabase.from('dental_procedures').select('*'),
         supabase.from('aesthetic_procedures').select('*'),
         supabase.from('dental_companies').select('*'),
@@ -198,8 +196,6 @@ class ComprehensiveDataService {
         supabase.from('dental_procedure_categories').select('*'),
         supabase.from('aesthetic_categories').select('*'),
         supabase.from('providers').select('*').limit(100),
-        supabase.from('trends').select('*').limit(50),
-        supabase.from('search_analytics').select('*').limit(100),
       ]);
 
       // Combine all procedures with industry tagging
@@ -220,6 +216,13 @@ class ComprehensiveDataService {
         ...(aestheticProceduresResponse.status === 'fulfilled' ? 
           (aestheticProceduresResponse.value.data || []).map((p: any) => ({ ...p, industry: 'aesthetic' })) : []),
       ];
+      
+      // Sort procedures by market size
+      allProcedures.sort((a, b) => {
+        const aSize = a.market_size_2025_usd_millions || a.market_size_usd_millions || 0;
+        const bSize = b.market_size_2025_usd_millions || b.market_size_usd_millions || 0;
+        return bSize - aSize;
+      });
 
       // Combine all companies
       const allCompanies = [
@@ -240,11 +243,8 @@ class ComprehensiveDataService {
       // Extract territory data from procedures regional_popularity
       const territories = this.extractTerritoryData(allProcedures);
 
-      // Get analytics data
-      const analytics = [
-        ...(trendsResponse.status === 'fulfilled' ? trendsResponse.value.data || [] : []),
-        ...(analyticsResponse.status === 'fulfilled' ? analyticsResponse.value.data || [] : []),
-      ];
+      // Get analytics data (empty for now since these tables don't exist)
+      const analytics = [];
 
       // Calculate market metrics
       const totalMarketSize = allProcedures.reduce((sum, p) => 
