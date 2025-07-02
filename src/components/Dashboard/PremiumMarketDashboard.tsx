@@ -62,6 +62,7 @@ import { comprehensiveDataService, ComprehensiveMarketData } from '../../service
 import { getCategoryIconConfig } from './CategoryIcons';
 import SupremeGauge from './SupremeGauge';
 import TerritoryIntelWidget from '../Widgets/TerritoryIntelWidget';
+import EnhancedTerritoryIntel from '../Widgets/EnhancedTerritoryIntel';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 
@@ -119,6 +120,14 @@ const PremiumContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   paddingTop: '140px', // Account for fixed navbar + telemetry
   paddingBottom: theme.spacing(4),
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
+// Content Wrapper - constrained to navbar width
+const ContentWrapper = styled(Box)(({ theme }) => ({
+  width: '100%',
+  maxWidth: '1400px', // Match navbar max-width
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
 }));
@@ -456,8 +465,9 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
   
   return (
     <PremiumContainer>
-      {/* Market Command Center V2.0 */}
-      <Grid container spacing={3}>
+      <ContentWrapper>
+        {/* Market Command Center V2.0 */}
+        <Grid container spacing={3}>
         <Grid item xs={12} lg={9}>
           <MarketOverviewCard>
             <CardContent>
@@ -550,6 +560,17 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
           <TerritoryIntelContainer>
             <TerritoryIntelWidget />
           </TerritoryIntelContainer>
+        </Grid>
+      </Grid>
+      
+      {/* Enhanced Territory Intelligence - Full Width */}
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid item xs={12}>
+          <EnhancedTerritoryIntel 
+            isAuthenticated={false} // Demo mode
+            userTerritory="NY"
+            subscriptionLevel="basic"
+          />
         </Grid>
       </Grid>
       
@@ -907,6 +928,7 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
           onClose={() => setSelectedCompany(null)}
         />
       )}
+      </ContentWrapper>
     </PremiumContainer>
   );
 };

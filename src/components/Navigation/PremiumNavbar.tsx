@@ -50,8 +50,8 @@ const screwWiggle = keyframes`
 `;
 
 const jewelPulse = keyframes`
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
 `;
 
 const pulse = keyframes`
@@ -302,15 +302,15 @@ const NavActions = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-// Premium CTA Button - Smaller size
+// Premium CTA Button - Exact from HTML
 const NavCTA = styled(Button)(({ theme }) => ({
   position: 'relative',
-  padding: '8px 20px',
-  borderRadius: '10px',
+  padding: '10px 24px',
+  borderRadius: '12px',
   background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
   color: 'white',
   fontWeight: 600,
-  fontSize: '13px',
+  fontSize: '14px',
   textDecoration: 'none',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   overflow: 'hidden',
@@ -542,34 +542,22 @@ const TelemetryRailWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: { width: '600px' },
 }));
 
-// Telemetry Node - Enhanced LED visibility
+// Telemetry Node - Exact from HTML
 const TelemetryNode = styled(Box)(({ theme }) => ({
-  width: '8px',
-  height: '8px',
+  width: '4px',
+  height: '4px',
   borderRadius: '50%',
-  background: `radial-gradient(circle at 30% 30%, 
+  background: `radial-gradient(circle, 
     ${gemColors.impossible}, 
     ${gemColors.deep}CC,
-    ${gemColors.shift}80
+    transparent
   )`,
   boxShadow: `
-    0 0 12px ${gemColors.shift},
-    0 0 6px ${gemColors.impossible},
-    inset 0 0 2px rgba(255,255,255,0.8)
+    0 0 4px ${gemColors.shift}99,
+    inset 0 0 1px rgba(255,255,255,0.5)
   `,
   animation: `${jewelPulse} 3s infinite ease-in-out`,
   position: 'relative',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: '20%',
-    left: '20%',
-    width: '40%',
-    height: '40%',
-    background: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '50%',
-    filter: 'blur(1px)',
-  },
   '&.left': {
     animationDelay: '0s',
   },

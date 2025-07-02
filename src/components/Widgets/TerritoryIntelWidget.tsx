@@ -617,30 +617,54 @@ const TerritoryIntelWidget: React.FC<TerritoryIntelWidgetProps> = ({ className }
               
               <Box sx={{ display: 'flex', gap: 1 }}>
                 {territoryData.regions.map((region: any) => (
-                  <Tooltip key={region.name} title={`${region.name}: ${region.providers.toLocaleString()} providers`}>
+                  <Tooltip 
+                    key={region.name} 
+                    title={region.locked 
+                      ? 'Login to unlock this region' 
+                      : `${region.name}: ${region.providers.toLocaleString()} providers`
+                    }
+                  >
                     <Box
                       sx={{
                         flex: 1,
                         height: 32,
                         borderRadius: '4px',
-                        background: `linear-gradient(90deg, ${region.color}33, ${region.color}66)`,
-                        border: `1px solid ${region.color}44`,
+                        background: region.locked 
+                          ? 'rgba(255, 255, 255, 0.05)'
+                          : `linear-gradient(90deg, ${region.color}33, ${region.color}66)`,
+                        border: `1px solid ${region.locked ? 'rgba(255,255,255,0.1)' : region.color + '44'}`,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'pointer',
+                        cursor: region.locked ? 'not-allowed' : 'pointer',
                         transition: 'all 0.3s ease',
-                        '&:hover': {
+                        position: 'relative',
+                        opacity: region.locked ? 0.5 : 1,
+                        '&:hover': region.locked ? {} : {
                           background: `linear-gradient(90deg, ${region.color}66, ${region.color}99)`,
                           transform: 'translateY(-1px)',
                         },
                       }}
                     >
+                      {region.locked && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            fontSize: '10px',
+                            color: '#666',
+                          }}
+                        >
+                          🔒
+                        </Box>
+                      )}
                       <Typography
                         variant="caption"
                         sx={{
-                          color: '#fff',
+                          color: region.locked ? '#666' : '#fff',
                           fontWeight: 600,
                           fontSize: '0.55rem',
                           fontFamily: 'JetBrains Mono, monospace',
@@ -651,13 +675,13 @@ const TerritoryIntelWidget: React.FC<TerritoryIntelWidgetProps> = ({ className }
                       <Typography
                         variant="caption"
                         sx={{
-                          color: region.color,
+                          color: region.locked ? '#666' : region.color,
                           fontWeight: 700,
                           fontSize: '0.65rem',
                           fontFamily: 'JetBrains Mono, monospace',
                         }}
                       >
-                        {region.providers.toLocaleString()}
+                        {region.locked ? '???' : region.providers.toLocaleString()}
                       </Typography>
                     </Box>
                   </Tooltip>
