@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import PremiumMarketDashboard from './components/Dashboard/PremiumMarketDashboard';
 import Dashboard from './components/Dashboard/Dashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter, EnhancedMarketCommandCenter, TerritoryIntelligenceDashboard } from './components/Dashboard';
@@ -10,7 +10,7 @@ import { OrbContextProvider } from './assets/OrbContextProvider';
 import PremiumNavbar from './components/Navigation/PremiumNavbar';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { 
   SalesDashboard,
   FieldTools,
@@ -22,49 +22,90 @@ import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-const App: React.FC = () => {
-  const [salesMode, setSalesMode] = useState(false);
+// OAuth Callback Handler Component
+const OAuthHandler: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, loading } = useAuth();
 
+  useEffect(() => {
+    // Check if this is an OAuth callback
+    const hashParams = new URLSearchParams(location.hash.substring(1));
+    const searchParams = new URLSearchParams(location.search);
+    
+    const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+    const error = hashParams.get('error') || searchParams.get('error');
+
+    if (error) {
+      console.error('OAuth error:', error);
+      navigate('/', { replace: true });
+      return;
+    }
+
+    if (accessToken || isAuthenticated) {
+      // We have a token or are authenticated, redirect to market-data
+      navigate('/market-data', { replace: true });
+    }
+  }, [location, navigate, isAuthenticated]);
+
+  return null;
+};
+
+// Main App Content
+const AppContent: React.FC = () => {
+  const [salesMode, setSalesMode] = useState(false);
+  const location = useLocation();
+
+  return (
+    <OrbContextProvider>
+      {/* Handle OAuth callbacks */}
+      <OAuthHandler />
+      
+      {salesMode ? (
+        <>
+          <QuickActionsBar />
+          <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 } }}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/sales-dashboard" />} />
+              <Route path="/sales-dashboard" element={<SalesDashboard />} />
+              <Route path="/field-tools" element={<FieldTools />} />
+              <Route path="/industry-tools" element={<IndustrySpecificTools />} />
+              <Route path="/intelligence" element={<SalesIntelligenceHub />} />
+              <Route path="/market-data" element={
+                <Box sx={{ p: 2 }}>
+                  <Dashboard />
+                </Box>
+              } />
+            </Routes>
+          </Box>
+        </>
+      ) : (
+        <>
+          <PremiumNavbar />
+          <Routes>
+            <Route path="/" element={<PremiumMarketDashboard />} />
+            <Route path="/market-data" element={<PremiumMarketDashboard />} />
+            <Route path="/territory-intelligence" element={<TerritoryIntelligenceDashboard />} />
+            <Route path="/canvas" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Canvas - Coming Soon</h2></div>} />
+            <Route path="/podcasts" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Podcasts - Coming Soon</h2></div>} />
+            <Route path="/sphere-os" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Sphere oS - Coming Soon</h2></div>} />
+            <Route path="/test" element={<TestDashboard />} />
+            <Route path="/gauges" element={<GaugeShowcase />} />
+            <Route path="/old-dashboard" element={<Dashboard />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </>
+      )}
+    </OrbContextProvider>
+  );
+};
+
+const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <OrbContextProvider>
-            {salesMode ? (
-              <>
-                <QuickActionsBar />
-                <Box sx={{ pt: 8, pb: { xs: 7, sm: 0 } }}>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/sales-dashboard" />} />
-                    <Route path="/sales-dashboard" element={<SalesDashboard />} />
-                    <Route path="/field-tools" element={<FieldTools />} />
-                    <Route path="/industry-tools" element={<IndustrySpecificTools />} />
-                    <Route path="/intelligence" element={<SalesIntelligenceHub />} />
-                    <Route path="/market-data" element={
-                      <Box sx={{ p: 2 }}>
-                        <Dashboard />
-                      </Box>
-                    } />
-                  </Routes>
-                </Box>
-              </>
-            ) : (
-              <>
-                <PremiumNavbar />
-                <Routes>
-                  <Route path="/" element={<PremiumMarketDashboard />} />
-                  <Route path="/territory-intelligence" element={<TerritoryIntelligenceDashboard />} />
-                  <Route path="/canvas" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Canvas - Coming Soon</h2></div>} />
-                  <Route path="/podcasts" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Podcasts - Coming Soon</h2></div>} />
-                  <Route path="/sphere-os" element={<div style={{ padding: '2rem', textAlign: 'center', marginTop: '140px' }}><h2>Sphere oS - Coming Soon</h2></div>} />
-                  <Route path="/test" element={<TestDashboard />} />
-                  <Route path="/gauges" element={<GaugeShowcase />} />
-                  <Route path="/old-dashboard" element={<Dashboard />} />
-                  <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-              </>
-            )}
-          </OrbContextProvider>
+          <AppContent />
         </Router>
       </AuthProvider>
     </ThemeProvider>

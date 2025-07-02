@@ -161,7 +161,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: `${window.location.origin}/market-data`
         }
       });
       
@@ -183,7 +183,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: `${window.location.origin}/market-data`
         }
       });
       

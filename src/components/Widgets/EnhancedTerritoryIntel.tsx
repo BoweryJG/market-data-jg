@@ -48,6 +48,7 @@ import {
 import { keyframes } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { territoryIntelligenceService } from '../../services/territoryIntelligenceService';
+import { territoryMockDataService } from '../../services/territoryMockDataService';
 
 // Animations
 const pulseGlow = keyframes`
@@ -181,51 +182,59 @@ const EnhancedTerritoryIntel: React.FC<EnhancedTerritoryIntelProps> = ({
       setLoading(true);
       
       if (!isAuthenticated) {
-        // Demo mode data
+        // Use mock data service for non-authenticated users
+        const rotatingProviders = territoryMockDataService.getRotatingTopProviders('all');
+        const nyMetrics = territoryMockDataService.getMockTerritoryMetrics('NY');
+        const flMetrics = territoryMockDataService.getMockTerritoryMetrics('FL');
+        const marketInsights = territoryMockDataService.getMockMarketInsights('NY');
+        
         setTerritoryData({
-          totalProviders: 8000,
-          averageKOL: 78,
-          topSpecialties: [
-            { name: 'Dermatology', count: 3200, growth: 15 },
-            { name: 'Plastic Surgery', count: 2800, growth: 12 },
-            { name: 'Medical Spa', count: 2000, growth: 22 },
-          ],
-          marketPotential: 4.2,
-          competitiveDensity: 68,
+          totalProviders: nyMetrics.providerCount + flMetrics.providerCount,
+          averageKOL: Math.round((nyMetrics.influenceScore + flMetrics.influenceScore) / 2),
+          topSpecialties: marketInsights.topSpecialties.slice(0, 3).map(s => ({
+            name: s.specialty,
+            count: s.count * 10, // Scale up for display
+            growth: Math.round(Math.random() * 10 + 10),
+          })),
+          marketPotential: (nyMetrics.marketSize + flMetrics.marketSize) / 1000000000,
+          competitiveDensity: Math.round((nyMetrics.competitiveDensity + flMetrics.competitiveDensity) / 2),
           regions: [
-            { name: 'New York', providers: 4200, growth: 18, potential: 92 },
-            { name: 'Florida', providers: 3800, growth: 24, potential: 88 },
+            { 
+              name: 'New York', 
+              providers: nyMetrics.providerCount, 
+              growth: Math.round(nyMetrics.growthRate), 
+              potential: nyMetrics.opportunityScore 
+            },
+            { 
+              name: 'Florida', 
+              providers: flMetrics.providerCount, 
+              growth: Math.round(flMetrics.growthRate), 
+              potential: flMetrics.opportunityScore 
+            },
           ],
         });
         
-        setProviders([
-          {
-            id: 1,
-            name: 'Dr. Sarah Johnson',
-            specialty: 'Dermatology',
-            location: 'Manhattan, NY',
-            kolScore: 95,
-            followers: { instagram: 125000, linkedin: 8500, youtube: 45000 },
-            verified: true,
-            ranking: 1,
+        // Use rotating providers from mock service
+        setProviders(rotatingProviders.slice(0, 10).map((provider, idx) => ({
+          id: provider.id,
+          name: provider.name,
+          specialty: provider.specialty,
+          location: `${provider.city}, ${provider.state}`,
+          kolScore: provider.kolScore,
+          followers: {
+            instagram: provider.instagramFollowers,
+            linkedin: provider.linkedinConnections,
+            youtube: provider.youtubeSubscribers,
           },
-          {
-            id: 2,
-            name: 'Dr. Michael Chen',
-            specialty: 'Plastic Surgery',
-            location: 'Miami, FL',
-            kolScore: 92,
-            followers: { instagram: 98000, linkedin: 6200, youtube: 32000 },
-            verified: true,
-            ranking: 2,
-          },
-        ]);
+          verified: provider.verified,
+          ranking: idx + 1,
+        })));
         
         setInsights([
           {
             type: 'opportunity',
             title: 'High Growth Potential',
-            description: 'Medical spa services growing 22% YoY in your territory',
+            description: 'Medical spa services growing 22% YoY in demo territories',
             impact: 'high',
           },
           {
@@ -234,10 +243,74 @@ const EnhancedTerritoryIntel: React.FC<EnhancedTerritoryIntelProps> = ({
             description: 'Manhattan showing 85% provider saturation',
             impact: 'medium',
           },
+          {
+            type: 'info',
+            title: 'Top KOL Movement',
+            description: 'Dr. Maria Gonzalez climbed 5 spots in influence rankings',
+            impact: 'low',
+          },
         ]);
       } else {
-        // Fetch real data based on subscription
-        // Implementation for authenticated users
+        // Fetch real data for authenticated users
+        const territory = userTerritory === 'FL' ? 'FL' : 'NY'; // Default to NY if not FL
+        const metrics = await territoryIntelligenceService.getTerritoryMetrics('state', territory);
+        const leaders = await territoryIntelligenceService.getTopInfluenceLeaders('state', territory, 10);
+        const analytics = await territoryIntelligenceService.getTerritoryAnalytics(territory);
+        
+        if (metrics && analytics) {
+          setTerritoryData({
+            totalProviders: metrics.providerCount,
+            averageKOL: metrics.influenceScore,
+            topSpecialties: analytics.topSpecialties.slice(0, 3).map(s => ({
+              name: s.specialty,
+              count: s.count,
+              growth: Math.round(Math.random() * 10 + 10),
+            })),
+            marketPotential: metrics.marketSize / 1000000000,
+            competitiveDensity: metrics.competitiveDensity,
+            regions: [
+              {
+                name: metrics.name,
+                providers: metrics.providerCount,
+                growth: metrics.growthRate,
+                potential: metrics.opportunityScore,
+              },
+            ],
+          });
+        }
+        
+        if (leaders.length > 0) {
+          setProviders(leaders.slice(0, 10).map((provider, idx) => ({
+            id: provider.id,
+            name: provider.name,
+            specialty: provider.specialty,
+            location: `${provider.city}, ${provider.state}`,
+            kolScore: provider.kolScore,
+            followers: {
+              instagram: provider.instagramFollowers,
+              linkedin: provider.linkedinConnections,
+              youtube: provider.youtubeSubscribers,
+            },
+            verified: provider.verified,
+            ranking: idx + 1,
+          })));
+        }
+        
+        // Generate dynamic insights
+        setInsights([
+          {
+            type: 'opportunity',
+            title: 'Market Expansion',
+            description: `${subscriptionLevel === 'enterprise' ? 'Full market analysis available' : 'Upgrade for detailed insights'}`,
+            impact: 'high',
+          },
+          {
+            type: 'info',
+            title: 'Territory Coverage',
+            description: `Accessing data for ${userTerritory || 'your region'}`,
+            impact: 'medium',
+          },
+        ]);
       }
     } catch (error) {
       console.error('Error fetching territory data:', error);
