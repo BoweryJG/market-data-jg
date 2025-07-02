@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { supabase } from '../../services/supabaseClient';
 import './LoginModal.css';
 
 interface LoginModalProps {
@@ -156,39 +157,52 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     
-    // Simulate authentication delay
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) throw error;
+      
+      // The browser will redirect to Google's OAuth page
+      // After successful auth, it will redirect back to the app
+    } catch (error) {
+      console.error('Error with Google auth:', error);
       setIsLoading(false);
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        onGoogleAuth();
-      }, 800);
-    }, 1500);
+      // You might want to show an error message here
+    }
   };
 
   const handleFacebookAuth = async () => {
     setIsLoading(true);
     
-    // Simulate authentication delay
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) throw error;
+      
+      // The browser will redirect to Facebook's OAuth page
+      // After successful auth, it will redirect back to the app
+    } catch (error) {
+      console.error('Error with Facebook auth:', error);
       setIsLoading(false);
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        onFacebookAuth();
-      }, 800);
-    }, 1500);
+      // You might want to show an error message here
+    }
   };
 
   const handleEmailAuth = () => {
-    setIsLoading(true);
-    
-    // Simulate loading
-    setTimeout(() => {
-      setIsLoading(false);
+    // Close this modal and let parent handle showing email auth modal
+    if (onEmailAuth) {
       onEmailAuth();
-    }, 500);
+    }
   };
 
   if (!isOpen) return null;

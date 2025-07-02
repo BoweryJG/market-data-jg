@@ -416,13 +416,11 @@ const NavEdge = styled(Box)<{ side: 'left' | 'right' }>(({ side }) => ({
   },
 }));
 
-// Precision Screw Component - Reduced size
-const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle, rotation }) => ({
+// Screw Wrapper with Bezel Inset
+const ScrewWrapper = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: '50%',
-  left: '50%',
-  width: '6px',
-  height: '6px',
+  width: '8px',
+  height: '8px',
   borderRadius: '50%',
   background: `radial-gradient(circle at center, 
     rgba(0,0,0,0.3) 0%, 
@@ -437,21 +435,37 @@ const PrecisionScrew = styled(Box)<{ angle: number; rotation: number }>(({ angle
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transform: `
-    translate(-50%, -50%)
-    rotate(${angle}deg)
-    translateY(-46%)
-  `,
-  '--angle': `${rotation}deg`,
-  animation: `${screwWiggle} 5s ease-in-out infinite`,
-  animationDelay: `${angle / 90}s`,
+  '&.screw-wrapper-top-left': { 
+    top: '10px', 
+    left: '10px',
+    '--angle': '10deg',
+    animationDelay: '0s',
+  },
+  '&.screw-wrapper-top-right': { 
+    top: '10px', 
+    right: '10px',
+    '--angle': '22deg',
+    animationDelay: '1.2s',
+  },
+  '&.screw-wrapper-bot-left': { 
+    bottom: '10px', 
+    left: '10px',
+    '--angle': '-12deg',
+    animationDelay: '2.4s',
+  },
+  '&.screw-wrapper-bot-right': { 
+    bottom: '10px', 
+    right: '10px',
+    '--angle': '18deg',
+    animationDelay: '3.6s',
+  },
 }));
 
 // Screw Inner
 const ScrewInner = styled(Box)(({ theme }) => ({
   position: 'relative',
-  width: '4px',
-  height: '4px',
+  width: '5px',
+  height: '5px',
   background: `
     radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%),
     linear-gradient(135deg, #ccc 0%, #666 100%)
@@ -465,6 +479,8 @@ const ScrewInner = styled(Box)(({ theme }) => ({
     0 0 3px rgba(0,0,0,0.3)
   `,
   border: '0.5px solid rgba(0,0,0,0.2)',
+  transform: 'rotate(var(--angle, 10deg))',
+  animation: `${screwWiggle} 5s ease-in-out infinite`,
   
   // Phillips head screw grooves
   '&::before, &::after': {
@@ -627,15 +643,28 @@ const PremiumNavbar: React.FC = () => {
         <NavEdge className="nav-edge" side="left" />
         <NavEdge className="nav-edge" side="right" />
         
-        {/* Precision Screws */}
-        <Box className="nav-screws">
-          {[0, 90, 180, 270].map((angle, index) => (
-            <PrecisionScrew key={`screw-${index}`} angle={angle} rotation={Math.random() * 360}>
-              <ScrewInner>
-                <ScrewJewel />
-              </ScrewInner>
-            </PrecisionScrew>
-          ))}
+        {/* Advanced Metallic Screws with Wrappers */}
+        <Box className="nav-screws" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
+          <ScrewWrapper className="screw-wrapper-top-left">
+            <ScrewInner>
+              <ScrewJewel />
+            </ScrewInner>
+          </ScrewWrapper>
+          <ScrewWrapper className="screw-wrapper-top-right">
+            <ScrewInner>
+              <ScrewJewel />
+            </ScrewInner>
+          </ScrewWrapper>
+          <ScrewWrapper className="screw-wrapper-bot-left">
+            <ScrewInner>
+              <ScrewJewel />
+            </ScrewInner>
+          </ScrewWrapper>
+          <ScrewWrapper className="screw-wrapper-bot-right">
+            <ScrewInner>
+              <ScrewJewel />
+            </ScrewInner>
+          </ScrewWrapper>
         </Box>
         
         <NavInner>
@@ -774,7 +803,7 @@ const PremiumNavbar: React.FC = () => {
         </NavInner>
       </NavContainer>
       
-      {/* Telemetry System */}
+      {/* PATCHED TELEMETRY SYSTEM */}
       <TelemetryContainer>
         <TelemetryRailSystem>
           <TelemetryRailWrapper>
@@ -790,16 +819,17 @@ const PremiumNavbar: React.FC = () => {
         isOpen={loginModalOpen} 
         onClose={() => setLoginModalOpen(false)} 
         onGoogleAuth={() => {
-          console.log('Google auth');
+          // OAuth will redirect, modal will close automatically
           setLoginModalOpen(false);
         }}
         onFacebookAuth={() => {
-          console.log('Facebook auth');
+          // OAuth will redirect, modal will close automatically
           setLoginModalOpen(false);
         }}
         onEmailAuth={() => {
-          console.log('Email auth');
+          // Switch to email auth modal
           setLoginModalOpen(false);
+          // You could open an email/password modal here
         }}
       />
       <SignupModal open={signupModalOpen} onClose={() => setSignupModalOpen(false)} />
