@@ -86,22 +86,30 @@ class TerritoryIntelligenceService {
       // Get social influence data for providers in this territory
       const providerIds = providerData?.map(p => p.id) || [];
       
-      const { data: influenceData, error: influenceError } = await supabase
-        .from('provider_social_influence')
-        .select(`
-          provider_id,
-          instagram_followers, instagram_engagement_rate,
-          linkedin_connections, linkedin_posts_count,
-          youtube_subscribers, youtube_video_count,
-          realself_worth_it_rating, realself_review_count,
-          google_rating, google_review_count,
-          kol_score, local_influence_score, national_influence_score,
-          published_articles_count, speaking_engagements_count,
-          training_courses_offered
-        `)
-        .in('provider_id', providerIds.length > 0 ? providerIds.slice(0, 1000) : ['dummy']); // Limit for performance
+      // Skip social influence query if we don't have valid provider IDs or if they're UUIDs
+      let influenceData: any[] = [];
+      if (providerIds.length > 0 && typeof providerIds[0] === 'number') {
+        const { data, error: influenceError } = await supabase
+          .from('provider_social_influence')
+          .select(`
+            provider_id,
+            instagram_followers, instagram_engagement_rate,
+            linkedin_connections, linkedin_posts_count,
+            youtube_subscribers, youtube_video_count,
+            realself_worth_it_rating, realself_review_count,
+            google_rating, google_review_count,
+            kol_score, local_influence_score, national_influence_score,
+            published_articles_count, speaking_engagements_count,
+            training_courses_offered
+          `)
+          .in('provider_id', providerIds.slice(0, 1000));
 
-      if (influenceError) throw influenceError;
+        if (influenceError) {
+          console.warn('Error fetching influence data:', influenceError);
+        } else {
+          influenceData = data || [];
+        }
+      }
 
       // Create a map of provider influence data
       const influenceMap = new Map();
@@ -150,12 +158,20 @@ class TerritoryIntelligenceService {
       // Get corresponding social influence data
       const providerIds = data?.map(p => p.id) || [];
       
-      const { data: socialData, error: socialError } = await supabase
-        .from('provider_social_influence')
-        .select('*')
-        .in('provider_id', providerIds.length > 0 ? providerIds.slice(0, 100) : ['dummy']);
+      // Skip social influence query if we don't have valid provider IDs or if they're UUIDs
+      let socialData: any[] = [];
+      if (providerIds.length > 0 && typeof providerIds[0] === 'number') {
+        const { data, error: socialError } = await supabase
+          .from('provider_social_influence')
+          .select('*')
+          .in('provider_id', providerIds.slice(0, 100));
 
-      if (socialError) throw socialError;
+        if (socialError) {
+          console.warn('Error fetching social data:', socialError);
+        } else {
+          socialData = data || [];
+        }
+      }
 
       // Merge the data
       const leaders: InfluenceLeader[] = (data || []).map(provider => {
