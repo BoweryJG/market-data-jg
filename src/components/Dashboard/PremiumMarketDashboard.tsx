@@ -358,22 +358,24 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
               volume_per_year: proc.volume_per_year,
               confidence_score: proc.confidence_score,
             })),
-            companies: proc.top_companies ? mockData.procedures.reduce((acc: any[], proc) => {
-              proc.top_companies.forEach((company, idx) => {
-                if (!acc.find(c => c.name === company)) {
-                  acc.push({
-                    id: `comp-${company.toLowerCase().replace(/\s+/g, '-')}`,
-                    name: company,
-                    industry: proc.industry,
-                    headquarters: 'United States',
-                    market_size_2025_usd_billion: Math.random() * 10 + 1,
-                    yearly_growth_percentage: Math.random() * 20 + 5,
-                    company_type: 'Public',
-                  });
-                }
-              });
+            companies: mockData.procedures.reduce((acc: any[], proc) => {
+              if (proc.top_companies) {
+                proc.top_companies.forEach((company, idx) => {
+                  if (!acc.find(c => c.name === company)) {
+                    acc.push({
+                      id: `comp-${company.toLowerCase().replace(/\s+/g, '-')}`,
+                      name: company,
+                      industry: proc.industry,
+                      headquarters: 'United States',
+                      market_size_2025_usd_billion: Math.random() * 10 + 1,
+                      yearly_growth_percentage: Math.random() * 20 + 5,
+                      company_type: 'Public',
+                    });
+                  }
+                });
+              }
               return acc;
-            }, []) : [],
+            }, []),
             categories: [...new Set(mockData.procedures.map(p => p.category))].map((cat, idx) => ({
               id: `cat-${idx}`,
               name: cat,
