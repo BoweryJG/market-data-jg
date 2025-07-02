@@ -66,7 +66,6 @@ import EnhancedTerritoryIntel from '../Widgets/EnhancedTerritoryIntel';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 import { useAuth } from '../../context/AuthContext';
-import { getEstimatedMarketData } from '../../services/marketDataEstimator';
 
 // Animations
 const dataFlow = keyframes`
@@ -324,14 +323,13 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
   });
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
-  const [isLiveMode, setIsLiveMode] = useState(false); // Default to false for non-authenticated
+  const [isLiveMode, setIsLiveMode] = useState(true); // Live mode available for all users
   
-  // Enable live mode for authenticated users
+  // Live mode is now available for all users
   useEffect(() => {
-    if (isAuthenticated) {
-      setIsLiveMode(true);
-    }
-  }, [isAuthenticated]);
+    // Live mode is always available, no authentication check needed
+    setIsLiveMode(true);
+  }, []);
 
   // Fetch market data
   useEffect(() => {
@@ -339,60 +337,9 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
       try {
         setLoading(true);
         
-        if (isAuthenticated) {
-          // Fetch real data for authenticated users
-          const data = await comprehensiveDataService.getComprehensiveMarketData();
-          setMarketData(data);
-        } else {
-          // Use mock data for non-authenticated users
-          const mockData = getEstimatedMarketData(2025);
-          const transformedData: ComprehensiveMarketData = {
-            procedures: mockData.procedures.map((proc, idx) => ({
-              id: `proc-${idx}`,
-              procedure_name: proc.name,
-              category: proc.category,
-              industry: proc.industry,
-              market_size_2025_usd_millions: proc.market_size_usd / 1000000,
-              yearly_growth_percentage: proc.growth_rate,
-              average_cost_usd: proc.average_cost_usd,
-              volume_per_year: proc.volume_per_year,
-              confidence_score: proc.confidence_score,
-            })),
-            companies: mockData.procedures.reduce((acc: any[], proc) => {
-              if (proc.top_companies) {
-                proc.top_companies.forEach((company, idx) => {
-                  if (!acc.find(c => c.name === company)) {
-                    acc.push({
-                      id: `comp-${company.toLowerCase().replace(/\s+/g, '-')}`,
-                      name: company,
-                      industry: proc.industry,
-                      headquarters: 'United States',
-                      market_size_2025_usd_billion: Math.random() * 10 + 1,
-                      yearly_growth_percentage: Math.random() * 20 + 5,
-                      company_type: 'Public',
-                    });
-                  }
-                });
-              }
-              return acc;
-            }, []),
-            categories: [...new Set(mockData.procedures.map(p => p.category))].map((cat, idx) => ({
-              id: `cat-${idx}`,
-              name: cat,
-              industry: mockData.procedures.find(p => p.category === cat)?.industry || 'aesthetic',
-            })),
-            territories: [],
-            analytics: [],
-            marketMetrics: {
-              totalMarketSize: mockData.total_market_size,
-              totalProcedures: mockData.procedures.length,
-              totalCompanies: 50,
-              averageGrowth: mockData.average_growth_rate,
-              territoryCount: 2, // NY and FL for demo
-            },
-          };
-          setMarketData(transformedData);
-        }
+        // Always fetch real data for all users
+        const data = await comprehensiveDataService.getComprehensiveMarketData();
+        setMarketData(data);
         
         setError(null);
       } catch (err) {
@@ -405,13 +352,13 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
     
     fetchData();
     
-    // Refresh data every 30 seconds in live mode (authenticated only)
-    const interval = isLiveMode && isAuthenticated ? setInterval(fetchData, 30000) : null;
+    // Refresh data every 30 seconds in live mode for all users
+    const interval = isLiveMode ? setInterval(fetchData, 30000) : null;
     
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isLiveMode, isAuthenticated]);
+  }, [isLiveMode]);
   
   // Filter procedures
   const filteredProcedures = useMemo(() => {
@@ -547,32 +494,31 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
                   US Medical Aesthetics Market 2025-2030
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <LEDIndicator color={isAuthenticated ? (isLiveMode ? '#00ff00' : '#ffaa00') : '#ff0000'} />
-                  {isAuthenticated ? (
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={isLiveMode}
-                          onChange={(e) => setIsLiveMode(e.target.checked)}
-                          sx={{
-                            '& .MuiSwitch-switchBase.Mui-checked': {
-                              color: gemColors.greenAccent,
-                            },
-                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                              backgroundColor: gemColors.greenAccent,
-                            },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
-                          {isLiveMode ? 'LIVE DATA' : 'STATIC'}
-                        </Typography>
-                      }
-                    />
-                  ) : (
-                    <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
-                      PUBLIC MODE
+                  <LEDIndicator color={isLiveMode ? '#00ff00' : '#ffaa00'} />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isLiveMode}
+                        onChange={(e) => setIsLiveMode(e.target.checked)}
+                        sx={{
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: gemColors.greenAccent,
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: gemColors.greenAccent,
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+                        {isLiveMode ? 'LIVE DATA' : 'STATIC'}
+                      </Typography>
+                    }
+                  />
+                  {!isAuthenticated && (
+                    <Typography variant="caption" sx={{ color: gemColors.blueAccent, ml: 1 }}>
+                      PUBLIC ACCESS
                     </Typography>
                   )}
                 </Box>
