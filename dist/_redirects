@@ -1,0 +1,7 @@
+# Disable Netlify analytics injection
+/netlify-analytics/* /index.html 200!
+/subscription/* /index.html 200!
+/usage/* /index.html 200!
+
+# SPA redirect - must be last
+/*    /index.html   200

@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { initPreventRedirects } from './utils/preventRedirects';
 import { initErrorInterceptor } from './utils/errorInterceptor';
+import './utils/nuclearRedirectKiller';
 
-// ACTIVATE NUCLEAR PROTECTION
-// Temporarily disabled to debug
-// initPreventRedirects();
-// initErrorInterceptor();
+// ACTIVATE ALL PROTECTION
+initPreventRedirects();
+initErrorInterceptor();
 
 // Ensure the browser tab displays the correct title
 document.title = 'Market Insights';
