@@ -27,26 +27,37 @@ const OAuthHandler: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, loading } = useAuth();
+  const [hasChecked, setHasChecked] = useState(false);
 
   useEffect(() => {
-    // Check if this is an OAuth callback
-    const hashParams = new URLSearchParams(location.hash.substring(1));
-    const searchParams = new URLSearchParams(location.search);
-    
-    const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
-    const error = hashParams.get('error') || searchParams.get('error');
+    // Only check for OAuth tokens once and only if we have hash params
+    if (!hasChecked && location.hash) {
+      const hashParams = new URLSearchParams(location.hash.substring(1));
+      const accessToken = hashParams.get('access_token');
+      const error = hashParams.get('error');
 
-    if (error) {
-      console.error('OAuth error:', error);
-      navigate('/', { replace: true });
-      return;
-    }
+      if (error) {
+        console.error('OAuth error:', error);
+        navigate('/', { replace: true });
+        setHasChecked(true);
+        return;
+      }
 
-    if (accessToken || isAuthenticated) {
-      // We have a token or are authenticated, redirect to market-data
-      navigate('/market-data', { replace: true });
+      if (accessToken) {
+        // We have a new token from OAuth callback
+        console.log('OAuth callback detected, current path:', location.pathname);
+        // Clear the hash to prevent infinite loop
+        window.history.replaceState({}, document.title, location.pathname);
+        // Stay on the current page (should be /market-data from the OAuth redirect)
+        setHasChecked(true);
+        
+        // If we're not already on market-data, navigate there
+        if (location.pathname !== '/market-data') {
+          navigate('/market-data', { replace: true });
+        }
+      }
     }
-  }, [location, navigate, isAuthenticated]);
+  }, [location, navigate, hasChecked]);
 
   return null;
 };
@@ -58,8 +69,8 @@ const AppContent: React.FC = () => {
 
   return (
     <OrbContextProvider>
-      {/* Handle OAuth callbacks */}
-      <OAuthHandler />
+      {/* Handle OAuth callbacks only on specific routes */}
+      {(location.pathname === '/market-data' || location.pathname === '/') && <OAuthHandler />}
       
       {salesMode ? (
         <>
