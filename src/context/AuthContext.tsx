@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchUserProfile = async (userId: string, userEmail?: string) => {
+    console.log('🔍 Fetching user profile for:', userId, userEmail);
     try {
       // First try to get existing profile
       const { data: profile, error } = await supabase
@@ -47,6 +48,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         .select('*')
         .eq('id', userId)
         .single();
+      
+      console.log('📊 Profile fetch result:', { profile, error });
 
       if (error && error.code === 'PGRST116') {
         // Profile doesn't exist, create one
@@ -64,12 +67,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           .single();
 
         if (!createError && createdProfile) {
+          console.log('✨ Created new profile:', createdProfile);
           setUserProfile(createdProfile);
           setSubscriptionLevel(createdProfile.subscription_level || 'free');
+        } else if (createError) {
+          console.error('❌ Error creating profile:', createError);
         }
       } else if (profile) {
+        console.log('✅ Setting user profile:', profile);
+        console.log('💎 Subscription level:', profile.subscription_level);
         setUserProfile(profile);
         setSubscriptionLevel(profile.subscription_level || 'free');
+      } else {
+        console.log('⚠️ No profile found and no error - this is unusual');
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -94,11 +104,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     };
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+      }
+      console.log('Initial session:', session?.user?.email);
       setAuthHeader(session);
     });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
       setAuthHeader(session);
     });
 
@@ -121,6 +136,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const isAuthenticated = !!user && !loading;
+  
+  // Debug log authentication state
+  useEffect(() => {
+    console.log('🔐 Auth State:', {
+      isAuthenticated,
+      user: user?.email,
+      loading,
+      subscriptionLevel,
+      userProfile: userProfile?.email
+    });
+  }, [isAuthenticated, user, loading, subscriptionLevel, userProfile]);
 
   return (
     <AuthContext.Provider value={{ 
