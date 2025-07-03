@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, styled, keyframes } from '@mui/material';
+import { Box, Button, Typography, styled, keyframes, Avatar, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoginModal from '../Auth/LoginModal';
@@ -604,11 +604,12 @@ const TelemetryStatus = styled(Typography)(({ theme }) => ({
 
 const PremiumNavbar: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [signupModalOpen, setSignupModalOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   
   const statusMessages = [
     '⏱ AI SYNC 97%',
@@ -620,6 +621,29 @@ const PremiumNavbar: React.FC = () => {
     '💎 GEMS ALIGNED',
     '🔮 PREDICTION MODE'
   ];
+
+  const getUserInitials = (email: string | undefined) => {
+    if (!email) return 'U';
+    const parts = email.split('@')[0].split('.');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return email.substring(0, 2).toUpperCase();
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    handleMenuClose();
+    navigate('/');
+  };
   
   useEffect(() => {
     const handleScroll = () => {
@@ -763,9 +787,63 @@ const PremiumNavbar: React.FC = () => {
           {/* Right Actions */}
           <NavActions>
             {user ? (
-              <Typography sx={{ color: gemColors.textPrimary, fontSize: '14px' }}>
-                Welcome, {user.email}
-              </Typography>
+              <>
+                <Avatar
+                  onClick={handleMenuOpen}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    bgcolor: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
+                    background: `linear-gradient(135deg, ${gemColors.purplePrimary}, ${gemColors.blueAccent})`,
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: `0 2px 10px ${gemColors.purplePrimary}33`,
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      boxShadow: `0 4px 20px ${gemColors.purplePrimary}66`,
+                    },
+                  }}
+                >
+                  {getUserInitials(user.email)}
+                </Avatar>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  PaperProps={{
+                    sx: {
+                      mt: 1.5,
+                      bgcolor: gemColors.panelDarker,
+                      border: `1px solid ${gemColors.borderColor}`,
+                      boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4)`,
+                      '& .MuiMenuItem-root': {
+                        color: gemColors.textPrimary,
+                        fontSize: '14px',
+                        py: 1.5,
+                        px: 2,
+                        '&:hover': {
+                          bgcolor: gemColors.glassHover,
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem disabled sx={{ 
+                    fontSize: '12px !important', 
+                    color: `${gemColors.textMuted} !important`,
+                    borderBottom: `1px solid ${gemColors.borderColor}`,
+                    pb: 1,
+                    mb: 1,
+                  }}>
+                    {user.email}
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
             ) : (
               <>
                 <NavCTA onClick={() => setSignupModalOpen(true)}>Sign Up</NavCTA>
