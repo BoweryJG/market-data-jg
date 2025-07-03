@@ -66,7 +66,6 @@ import EnhancedTerritoryIntel from '../Widgets/EnhancedTerritoryIntel';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 import { useAuth } from '../../context/AuthContext';
-import DebugAuth from '../Debug/DebugAuth';
 import { useBlockHomepageRedirect } from '../../hooks/useBlockHomepageRedirect';
 
 // Animations
@@ -949,7 +948,6 @@ const PremiumMarketDashboard: React.FC<PremiumMarketDashboardProps> = () => {
       </ContentWrapper>
       
       {/* Debug Auth Panel - Remove in production */}
-      <DebugAuth />
     </PremiumContainer>
   );
 };

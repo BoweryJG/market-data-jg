@@ -7,7 +7,7 @@ import EnhancedMarketCommandCenterWithWidget from './components/Dashboard/Enhanc
 import TestDashboard from './components/Dashboard/TestDashboard';
 import GaugeShowcase from './components/Dashboard/GaugeShowcase';
 import { OrbContextProvider } from './assets/OrbContextProvider';
-import PremiumNavbar from './components/Navigation/PremiumNavbar';
+import RepSpheresNavbar from './components/Navigation/RepSpheresNavbar';
 import NavBar from './assets/menubar';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -55,7 +55,18 @@ const AppContent: React.FC = () => {
         </>
       ) : (
         <>
-          <PremiumNavbar />
+          <RepSpheresNavbar 
+            onLogin={() => {/* handled by navbar */}}
+            onSignup={() => {/* handled by navbar */}}
+            customLinks={[
+              { href: '/market-data', label: 'Market Data', icon: 'market' },
+              { href: '/canvas', label: 'Canvas', icon: 'canvas' },
+              { href: '/pipeline', label: 'Pipeline', icon: 'pipeline' },
+              { href: '/sphere-os', label: 'Sphere oS', icon: 'sphere' },
+              { href: '/podcasts', label: 'Podcasts', icon: 'podcasts' }
+            ]}
+            logoHref="/market-data"
+          />
           <Routes>
             <Route path="/" element={<PremiumMarketDashboard />} />
             <Route path="/market-data" element={<PremiumMarketDashboard />} />

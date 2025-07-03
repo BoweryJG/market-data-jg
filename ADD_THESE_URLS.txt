@@ -1,0 +1,12 @@
+ADD THESE EXACT URLS TO SUPABASE:
+
+https://marketdata.repspheres.com/market-data
+https://marketdata.repspheres.com/auth/callback
+http://localhost:5173/market-data
+http://localhost:5173/auth/callback
+
+REMOVE THESE BAD ONES:
+- https://*.netlify.app/
+- https://*.netlify.app/*
+
+Those wildcards are causing the redirect issue!
