@@ -1,6 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { initPreventRedirects } from './utils/preventRedirects';
+import { initErrorInterceptor } from './utils/errorInterceptor';
+
+// ACTIVATE NUCLEAR PROTECTION
+initPreventRedirects();
+initErrorInterceptor();
 
 // Ensure the browser tab displays the correct title
 document.title = 'Market Insights';
