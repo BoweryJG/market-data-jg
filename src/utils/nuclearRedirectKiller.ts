@@ -6,16 +6,13 @@ export const initNuclearRedirectKiller = () => {
   const correctPath = window.location.pathname;
   
   // Override EVERYTHING that could cause redirects
-  const methods = ['assign', 'replace', 'reload'];
+  const methods = ['assign', 'replace'];
   methods.forEach(method => {
     const original = window.location[method];
-    window.location[method] = function(url?: any) {
+    (window.location as any)[method] = function(url?: any) {
       if (url === '/' || url === '' || (typeof url === 'string' && url.endsWith('/#'))) {
         console.error(`☢️ NUCLEAR BLOCK: Prevented redirect via location.${method} to:`, url);
         return;
-      }
-      if (method === 'reload' && !url) {
-        return original.call(window.location);
       }
       return original.call(window.location, url);
     };

@@ -1,12 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { initPreventRedirects } from './utils/preventRedirects';
 import { initErrorInterceptor } from './utils/errorInterceptor';
-import './utils/nuclearRedirectKiller';
 
-// ACTIVATE ALL PROTECTION
-initPreventRedirects();
+// ACTIVATE ERROR INTERCEPTOR ONLY - nuclear killer might be breaking things
 initErrorInterceptor();
 
 // Ensure the browser tab displays the correct title

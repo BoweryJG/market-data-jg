@@ -7,72 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- ULTRA-AGGRESSIVE SCRIPT BLOCKER -->
-    <script>
-      (function() {
-        console.log('🛡️ ULTRA blocker active - blocking ALL external scripts');
-        
-        // Track what's being blocked
-        window.blockedResources = [];
-        
-        // Override script creation
-        const og = document.createElement.bind(document);
-        document.createElement = function(tag) {
-          const el = og(tag);
-          if (tag.toLowerCase() === 'script') {
-            Object.defineProperty(el, 'src', {
-              set: function(val) {
-                if (val && !val.includes('/src/') && !val.includes('chunk') && !val.includes('fonts.googleapis')) {
-                  console.error('🚫 BLOCKED script:', val);
-                  window.blockedResources.push({type: 'script', url: val});
-                  return;
-                }
-                this.setAttribute('src', val);
-              },
-              get: function() { return this.getAttribute('src'); }
-            });
-          }
-          return el;
-        };
-        
-        // Block ALL subscription/usage API calls
-        const ogFetch = window.fetch;
-        window.fetch = function(url, ...args) {
-          const urlStr = url?.toString() || '';
-          if (urlStr.includes('subscription') || urlStr.includes('usage') || urlStr.includes('SubscriptionContext')) {
-            console.error('🚫 BLOCKED API:', urlStr);
-            window.blockedResources.push({type: 'api', url: urlStr});
-            return Promise.resolve(new Response('{"blocked":true}', {status: 200}));
-          }
-          return ogFetch(url, ...args);
-        };
-        
-        // Prevent ALL redirects to homepage
-        const ogPushState = history.pushState;
-        const ogReplaceState = history.replaceState;
-        
-        history.pushState = function(...args) {
-          if (args[2] === '/' && window.location.pathname !== '/') {
-            console.error('🚫 BLOCKED redirect to homepage');
-            window.blockedResources.push({type: 'redirect', url: '/'});
-            return;
-          }
-          return ogPushState.apply(history, args);
-        };
-        
-        history.replaceState = function(...args) {
-          if (args[2] === '/' && window.location.pathname !== '/') {
-            console.error('🚫 BLOCKED redirect to homepage');
-            window.blockedResources.push({type: 'redirect', url: '/'});
-            return;
-          }
-          return ogReplaceState.apply(history, args);
-        };
-        
-        console.log('💡 Run window.blockedResources to see what was blocked');
-      })();
-    </script>
-    <script type="module" crossorigin src="/assets/index-B99FEd9_.js"></script>
+    <script type="module" crossorigin src="/assets/index-Czg5W9vN.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CZtneRUI.css">
   </head>
   <body>
