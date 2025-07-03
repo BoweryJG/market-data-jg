@@ -5,8 +5,9 @@ import { initPreventRedirects } from './utils/preventRedirects';
 import { initErrorInterceptor } from './utils/errorInterceptor';
 
 // ACTIVATE NUCLEAR PROTECTION
-initPreventRedirects();
-initErrorInterceptor();
+// Temporarily disabled to debug
+// initPreventRedirects();
+// initErrorInterceptor();
 
 // Ensure the browser tab displays the correct title
 document.title = 'Market Insights';

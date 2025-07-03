@@ -24,24 +24,25 @@ export const initPreventRedirects = () => {
     return originalReplaceState.apply(window.history, args);
   };
   
-  // Override location.href setter
-  const locationDescriptor = Object.getOwnPropertyDescriptor(window, 'location');
-  if (locationDescriptor) {
-    Object.defineProperty(window, 'location', {
-      get: locationDescriptor.get,
-      set: function(value) {
-        if (typeof value === 'string' && (value === '/' || value.endsWith('/'))) {
-          console.warn('🚫 BLOCKED redirect to homepage via location.href');
-          return;
-        }
-        if (typeof value === 'object' && value.href && (value.href === '/' || value.href.endsWith('/'))) {
-          console.warn('🚫 BLOCKED redirect to homepage via location object');
-          return;
-        }
-        return locationDescriptor.set?.call(window, value);
-      }
-    });
-  }
+  // Override navigation methods instead of trying to redefine location
+  const originalAssign = window.location.assign;
+  const originalReplace = window.location.replace;
+  
+  window.location.assign = function(url) {
+    if (url === '/' || url.endsWith('/')) {
+      console.warn('🚫 BLOCKED redirect to homepage via location.assign');
+      return;
+    }
+    return originalAssign.call(window.location, url);
+  };
+  
+  window.location.replace = function(url) {
+    if (url === '/' || url.endsWith('/')) {
+      console.warn('🚫 BLOCKED redirect to homepage via location.replace');
+      return;
+    }
+    return originalReplace.call(window.location, url);
+  };
   
   console.log('🛡️ Homepage redirect protection activated!');
 };
