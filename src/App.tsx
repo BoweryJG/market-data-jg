@@ -21,12 +21,16 @@ import {
 import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { usePreventHomeRedirect } from './hooks/usePreventHomeRedirect';
 
 
 // Main App Content
 const AppContent: React.FC = () => {
   const [salesMode, setSalesMode] = useState(false);
   const location = useLocation();
+  
+  // Prevent authenticated users from being stuck on homepage
+  usePreventHomeRedirect();
 
   return (
     <OrbContextProvider>

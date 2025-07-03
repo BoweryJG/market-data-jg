@@ -669,7 +669,7 @@ const PremiumNavbar: React.FC = () => {
         
         <NavInner>
           {/* Logo */}
-          <NavLogo onClick={() => navigate('/')}>
+          <NavLogo onClick={() => navigate(user ? '/market-data' : '/')}>
             <Box sx={{ width: 36, height: 36, position: 'relative', display: 'flex', alignItems: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="100%" height="100%">
                 <defs>
