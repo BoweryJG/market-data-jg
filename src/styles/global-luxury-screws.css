@@ -1,0 +1,191 @@
+/* Global Luxury Screw Application System */
+/* Automatically adds Cartier-level screws to all containers */
+
+@import './luxury-screws.css';
+
+/* Base class to prepare containers for screws */
+.nav-container,
+.panel,
+.card,
+.dashboard-card,
+.premium-container,
+.modal-container,
+.widget-container,
+.command-center,
+.data-panel,
+.intelligence-hub,
+.market-panel,
+.sales-panel,
+.territory-panel,
+.category-panel,
+.insights-panel,
+.opportunity-panel,
+.automation-panel {
+  position: relative !important;
+  /* Ensure minimum height for screw visibility */
+  min-height: 60px;
+}
+
+/* Auto-apply screws using pseudo-elements */
+.nav-container::before,
+.panel::before,
+.card::before,
+.dashboard-card::before,
+.premium-container::before,
+.modal-container::before,
+.widget-container::before,
+.command-center::before,
+.data-panel::before,
+.intelligence-hub::before,
+.market-panel::before,
+.sales-panel::before,
+.territory-panel::before,
+.category-panel::before,
+.insights-panel::before,
+.opportunity-panel::before,
+.automation-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Generate corner screws dynamically for all containers */
+.nav-container::after,
+.panel::after,
+.card::after,
+.dashboard-card::after,
+.premium-container::after,
+.modal-container::after,
+.widget-container::after,
+.command-center::after,
+.data-panel::after,
+.intelligence-hub::after,
+.market-panel::after,
+.sales-panel::after,
+.territory-panel::after,
+.category-panel::after,
+.insights-panel::after,
+.opportunity-panel::after,
+.automation-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 101;
+  
+  /* Top-left screw */
+  background-image: 
+    radial-gradient(
+      circle at 12px 12px,
+      transparent 0px,
+      transparent 7px,
+      rgba(0, 0, 0, 0.3) 8px,
+      rgba(0, 0, 0, 0.5) 9px,
+      rgba(0, 0, 0, 0.2) 10px,
+      transparent 12px
+    );
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+/* Manual screw insertion helper classes */
+.add-luxury-screws {
+  position: relative;
+}
+
+.add-luxury-screws > .auto-screw-tl,
+.add-luxury-screws > .auto-screw-tr,
+.add-luxury-screws > .auto-screw-bl,
+.add-luxury-screws > .auto-screw-br {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.add-luxury-screws > .auto-screw-tl { top: 12px; left: 12px; }
+.add-luxury-screws > .auto-screw-tr { top: 12px; right: 12px; }
+.add-luxury-screws > .auto-screw-bl { bottom: 12px; left: 12px; }
+.add-luxury-screws > .auto-screw-br { bottom: 12px; right: 12px; }
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .nav-container::after,
+  .panel::after,
+  .card::after,
+  .dashboard-card::after,
+  .premium-container::after,
+  .modal-container::after,
+  .widget-container::after,
+  .command-center::after,
+  .data-panel::after,
+  .intelligence-hub::after,
+  .market-panel::after,
+  .sales-panel::after,
+  .territory-panel::after,
+  .category-panel::after,
+  .insights-panel::after,
+  .opportunity-panel::after,
+  .automation-panel::after {
+    background-size: 20px 20px;
+  }
+  
+  .add-luxury-screws > .auto-screw-tl,
+  .add-luxury-screws > .auto-screw-tr,
+  .add-luxury-screws > .auto-screw-bl,
+  .add-luxury-screws > .auto-screw-br {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .add-luxury-screws > .auto-screw-tl { top: 8px; left: 8px; }
+  .add-luxury-screws > .auto-screw-tr { top: 8px; right: 8px; }
+  .add-luxury-screws > .auto-screw-bl { bottom: 8px; left: 8px; }
+  .add-luxury-screws > .auto-screw-br { bottom: 8px; right: 8px; }
+}
+
+/* JavaScript helper for dynamic screw generation */
+/* 
+To automatically add luxury screws to any container dynamically:
+
+1. Add class "add-luxury-screws" to container
+2. Call this function after DOM load:
+
+function addLuxuryScrews(container) {
+  if (!container.classList.contains('add-luxury-screws')) {
+    container.classList.add('add-luxury-screws');
+  }
+  
+  const positions = ['tl', 'tr', 'bl', 'br'];
+  const types = ['phillips', 'slot'];
+  const jewels = ['', 'arctic', 'rose'];
+  
+  positions.forEach((pos, index) => {
+    if (!container.querySelector(`.auto-screw-${pos}`)) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `luxury-screw-wrapper auto-screw-${pos}`;
+      wrapper.style.setProperty('--screw-rotation', `${Math.random() * 360}deg`);
+      
+      const screw = document.createElement('div');
+      screw.className = `luxury-screw ${types[index % 2]}`;
+      
+      const jewel = document.createElement('div');
+      jewel.className = `luxury-screw-jewel ${jewels[index % 3]}`;
+      
+      screw.appendChild(jewel);
+      wrapper.appendChild(screw);
+      container.appendChild(wrapper);
+    }
+  });
+}
+
+// Auto-apply to all containers on load
+document.addEventListener('DOMContentLoaded', () => {
+  const containers = document.querySelectorAll('.nav-container, .panel, .card, .dashboard-card, .premium-container');
+  containers.forEach(addLuxuryScrews);
+});
+*/

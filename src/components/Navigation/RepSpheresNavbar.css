@@ -1,5 +1,8 @@
 /* RepSpheres Navbar Styles - Scoped with .repspheres prefix */
 
+/* Import luxury screw system */
+@import '../../styles/luxury-screws.css';
+
 :root {
     --bg-dark: #0a0a0a;
     --bg-darker: #050505;

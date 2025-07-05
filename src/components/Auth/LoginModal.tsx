@@ -34,7 +34,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
       delay: 0.1
     });
 
-    gsap.from(".screw", {
+    gsap.from(".luxury-screw-wrapper", {
       duration: 0.6,
       scale: 0,
       rotation: -180,
@@ -73,7 +73,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
     });
 
     // Screw rotation on hover
-    const screws = modalRef.current.querySelectorAll('.screw');
+    const screws = modalRef.current.querySelectorAll('.luxury-screw');
     screws.forEach((screw: Element) => {
       screw.addEventListener('mouseenter', () => {
         gsap.to(screw, {
@@ -227,10 +227,27 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onGoogleAuth, 
           </div>
 
           {/* 4-Point Luxury Screws */}
-          <div className="screw screw-tl" style={{'--screw-index': 0} as React.CSSProperties}></div>
-          <div className="screw screw-tr" style={{'--screw-index': 1} as React.CSSProperties}></div>
-          <div className="screw screw-bl" style={{'--screw-index': 2} as React.CSSProperties}></div>
-          <div className="screw screw-br" style={{'--screw-index': 3} as React.CSSProperties}></div>
+          {/* Luxury Cartier-Level Screws */}
+          <div className="luxury-screw-wrapper top-left" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw phillips">
+              <div className="luxury-screw-jewel"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper top-right" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw slot">
+              <div className="luxury-screw-jewel arctic"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-left" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw phillips">
+              <div className="luxury-screw-jewel rose"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-right" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw slot">
+              <div className="luxury-screw-jewel"></div>
+            </div>
+          </div>
 
           {/* Close Button */}
           <button className="close-btn" aria-label="Close" onClick={handleClose}></button>

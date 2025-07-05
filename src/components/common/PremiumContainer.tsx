@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, BoxProps } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
 import { navbarColors, navbarStyles, getPremiumContainerStyles } from '../../styles/navbarStyles';
+import '../../styles/luxury-screws.css';
 
 // Keyframe animations - optimized for performance
 const glassOscillate = keyframes`
@@ -139,13 +140,29 @@ const PremiumContainer: React.FC<PremiumContainerProps> = ({
         </>
       )}
       
-      {/* Metallic screws */}
+      {/* Luxury Cartier-Level Screws */}
       {showScrews && (
         <>
-          <Screw screwPosition="topLeft" />
-          <Screw screwPosition="topRight" />
-          <Screw screwPosition="bottomLeft" />
-          <Screw screwPosition="bottomRight" />
+          <div className="luxury-screw-wrapper top-left" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw phillips">
+              <div className="luxury-screw-jewel"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper top-right" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw slot">
+              <div className="luxury-screw-jewel arctic"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-left" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw phillips">
+              <div className="luxury-screw-jewel rose"></div>
+            </div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-right" style={{'--screw-rotation': `${Math.random() * 360}deg`} as React.CSSProperties}>
+            <div className="luxury-screw slot">
+              <div className="luxury-screw-jewel"></div>
+            </div>
+          </div>
         </>
       )}
       

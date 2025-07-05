@@ -1,3 +1,6 @@
+/* Import luxury screw system */
+@import '../../styles/luxury-screws.css';
+
 /* Animated Starfield Background */
 .starfield {
     position: fixed;

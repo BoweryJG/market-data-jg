@@ -1,0 +1,394 @@
+/* Cartier-Level Luxury Screw System */
+/* Haute Horology × Aerospace Precision Design */
+
+:root {
+  /* Metallic gradient palette */
+  --screw-steel-light: #e8e8e8;
+  --screw-steel-mid: #c4c4c4;
+  --screw-steel-dark: #888888;
+  --screw-titanium-accent: #d4d4dc;
+  --screw-shadow-deep: #1a1a1a;
+  --screw-highlight: #f5f5f5;
+  
+  /* Jewel core colors */
+  --jewel-magenta: #ff00aa;
+  --jewel-mint: #00ffcc;
+  --jewel-arctic: #00ddff;
+  --jewel-rose: #ff0088;
+  
+  /* Dynamic angles */
+  --screw-rotation: 0deg;
+  --screw-wiggle-offset: 0deg;
+}
+
+/* Base wrapper for positioning */
+.luxury-screw-wrapper {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+  
+  /* Bezel shadow ring */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.3) 40%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0.2) 60%,
+      transparent 70%
+    );
+    box-shadow: 
+      inset 0 1px 3px rgba(0, 0, 0, 0.6),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Main screw body */
+.luxury-screw {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  
+  /* Radial metallic gradient - titanium/steel finish */
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--screw-highlight) 0%,
+    var(--screw-steel-light) 10%,
+    var(--screw-titanium-accent) 25%,
+    var(--screw-steel-mid) 40%,
+    var(--screw-steel-dark) 60%,
+    var(--screw-shadow-deep) 85%,
+    #0a0a0a 100%
+  );
+  
+  /* Machined edge effect */
+  box-shadow:
+    /* Outer rim highlight */
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    inset 1px 0 1px rgba(255, 255, 255, 0.3),
+    /* Inner shadow for depth */
+    inset 0 -1px 3px rgba(0, 0, 0, 0.8),
+    inset -1px 0 2px rgba(0, 0, 0, 0.5),
+    /* Ambient shadow */
+    0 2px 4px rgba(0, 0, 0, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.8);
+  
+  /* Dynamic rotation */
+  transform: rotate(var(--screw-rotation));
+  animation: luxuryWiggle 8s ease-in-out infinite;
+  
+  /* Smooth transitions */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Slot groove variations */
+.luxury-screw.slot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.9) 15%,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 1) 70%,
+    rgba(0, 0, 0, 0.9) 85%,
+    transparent
+  );
+  transform: translateY(-50%);
+  box-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.1),
+    0 -1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Phillips cross groove */
+.luxury-screw.phillips::before,
+.luxury-screw.phillips::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.8) 20%,
+    rgba(0, 0, 0, 1) 40%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.8) 80%,
+    transparent
+  );
+  box-shadow: 
+    1px 0 1px rgba(255, 255, 255, 0.05),
+    -1px 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.luxury-screw.phillips::before {
+  top: 15%;
+  bottom: 15%;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+.luxury-screw.phillips::after {
+  left: 15%;
+  right: 15%;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.8) 20%,
+    rgba(0, 0, 0, 1) 40%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.8) 80%,
+    transparent
+  );
+  box-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.05),
+    0 -1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Center jewel core */
+.luxury-screw-jewel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  
+  /* Glowing jewel effect */
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 255, 255, 0.9),
+    var(--jewel-mint) 30%,
+    var(--jewel-magenta) 60%,
+    transparent 100%
+  );
+  
+  box-shadow:
+    0 0 3px var(--jewel-mint),
+    0 0 6px var(--jewel-magenta),
+    0 0 9px rgba(255, 255, 255, 0.3),
+    inset 0 0 2px rgba(255, 255, 255, 0.8);
+  
+  /* Subtle pulse */
+  animation: jewelPulse 4s ease-in-out infinite;
+}
+
+/* Alternative jewel colors */
+.luxury-screw-jewel.arctic {
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 255, 255, 0.9),
+    var(--jewel-arctic) 30%,
+    var(--jewel-mint) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 3px var(--jewel-arctic),
+    0 0 6px var(--jewel-mint),
+    0 0 9px rgba(255, 255, 255, 0.3);
+}
+
+.luxury-screw-jewel.rose {
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 255, 255, 0.9),
+    var(--jewel-rose) 30%,
+    var(--jewel-magenta) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 3px var(--jewel-rose),
+    0 0 6px var(--jewel-magenta),
+    0 0 9px rgba(255, 255, 255, 0.3);
+}
+
+/* Position classes */
+.luxury-screw-wrapper.top-left { 
+  top: 12px; 
+  left: 12px; 
+  --screw-rotation: 45deg;
+}
+
+.luxury-screw-wrapper.top-right { 
+  top: 12px; 
+  right: 12px; 
+  --screw-rotation: -30deg;
+}
+
+.luxury-screw-wrapper.bottom-left { 
+  bottom: 12px; 
+  left: 12px; 
+  --screw-rotation: -60deg;
+}
+
+.luxury-screw-wrapper.bottom-right { 
+  bottom: 12px; 
+  right: 12px; 
+  --screw-rotation: 120deg;
+}
+
+/* Container-specific positioning adjustments */
+.nav-container .luxury-screw-wrapper,
+.repspheres-nav-container .luxury-screw-wrapper {
+  --screw-distance: 10px;
+}
+
+.panel .luxury-screw-wrapper,
+.card .luxury-screw-wrapper {
+  --screw-distance: 8px;
+}
+
+.nav-container .luxury-screw-wrapper.top-left,
+.panel .luxury-screw-wrapper.top-left,
+.card .luxury-screw-wrapper.top-left {
+  top: var(--screw-distance, 12px);
+  left: var(--screw-distance, 12px);
+}
+
+.nav-container .luxury-screw-wrapper.top-right,
+.panel .luxury-screw-wrapper.top-right,
+.card .luxury-screw-wrapper.top-right {
+  top: var(--screw-distance, 12px);
+  right: var(--screw-distance, 12px);
+}
+
+.nav-container .luxury-screw-wrapper.bottom-left,
+.panel .luxury-screw-wrapper.bottom-left,
+.card .luxury-screw-wrapper.bottom-left {
+  bottom: var(--screw-distance, 12px);
+  left: var(--screw-distance, 12px);
+}
+
+.nav-container .luxury-screw-wrapper.bottom-right,
+.panel .luxury-screw-wrapper.bottom-right,
+.card .luxury-screw-wrapper.bottom-right {
+  bottom: var(--screw-distance, 12px);
+  right: var(--screw-distance, 12px);
+}
+
+/* Animations */
+@keyframes luxuryWiggle {
+  0%, 100% {
+    transform: rotate(calc(var(--screw-rotation) - 1deg));
+  }
+  25% {
+    transform: rotate(calc(var(--screw-rotation) + 0.5deg));
+  }
+  50% {
+    transform: rotate(calc(var(--screw-rotation) + 1deg));
+  }
+  75% {
+    transform: rotate(calc(var(--screw-rotation) - 0.5deg));
+  }
+}
+
+@keyframes jewelPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Hover state for interactive elements */
+.luxury-screw-wrapper:hover .luxury-screw {
+  animation-duration: 2s;
+  transform: rotate(calc(var(--screw-rotation) + 5deg));
+}
+
+.luxury-screw-wrapper:hover .luxury-screw-jewel {
+  animation-duration: 1s;
+  filter: brightness(1.3);
+}
+
+/* Mobile responsive scaling */
+@media (max-width: 768px) {
+  .luxury-screw-wrapper {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .luxury-screw {
+    width: 9px;
+    height: 9px;
+  }
+  
+  .luxury-screw-jewel {
+    width: 2px;
+    height: 2px;
+  }
+  
+  .luxury-screw.slot::before {
+    height: 1.5px;
+  }
+  
+  .luxury-screw.phillips::before {
+    width: 1.5px;
+  }
+  
+  .luxury-screw.phillips::after {
+    height: 1.5px;
+  }
+  
+  /* Adjust positions for mobile */
+  .luxury-screw-wrapper.top-left,
+  .luxury-screw-wrapper.top-right,
+  .luxury-screw-wrapper.bottom-left,
+  .luxury-screw-wrapper.bottom-right {
+    --screw-distance: 8px;
+  }
+}
+
+/* Automatic screw application system */
+.auto-screws {
+  position: relative;
+}
+
+.auto-screws::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Generate screws for specific containers */
+.nav-container.auto-screws,
+.panel.auto-screws,
+.card.auto-screws,
+.login-modal.auto-screws,
+.premium-container.auto-screws {
+  position: relative;
+}
+
+/* Performance optimization */
+@media (prefers-reduced-motion: reduce) {
+  .luxury-screw,
+  .luxury-screw-jewel {
+    animation: none;
+  }
+  
+  .luxury-screw-wrapper:hover .luxury-screw {
+    transform: rotate(var(--screw-rotation));
+  }
+}
