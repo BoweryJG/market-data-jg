@@ -1,0 +1,217 @@
+/* Luxury UI Components - Swiss Watch Bezel Meets AI Control Deck */
+/* Industrial design for UI - Purpose-built, engineered, elegant */
+
+/* Reusable Screw Wrapper for All Containers */
+.screw-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Base Screw Design - 4px Swiss Precision */
+.luxury-screw {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle at 30% 30%, #f0f0f0 0%, #d8d8d8 10%, #b8b8b8 20%, #999 40%, #777 60%, #555 80%, #333 100%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0.5px 0.5px rgba(255,255,255,0.6),
+    inset 0 -0.5px 0.5px rgba(0,0,0,0.4),
+    0 0.5px 1px rgba(0,0,0,0.6);
+  border: 0.25px solid rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+/* Phillips Head Groove - Horizontal */
+.luxury-screw::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+/* Phillips Head Groove - Vertical */
+.luxury-screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+/* Tiny Jewel Center */
+.luxury-screw-jewel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.4), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Screw Positions */
+.luxury-screw-tl { top: 8px; left: 8px; }
+.luxury-screw-tr { top: 8px; right: 8px; }
+.luxury-screw-bl { bottom: 8px; left: 8px; }
+.luxury-screw-br { bottom: 8px; right: 8px; }
+
+/* Machined Panel - Primary Container */
+.luxury-panel {
+  position: relative;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: 
+    linear-gradient(135deg, 
+      rgba(255,255,255,0.015) 0%, 
+      rgba(255,255,255,0) 50%, 
+      rgba(0,0,0,0.015) 100%),
+    #1a1a1a;
+  box-shadow: 
+    /* Outer shadows for depth */
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 1px 4px rgba(0, 0, 0, 0.7),
+    /* Inner bevels for machined edge */
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    inset 1px 0 0 rgba(255, 255, 255, 0.03),
+    inset -1px 0 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Elevated Card - Secondary Container */
+.luxury-card {
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: 
+    linear-gradient(135deg, 
+      rgba(255,255,255,0.02) 0%, 
+      rgba(255,255,255,0) 50%, 
+      rgba(0,0,0,0.02) 100%),
+    rgba(255, 255, 255, 0.03);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Gauge Container - Deep Inset */
+.luxury-gauge-wrapper {
+  position: relative;
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at 50% 50%, 
+      rgba(0,0,0,0.4) 0%, 
+      rgba(0,0,0,0.2) 50%, 
+      rgba(0,0,0,0) 100%),
+    #141414;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+/* Brushed Metal Surface Overlay */
+.luxury-brushed-metal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255,255,255,0.01) 1px,
+      rgba(255,255,255,0.01) 2px
+    );
+  pointer-events: none;
+}
+
+/* Top Light Source Effect */
+.luxury-light-source {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: radial-gradient(ellipse at top left, 
+    rgba(255,255,255,0.03) 0%, 
+    transparent 40%);
+  pointer-events: none;
+}
+
+/* Micro Edge Highlight */
+.luxury-edge-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255,255,255,0.1) 20%, 
+    rgba(255,255,255,0.1) 80%, 
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* Responsive Screw Hiding */
+@media (max-width: 768px) {
+  .luxury-screw-tl,
+  .luxury-screw-br {
+    display: none; /* Hide diagonal screws on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .luxury-screw {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+/* Utility Classes */
+.luxury-no-screws .screw-wrapper {
+  display: none;
+}
+
+.luxury-subtle-screws .luxury-screw {
+  opacity: 0.7;
+}
+
+/* Example Usage:
+<div class="luxury-panel">
+  <div class="screw-wrapper">
+    <div class="luxury-screw luxury-screw-tl"><div class="luxury-screw-jewel"></div></div>
+    <div class="luxury-screw luxury-screw-tr"><div class="luxury-screw-jewel"></div></div>
+    <div class="luxury-screw luxury-screw-bl"><div class="luxury-screw-jewel"></div></div>
+    <div class="luxury-screw luxury-screw-br"><div class="luxury-screw-jewel"></div></div>
+  </div>
+  <div class="luxury-brushed-metal"></div>
+  <div class="luxury-light-source"></div>
+  <div class="luxury-edge-highlight"></div>
+  <!-- Your content here -->
+</div>
+*/

@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import { initErrorInterceptor } from './utils/errorInterceptor';
+import './styles/luxuryComponents.css';
 
 // ACTIVATE ERROR INTERCEPTOR ONLY - nuclear killer might be breaking things
 initErrorInterceptor();

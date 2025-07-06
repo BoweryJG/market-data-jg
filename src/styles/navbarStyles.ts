@@ -38,56 +38,94 @@ export const navbarColors = {
 };
 
 export const navbarStyles = {
-  // Container base styles
+  // Container base styles - Machined Component Design
   container: {
-    borderRadius: '18px',
+    borderRadius: '16px',
     border: `1px solid ${navbarColors.borderColor}`,
     backdropFilter: 'blur(20px) saturate(180%)',
     WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-    background: `linear-gradient(to right,
-      rgba(26, 26, 26, 0.95) 0%,
-      rgba(30, 30, 30, 0.9) 10%,
-      rgba(28, 28, 28, 0.88) 50%,
-      rgba(30, 30, 30, 0.9) 90%,
-      rgba(26, 26, 26, 0.95) 100%
-    )`,
+    background: `
+      linear-gradient(135deg, 
+        rgba(255,255,255,0.02) 0%, 
+        rgba(255,255,255,0) 50%, 
+        rgba(0,0,0,0.02) 100%),
+      linear-gradient(to right,
+        rgba(26, 26, 26, 0.95) 0%,
+        rgba(32, 32, 32, 0.92) 20%,
+        rgba(30, 30, 30, 0.9) 50%,
+        rgba(32, 32, 32, 0.92) 80%,
+        rgba(26, 26, 26, 0.95) 100%
+      )
+    `,
     boxShadow: `
-      0 12px 40px rgba(0, 0, 0, 0.4),
-      0 0 20px rgba(0, 255, 255, 0.08),
-      0 2px 10px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.3)
+      0 8px 32px rgba(0, 0, 0, 0.6),
+      0 2px 8px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+      inset 1px 0 0 rgba(255, 255, 255, 0.04),
+      inset -1px 0 0 rgba(255, 255, 255, 0.04)
     `,
     position: 'relative' as const,
     overflow: 'hidden' as const,
   },
   
-  // Metallic screw styles
+  // Refined metallic screw styles - Swiss precision
   screw: {
     position: 'absolute' as const,
-    width: '5.6px',  // Reduced by 30% from 8px
-    height: '5.6px', // Reduced by 30% from 8px
-    background: `
-      radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%),
-      linear-gradient(135deg, #ccc 0%, #666 100%)
-    `,
-    backgroundSize: '100%, 100%',
+    width: '4px',
+    height: '4px',
+    background: `radial-gradient(circle at 30% 30%, #f0f0f0 0%, #d8d8d8 10%, #b8b8b8 20%, #999 40%, #777 60%, #555 80%, #333 100%)`,
     borderRadius: '50%',
     boxShadow: `
-      inset 0 0.5px 1px rgba(255,255,255,0.4),
-      inset 0 -0.5px 1px rgba(0,0,0,0.5),
-      0 0.5px 2px rgba(0,0,0,0.8),
-      0 0 3px rgba(0,0,0,0.3)
+      inset 0 0.5px 0.5px rgba(255,255,255,0.6),
+      inset 0 -0.5px 0.5px rgba(0,0,0,0.4),
+      0 0.5px 1px rgba(0,0,0,0.6)
     `,
-    border: '0.5px solid rgba(0,0,0,0.2)',
+    border: '0.25px solid rgba(0,0,0,0.15)',
+    overflow: 'hidden' as const,
   },
   
-  // Screw positions
+  // Phillips head groove styles
+  screwGroove: {
+    horizontal: {
+      position: 'absolute' as const,
+      top: '50%',
+      left: '50%',
+      width: '60%',
+      height: '0.5px',
+      background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent)',
+      transform: 'translate(-50%, -50%)',
+    },
+    vertical: {
+      position: 'absolute' as const,
+      top: '50%',
+      left: '50%',
+      width: '0.5px',
+      height: '60%',
+      background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent)',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  
+  // Tiny jewel center
+  screwJewel: {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    width: '1px',
+    height: '1px',
+    transform: 'translate(-50%, -50%)',
+    background: `radial-gradient(circle at center, rgba(0, 255, 255, 0.4), transparent)`,
+    borderRadius: '50%',
+    pointerEvents: 'none' as const,
+  },
+  
+  // Screw positions - Closer for tighter precision
   screwPositions: {
-    topLeft: { top: '12px', left: '12px' },
-    topRight: { top: '12px', right: '12px' },
-    bottomLeft: { bottom: '12px', left: '12px' },
-    bottomRight: { bottom: '12px', right: '12px' },
+    topLeft: { top: '8px', left: '8px' },
+    topRight: { top: '8px', right: '8px' },
+    bottomLeft: { bottom: '8px', left: '8px' },
+    bottomRight: { bottom: '8px', right: '8px' },
   },
   
   // Edge mount indicator styles
@@ -135,28 +173,70 @@ export const navbarStyles = {
   },
 };
 
-// Animation keyframes as CSS strings
-export const navbarAnimations = {
-  glassOscillate: `
-    @keyframes glassOscillate {
-      0%, 100% { opacity: 0.2; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(1.02); }
-    }
-  `,
+// Premium panel and card styles
+export const luxuryPanelStyles = {
+  // Base panel with machined edges
+  panel: {
+    borderRadius: '12px',
+    border: `1px solid ${navbarColors.borderColor}`,
+    background: `
+      linear-gradient(135deg, 
+        rgba(255,255,255,0.015) 0%, 
+        rgba(255,255,255,0) 50%, 
+        rgba(0,0,0,0.015) 100%),
+      ${navbarColors.panelDark}
+    `,
+    boxShadow: `
+      0 4px 16px rgba(0, 0, 0, 0.5),
+      0 1px 4px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+      inset 1px 0 0 rgba(255, 255, 255, 0.03),
+      inset -1px 0 0 rgba(255, 255, 255, 0.03)
+    `,
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  },
   
-  screwGlow: `
-    @keyframes screwGlow {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-    }
-  `,
+  // Card variant with lighter background
+  card: {
+    borderRadius: '10px',
+    border: `1px solid ${navbarColors.borderColor}`,
+    background: `
+      linear-gradient(135deg, 
+        rgba(255,255,255,0.02) 0%, 
+        rgba(255,255,255,0) 50%, 
+        rgba(0,0,0,0.02) 100%),
+      rgba(255, 255, 255, 0.03)
+    `,
+    boxShadow: `
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 1px 2px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3)
+    `,
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  },
   
-  edgeGlow: `
-    @keyframes edgeGlow {
-      0%, 100% { opacity: 0.6; box-shadow: 0 0 8px rgba(0, 255, 255, 0.15); }
-      50% { opacity: 1; box-shadow: 0 0 12px rgba(0, 255, 255, 0.3); }
-    }
-  `,
+  // Gauge wrapper with deep inset
+  gaugeWrapper: {
+    borderRadius: '50%',
+    background: `
+      radial-gradient(circle at 50% 50%, 
+        rgba(0,0,0,0.4) 0%, 
+        rgba(0,0,0,0.2) 50%, 
+        rgba(0,0,0,0) 100%),
+      ${navbarColors.panelDarker}
+    `,
+    boxShadow: `
+      inset 0 2px 4px rgba(0, 0, 0, 0.8),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+      0 1px 0 rgba(255, 255, 255, 0.04)
+    `,
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  },
 };
 
 // Utility function to apply premium container styles

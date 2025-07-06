@@ -309,7 +309,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             padding-top: 12px;
         }
 
-        /* Award-Winning Navigation Bar - Floating Bezel Design */
+        /* Award-Winning Navigation Bar - Machined Component Design */
         .nav-container {
             position: relative;
             left: 50%;
@@ -319,24 +319,31 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             height: var(--nav-height);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            background: linear-gradient(to right,
-                rgba(26, 26, 26, 0.95) 0%,
-                rgba(30, 30, 30, 0.9) 10%,
-                rgba(28, 28, 28, 0.88) 50%,
-                rgba(30, 30, 30, 0.9) 90%,
-                rgba(26, 26, 26, 0.95) 100%
-            );
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255,255,255,0.02) 0%, 
+                    rgba(255,255,255,0) 50%, 
+                    rgba(0,0,0,0.02) 100%),
+                linear-gradient(to right,
+                    rgba(26, 26, 26, 0.95) 0%,
+                    rgba(32, 32, 32, 0.92) 20%,
+                    rgba(30, 30, 30, 0.9) 50%,
+                    rgba(32, 32, 32, 0.92) 80%,
+                    rgba(26, 26, 26, 0.95) 100%
+                );
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
+            border-radius: 16px;
             box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(var(--gem-shift), 0.08),
-                0 2px 10px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.06),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+                /* Outer shadows for depth */
+                0 8px 32px rgba(0, 0, 0, 0.6),
+                0 2px 8px rgba(0, 0, 0, 0.8),
+                /* Inner bevels for machined edge */
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+                inset 1px 0 0 rgba(255, 255, 255, 0.04),
+                inset -1px 0 0 rgba(255, 255, 255, 0.04);
             transform-style: preserve-3d;
-            perspective: 1000px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
 
@@ -400,13 +407,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             pointer-events: none;
             mix-blend-mode: screen;
             opacity: 0.2;
-            animation: glassOscillate 8s ease-in-out infinite;
             transition: background 0.5s ease;
-        }
-
-        @keyframes glassOscillate {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.02); }
         }
 
         /* Metallic Screws */
@@ -422,62 +423,72 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
 
         .screw {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             background: 
-                radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%),
-                linear-gradient(135deg, #ccc 0%, #666 100%);
-            background-size: 100%, 100%;
+                radial-gradient(circle at 30% 30%, #f0f0f0 0%, #d8d8d8 10%, #b8b8b8 20%, #999 40%, #777 60%, #555 80%, #333 100%);
             border-radius: 50%;
             box-shadow:
-                inset 0 0.5px 1px rgba(255,255,255,0.4),
-                inset 0 -0.5px 1px rgba(0,0,0,0.5),
-                0 0.5px 2px rgba(0,0,0,0.8),
-                0 0 3px rgba(0,0,0,0.3);
-            transform: rotate(var(--angle, 10deg));
-            border: 0.5px solid rgba(0,0,0,0.2);
+                inset 0 0.5px 0.5px rgba(255,255,255,0.6),
+                inset 0 -0.5px 0.5px rgba(0,0,0,0.4),
+                0 0.5px 1px rgba(0,0,0,0.6);
+            border: 0.25px solid rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Jeweled Screw Caps */
+        /* Phillips head groove */
+        .screw::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 0.5px;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent);
+            transform: translate(-50%, -50%);
+        }
+
         .screw::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 2px;
-            height: 2px;
+            width: 0.5px;
+            height: 60%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, transparent);
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle at center, rgba(var(--gem-impossible), 0.8), rgba(var(--gem-deep), 0.4), transparent);
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: screwGlow 3s infinite;
         }
 
-        @keyframes screwGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
+        /* Tiny jewel center */
+        .screw-jewel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 1px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle at center, rgba(var(--gem-shift), 0.4), transparent);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         /* 4-Point Luxury Bezel - Perfect Mechanical Symmetry */
         .screw-top-left { 
-            top: 12px; 
-            left: 12px; 
-            --angle: 10deg; 
+            top: 8px; 
+            left: 8px; 
         }
         .screw-top-right { 
-            top: 12px; 
-            right: 12px; 
-            --angle: 22deg; 
+            top: 8px; 
+            right: 8px; 
         }
         .screw-bot-left { 
-            bottom: 12px; 
-            left: 12px; 
-            --angle: -12deg; 
+            bottom: 8px; 
+            left: 8px; 
         }
         .screw-bot-right { 
-            bottom: 12px; 
-            right: 12px; 
-            --angle: 18deg; 
+            bottom: 8px; 
+            right: 8px; 
         }
 
         .nav-inner {
@@ -1082,10 +1093,10 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
         <nav className="nav-container" ref={navContainerRef}>
           {/* Metallic Screws - 4-Point Luxury Bezel */}
           <div className="nav-screws">
-            <div className="screw screw-top-left"></div>
-            <div className="screw screw-top-right"></div>
-            <div className="screw screw-bot-left"></div>
-            <div className="screw screw-bot-right"></div>
+            <div className="screw screw-top-left"><div className="screw-jewel"></div></div>
+            <div className="screw screw-top-right"><div className="screw-jewel"></div></div>
+            <div className="screw screw-bot-left"><div className="screw-jewel"></div></div>
+            <div className="screw screw-bot-right"><div className="screw-jewel"></div></div>
           </div>
 
           <div className="nav-inner">
