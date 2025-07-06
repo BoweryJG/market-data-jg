@@ -730,6 +730,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             gap: 8px;
             justify-content: flex-end;
             margin-right: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-link {
@@ -749,6 +751,8 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             border: 1px solid transparent;
             overflow: hidden;
             transform-style: preserve-3d;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-link::before {
@@ -1032,12 +1036,38 @@ const NavBar: React.FC<NavBarProps> = ({ onSalesModeToggle }) => {
             transform: translateX(2px);
         }
 
-        /* Mobile */
-        @media (max-width: 768px) {
+        /* Responsive Breakpoints - Items disappear one by one */
+        
+        /* Hide Podcasts first at 1024px */
+        @media (max-width: 1024px) {
+            .nav-link[href="/podcasts"] {
+                display: none;
+            }
+        }
+        
+        /* Hide CRM at 920px */
+        @media (max-width: 920px) {
+            .nav-link[href="/crm"] {
+                display: none;
+            }
+        }
+        
+        /* Hide Canvas at 820px */
+        @media (max-width: 820px) {
+            .nav-link[href="/canvas"] {
+                display: none;
+            }
+        }
+        
+        /* Hide Market Data and show only hamburger at 720px */
+        @media (max-width: 720px) {
             .nav-links {
                 display: none;
             }
-            
+        }
+        
+        /* Further mobile adjustments */
+        @media (max-width: 768px) {
             .nav-rail-container {
                 margin: 0 10px;
             }
