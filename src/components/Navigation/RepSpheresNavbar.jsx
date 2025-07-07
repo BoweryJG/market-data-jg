@@ -80,27 +80,19 @@ const RepSpheresNavbar = ({
           <div className="nav-edge left-edge"></div>
           <div className="nav-edge right-edge"></div>
 
-          {/* Luxury Cartier-Level Screws */}
+          {/* Swiss Watchmaking × Surgical Engineering Screws */}
           <div className="nav-screws">
-            <div className="luxury-screw-wrapper top-left" style={{"--screw-rotation": `${Math.random() * 360}deg`}}>
-              <div className="luxury-screw phillips">
-                <div className="luxury-screw-jewel"></div>
-              </div>
+            <div className="luxury-screw-wrapper top-left">
+              <div className="luxury-screw slot"></div>
             </div>
-            <div className="luxury-screw-wrapper top-right" style={{"--screw-rotation": `${Math.random() * 360}deg`}}>
-              <div className="luxury-screw slot">
-                <div className="luxury-screw-jewel arctic"></div>
-              </div>
+            <div className="luxury-screw-wrapper top-right">
+              <div className="luxury-screw hex"></div>
             </div>
-            <div className="luxury-screw-wrapper bottom-left" style={{"--screw-rotation": `${Math.random() * 360}deg`}}>
-              <div className="luxury-screw phillips">
-                <div className="luxury-screw-jewel rose"></div>
-              </div>
+            <div className="luxury-screw-wrapper bottom-left">
+              <div className="luxury-screw hex"></div>
             </div>
-            <div className="luxury-screw-wrapper bottom-right" style={{"--screw-rotation": `${Math.random() * 360}deg`}}>
-              <div className="luxury-screw slot">
-                <div className="luxury-screw-jewel"></div>
-              </div>
+            <div className="luxury-screw-wrapper bottom-right">
+              <div className="luxury-screw slot"></div>
             </div>
           </div>
 

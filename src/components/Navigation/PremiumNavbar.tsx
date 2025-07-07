@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoginModal from '../Auth/LoginModal';
 import SignupModal from '../Auth/SignupModal';
+import '../../styles/luxury-screws.css';
 
 // Root CSS variables for gem colors
 const gemColors = {
@@ -667,28 +668,20 @@ const PremiumNavbar: React.FC = () => {
         <NavEdge className="nav-edge" side="left" />
         <NavEdge className="nav-edge" side="right" />
         
-        {/* Advanced Metallic Screws with Wrappers */}
+        {/* Swiss Watchmaking × Surgical Engineering Screws */}
         <Box className="nav-screws" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
-          <ScrewWrapper className="screw-wrapper-top-left">
-            <ScrewInner>
-              <ScrewJewel />
-            </ScrewInner>
-          </ScrewWrapper>
-          <ScrewWrapper className="screw-wrapper-top-right">
-            <ScrewInner>
-              <ScrewJewel />
-            </ScrewInner>
-          </ScrewWrapper>
-          <ScrewWrapper className="screw-wrapper-bot-left">
-            <ScrewInner>
-              <ScrewJewel />
-            </ScrewInner>
-          </ScrewWrapper>
-          <ScrewWrapper className="screw-wrapper-bot-right">
-            <ScrewInner>
-              <ScrewJewel />
-            </ScrewInner>
-          </ScrewWrapper>
+          <div className="luxury-screw-wrapper top-left">
+            <div className="luxury-screw slot"></div>
+          </div>
+          <div className="luxury-screw-wrapper top-right">
+            <div className="luxury-screw hex"></div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-left">
+            <div className="luxury-screw hex"></div>
+          </div>
+          <div className="luxury-screw-wrapper bottom-right">
+            <div className="luxury-screw slot"></div>
+          </div>
         </Box>
         
         <NavInner>
