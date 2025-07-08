@@ -1,0 +1,57 @@
+/* Luxury Screw SVG Component Styles */
+
+.luxury-screw-svg-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Position variants */
+.luxury-screw-svg-wrapper.top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.luxury-screw-svg-wrapper.top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.luxury-screw-svg-wrapper.bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+.luxury-screw-svg-wrapper.bottom-right {
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Subtle animation on parent hover */
+.repspheres-nav-container:hover .luxury-screw-svg-wrapper {
+  filter: brightness(1.05);
+}
+
+/* Performance optimization */
+@media (prefers-reduced-motion: reduce) {
+  .luxury-screw-svg-wrapper {
+    transition: none;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .luxury-screw-svg-wrapper.top-left,
+  .luxury-screw-svg-wrapper.top-right,
+  .luxury-screw-svg-wrapper.bottom-left,
+  .luxury-screw-svg-wrapper.bottom-right {
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+  }
+}

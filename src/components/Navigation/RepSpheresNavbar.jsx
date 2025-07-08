@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './RepSpheresNavbar.css';
+import LuxuryScrew from '../common/LuxuryScrew';
+import '../common/LuxuryScrew.css';
 
 const RepSpheresNavbar = ({ 
   onLogin, 
@@ -82,18 +84,34 @@ const RepSpheresNavbar = ({
 
           {/* Swiss Watchmaking × Surgical Engineering Screws */}
           <div className="nav-screws">
-            <div className="luxury-screw-wrapper top-left">
-              <div className="luxury-screw slot"></div>
-            </div>
-            <div className="luxury-screw-wrapper top-right">
-              <div className="luxury-screw hex"></div>
-            </div>
-            <div className="luxury-screw-wrapper bottom-left">
-              <div className="luxury-screw hex"></div>
-            </div>
-            <div className="luxury-screw-wrapper bottom-right">
-              <div className="luxury-screw slot"></div>
-            </div>
+            <LuxuryScrew 
+              type="flathead" 
+              rotation={11} 
+              size={16}
+              className="top-left"
+              showHalo={true}
+            />
+            <LuxuryScrew 
+              type="hex" 
+              rotation={47} 
+              size={16}
+              className="top-right"
+              showHalo={true}
+            />
+            <LuxuryScrew 
+              type="hex" 
+              rotation={89} 
+              size={16}
+              className="bottom-left"
+              showHalo={true}
+            />
+            <LuxuryScrew 
+              type="flathead" 
+              rotation={120} 
+              size={16}
+              className="bottom-right"
+              showHalo={true}
+            />
           </div>
 
           <div className="nav-inner">

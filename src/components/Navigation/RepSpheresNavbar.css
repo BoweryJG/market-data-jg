@@ -186,6 +186,32 @@
     z-index: 2;
 }
 
+/* Override for luxury screw component positioning */
+.nav-screws .luxury-screw-svg-wrapper {
+    position: absolute;
+    z-index: 10;
+}
+
+.nav-screws .luxury-screw-svg-wrapper.top-left {
+    top: 10px;
+    left: 10px;
+}
+
+.nav-screws .luxury-screw-svg-wrapper.top-right {
+    top: 10px;
+    right: 10px;
+}
+
+.nav-screws .luxury-screw-svg-wrapper.bottom-left {
+    bottom: 10px;
+    left: 10px;
+}
+
+.nav-screws .luxury-screw-svg-wrapper.bottom-right {
+    bottom: 10px;
+    right: 10px;
+}
+
 .screw-wrapper {
     position: absolute;
     width: 8px;
