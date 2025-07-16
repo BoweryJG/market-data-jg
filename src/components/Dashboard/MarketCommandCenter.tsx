@@ -1187,11 +1187,11 @@ const MarketCommandCenter: React.FC = () => {
       <Box
         sx={{
           mb: 4,
-          opacity: isSearchSticky ? 0 : 1,
-          transform: isSearchSticky ? 'translateY(-50px)' : 'translateY(0)',
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
+          opacity: isSearchSticky ? 0.15 : 1,
+          transform: isSearchSticky ? 'translateY(-20px) scale(0.95)' : 'translateY(0) scale(1)',
+          transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
           pointerEvents: isSearchSticky ? 'none' : 'auto',
-          height: isSearchSticky ? 0 : 'auto',
+          height: isSearchSticky ? '40px' : 'auto',
           overflow: 'hidden',
         }}
       >
@@ -1788,8 +1788,6 @@ const MarketCommandCenter: React.FC = () => {
                     cursor: 'pointer',
                     position: 'relative',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    borderRadius: '8px',
-                    margin: '2px 8px',
                     '&:hover': {
                       background: `linear-gradient(135deg, 
                         ${alpha(theme.palette.primary.main, 0.08)} 0%, 
@@ -1819,7 +1817,7 @@ const MarketCommandCenter: React.FC = () => {
                         ${theme.palette.secondary.main} 50%, 
                         ${theme.palette.success.main} 100%
                       )`,
-                      borderRadius: '8px 8px 0 0',
+                      borderRadius: '4px 4px 0 0',
                       opacity: 0,
                       transform: 'scaleX(0)',
                       transformOrigin: 'left',
@@ -1946,8 +1944,6 @@ const MarketCommandCenter: React.FC = () => {
                     cursor: 'pointer',
                     position: 'relative',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    borderRadius: '8px',
-                    margin: '2px 8px',
                     '&:hover': {
                       background: `linear-gradient(135deg, 
                         ${alpha(theme.palette.primary.main, 0.08)} 0%, 
@@ -1977,7 +1973,7 @@ const MarketCommandCenter: React.FC = () => {
                         ${theme.palette.secondary.main} 50%, 
                         ${theme.palette.success.main} 100%
                       )`,
-                      borderRadius: '8px 8px 0 0',
+                      borderRadius: '4px 4px 0 0',
                       opacity: 0,
                       transform: 'scaleX(0)',
                       transformOrigin: 'left',
