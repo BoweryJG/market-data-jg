@@ -8,7 +8,7 @@ import AuthCallback from './pages/AuthCallback';
 import ManualAuthHandler from './pages/ManualAuthHandler';
 import { PublicProceduresList } from './components/procedures/PublicProceduresList';
 import { OrbContextProvider } from './assets/OrbContextProvider';
-import NavBar from './assets/menubar';
+import { RepSpheresNavBar } from './components/ui/nav';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, AuthGuard } from './auth';
 import { 
@@ -35,8 +35,16 @@ const App: React.FC = () => {
         <Router>
           <ErrorBoundary>
             <OrbContextProvider>
-              <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)' }}>
-                <NavBar onSalesModeToggle={() => setSalesMode(true)} />
+              <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)', paddingTop: '120px' }}>
+                <RepSpheresNavBar 
+                  customLinks={[
+                    { href: '/', label: 'Market Data', icon: 'market' },
+                    { href: '/procedures', label: 'Procedures', icon: 'canvas' },
+                    { href: '/dashboard', label: 'Dashboard', icon: 'pipeline' },
+                    { href: '/workspace', label: 'Workspace', icon: 'sphere' }
+                  ]}
+                  logoHref="/"
+                />
                 <Routes>
                   {/* Public Routes - No Auth Required */}
                   <Route path="/" element={<MarketCommandCenter />} />
