@@ -10,6 +10,7 @@ import {
   LinearProgress,
   IconButton,
   Collapse,
+  Divider,
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,

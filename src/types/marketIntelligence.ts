@@ -1,4 +1,5 @@
 // Market Intelligence Types for Enhanced Procedure Data
+import { ProcedureBase } from './index';
 
 export interface MarketIntelligence {
   // Year-by-year projections

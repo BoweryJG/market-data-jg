@@ -49,7 +49,9 @@ const GradientButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const CategoryCard = styled(Card)(({ theme, expanded }: { theme: any; expanded: boolean }) => ({
+const CategoryCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded: boolean }>(({ theme, expanded }) => ({
   transition: 'all 0.3s ease',
   cursor: 'pointer',
   '&:hover': {

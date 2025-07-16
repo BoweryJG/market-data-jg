@@ -200,7 +200,7 @@ export const MarketIntelligenceDashboard: React.FC<MarketIntelligenceDashboardPr
               </Box>
               <Typography variant="h4">{stats.highGrowthCount}</Typography>
               <Typography variant="caption" color="text.secondary">
-                Procedures with >15% Growth
+                Procedures with &gt;15% Growth
               </Typography>
             </CardContent>
           </Card>

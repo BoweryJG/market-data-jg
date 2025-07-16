@@ -644,7 +644,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
       onClose={closeAuthModal} 
       onSuccess={handleAuthSuccess}
     />
-    <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
+    <LogoutModal isOpen={logoutOpen} onClose={() => setLogoutOpen(false)} />
     <SettingsModal 
       open={settingsOpen} 
       onClose={() => setSettingsOpen(false)} 
