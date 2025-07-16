@@ -400,6 +400,62 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
   const growthRate = procedure.yearly_growth_percentage;
   const marketSize = procedure.market_size_2025_usd_millions;
 
+  // Premium styling system for modal
+  const getProcedureTier = (proc: any) => {
+    const size = proc.market_size_2025_usd_millions || 0;
+    const growth = proc.yearly_growth_percentage || 0;
+    const cost = proc.average_cost_usd || 0;
+    
+    if (size >= 5000 || cost >= 10000) return 'platinum';
+    if (size >= 1000 || cost >= 5000 || growth >= 15) return 'gold';
+    if (growth >= 8 || cost >= 2000) return 'silver';
+    return 'standard';
+  };
+
+  const tier = getProcedureTier(procedure);
+  const isAesthetic = industry === 'aesthetic';
+
+  const getHeaderStyling = () => {
+    const tierStyles = {
+      platinum: {
+        background: isAesthetic 
+          ? 'linear-gradient(135deg, #92400E 0%, #DC2626 15%, #BE123C 35%, #A21CAF 65%, #7C3AED 85%, #1E40AF 100%)'
+          : 'linear-gradient(135deg, #065F46 0%, #059669 15%, #0891B2 35%, #1E40AF 65%, #7C3AED 85%, #A21CAF 100%)',
+        overlay: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 50%)',
+        textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+        borderBottom: '3px solid rgba(255,255,255,0.3)',
+      },
+      gold: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #D97706 0%, #EA580C 25%, #EC4899 50%, #BE185D 75%, #A21CAF 100%)'
+          : 'linear-gradient(135deg, #1E40AF 0%, #7C3AED 25%, #0891B2 50%, #059669 75%, #10B981 100%)',
+        overlay: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15) 0%, transparent 50%)',
+        textShadow: '0 2px 6px rgba(0,0,0,0.4)',
+        borderBottom: '2px solid rgba(255,255,255,0.25)',
+      },
+      silver: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #F59E0B 0%, #F97316 30%, #EF4444 70%, #DC2626 100%)'
+          : 'linear-gradient(135deg, #0891B2 0%, #06B6D4 30%, #3B82F6 70%, #6366F1 100%)',
+        overlay: 'radial-gradient(circle at 40% 30%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+        textShadow: '0 1px 4px rgba(0,0,0,0.3)',
+        borderBottom: '1px solid rgba(255,255,255,0.2)',
+      },
+      standard: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #6B7280 0%, #9CA3AF 50%, #D1D5DB 100%)'
+          : 'linear-gradient(135deg, #374151 0%, #4B5563 50%, #6B7280 100%)',
+        overlay: 'none',
+        textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+      }
+    };
+
+    return tierStyles[tier as keyof typeof tierStyles] || tierStyles.standard;
+  };
+
+  const headerStyle = getHeaderStyling();
+
   return (
     <Dialog
       open={open}
@@ -416,62 +472,177 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
         },
       }}
     >
-      {/* Header with gradient background */}
+      {/* Premium header with dynamic tier-based styling */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #0891B2 0%, #06B6D4 100%)',
+          background: headerStyle.background,
+          backgroundSize: '400% 400%',
           color: 'white',
-          p: 3,
+          p: 4,
           position: 'relative',
+          borderBottom: headerStyle.borderBottom,
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: headerStyle.overlay,
+            pointerEvents: 'none',
+          },
+          '&::after': tier !== 'standard' ? {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 30%)`,
+            pointerEvents: 'none',
+          } : {}
         }}
       >
         <IconButton
           onClick={onClose}
           sx={{
             position: 'absolute',
-            right: 8,
-            top: 8,
+            right: 12,
+            top: 12,
             color: 'white',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            zIndex: 2,
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              transform: 'scale(1.1)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
             },
           }}
         >
           <CloseIcon />
         </IconButton>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, position: 'relative', zIndex: 1 }}>
           <Avatar
             sx={{
-              width: 56,
-              height: 56,
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              width: tier === 'platinum' ? 72 : tier === 'gold' ? 64 : 56,
+              height: tier === 'platinum' ? 72 : tier === 'gold' ? 64 : 56,
+              background: tier === 'platinum' 
+                ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
+                : tier === 'gold'
+                ? 'linear-gradient(135deg, #C0C0C0 0%, #E6E6FA 100%)'
+                : tier === 'silver'
+                ? 'linear-gradient(135deg, #CD7F32 0%, #D2691E 100%)'
+                : 'rgba(255, 255, 255, 0.2)',
+              boxShadow: tier !== 'standard' 
+                ? '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2)'
+                : '0 4px 16px rgba(0, 0, 0, 0.2)',
+              border: tier !== 'standard' ? '2px solid rgba(255, 255, 255, 0.3)' : 'none',
             }}
           >
-            <HospitalIcon sx={{ fontSize: 32 }} />
+            <HospitalIcon sx={{ 
+              fontSize: tier === 'platinum' ? 40 : tier === 'gold' ? 36 : 32,
+              color: tier !== 'standard' ? '#000' : 'white',
+              filter: tier !== 'standard' ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' : 'none'
+            }} />
           </Avatar>
+          {tier !== 'standard' && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: -8,
+                left: tier === 'platinum' ? 64 : tier === 'gold' ? 56 : 48,
+                background: tier === 'platinum' 
+                  ? 'linear-gradient(45deg, #FFD700, #FFA500)'
+                  : tier === 'gold'
+                  ? 'linear-gradient(45deg, #C0C0C0, #E6E6FA)'
+                  : 'linear-gradient(45deg, #CD7F32, #D2691E)',
+                color: '#000',
+                px: 1,
+                py: 0.5,
+                borderRadius: 1,
+                fontSize: '0.7rem',
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                textShadow: '0 1px 2px rgba(255,255,255,0.5)'
+              }}
+            >
+              {tier.toUpperCase()}
+            </Box>
+          )}
           <Box>
-            <Typography variant="h4" fontWeight="bold">
+            <Typography 
+              variant="h4" 
+              sx={{ 
+                fontWeight: tier === 'platinum' ? 800 : tier === 'gold' ? 700 : 'bold',
+                fontSize: tier === 'platinum' ? '2.5rem' : tier === 'gold' ? '2.2rem' : '2rem',
+                textShadow: headerStyle.textShadow,
+                background: tier === 'platinum' 
+                  ? 'linear-gradient(45deg, #FFFACD, #FFFFFF)'
+                  : tier === 'gold'
+                  ? 'linear-gradient(45deg, #F5F5F5, #FFFFFF)'
+                  : 'inherit',
+                backgroundClip: tier !== 'standard' && tier !== 'silver' ? 'text' : 'inherit',
+                WebkitBackgroundClip: tier !== 'standard' && tier !== 'silver' ? 'text' : 'inherit',
+                WebkitTextFillColor: tier !== 'standard' && tier !== 'silver' ? 'transparent' : 'inherit',
+              }}
+            >
               {procedureName}
             </Typography>
-            <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
+            <Typography 
+              variant="subtitle1" 
+              sx={{ 
+                opacity: 0.95,
+                fontWeight: tier !== 'standard' ? 600 : 400,
+                textShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                fontSize: '1.1rem'
+              }}
+            >
               {procedure.category || procedure.clinical_category || industry} Procedure
             </Typography>
           </Box>
         </Box>
 
-        {/* Key metrics */}
-        <Grid container spacing={2}>
+        {/* Key metrics with premium styling */}
+        <Grid container spacing={3}>
           {averageCost && (
             <Grid item xs={12} sm={3}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <MoneyIcon />
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1.5,
+                p: 1.5,
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                position: 'relative',
+                zIndex: 1
+              }}>
+                <MoneyIcon sx={{ 
+                  fontSize: tier === 'platinum' ? 28 : tier === 'gold' ? 24 : 20,
+                  color: '#FFD700',
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                }} />
                 <Box>
-                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  <Typography variant="caption" sx={{ 
+                    opacity: 0.9, 
+                    fontWeight: 600,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
                     Average Cost
                   </Typography>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      fontWeight: tier === 'platinum' ? 800 : tier === 'gold' ? 700 : 'bold',
+                      fontSize: tier === 'platinum' ? '1.4rem' : '1.2rem',
+                      textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                    }}
+                  >
                     ${averageCost.toLocaleString()}
                   </Typography>
                 </Box>
@@ -480,13 +651,40 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
           )}
           {growthRate && (
             <Grid item xs={12} sm={3}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <TrendingUpIcon />
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1.5,
+                p: 1.5,
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                position: 'relative',
+                zIndex: 1
+              }}>
+                <TrendingUpIcon sx={{ 
+                  fontSize: tier === 'platinum' ? 28 : tier === 'gold' ? 24 : 20,
+                  color: growthRate > 10 ? '#10B981' : growthRate > 5 ? '#F59E0B' : '#06B6D4',
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                }} />
                 <Box>
-                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  <Typography variant="caption" sx={{ 
+                    opacity: 0.9, 
+                    fontWeight: 600,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
                     Growth Rate
                   </Typography>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      fontWeight: tier === 'platinum' ? 800 : tier === 'gold' ? 700 : 'bold',
+                      fontSize: tier === 'platinum' ? '1.4rem' : '1.2rem',
+                      textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                      color: growthRate > 10 ? '#10B981' : growthRate > 5 ? '#F59E0B' : '#06B6D4'
+                    }}
+                  >
                     {growthRate > 0 ? '+' : ''}{growthRate}%
                   </Typography>
                 </Box>
@@ -495,13 +693,43 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
           )}
           {procedure.market_maturity_stage && (
             <Grid item xs={12} sm={3}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <AutoAwesome />
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1.5,
+                p: 1.5,
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                position: 'relative',
+                zIndex: 1
+              }}>
+                <AutoAwesome sx={{ 
+                  fontSize: tier === 'platinum' ? 28 : tier === 'gold' ? 24 : 20,
+                  color: procedure.market_maturity_stage === 'Emerging' ? '#10B981' :
+                         procedure.market_maturity_stage === 'Growth' ? '#06B6D4' :
+                         procedure.market_maturity_stage === 'Expansion' ? '#3B82F6' :
+                         procedure.market_maturity_stage === 'Mature' ? '#F59E0B' :
+                         procedure.market_maturity_stage === 'Saturated' ? '#EF4444' : '#9CA3AF',
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                }} />
                 <Box>
-                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  <Typography variant="caption" sx={{ 
+                    opacity: 0.9, 
+                    fontWeight: 600,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
                     Market Maturity
                   </Typography>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      fontWeight: tier === 'platinum' ? 800 : tier === 'gold' ? 700 : 'bold',
+                      fontSize: tier === 'platinum' ? '1.4rem' : '1.2rem',
+                      textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                    }}
+                  >
                     {procedure.market_maturity_stage}
                   </Typography>
                 </Box>
@@ -510,13 +738,40 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
           )}
           {marketSize && (
             <Grid item xs={12} sm={3}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <ScienceIcon />
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1.5,
+                p: 1.5,
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                position: 'relative',
+                zIndex: 1
+              }}>
+                <ScienceIcon sx={{ 
+                  fontSize: tier === 'platinum' ? 28 : tier === 'gold' ? 24 : 20,
+                  color: marketSize >= 5000 ? '#9F58FA' : marketSize >= 1000 ? '#06B6D4' : '#10B981',
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                }} />
                 <Box>
-                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                  <Typography variant="caption" sx={{ 
+                    opacity: 0.9, 
+                    fontWeight: 600,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
                     Market Size
                   </Typography>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      fontWeight: tier === 'platinum' ? 800 : tier === 'gold' ? 700 : 'bold',
+                      fontSize: tier === 'platinum' ? '1.4rem' : '1.2rem',
+                      textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                      color: marketSize >= 5000 ? '#9F58FA' : marketSize >= 1000 ? '#06B6D4' : '#10B981'
+                    }}
+                  >
                     ${marketSize >= 1000 ? `${(marketSize / 1000).toFixed(1)}B` : `${marketSize}M`}
                   </Typography>
                 </Box>

@@ -608,15 +608,19 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
   return (
     <Card
       sx={{
-        background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.error.main, 0.1)} 100%)`,
-        border: `2px solid ${theme.palette.warning.main}`,
+        background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(147, 51, 234, 0.12) 35%, rgba(59, 130, 246, 0.08) 70%, rgba(6, 182, 212, 0.05) 100%)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(6, 182, 212, 0.3)',
         position: 'relative',
         overflow: 'visible',
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: '0 8px 32px rgba(6, 182, 212, 0.15), 0 0 20px rgba(147, 51, 234, 0.08)',
         '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: theme.shadows[8],
+          transform: 'translateY(-3px) scale(1.01)',
+          boxShadow: '0 12px 40px rgba(6, 182, 212, 0.25), 0 0 30px rgba(147, 51, 234, 0.15)',
+          border: '1px solid rgba(6, 182, 212, 0.5)',
+          background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(147, 51, 234, 0.15) 35%, rgba(59, 130, 246, 0.12) 70%, rgba(6, 182, 212, 0.08) 100%)',
         }
       }}
       onClick={onClick}
@@ -626,21 +630,37 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
           position: 'absolute',
           top: -10,
           right: -10,
-          background: theme.palette.warning.main,
+          background: 'linear-gradient(135deg, #06B6D4 0%, #9333EA 50%, #3B82F6 100%)',
           color: 'white',
-          px: 1,
+          px: 1.5,
           py: 0.5,
-          borderRadius: 1,
+          borderRadius: 2,
           fontSize: 12,
           fontWeight: 'bold',
+          boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4), 0 0 12px rgba(147, 51, 234, 0.3)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          backdropFilter: 'blur(8px)',
         }}
       >
         PREMIUM
       </Box>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <PinDrop sx={{ mr: 1, color: theme.palette.warning.main }} />
-          <Typography variant="h6">Territory Intelligence</Typography>
+          <PinDrop sx={{ 
+            mr: 1, 
+            color: '#06B6D4',
+            fontSize: 28,
+            filter: 'drop-shadow(0 2px 4px rgba(6, 182, 212, 0.3))'
+          }} />
+          <Typography variant="h6" sx={{ 
+            background: 'linear-gradient(135deg, #06B6D4, #9333EA)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 700
+          }}>
+            Territory Intelligence
+          </Typography>
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -680,7 +700,13 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
               <Chip
                 label={`$${territory.marketSize}M`}
                 size="small"
-                sx={{ background: theme.palette.warning.main, color: 'white' }}
+                sx={{ 
+                  background: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+                  color: 'white',
+                  fontWeight: 600,
+                  boxShadow: '0 2px 8px rgba(6, 182, 212, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                }}
               />
             </Box>
             <Typography variant="caption" color="text.secondary">
@@ -691,10 +717,13 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
               value={territory.saturation}
               sx={{
                 mt: 1,
-                height: 4,
-                backgroundColor: alpha(theme.palette.warning.main, 0.2),
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: 'rgba(6, 182, 212, 0.15)',
                 '& .MuiLinearProgress-bar': {
-                  backgroundColor: theme.palette.warning.main,
+                  background: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+                  borderRadius: 3,
+                  boxShadow: '0 0 8px rgba(6, 182, 212, 0.4)'
                 },
               }}
             />
@@ -1040,6 +1069,70 @@ const MarketCommandCenter: React.FC = () => {
       }
     };
   }, [scrollProgress, luxuryEase]);
+
+  // Premium procedure styling system (CPU-efficient)
+  const getProcedureTier = useCallback((procedure: any) => {
+    const marketSize = procedure.market_size_2025_usd_millions || 0;
+    const growthRate = procedure.yearly_growth_percentage || 0;
+    const avgCost = procedure.average_cost_usd || 0;
+    
+    if (marketSize >= 5000 || avgCost >= 10000) return 'platinum';
+    if (marketSize >= 1000 || avgCost >= 5000 || growthRate >= 15) return 'gold';
+    if (growthRate >= 8 || avgCost >= 2000) return 'silver';
+    return 'standard';
+  }, []);
+
+  const getTierStyling = useCallback((tier: string, industry: string) => {
+    const isAesthetic = industry === 'aesthetic';
+    
+    const tierStyles = {
+      platinum: {
+        background: isAesthetic 
+          ? 'linear-gradient(135deg, #92400E 0%, #DC2626 25%, #BE123C 50%, #A21CAF 100%)'
+          : 'linear-gradient(135deg, #065F46 0%, #0891B2 25%, #1E40AF 50%, #7C3AED 100%)',
+        border: `2px solid ${isAesthetic ? 'rgba(220, 38, 38, 0.6)' : 'rgba(8, 145, 178, 0.6)'}`,
+        boxShadow: `
+          0 8px 32px ${isAesthetic ? 'rgba(220, 38, 38, 0.3)' : 'rgba(8, 145, 178, 0.3)'},
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2)
+        `,
+        backdropFilter: 'blur(20px)',
+      },
+      gold: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #D97706 0%, #EA580C 25%, #EC4899 75%, #BE185D 100%)'
+          : 'linear-gradient(135deg, #1E40AF 0%, #7C3AED 25%, #0891B2 75%, #059669 100%)',
+        border: `2px solid ${isAesthetic ? 'rgba(217, 119, 6, 0.5)' : 'rgba(30, 64, 175, 0.5)'}`,
+        boxShadow: `
+          0 6px 24px ${isAesthetic ? 'rgba(217, 119, 6, 0.25)' : 'rgba(30, 64, 175, 0.25)'},
+          0 0 0 1px rgba(255, 255, 255, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15)
+        `,
+        backdropFilter: 'blur(16px)',
+      },
+      silver: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #EF4444 100%)'
+          : 'linear-gradient(135deg, #0891B2 0%, #06B6D4 50%, #3B82F6 100%)',
+        border: `1px solid ${isAesthetic ? 'rgba(245, 158, 11, 0.4)' : 'rgba(8, 145, 178, 0.4)'}`,
+        boxShadow: `
+          0 4px 16px ${isAesthetic ? 'rgba(245, 158, 11, 0.2)' : 'rgba(8, 145, 178, 0.2)'},
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `,
+        backdropFilter: 'blur(12px)',
+      },
+      standard: {
+        background: isAesthetic
+          ? 'linear-gradient(135deg, #374151 0%, #4B5563 50%, #6B7280 100%)'
+          : 'linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%)',
+        border: '1px solid rgba(75, 85, 99, 0.3)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(8px)',
+      }
+    };
+
+    return tierStyles[tier as keyof typeof tierStyles] || tierStyles.standard;
+  }, []);
 
   const handleSort = (key: string) => {
     setSortConfig(prev => ({
@@ -1838,7 +1931,11 @@ const MarketCommandCenter: React.FC = () => {
           </TableHead>
           <TableBody>
             {viewMode === 'procedures' ? (
-              filteredProcedures.map((procedure, index) => (
+              filteredProcedures.map((procedure, index) => {
+                const tier = getProcedureTier(procedure);
+                const tierStyle = getTierStyling(tier, procedure.industry);
+                
+                return (
                 <TableRow
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
@@ -1850,34 +1947,77 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    position: 'relative',
+                    background: alpha(tierStyle.background, 0.1),
+                    borderLeft: `4px solid ${tierStyle.border.split(' ')[2]}`,
+                    transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     '&:hover': {
-                      background: `linear-gradient(135deg, 
-                        ${alpha(theme.palette.primary.main, 0.08)} 0%, 
-                        ${alpha(theme.palette.secondary.main, 0.06)} 50%,
-                        ${alpha(theme.palette.success.main, 0.04)} 100%
-                      )`,
-                      transform: 'translateY(-2px) scale(1.002)',
-                      boxShadow: `
-                        0 8px 25px ${alpha(theme.palette.primary.main, 0.2)},
-                        0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
-                        inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
-                      `,
+                      background: tierStyle.background,
+                      transform: 'translateY(-3px) scale(1.005)',
+                      boxShadow: tierStyle.boxShadow,
+                      border: tierStyle.border,
+                      borderRadius: '12px',
+                      backdropFilter: tierStyle.backdropFilter,
+                      '& .MuiTableCell-root': {
+                        color: tier !== 'standard' ? '#FFFFFF' : 'inherit',
+                        fontWeight: tier === 'platinum' ? 600 : tier === 'gold' ? 500 : 'inherit',
+                      }
                     },
+                    '& .tier-indicator': {
+                      opacity: 0,
+                      transition: 'opacity 0.3s ease',
+                    },
+                    '&:hover .tier-indicator': {
+                      opacity: 1,
+                    }
                   }}
                 >
                   <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                       <MedicalServices 
                         sx={{ 
                           mr: 1, 
-                          color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main 
+                          color: procedure.industry === 'dental' ? theme.palette.info.main : theme.palette.secondary.main,
+                          fontSize: tier === 'platinum' ? 28 : tier === 'gold' ? 24 : 20,
+                          filter: tier !== 'standard' ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' : 'none'
                         }} 
                       />
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-                          {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
-                        </Typography>
+                      <Box sx={{ flex: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography 
+                            variant="subtitle2" 
+                            sx={{ 
+                              fontWeight: tier === 'platinum' ? 700 : tier === 'gold' ? 600 : 'bold',
+                              color: theme.palette.primary.main,
+                              fontSize: tier === 'platinum' ? '1.1rem' : '1rem',
+                              textShadow: tier !== 'standard' ? '0 1px 2px rgba(0,0,0,0.5)' : 'none'
+                            }}
+                          >
+                            {procedure.procedure_name || procedure.name || 'Unknown Procedure'}
+                          </Typography>
+                          {tier !== 'standard' && (
+                            <Chip
+                              label={tier.toUpperCase()}
+                              size="small"
+                              className="tier-indicator"
+                              sx={{
+                                height: 20,
+                                fontSize: '0.7rem',
+                                fontWeight: 'bold',
+                                background: tier === 'platinum' 
+                                  ? 'linear-gradient(45deg, #FFD700, #FFA500)'
+                                  : tier === 'gold'
+                                  ? 'linear-gradient(45deg, #C0C0C0, #E6E6FA)'
+                                  : 'linear-gradient(45deg, #CD7F32, #D2691E)',
+                                color: '#000',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                                '& .MuiChip-label': {
+                                  textShadow: '0 1px 2px rgba(255,255,255,0.5)'
+                                }
+                              }}
+                            />
+                          )}
+                        </Box>
                         <Typography variant="caption" color="text.secondary">
                           Click for detailed insights
                         </Typography>
@@ -1888,12 +2028,42 @@ const MarketCommandCenter: React.FC = () => {
                     <Chip
                       label={procedure.industry === 'dental' ? 'Dental' : procedure.industry === 'aesthetic' ? 'Aesthetic' : 'Unknown'}
                       size="small"
-                      color={procedure.industry === 'dental' ? 'info' : 'secondary'}
+                      sx={{
+                        background: procedure.industry === 'dental' 
+                          ? 'linear-gradient(135deg, #0891B2 0%, #06B6D4 100%)'
+                          : procedure.industry === 'aesthetic'
+                          ? 'linear-gradient(135deg, #EC4899 0%, #F472B6 100%)'
+                          : 'linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%)',
+                        color: 'white',
+                        fontWeight: 600,
+                        border: 'none',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                        backdropFilter: 'blur(8px)',
+                        '&:hover': {
+                          transform: 'scale(1.05)',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                        }
+                      }}
                     />
                   </TableCell>
                   <TableCell>{procedure.category || procedure.normalized_category || procedure.clinical_category || (procedure.industry === 'dental' ? 'Dental Procedure' : procedure.industry === 'aesthetic' ? 'Aesthetic Procedure' : 'General')}</TableCell>
                   <TableCell align="right">
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: tier === 'platinum' ? 700 : tier === 'gold' ? 600 : 'bold',
+                        fontSize: tier === 'platinum' ? '1.1rem' : '1rem',
+                        background: tier === 'platinum' 
+                          ? 'linear-gradient(45deg, #FFD700, #FFA500)'
+                          : tier === 'gold'
+                          ? 'linear-gradient(45deg, #C0C0C0, #E6E6FA)'
+                          : 'inherit',
+                        backgroundClip: tier !== 'standard' ? 'text' : 'inherit',
+                        WebkitBackgroundClip: tier !== 'standard' ? 'text' : 'inherit',
+                        WebkitTextFillColor: tier !== 'standard' ? 'transparent' : 'inherit',
+                        textShadow: tier !== 'standard' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none'
+                      }}
+                    >
                       {(() => {
                         const marketSize = procedure.market_size_2025_usd_millions || procedure.market_size_usd_millions || 0;
                         if (marketSize >= 1000) {
@@ -1906,15 +2076,26 @@ const MarketCommandCenter: React.FC = () => {
                   <TableCell align="right">
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                       {(procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? (
-                        <TrendingUp sx={{ color: theme.palette.success.main, mr: 0.5 }} />
+                        <TrendingUp sx={{ 
+                          color: theme.palette.success.main, 
+                          mr: 0.5,
+                          fontSize: tier === 'platinum' ? 24 : tier === 'gold' ? 22 : 20,
+                          filter: tier !== 'standard' ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' : 'none'
+                        }} />
                       ) : (
-                        <TrendingDown sx={{ color: theme.palette.error.main, mr: 0.5 }} />
+                        <TrendingDown sx={{ 
+                          color: theme.palette.error.main, 
+                          mr: 0.5,
+                          fontSize: tier === 'platinum' ? 24 : tier === 'gold' ? 22 : 20
+                        }} />
                       )}
                       <Typography
                         variant="body2"
                         sx={{
                           color: (procedure.yearly_growth_percentage || procedure.growth_rate || 0) > 0 ? theme.palette.success.main : theme.palette.error.main,
-                          fontWeight: 'bold',
+                          fontWeight: tier === 'platinum' ? 700 : tier === 'gold' ? 600 : 'bold',
+                          fontSize: tier === 'platinum' ? '1.1rem' : '1rem',
+                          textShadow: tier !== 'standard' ? '0 1px 2px rgba(0,0,0,0.5)' : 'none'
                         }}
                       >
                         {(procedure.yearly_growth_percentage || procedure.growth_rate || 0).toFixed(1)}%
@@ -1971,7 +2152,8 @@ const MarketCommandCenter: React.FC = () => {
                     </motion.div>
                   </TableCell>
                 </TableRow>
-              ))
+                );
+              })
             ) : (
               filteredCompanies.map((company, index) => (
                 <TableRow
