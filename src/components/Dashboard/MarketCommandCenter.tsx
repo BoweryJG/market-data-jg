@@ -757,6 +757,7 @@ const MarketCommandCenter: React.FC = () => {
   const [liveData, setLiveData] = useState(true);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [isSearchSticky, setIsSearchSticky] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [dataDiscoveryMode, setDataDiscoveryMode] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
@@ -810,7 +811,7 @@ const MarketCommandCenter: React.FC = () => {
     return () => clearInterval(interval);
   }, [liveData, fetchAllData]);
 
-  // Optimized scroll handling with throttling
+  // Luxury progressive scroll handling with throttling
   useEffect(() => {
     let ticking = false;
     
@@ -818,7 +819,14 @@ const MarketCommandCenter: React.FC = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-          setIsSearchSticky(scrollY > 100); // Lower threshold for quicker response
+          
+          // Binary sticky state for search bar (keeps existing behavior)
+          setIsSearchSticky(scrollY > 100);
+          
+          // Progressive scroll for luxury transitions (0 to 1 over 300px)
+          const rawProgress = Math.min(Math.max((scrollY - 50) / 300, 0), 1);
+          setScrollProgress(rawProgress);
+          
           ticking = false;
         });
         ticking = true;
@@ -993,6 +1001,45 @@ const MarketCommandCenter: React.FC = () => {
           : Number(bVal) - Number(aVal);
       });
   }, [marketData, searchTerm, selectedIndustry, selectedCategory, sortConfig]);
+
+  // Luxury easing and transition calculations
+  const luxuryEase = useMemo(() => (t: number) => {
+    // Smooth step function for premium automotive feel
+    return t * t * (3 - 2 * t);
+  }, []);
+
+  const scrollTransitions = useMemo(() => {
+    const easedProgress = luxuryEase(scrollProgress);
+    
+    return {
+      // Gauges (most prominent, fade slowest)
+      gauges: {
+        opacity: 1 - (easedProgress * 0.4), // 1 → 0.6
+        scale: 1 - (easedProgress * 0.08), // 1 → 0.92
+        translateY: -(easedProgress * 10), // 0 → -10px
+        transition: 'all 1.2s cubic-bezier(0.23, 1, 0.32, 1)',
+      },
+      // Categories (medium fade)
+      categories: {
+        opacity: 1 - (easedProgress * 0.6), // 1 → 0.4
+        scale: 1 - (easedProgress * 0.12), // 1 → 0.88
+        translateY: -(easedProgress * 15), // 0 → -15px
+        transition: 'all 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      },
+      // Territory Intelligence (most fade)
+      territory: {
+        opacity: 1 - (easedProgress * 0.7), // 1 → 0.3
+        scale: 1 - (easedProgress * 0.15), // 1 → 0.85
+        translateY: -(easedProgress * 20), // 0 → -20px
+        transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      },
+      // Table (smooth upward movement, no opacity change)
+      table: {
+        translateY: -(easedProgress * 30), // 0 → -30px
+        transition: 'transform 1.0s cubic-bezier(0.23, 1, 0.32, 1)',
+      }
+    };
+  }, [scrollProgress, luxuryEase]);
 
   const handleSort = (key: string) => {
     setSortConfig(prev => ({
@@ -1187,11 +1234,10 @@ const MarketCommandCenter: React.FC = () => {
       <Box
         sx={{
           mb: 4,
-          opacity: isSearchSticky ? 0.15 : 1,
-          transform: isSearchSticky ? 'translateY(-20px) scale(0.95)' : 'translateY(0) scale(1)',
-          transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-          pointerEvents: isSearchSticky ? 'none' : 'auto',
-          height: isSearchSticky ? '40px' : 'auto',
+          opacity: scrollTransitions.gauges.opacity,
+          transform: `translateY(${scrollTransitions.gauges.translateY}px) scale(${scrollTransitions.gauges.scale})`,
+          transition: scrollTransitions.gauges.transition,
+          pointerEvents: scrollTransitions.gauges.opacity < 0.3 ? 'none' : 'auto',
           overflow: 'hidden',
         }}
       >
@@ -1300,13 +1346,28 @@ const MarketCommandCenter: React.FC = () => {
         
         <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TerritoryPremiumData 
-                territories={marketData?.territories || []} 
-                onClick={() => setTerritoryModalOpen(true)}
-              />
+              <Box
+                sx={{
+                  opacity: scrollTransitions.territory.opacity,
+                  transform: `translateY(${scrollTransitions.territory.translateY}px) scale(${scrollTransitions.territory.scale})`,
+                  transition: scrollTransitions.territory.transition,
+                }}
+              >
+                <TerritoryPremiumData 
+                  territories={marketData?.territories || []} 
+                  onClick={() => setTerritoryModalOpen(true)}
+                />
+              </Box>
             
             {/* Compact Category Filter */}
             {viewMode === 'procedures' && marketData?.categories && (
+              <Box
+                sx={{
+                  opacity: scrollTransitions.categories.opacity,
+                  transform: `translateY(${scrollTransitions.categories.translateY}px) scale(${scrollTransitions.categories.scale})`,
+                  transition: scrollTransitions.categories.transition,
+                }}
+              >
                   <Card sx={{ 
                     p: 2,
                     borderRadius: '16px',
@@ -1437,6 +1498,7 @@ const MarketCommandCenter: React.FC = () => {
                   </Button>
                 )}
               </Card>
+              </Box>
             )}
           </Box>
         </Grid>
@@ -1639,6 +1701,8 @@ const MarketCommandCenter: React.FC = () => {
             inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
           `,
           position: 'relative',
+          transform: `translateY(${scrollTransitions.table.translateY}px)`,
+          transition: scrollTransitions.table.transition,
           '&::before': {
             content: '""',
             position: 'absolute',
