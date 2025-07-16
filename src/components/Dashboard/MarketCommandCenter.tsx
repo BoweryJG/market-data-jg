@@ -1016,8 +1016,134 @@ const MarketCommandCenter: React.FC = () => {
     <Box sx={{ 
       p: 3, 
       background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-      minHeight: '100vh'
+      minHeight: '100vh',
+      position: 'relative'
     }}>
+      {/* Decorative Screws for Market Command Center */}
+      <Box sx={{
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        width: 12,
+        height: 12,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+        boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '70%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '1px',
+          height: '70%',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        width: 12,
+        height: 12,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+        boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '70%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '1px',
+          height: '70%',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        width: 12,
+        height: 12,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+        boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '70%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '1px',
+          height: '70%',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 12,
+        height: 12,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+        boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '70%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '1px',
+          height: '70%',
+          background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
       {/* Header with live indicator */}
       <Box sx={{ 
         display: 'flex', 
@@ -1027,7 +1153,7 @@ const MarketCommandCenter: React.FC = () => {
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mr: 2 }}>
-            Market Command Center v2.0
+            Market Command Center
           </Typography>
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
@@ -1071,7 +1197,35 @@ const MarketCommandCenter: React.FC = () => {
       >
         <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <Card sx={{ p: 3, background: alpha(theme.palette.background.paper, 0.95) }}>
+          <Card sx={{ 
+            p: 3, 
+            background: `linear-gradient(145deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.98)} 100%)`,
+            borderRadius: '20px',
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+            boxShadow: `
+              0 16px 50px ${alpha(theme.palette.common.black, 0.25)},
+              0 0 30px ${alpha(theme.palette.primary.main, 0.1)},
+              inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
+            `,
+            backdropFilter: 'blur(20px)',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              background: `linear-gradient(90deg, 
+                ${theme.palette.primary.main} 0%, 
+                ${theme.palette.secondary.main} 33%, 
+                ${theme.palette.success.main} 66%,
+                ${theme.palette.warning.main} 100%
+              )`,
+              borderRadius: '20px 20px 0 0',
+              opacity: 0.8,
+            }
+          }}>
             <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
               Market Intelligence Dashboard
             </Typography>
@@ -1153,7 +1307,34 @@ const MarketCommandCenter: React.FC = () => {
             
             {/* Compact Category Filter */}
             {viewMode === 'procedures' && marketData?.categories && (
-                  <Card sx={{ p: 2 }}>
+                  <Card sx={{ 
+                    p: 2,
+                    borderRadius: '16px',
+                    background: `linear-gradient(145deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.98)} 100%)`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                    boxShadow: `
+                      0 12px 40px ${alpha(theme.palette.common.black, 0.2)},
+                      0 0 20px ${alpha(theme.palette.primary.main, 0.08)},
+                      inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
+                    `,
+                    backdropFilter: 'blur(20px)',
+                    position: 'relative',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '2px',
+                      background: `linear-gradient(90deg, 
+                        ${alpha(theme.palette.primary.main, 0.6)} 0%, 
+                        ${alpha(theme.palette.secondary.main, 0.6)} 50%, 
+                        ${alpha(theme.palette.success.main, 0.6)} 100%
+                      )`,
+                      borderRadius: '16px 16px 0 0',
+                      opacity: 0.8,
+                    }
+                  }}>
                     <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                       <Category sx={{ mr: 0.5, fontSize: 18 }} />
                       Categories
@@ -1270,9 +1451,29 @@ const MarketCommandCenter: React.FC = () => {
         top: isSearchSticky ? 64 : 'auto', // Stick to navbar when scrolled
         zIndex: 1100,
         transition: 'all 0.3s ease',
-        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[2],
-        background: alpha(theme.palette.background.paper, 0.98),
-        backdropFilter: 'blur(10px)',
+        boxShadow: isSearchSticky ? 
+          `0 12px 40px ${alpha(theme.palette.common.black, 0.4)}, 0 0 30px ${alpha(theme.palette.primary.main, 0.2)}` : 
+          `0 8px 32px ${alpha(theme.palette.common.black, 0.2)}, 0 0 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+        background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.98)} 100%)`,
+        backdropFilter: 'blur(20px)',
+        borderRadius: '16px',
+        border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          background: `linear-gradient(90deg, 
+            ${alpha(theme.palette.primary.main, 0.6)} 0%, 
+            ${alpha(theme.palette.secondary.main, 0.6)} 50%, 
+            ${alpha(theme.palette.success.main, 0.6)} 100%
+          )`,
+          borderRadius: '16px 16px 0 0',
+          opacity: 0.8,
+        }
       }}>
         <Box sx={{ 
           display: 'flex', 
@@ -1448,14 +1649,44 @@ const MarketCommandCenter: React.FC = () => {
         component={Paper} 
         sx={{ 
           overflow: 'auto',
+          borderRadius: '20px',
+          background: `linear-gradient(145deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.98)} 100%)`,
+          backdropFilter: 'blur(20px)',
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+          boxShadow: `
+            0 20px 60px ${alpha(theme.palette.common.black, 0.3)},
+            0 0 40px ${alpha(theme.palette.primary.main, 0.1)},
+            inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
+          `,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: `linear-gradient(90deg, 
+              ${theme.palette.primary.main} 0%, 
+              ${theme.palette.secondary.main} 50%, 
+              ${theme.palette.success.main} 100%
+            )`,
+            borderRadius: '20px 20px 0 0',
+            opacity: 0.8,
+          },
           '&::-webkit-scrollbar': {
             width: '12px',
           },
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: theme.palette.divider,
+          '&::-webkit-scrollbar-track': {
+            background: alpha(theme.palette.background.default, 0.3),
             borderRadius: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+            borderRadius: '6px',
+            border: `2px solid ${alpha(theme.palette.background.paper, 0.5)}`,
             '&:hover': {
-              backgroundColor: theme.palette.text.disabled,
+              background: `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
             }
           }
         }}
@@ -1575,9 +1806,45 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    borderRadius: '8px',
+                    margin: '2px 8px',
                     '&:hover': {
-                      background: alpha(theme.palette.primary.main, 0.05),
+                      background: `linear-gradient(135deg, 
+                        ${alpha(theme.palette.primary.main, 0.08)} 0%, 
+                        ${alpha(theme.palette.secondary.main, 0.06)} 50%,
+                        ${alpha(theme.palette.success.main, 0.04)} 100%
+                      )`,
+                      transform: 'translateY(-2px) scale(1.002)',
+                      boxShadow: `
+                        0 8px 25px ${alpha(theme.palette.primary.main, 0.2)},
+                        0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
+                        inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
+                      `,
+                      '&::before': {
+                        opacity: 1,
+                        transform: 'scaleX(1)',
+                      }
                     },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '2px',
+                      background: `linear-gradient(90deg, 
+                        ${theme.palette.primary.main} 0%, 
+                        ${theme.palette.secondary.main} 50%, 
+                        ${theme.palette.success.main} 100%
+                      )`,
+                      borderRadius: '8px 8px 0 0',
+                      opacity: 0,
+                      transform: 'scaleX(0)',
+                      transformOrigin: 'left',
+                      transition: 'all 0.3s ease',
+                    }
                   }}
                 >
                   <TableCell>
@@ -1697,9 +1964,45 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    borderRadius: '8px',
+                    margin: '2px 8px',
                     '&:hover': {
-                      background: alpha(theme.palette.primary.main, 0.05),
+                      background: `linear-gradient(135deg, 
+                        ${alpha(theme.palette.primary.main, 0.08)} 0%, 
+                        ${alpha(theme.palette.secondary.main, 0.06)} 50%,
+                        ${alpha(theme.palette.success.main, 0.04)} 100%
+                      )`,
+                      transform: 'translateY(-2px) scale(1.002)',
+                      boxShadow: `
+                        0 8px 25px ${alpha(theme.palette.primary.main, 0.2)},
+                        0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
+                        inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
+                      `,
+                      '&::before': {
+                        opacity: 1,
+                        transform: 'scaleX(1)',
+                      }
                     },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '2px',
+                      background: `linear-gradient(90deg, 
+                        ${theme.palette.primary.main} 0%, 
+                        ${theme.palette.secondary.main} 50%, 
+                        ${theme.palette.success.main} 100%
+                      )`,
+                      borderRadius: '8px 8px 0 0',
+                      opacity: 0,
+                      transform: 'scaleX(0)',
+                      transformOrigin: 'left',
+                      transition: 'all 0.3s ease',
+                    }
                   }}
                 >
                   <TableCell>
