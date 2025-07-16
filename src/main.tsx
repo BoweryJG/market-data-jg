@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Ensure the browser tab displays the correct title
-document.title = 'Market Insights';
+document.title = 'Market Data';
 
 const container = document.getElementById('root');
 if (container) {
