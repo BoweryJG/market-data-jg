@@ -1786,7 +1786,6 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    position: 'relative',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
                       background: `linear-gradient(135deg, 
@@ -1800,29 +1799,7 @@ const MarketCommandCenter: React.FC = () => {
                         0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
                         inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
                       `,
-                      '&::before': {
-                        opacity: 1,
-                        transform: 'scaleX(1)',
-                      }
                     },
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '2px',
-                      background: `linear-gradient(90deg, 
-                        ${theme.palette.primary.main} 0%, 
-                        ${theme.palette.secondary.main} 50%, 
-                        ${theme.palette.success.main} 100%
-                      )`,
-                      borderRadius: '4px 4px 0 0',
-                      opacity: 0,
-                      transform: 'scaleX(0)',
-                      transformOrigin: 'left',
-                      transition: 'all 0.3s ease',
-                    }
                   }}
                 >
                   <TableCell>
@@ -1942,7 +1919,6 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    position: 'relative',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
                       background: `linear-gradient(135deg, 
@@ -1956,29 +1932,7 @@ const MarketCommandCenter: React.FC = () => {
                         0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
                         inset 0 1px 0 ${alpha(theme.palette.common.white, 0.1)}
                       `,
-                      '&::before': {
-                        opacity: 1,
-                        transform: 'scaleX(1)',
-                      }
                     },
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '2px',
-                      background: `linear-gradient(90deg, 
-                        ${theme.palette.primary.main} 0%, 
-                        ${theme.palette.secondary.main} 50%, 
-                        ${theme.palette.success.main} 100%
-                      )`,
-                      borderRadius: '4px 4px 0 0',
-                      opacity: 0,
-                      transform: 'scaleX(0)',
-                      transformOrigin: 'left',
-                      transition: 'all 0.3s ease',
-                    }
                   }}
                 >
                   <TableCell>
