@@ -218,30 +218,13 @@ const RepSpheresNavBar = ({
 
             {/* Right Actions */}
             <div className="nav-actions">
-              {user ? (
-                <>
-                  <button 
-                    className="nav-cta"
-                    onClick={handleSignOut}
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button 
-                    className="nav-cta-secondary"
-                    onClick={handleLogin}
-                  >
-                    Login
-                  </button>
-                  <button 
-                    className="nav-cta"
-                    onClick={handleSignup}
-                  >
-                    Sign Up
-                  </button>
-                </>
+              {user && (
+                <button 
+                  className="nav-cta"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
               )}
               <button className="nav-more" aria-label="More options">
                 <div className="nav-more-icon">

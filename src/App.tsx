@@ -39,9 +39,9 @@ const App: React.FC = () => {
                 <RepSpheresNavBar 
                   customLinks={[
                     { href: '/', label: 'Market Data', icon: 'market' },
-                    { href: '/procedures', label: 'Procedures', icon: 'canvas' },
-                    { href: '/dashboard', label: 'Dashboard', icon: 'pipeline' },
-                    { href: '/workspace', label: 'Workspace', icon: 'sphere' }
+                    { href: 'https://canvas.repspheres.com/', label: 'Canvas', icon: 'canvas', external: true },
+                    { href: '#repconnect', label: 'RepConnect', icon: 'pipeline' },
+                    { href: 'https://crm.repspheres.com/', label: 'Sphere OS', icon: 'sphere', external: true }
                   ]}
                   logoHref="/"
                 />
