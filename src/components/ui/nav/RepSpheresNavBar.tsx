@@ -218,13 +218,28 @@ const RepSpheresNavBar = ({
 
             {/* Right Actions */}
             <div className="nav-actions">
-              {user && (
+              {user ? (
                 <button 
                   className="nav-cta"
                   onClick={handleSignOut}
                 >
                   Sign Out
                 </button>
+              ) : (
+                <>
+                  <button 
+                    className="nav-cta-secondary"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </button>
+                  <button 
+                    className="nav-cta"
+                    onClick={handleSignup}
+                  >
+                    Sign Up
+                  </button>
+                </>
               )}
               <button className="nav-more" aria-label="More options">
                 <div className="nav-more-icon">
@@ -296,7 +311,7 @@ const RepSpheresNavBar = ({
                 </Link>
               )
             ))}
-            {user && (
+            {user ? (
               <Link
                 to="/analytics/shares"
                 className="mobile-menu-link"
@@ -305,6 +320,29 @@ const RepSpheresNavBar = ({
                 <span className="nav-link-icon icon-analytics"></span>
                 <span>Analytics</span>
               </Link>
+            ) : (
+              <>
+                <button
+                  className="mobile-menu-link"
+                  onClick={() => {
+                    handleLogin();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <span className="nav-link-icon icon-login"></span>
+                  <span>Login</span>
+                </button>
+                <button
+                  className="mobile-menu-link"
+                  onClick={() => {
+                    handleSignup();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <span className="nav-link-icon icon-signup"></span>
+                  <span>Sign Up</span>
+                </button>
+              </>
             )}
           </nav>
         </div>
