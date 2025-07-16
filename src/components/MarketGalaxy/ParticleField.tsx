@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { useTheme } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTheme, Box, Typography } from '@mui/material';
 
 interface Particle {
   x: number;
@@ -20,14 +20,27 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ isPlaying }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
+  const [canvasSupported, setCanvasSupported] = useState(true);
   const theme = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    // Check for canvas support
+    let ctx: CanvasRenderingContext2D | null = null;
+    try {
+      ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.warn('Canvas 2D context not supported');
+        setCanvasSupported(false);
+        return;
+      }
+    } catch (error) {
+      console.error('Error getting canvas context:', error);
+      setCanvasSupported(false);
+      return;
+    }
 
     // Set canvas size
     const resizeCanvas = () => {
@@ -52,12 +65,15 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ isPlaying }) => {
 
     // Animation loop
     const animate = () => {
-      ctx.fillStyle = theme.palette.mode === 'dark' 
-        ? 'rgba(0, 0, 0, 0.05)' 
-        : 'rgba(255, 255, 255, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (!ctx || !canvas) return;
+      
+      try {
+        ctx.fillStyle = theme.palette.mode === 'dark' 
+          ? 'rgba(0, 0, 0, 0.05)' 
+          : 'rgba(255, 255, 255, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      particlesRef.current.forEach(particle => {
+        particlesRef.current.forEach(particle => {
         // Update position
         if (isPlaying) {
           particle.x += particle.vx;
@@ -76,28 +92,39 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ isPlaying }) => {
         const y = (particle.y - canvas.height / 2) * scale + canvas.height / 2;
         const size = particle.size * scale;
 
-        // Draw particle with glow effect
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, size * 3);
-        gradient.addColorStop(0, `hsla(${particle.hue}, 70%, 50%, ${particle.opacity})`);
-        gradient.addColorStop(0.5, `hsla(${particle.hue}, 70%, 50%, ${particle.opacity * 0.5})`);
-        gradient.addColorStop(1, 'transparent');
+          // Draw particle with glow effect
+          try {
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, size * 3);
+            gradient.addColorStop(0, `hsla(${particle.hue}, 70%, 50%, ${particle.opacity})`);
+            gradient.addColorStop(0.5, `hsla(${particle.hue}, 70%, 50%, ${particle.opacity * 0.5})`);
+            gradient.addColorStop(1, 'transparent');
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(x, y, size * 3, 0, Math.PI * 2);
-        ctx.fill();
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(x, y, size * 3, 0, Math.PI * 2);
+            ctx.fill();
 
-        // Draw core
-        ctx.fillStyle = `hsla(${particle.hue}, 100%, 70%, ${particle.opacity * 2})`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
+            // Draw core
+            ctx.fillStyle = `hsla(${particle.hue}, 100%, 70%, ${particle.opacity * 2})`;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          } catch (drawError) {
+            // Fallback to simple circle if gradient fails
+            ctx.fillStyle = `hsla(${particle.hue}, 70%, 50%, ${particle.opacity})`;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
 
-        // Pulse effect
-        if (isPlaying) {
-          particle.opacity = 0.1 + Math.sin(Date.now() * 0.001 + particle.x) * 0.1;
-        }
-      });
+          // Pulse effect
+          if (isPlaying) {
+            particle.opacity = 0.1 + Math.sin(Date.now() * 0.001 + particle.x) * 0.1;
+          }
+        });
+      } catch (animationError) {
+        console.error('Error in particle animation:', animationError);
+      }
 
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -111,6 +138,36 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ isPlaying }) => {
       }
     };
   }, [isPlaying, theme]);
+
+  if (!canvasSupported) {
+    return (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: `radial-gradient(ellipse at center, ${theme.palette.primary.main}20 0%, transparent 70%)`,
+          pointerEvents: 'none'
+        }}
+      >
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            opacity: 0.6,
+            textAlign: 'center',
+            color: theme.palette.text.secondary
+          }}
+        >
+          3D Effects Unavailable
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <canvas
