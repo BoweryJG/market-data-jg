@@ -1451,29 +1451,9 @@ const MarketCommandCenter: React.FC = () => {
         top: isSearchSticky ? 64 : 'auto', // Stick to navbar when scrolled
         zIndex: 1100,
         transition: 'all 0.3s ease',
-        boxShadow: isSearchSticky ? 
-          `0 12px 40px ${alpha(theme.palette.common.black, 0.4)}, 0 0 30px ${alpha(theme.palette.primary.main, 0.2)}` : 
-          `0 8px 32px ${alpha(theme.palette.common.black, 0.2)}, 0 0 20px ${alpha(theme.palette.primary.main, 0.1)}`,
-        background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.98)} 100%)`,
-        backdropFilter: 'blur(20px)',
-        borderRadius: '16px',
-        border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '2px',
-          background: `linear-gradient(90deg, 
-            ${alpha(theme.palette.primary.main, 0.6)} 0%, 
-            ${alpha(theme.palette.secondary.main, 0.6)} 50%, 
-            ${alpha(theme.palette.success.main, 0.6)} 100%
-          )`,
-          borderRadius: '16px 16px 0 0',
-          opacity: 0.8,
-        }
+        boxShadow: isSearchSticky ? theme.shadows[8] : theme.shadows[2],
+        background: alpha(theme.palette.background.paper, 0.98),
+        backdropFilter: 'blur(10px)',
       }}>
         <Box sx={{ 
           display: 'flex', 
