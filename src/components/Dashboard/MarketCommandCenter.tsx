@@ -1090,6 +1090,7 @@ const MarketCommandCenter: React.FC = () => {
         background: isAesthetic 
           ? 'linear-gradient(135deg, #92400E 0%, #DC2626 25%, #BE123C 50%, #A21CAF 100%)'
           : 'linear-gradient(135deg, #065F46 0%, #0891B2 25%, #1E40AF 50%, #7C3AED 100%)',
+        baseColor: isAesthetic ? '#DC2626' : '#0891B2', // Base color for alpha function
         border: `2px solid ${isAesthetic ? 'rgba(220, 38, 38, 0.6)' : 'rgba(8, 145, 178, 0.6)'}`,
         boxShadow: `
           0 8px 32px ${isAesthetic ? 'rgba(220, 38, 38, 0.3)' : 'rgba(8, 145, 178, 0.3)'},
@@ -1102,6 +1103,7 @@ const MarketCommandCenter: React.FC = () => {
         background: isAesthetic
           ? 'linear-gradient(135deg, #D97706 0%, #EA580C 25%, #EC4899 75%, #BE185D 100%)'
           : 'linear-gradient(135deg, #1E40AF 0%, #7C3AED 25%, #0891B2 75%, #059669 100%)',
+        baseColor: isAesthetic ? '#EA580C' : '#1E40AF', // Base color for alpha function
         border: `2px solid ${isAesthetic ? 'rgba(217, 119, 6, 0.5)' : 'rgba(30, 64, 175, 0.5)'}`,
         boxShadow: `
           0 6px 24px ${isAesthetic ? 'rgba(217, 119, 6, 0.25)' : 'rgba(30, 64, 175, 0.25)'},
@@ -1114,6 +1116,7 @@ const MarketCommandCenter: React.FC = () => {
         background: isAesthetic
           ? 'linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #EF4444 100%)'
           : 'linear-gradient(135deg, #0891B2 0%, #06B6D4 50%, #3B82F6 100%)',
+        baseColor: isAesthetic ? '#F97316' : '#0891B2', // Base color for alpha function
         border: `1px solid ${isAesthetic ? 'rgba(245, 158, 11, 0.4)' : 'rgba(8, 145, 178, 0.4)'}`,
         boxShadow: `
           0 4px 16px ${isAesthetic ? 'rgba(245, 158, 11, 0.2)' : 'rgba(8, 145, 178, 0.2)'},
@@ -1125,6 +1128,7 @@ const MarketCommandCenter: React.FC = () => {
         background: isAesthetic
           ? 'linear-gradient(135deg, #374151 0%, #4B5563 50%, #6B7280 100%)'
           : 'linear-gradient(135deg, #1F2937 0%, #374151 50%, #4B5563 100%)',
+        baseColor: isAesthetic ? '#4B5563' : '#374151', // Base color for alpha function
         border: '1px solid rgba(75, 85, 99, 0.3)',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         backdropFilter: 'blur(8px)',
@@ -1948,7 +1952,7 @@ const MarketCommandCenter: React.FC = () => {
                   sx={{
                     cursor: 'pointer',
                     position: 'relative',
-                    background: alpha(tierStyle.background, 0.1),
+                    background: alpha(tierStyle.baseColor || '#374151', 0.1),
                     borderLeft: `4px solid ${tierStyle.border.split(' ')[2]}`,
                     transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     '&:hover': {
