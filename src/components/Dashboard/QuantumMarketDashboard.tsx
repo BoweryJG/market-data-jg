@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
-import { Box, Typography, IconButton, Tooltip, Fade, Grow, useTheme, alpha, Fab, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { Box, Typography, IconButton, Tooltip, Fade, Grow, useTheme, alpha, Fab } from '@mui/material';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Stars, Float, MeshDistortMaterial, Html } from '@react-three/drei';
-import * as THREE from 'three';
 import { 
   TrendingUp, 
   FlashOn, 
@@ -196,64 +193,153 @@ const QuantumMarketDashboard: React.FC = () => {
     return procedures;
   }, [selectedCategory, sortConfig]);
 
-  // 3D Category Sphere Component
+  // CSS-only Category Sphere Component
   const CategorySphere: React.FC<{ data: CategoryData; isSelected: boolean }> = ({ data, isSelected }) => {
-    const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
     
-    useFrame((state) => {
-      if (meshRef.current) {
-        meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
-        if (hovered || isSelected) {
-          meshRef.current.scale.lerp(new THREE.Vector3(1.2, 1.2, 1.2), 0.1);
-        } else {
-          meshRef.current.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
-        }
-      }
-    });
+    const sphereSize = 120 + (data.marketSize / 100000);
+    const x = (data.position[0] * 100) + 300;
+    const y = (data.position[1] * 100) + 300;
+    const z = data.position[2];
 
     return (
-      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
-        <mesh
-          ref={meshRef}
-          position={data.position}
-          onPointerOver={() => {
-            setHovered(true);
-            setHoveredItem(data.id);
-            document.body.style.cursor = 'pointer';
-          }}
-          onPointerOut={() => {
-            setHovered(false);
-            setHoveredItem(null);
-            document.body.style.cursor = 'default';
-          }}
-          onClick={() => setSelectedCategory(data)}
-        >
-          <sphereGeometry args={[1 + (data.marketSize / 5000000), 32, 32]} />
-          <MeshDistortMaterial
-            color={data.color}
-            speed={2}
-            distort={0.3}
-            radius={1}
-            emissive={data.color}
-            emissiveIntensity={hovered || isSelected ? 0.5 : 0.2}
-          />
-        </mesh>
-        <Html
-          position={[data.position[0], data.position[1] + 2, data.position[2]]}
-          center
+      <motion.div
+        style={{
+          position: 'absolute',
+          left: x,
+          top: y,
+          width: sphereSize,
+          height: sphereSize,
+          cursor: 'pointer',
+          transformStyle: 'preserve-3d',
+        }}
+        animate={{
+          rotateY: 360,
+          y: [0, -10, 0],
+          scale: hovered || isSelected ? 1.2 : 1,
+        }}
+        transition={{
+          rotateY: { duration: 20, repeat: Infinity, ease: 'linear' },
+          y: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+          scale: { duration: 0.3 },
+        }}
+        onMouseEnter={() => {
+          setHovered(true);
+          setHoveredItem(data.id);
+        }}
+        onMouseLeave={() => {
+          setHovered(false);
+          setHoveredItem(null);
+        }}
+        onClick={() => setSelectedCategory(data)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {/* Glow effect */}
+        <motion.div
           style={{
-            color: 'white',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            textShadow: '0 2px 4px rgba(0,0,0,0.8)',
-            whiteSpace: 'nowrap',
-            userSelect: 'none',
+            position: 'absolute',
+            inset: -20,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${data.color}40, transparent 70%)`,
+            filter: 'blur(20px)',
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.7, 0.3],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        
+        {/* Main sphere */}
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            background: `radial-gradient(circle at 30% 30%, ${alpha('#fff', 0.3)}, ${data.color})`,
+            border: `3px solid ${data.color}`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: `0 0 ${hovered || isSelected ? 40 : 20}px ${alpha(data.color, 0.5)}`,
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '15%',
+              left: '25%',
+              width: '40%',
+              height: '40%',
+              background: 'radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(5px)',
+            },
           }}
         >
-          {data.name}
-        </Html>
-      </Float>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: 'white',
+              fontWeight: 'bold',
+              textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+              mb: 1,
+              textAlign: 'center',
+              px: 1,
+            }}
+          >
+            {data.name}
+          </Typography>
+          
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'white',
+              fontWeight: 'bold',
+              textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+            }}
+          >
+            ${(data.marketSize / 1000000).toFixed(1)}M
+          </Typography>
+          
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              color: 'white',
+              fontWeight: 'bold',
+              textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+            }}
+          >
+            {data.growth.toFixed(1)}% growth
+          </Typography>
+        </Box>
+        
+        {/* Orbital ring for high opportunity */}
+        {data.opportunity > 80 && (
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: -15,
+              borderRadius: '50%',
+              border: `2px solid ${alpha(data.color, 0.6)}`,
+              borderTopColor: data.color,
+              borderRightColor: data.color,
+            }}
+            animate={{ rotateZ: 360 }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
+        )}
+      </motion.div>
     );
   };
 
@@ -693,44 +779,51 @@ const QuantumMarketDashboard: React.FC = () => {
             style={{ height: '100vh' }}
           >
             <ErrorBoundary>
-              <Suspense fallback={
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                  <CircularProgress />
-                </Box>
-              }>
-                <Canvas 
-                  camera={{ position: [0, 0, 10], fov: 75 }}
-                  onCreated={({ gl }) => {
-                    gl.setClearColor('#0a0a0a');
-                  }}
-                  gl={{ 
-                    antialias: true,
-                    alpha: true,
-                    powerPreference: 'high-performance',
-                  }}
-                >
-                  <ambientLight intensity={0.5} />
-                  <pointLight position={[10, 10, 10]} />
-                  <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade />
-                  <OrbitControls 
-                    enablePan={true} 
-                    enableZoom={true} 
-                    enableRotate={true}
-                    maxDistance={20}
-                    minDistance={5}
+              {/* CSS-only Star Field Background */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Animated stars */}
+                {Array.from({ length: 100 }, (_, i) => (
+                  <motion.div
+                    key={i}
+                    style={{
+                      position: 'absolute',
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      width: Math.random() * 3 + 1,
+                      height: Math.random() * 3 + 1,
+                      background: '#ffffff',
+                      borderRadius: '50%',
+                      boxShadow: '0 0 6px #ffffff',
+                    }}
+                    animate={{
+                      opacity: [0.3, 1, 0.3],
+                      scale: [0.8, 1.2, 0.8],
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                      delay: Math.random() * 2,
+                    }}
                   />
-                  
-                  <group>
-                    {categoryData.map((data) => (
-                      <CategorySphere
-                        key={data.id}
-                        data={data}
-                        isSelected={selectedCategory?.id === data.id}
-                      />
-                    ))}
-                  </group>
-                </Canvas>
-              </Suspense>
+                ))}
+                
+                {/* Category spheres */}
+                {categoryData.map((data) => (
+                  <CategorySphere
+                    key={data.id}
+                    data={data}
+                    isSelected={selectedCategory?.id === data.id}
+                  />
+                ))}
+              </Box>
             </ErrorBoundary>
             
             {/* Selected Category Details */}

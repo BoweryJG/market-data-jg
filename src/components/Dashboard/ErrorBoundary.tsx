@@ -59,7 +59,7 @@ class ErrorBoundary extends Component<Props, State> {
               Something went wrong
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              The 3D visualization encountered an error. This might be due to WebGL compatibility issues.
+              An error occurred while loading the dashboard. Please try refreshing the page.
             </Typography>
             <Button
               variant="contained"
