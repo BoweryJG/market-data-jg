@@ -9,14 +9,18 @@ export async function debugAuth() {
   console.group('🔍 MarketData Auth Debug Info');
   
   // 1. Check current domain
-  console.log('Current Domain:', window.location.hostname);
-  console.log('Current URL:', window.location.href);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Current Domain:', window.location.hostname);
+    console.log('Current URL:', window.location.href);
+  }
   
   // 2. Check Supabase session
   try {
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
-      console.error('Session Error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Session Error:', error);
+      }
     } else if (session) {
       console.log('✅ Session found:', {
         user_id: session.user.id,

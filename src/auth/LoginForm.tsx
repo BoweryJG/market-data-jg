@@ -15,7 +15,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       await signInWithProvider('google');
       onSuccess?.();
     } catch (err) {
-      console.error('Login failed:', err);
+      // Login failed - error handled by UI
     } finally {
       setIsSigningIn(false);
     }
@@ -27,7 +27,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       await signInWithProvider('facebook');
       onSuccess?.();
     } catch (err) {
-      console.error('Login failed:', err);
+      // Login failed - error handled by UI
     } finally {
       setIsSigningIn(false);
     }

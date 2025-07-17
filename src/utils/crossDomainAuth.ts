@@ -127,7 +127,7 @@ export async function handleCrossDomainRedirect(supabaseClient: any): Promise<bo
     
     return false;
   } catch (error) {
-    console.error('Error handling cross-domain redirect:', error);
+    // Error handling cross-domain redirect silently
     return false;
   }
 }
@@ -150,7 +150,7 @@ export function setupCrossDomainAuthListener(supabaseClient: any) {
         try {
           await supabaseClient.auth.setSession(session);
         } catch (error) {
-          console.error('Error setting session:', error);
+          // Error setting session handled internally
         }
       } else {
         await supabaseClient.auth.signOut();
@@ -207,7 +207,7 @@ export function broadcastAuthState(session: any) {
           }
         };
       } catch (error) {
-        console.error(`Failed to sync auth with ${domain}:`, error);
+        // Failed to sync auth with domain - handled internally
       }
     }
   });

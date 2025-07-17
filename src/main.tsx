@@ -6,7 +6,7 @@ import './index.css';
 // Import auth debug utility for development
 if (process.env.NODE_ENV === 'development') {
   import('./utils/authDebug').then(module => {
-    console.log('Auth debug utility loaded');
+    // Auth debug utility loaded
   });
 }
 
@@ -22,5 +22,5 @@ if (container) {
     </React.StrictMode>
   );
 } else {
-  console.error('Failed to find the root element');
+  throw new Error('Failed to find the root element');
 }
