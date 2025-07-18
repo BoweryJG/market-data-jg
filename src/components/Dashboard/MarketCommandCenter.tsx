@@ -1161,7 +1161,9 @@ const MarketCommandCenter: React.FC = () => {
       p: 3, 
       background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.95)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
       minHeight: '100vh',
-      position: 'relative'
+      position: 'relative',
+      borderRadius: '20px',
+      overflow: 'hidden'
     }}>
       {/* Decorative Screws for Market Command Center */}
       <Box sx={{
