@@ -1956,13 +1956,15 @@ const MarketCommandCenter: React.FC = () => {
                     position: 'relative',
                     background: alpha(tierStyle.baseColor || '#374151', 0.1),
                     borderLeft: `4px solid ${tierStyle.border.split(' ')[2]}`,
+                    borderRadius: '12px',
+                    mb: 1,
                     transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     '&:hover': {
                       background: tierStyle.background,
                       transform: 'translateY(-3px) scale(1.005)',
                       boxShadow: tierStyle.boxShadow,
                       border: tierStyle.border,
-                      borderRadius: '12px',
+                      borderRadius: '16px',
                       backdropFilter: tierStyle.backdropFilter,
                       '& .MuiTableCell-root': {
                         color: tier !== 'standard' ? '#FFFFFF' : 'inherit',
@@ -2171,6 +2173,8 @@ const MarketCommandCenter: React.FC = () => {
                   }}
                   sx={{
                     cursor: 'pointer',
+                    borderRadius: '12px',
+                    mb: 1,
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
                       background: `linear-gradient(135deg, 
@@ -2179,6 +2183,7 @@ const MarketCommandCenter: React.FC = () => {
                         ${alpha(theme.palette.success.main, 0.04)} 100%
                       )`,
                       transform: 'translateY(-2px) scale(1.002)',
+                      borderRadius: '16px',
                       boxShadow: `
                         0 8px 25px ${alpha(theme.palette.primary.main, 0.2)},
                         0 0 20px ${alpha(theme.palette.primary.main, 0.1)},
