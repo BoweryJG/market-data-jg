@@ -190,8 +190,8 @@ export default function EnhancedTerritoryIntelligence() {
       {/* Navbar-style Screws */}
       <Box sx={{
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: 9,
+        left: 9,
         width: 8,
         height: 8,
         borderRadius: '50%',
@@ -223,8 +223,8 @@ export default function EnhancedTerritoryIntelligence() {
       }} />
       <Box sx={{
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: 9,
+        right: 9,
         width: 8,
         height: 8,
         borderRadius: '50%',
@@ -256,8 +256,8 @@ export default function EnhancedTerritoryIntelligence() {
       }} />
       <Box sx={{
         position: 'absolute',
-        bottom: 10,
-        left: 10,
+        bottom: 9,
+        left: 9,
         width: 8,
         height: 8,
         borderRadius: '50%',
@@ -289,8 +289,8 @@ export default function EnhancedTerritoryIntelligence() {
       }} />
       <Box sx={{
         position: 'absolute',
-        bottom: 10,
-        right: 10,
+        bottom: 9,
+        right: 9,
         width: 8,
         height: 8,
         borderRadius: '50%',

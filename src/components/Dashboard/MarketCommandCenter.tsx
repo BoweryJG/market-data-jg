@@ -1166,8 +1166,8 @@ const MarketCommandCenter: React.FC = () => {
       {/* Decorative Screws for Market Command Center */}
       <Box sx={{
         position: 'absolute',
-        top: 20,
-        left: 20,
+        top: 19,
+        left: 19,
         width: 6,
         height: 6,
         borderRadius: '50%',
@@ -1197,8 +1197,8 @@ const MarketCommandCenter: React.FC = () => {
       }} />
       <Box sx={{
         position: 'absolute',
-        top: 20,
-        right: 20,
+        top: 19,
+        right: 19,
         width: 6,
         height: 6,
         borderRadius: '50%',
@@ -1228,8 +1228,8 @@ const MarketCommandCenter: React.FC = () => {
       }} />
       <Box sx={{
         position: 'absolute',
-        bottom: 20,
-        left: 20,
+        bottom: 19,
+        left: 19,
         width: 6,
         height: 6,
         borderRadius: '50%',
@@ -1259,8 +1259,8 @@ const MarketCommandCenter: React.FC = () => {
       }} />
       <Box sx={{
         position: 'absolute',
-        bottom: 20,
-        right: 20,
+        bottom: 19,
+        right: 19,
         width: 6,
         height: 6,
         borderRadius: '50%',
