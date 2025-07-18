@@ -186,7 +186,140 @@ export default function EnhancedTerritoryIntelligence() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', position: 'relative' }}>
+      {/* Navbar-style Screws */}
+      <Box sx={{
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, transparent 70%)',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 1px rgba(255,255,255,0.1), 0 1px 1px rgba(255,255,255,0.05)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          width: 5,
+          height: 5,
+          background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+          borderRadius: '50%',
+          boxShadow: 'inset 0 0.5px 1px rgba(255,255,255,0.4), inset 0 -0.5px 1px rgba(0,0,0,0.5), 0 0.5px 2px rgba(0,0,0,0.8)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          width: '70%',
+          height: '0.5px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, transparent 70%)',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 1px rgba(255,255,255,0.1), 0 1px 1px rgba(255,255,255,0.05)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          width: 5,
+          height: 5,
+          background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+          borderRadius: '50%',
+          boxShadow: 'inset 0 0.5px 1px rgba(255,255,255,0.4), inset 0 -0.5px 1px rgba(0,0,0,0.5), 0 0.5px 2px rgba(0,0,0,0.8)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          width: '70%',
+          height: '0.5px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, transparent 70%)',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 1px rgba(255,255,255,0.1), 0 1px 1px rgba(255,255,255,0.05)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          width: 5,
+          height: 5,
+          background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+          borderRadius: '50%',
+          boxShadow: 'inset 0 0.5px 1px rgba(255,255,255,0.4), inset 0 -0.5px 1px rgba(0,0,0,0.5), 0 0.5px 2px rgba(0,0,0,0.8)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          width: '70%',
+          height: '0.5px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, transparent 70%)',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 1px rgba(255,255,255,0.1), 0 1px 1px rgba(255,255,255,0.05)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          width: 5,
+          height: 5,
+          background: 'radial-gradient(circle at 35% 35%, #e0e0e0 0%, #b8b8b8 15%, #888 40%, #555 70%, #222 100%)',
+          borderRadius: '50%',
+          boxShadow: 'inset 0 0.5px 1px rgba(255,255,255,0.4), inset 0 -0.5px 1px rgba(0,0,0,0.5), 0 0.5px 2px rgba(0,0,0,0.8)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          width: '70%',
+          height: '0.5px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.7) 80%, transparent)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }
+      }} />
       {/* Header with Territory Toggle */}
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
         <Box>
