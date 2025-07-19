@@ -144,9 +144,23 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`territory-tabpanel-${index}`}
       aria-labelledby={`territory-tab-${index}`}
+      style={{ 
+        height: '100%',
+        display: value === index ? 'flex' : 'none',
+        flexDirection: 'column'
+      }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ 
+          p: 3, 
+          flex: 1,
+          overflow: 'auto',
+          height: '100%'
+        }}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 }
@@ -186,7 +200,13 @@ export default function EnhancedTerritoryIntelligence() {
   };
 
   return (
-    <Box sx={{ width: '100%', position: 'relative' }}>
+    <Box sx={{ 
+      width: '100%', 
+      height: '100%',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       {/* Navbar-style Screws */}
       <Box sx={{
         position: 'absolute',
@@ -493,7 +513,12 @@ export default function EnhancedTerritoryIntelligence() {
       </Grid>
 
       {/* Main Content Area */}
-      <Card>
+      <Card sx={{ 
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
             <Tab label="Market Overview" icon={<BarChart3 size={20} />} iconPosition="start" />

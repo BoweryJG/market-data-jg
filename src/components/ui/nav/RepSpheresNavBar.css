@@ -389,12 +389,13 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-right: 20px; /* Always maintain 2px minimum from screws (10px + 8px + 2px) */
     transition: all 0.3s ease;
 }
 
 /* Adjust action buttons when scrolled to avoid screws */
 .repspheres-header-container.scrolled .nav-actions {
-    margin-right: 20px; /* Move away from top-right and bottom-right screws */
+    margin-right: 22px; /* Extra spacing when scrolled for visual comfort */
 }
 
 /* Both buttons use the same premium styling */
@@ -668,10 +669,15 @@
     
     .nav-hamburger {
         display: flex;
+        margin-right: 0; /* Reset margin for mobile */
     }
     
     .nav-inner {
-        padding: 0 16px;
+        padding: 0 20px; /* Increased padding to ensure screws don't interfere */
+    }
+    
+    .nav-actions {
+        margin-right: 20px; /* Maintain proper spacing from screws on mobile */
     }
     
     .nav-cta,

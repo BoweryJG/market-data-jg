@@ -2351,7 +2351,13 @@ const MarketCommandCenter: React.FC = () => {
               }
             }}
           >
-            <Box sx={{ p: 3, minHeight: '100%' }}>
+            <Box sx={{ 
+              p: 3, 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'auto'
+            }}>
               <EnhancedTerritoryIntelligence />
             </Box>
           </Box>
