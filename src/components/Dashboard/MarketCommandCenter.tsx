@@ -629,28 +629,29 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
       <Box
         sx={{
           position: 'absolute',
-          top: -10,
-          right: -10,
+          top: { xs: 4, sm: -5, md: -10 },
+          right: { xs: 4, sm: -5, md: -10 },
           background: 'linear-gradient(135deg, #06B6D4 0%, #9333EA 50%, #3B82F6 100%)',
           color: 'white',
-          px: 1.5,
-          py: 0.5,
+          px: { xs: 1, sm: 1.5 },
+          py: { xs: 0.3, sm: 0.5 },
           borderRadius: 2,
-          fontSize: 12,
+          fontSize: { xs: 10, sm: 12 },
           fontWeight: 'bold',
           boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4), 0 0 12px rgba(147, 51, 234, 0.3)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(8px)',
+          whiteSpace: 'nowrap',
         }}
       >
         PREMIUM
       </Box>
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: { xs: 0.5, sm: 1 } }}>
           <PinDrop sx={{ 
-            mr: 1, 
+            mr: { xs: 0.5, sm: 1 }, 
             color: '#06B6D4',
-            fontSize: 28,
+            fontSize: { xs: 20, sm: 24, md: 28 },
             filter: 'drop-shadow(0 2px 4px rgba(6, 182, 212, 0.3))'
           }} />
           <Typography variant="h6" sx={{ 
@@ -658,14 +659,16 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            fontWeight: 700
+            fontWeight: 700,
+            fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.25rem' },
+            whiteSpace: 'nowrap'
           }}>
             Territory Intelligence
           </Typography>
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            style={{ marginLeft: 8 }}
+            style={{ marginLeft: 4 }}
           >
             <Chip
               label="LIVE"
@@ -673,7 +676,8 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
               sx={{
                 background: theme.palette.success.main,
                 color: 'white',
-                fontSize: 10,
+                fontSize: { xs: 8, sm: 10 },
+                height: { xs: 18, sm: 24 }
               }}
             />
           </motion.div>
@@ -682,13 +686,15 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
             sx={{ 
               ml: 'auto', 
               color: theme.palette.text.secondary,
-              display: 'flex',
+              display: { xs: 'none', sm: 'flex' },
               alignItems: 'center',
-              gap: 0.5
+              gap: 0.5,
+              fontSize: { xs: '0.7rem', sm: '0.75rem' },
+              whiteSpace: 'nowrap'
             }}
           >
             Click to open
-            <ExpandMore sx={{ fontSize: 16 }} />
+            <ExpandMore sx={{ fontSize: { xs: 14, sm: 16 } }} />
           </Typography>
         </Box>
         
