@@ -9,29 +9,21 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // First check if we have an authorization code in the query params (PKCE flow)
+        // Check if we have an authorization code in the query params (PKCE flow)
         const queryParams = new URLSearchParams(window.location.search);
         const code = queryParams.get('code');
         
         if (code) {
-          console.log('Authorization code found, exchanging for session...');
-          // Let Supabase handle the code exchange automatically
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-          
-          if (error) {
-            console.error('Error exchanging code for session:', error);
-            navigate('/');
-            return;
-          }
-          
-          if (data.session) {
-            console.log('Auth callback successful, user logged in');
+          console.log('Authorization code found, letting Supabase AuthContext handle PKCE exchange...');
+          // The Supabase client with detectSessionInUrl: true will automatically handle this
+          // Just wait for the auth state change and redirect
+          setTimeout(() => {
             // Clear the URL params to clean up the URL
             window.history.replaceState({}, document.title, window.location.pathname);
             // Navigate to dashboard
             navigate('/');
-            return;
-          }
+          }, 1500); // Give a bit more time for the auth to process
+          return;
         }
         
         // Check if we have auth tokens in the URL hash (implicit flow)

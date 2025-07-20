@@ -617,6 +617,7 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
         boxShadow: '0 8px 32px rgba(6, 182, 212, 0.15), 0 0 20px rgba(147, 51, 234, 0.08)',
         minHeight: '180px',
         height: 'auto',
+        margin: { xs: '12px 12px 8px 8px', sm: '12px 12px 8px 8px', md: '12px 12px 8px 8px' }, // Add margin to accommodate button
         '&:hover': {
           transform: 'translateY(-3px) scale(1.01)',
           boxShadow: '0 12px 40px rgba(6, 182, 212, 0.25), 0 0 30px rgba(147, 51, 234, 0.15)',
@@ -629,8 +630,8 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
       <Box
         sx={{
           position: 'absolute',
-          top: { xs: 4, sm: -5, md: -10 },
-          right: { xs: 4, sm: -5, md: -10 },
+          top: { xs: -8, sm: -8, md: -10 },
+          right: { xs: -8, sm: -8, md: -10 },
           background: 'linear-gradient(135deg, #06B6D4 0%, #9333EA 50%, #3B82F6 100%)',
           color: 'white',
           px: { xs: 1, sm: 1.5 },
@@ -642,6 +643,7 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
           border: '1px solid rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(8px)',
           whiteSpace: 'nowrap',
+          zIndex: 10,
         }}
       >
         PREMIUM

@@ -227,6 +227,7 @@ export function getStandardAuthConfig() {
       storage: window.localStorage,
       storageKey: 'repspheres-auth',
       flowType: 'pkce' as const,
+      debug: !isProduction, // Enable debug in development
       cookies: isProduction ? {
         domain: '.repspheres.com',
         sameSite: 'lax' as const,
