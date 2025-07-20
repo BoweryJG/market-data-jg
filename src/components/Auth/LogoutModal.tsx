@@ -188,7 +188,9 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
     setIsLoading(true);
     
     try {
+      console.log('Starting logout process...');
       await signOut();
+      console.log('SignOut completed successfully');
       
       // Animate modal shrinking
       gsap.to(modalRef.current, {
@@ -198,6 +200,8 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
         opacity: 0,
         ease: "power2.in",
         onComplete: () => {
+          console.log('Animation completed, executing callbacks');
+          setIsLoading(false);
           onSuccess?.();
           onClose();
           // Navigate to home or login page
