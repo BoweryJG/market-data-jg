@@ -41,7 +41,7 @@ const App: React.FC = () => {
                     { href: '/', label: 'Market Data', icon: 'market' },
                     { href: 'https://canvas.repspheres.com/', label: 'Canvas', icon: 'canvas', external: true },
                     { href: '#repconnect', label: 'RepConnect', icon: 'pipeline' },
-                    { href: 'https://crm.repspheres.com/', label: 'Sphere OS', icon: 'sphere', external: true }
+                    { href: 'https://crm.repspheres.com/', label: 'CRM', icon: 'sphere', external: true }
                   ]}
                   logoHref="/"
                 />
