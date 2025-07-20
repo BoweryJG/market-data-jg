@@ -437,7 +437,7 @@ export default function EnhancedTerritoryIntelligence() {
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Total Providers
                     </Typography>
-                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700 }}>
                       <animated.span>
                         {number.to(n => Math.floor(n).toLocaleString())}
                       </animated.span>
@@ -487,7 +487,7 @@ export default function EnhancedTerritoryIntelligence() {
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Market Value
                     </Typography>
-                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700 }}>
                       {territoryData.marketValue}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, flexWrap: 'wrap' }}>
@@ -529,7 +529,7 @@ export default function EnhancedTerritoryIntelligence() {
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Opportunities
                     </Typography>
-                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700 }}>
                       {territoryData.opportunities.reduce((sum, opp) => sum + opp.count, 0)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -568,7 +568,7 @@ export default function EnhancedTerritoryIntelligence() {
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Demographics
                     </Typography>
-                    <Typography variant={{ xs: 'h5', sm: 'h6' }} sx={{ fontWeight: 600 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       {territoryData.demographics.population}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ 

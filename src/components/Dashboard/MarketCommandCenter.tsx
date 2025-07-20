@@ -156,35 +156,62 @@ const CockpitGauge: React.FC<{
           const data = await comprehensiveDataService.getComprehensiveMarketData();
           let industrySpecificValue = 0;
           
-          // Calculate industry-specific values based on label
+          // Enhanced real-time calculation for industry-specific values
           switch (label) {
             case 'Market Size':
               if (industry === 'dental') {
-                industrySpecificValue = data.procedures
+                // Include company market cap for comprehensive dental market size
+                const dentalProcedures = data.procedures
                   .filter(p => p.industry === 'dental')
                   .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+                const dentalCompanies = data.companies
+                  .filter(c => c.industry === 'dental')
+                  .reduce((sum, c) => sum + (c.market_cap || 0), 0);
+                industrySpecificValue = dentalProcedures + (dentalCompanies / 1000); // Convert to millions
               } else if (industry === 'aesthetic') {
-                industrySpecificValue = data.procedures
+                const aestheticProcedures = data.procedures
                   .filter(p => p.industry === 'aesthetic')
                   .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+                const aestheticCompanies = data.companies
+                  .filter(c => c.industry === 'aesthetic')
+                  .reduce((sum, c) => sum + (c.market_cap || 0), 0);
+                industrySpecificValue = aestheticProcedures + (aestheticCompanies / 1000);
               } else {
-                industrySpecificValue = data.marketMetrics.totalMarketSize;
+                // Total market including territories and analytics
+                const territoryValue = data.territories?.reduce((sum, t) => sum + (t.market_value || 0), 0) || 0;
+                industrySpecificValue = data.marketMetrics.totalMarketSize + territoryValue;
               }
               break;
               
             case 'Avg Growth':
               if (industry === 'dental') {
+                // Weighted average growth based on market size
                 const dentalProcedures = data.procedures.filter(p => p.industry === 'dental');
-                industrySpecificValue = dentalProcedures.length > 0
-                  ? dentalProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / dentalProcedures.length
-                  : 0;
+                let weightedGrowth = 0;
+                let totalWeight = 0;
+                dentalProcedures.forEach(p => {
+                  const weight = p.market_size_2025_usd_millions || 1;
+                  const growth = p.yearly_growth_percentage || 0;
+                  weightedGrowth += growth * weight;
+                  totalWeight += weight;
+                });
+                industrySpecificValue = totalWeight > 0 ? weightedGrowth / totalWeight : 0;
               } else if (industry === 'aesthetic') {
                 const aestheticProcedures = data.procedures.filter(p => p.industry === 'aesthetic');
-                industrySpecificValue = aestheticProcedures.length > 0
-                  ? aestheticProcedures.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / aestheticProcedures.length
-                  : 0;
+                let weightedGrowth = 0;
+                let totalWeight = 0;
+                aestheticProcedures.forEach(p => {
+                  const weight = p.market_size_2025_usd_millions || 1;
+                  const growth = p.yearly_growth_percentage || 0;
+                  weightedGrowth += growth * weight;
+                  totalWeight += weight;
+                });
+                industrySpecificValue = totalWeight > 0 ? weightedGrowth / totalWeight : 0;
               } else {
-                industrySpecificValue = data.marketMetrics.averageGrowth;
+                // Include territory growth data
+                const territoryGrowth = data.territories?.reduce((sum, t) => sum + (t.growth_rate || 0), 0) || 0;
+                const territoryCount = data.territories?.length || 1;
+                industrySpecificValue = (data.marketMetrics.averageGrowth + (territoryGrowth / territoryCount)) / 2;
               }
               break;
               
@@ -212,14 +239,23 @@ const CockpitGauge: React.FC<{
               industrySpecificValue = value; // Fallback to original value
           }
           
-          setLiveValue(industrySpecificValue);
+          // Validate and set live value with bounds checking
+          if (industrySpecificValue >= 0 && industrySpecificValue !== liveValue) {
+            setLiveValue(Math.min(industrySpecificValue, max * 1.5)); // Allow 50% over max for dynamic scaling
+            console.log(`🔄 Live update for ${label} (${industry}): ${industrySpecificValue.toLocaleString()}`);
+          }
         } catch (error) {
-          console.error('Failed to fetch live gauge data:', error);
+          console.error(`❌ Failed to fetch live gauge data for ${label}:`, error);
+          // Keep current value on error
+          setLiveValue(value);
         }
       };
       
+      // Initial fetch
       fetchLiveData();
-      const interval = setInterval(fetchLiveData, 30000); // Update every 30s
+      
+      // Real-time updates every 15 seconds for responsive dashboard
+      const interval = setInterval(fetchLiveData, 15000);
       return () => clearInterval(interval);
     }
   }, [isLive, label, industry, value]);
@@ -329,58 +365,204 @@ const CockpitGauge: React.FC<{
             <stop offset="100%" stopColor={alpha(theme.palette.success.main, 0.6)} />
           </linearGradient>
           
-          {/* LUXURY NEEDLE GRADIENTS - CARTIER STYLE */}
-          <linearGradient id="luxury-needle-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#2C3E50" />
-            <stop offset="30%" stopColor="#34495E" />
-            <stop offset="70%" stopColor="#5D6D7E" />
-            <stop offset="100%" stopColor="#85929E" />
-          </linearGradient>
-          
-          {/* CHROME TIP GRADIENT */}
-          <radialGradient id="chrome-tip-gradient" cx="50%" cy="30%" r="70%">
+          {/* ULTRA-REALISTIC 5-LAYER CHROME BEZEL SYSTEM */}
+          {/* Layer 1: Base Chrome Foundation */}
+          <radialGradient id={`chrome-base-${label}`} cx="50%" cy="30%" r="80%">
             <stop offset="0%" stopColor="#F8F9FA" />
-            <stop offset="30%" stopColor="#ECF0F1" />
-            <stop offset="70%" stopColor="#BDC3C7" />
-            <stop offset="100%" stopColor="#95A5A6" />
+            <stop offset="15%" stopColor="#E9ECEF" />
+            <stop offset="35%" stopColor="#DEE2E6" />
+            <stop offset="55%" stopColor="#CED4DA" />
+            <stop offset="75%" stopColor="#ADB5BD" />
+            <stop offset="90%" stopColor="#6C757D" />
+            <stop offset="100%" stopColor="#495057" />
           </radialGradient>
           
-          {/* BASE GRADIENT */}
-          <radialGradient id="base-gradient" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#ECF0F1" />
-            <stop offset="50%" stopColor="#BDC3C7" />
+          {/* Layer 2: Brushed Metal Texture */}
+          <pattern id={`brushed-metal-${label}`} x="0" y="0" width="6" height="2" patternUnits="userSpaceOnUse">
+            <rect width="6" height="1" fill="rgba(255,255,255,0.1)" />
+            <rect y="1" width="6" height="1" fill="rgba(0,0,0,0.05)" />
+          </pattern>
+          
+          {/* Layer 3: Dynamic Reflection Bands */}
+          <linearGradient id={`reflection-bands-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+            <stop offset="20%" stopColor="rgba(255,255,255,0.4)" />
+            <stop offset="25%" stopColor="rgba(255,255,255,0.8)" />
+            <stop offset="30%" stopColor="rgba(255,255,255,0.3)" />
+            <stop offset="50%" stopColor="rgba(255,255,255,0)" />
+            <stop offset="70%" stopColor="rgba(255,255,255,0.2)" />
+            <stop offset="75%" stopColor="rgba(255,255,255,0.6)" />
+            <stop offset="80%" stopColor="rgba(255,255,255,0.1)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </linearGradient>
+          
+          {/* Layer 4: Edge Beveling */}
+          <linearGradient id={`edge-bevel-${label}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.6)" />
+            <stop offset="10%" stopColor="rgba(255,255,255,0.2)" />
+            <stop offset="90%" stopColor="rgba(0,0,0,0.2)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.4)" />
+          </linearGradient>
+          
+          {/* Layer 5: Glass Overlay Effect */}
+          <linearGradient id={`glass-overlay-${label}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+            <stop offset="40%" stopColor="rgba(255,255,255,0.1)" />
+            <stop offset="60%" stopColor="rgba(255,255,255,0.05)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </linearGradient>
+          
+          {/* Enhanced LED Glow Filter */}
+          <filter id={`led-glow-${label}`} x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="6" result="biggerBlur"/>
+            <feMerge>
+              <feMergeNode in="biggerBlur"/>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          
+          {/* Chrome Shadow Filter */}
+          <filter id={`chrome-shadow-${label}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="rgba(0,0,0,0.3)" />
+            <feDropShadow dx="0" dy="1" stdDeviation="1" floodColor="rgba(0,0,0,0.2)" />
+            <feDropShadow dx="1" dy="1" stdDeviation="2" floodColor="rgba(44, 62, 80, 0.6)" />
+          </filter>
+          
+          {/* Metallic Shine Filter */}
+          <filter id={`metallic-shine-${label}`} x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+            <feSpecularLighting in="blur" result="specOut" lightingColor="white" specularConstant="1.5" specularExponent="20">
+              <fePointLight x="-50" y="-50" z="200"/>
+            </feSpecularLighting>
+            <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut2"/>
+            <feComposite in="SourceGraphic" in2="specOut2" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+          </filter>
+          
+          {/* LUXURY NEEDLE GRADIENTS - ULTRA ENHANCED */}
+          <linearGradient id={`luxury-needle-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#E74C3C" />
+            <stop offset="30%" stopColor="#DC143C" />
+            <stop offset="60%" stopColor="#B22222" />
+            <stop offset="100%" stopColor="#8B0000" />
+          </linearGradient>
+          
+          {/* CHROME TIP GRADIENT - ULTRA ENHANCED */}
+          <radialGradient id={`chrome-tip-${label}`} cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#F8F9FA" />
+            <stop offset="40%" stopColor="#DC143C" />
+            <stop offset="80%" stopColor="#8B0000" />
             <stop offset="100%" stopColor="#2C3E50" />
           </radialGradient>
           
-          {/* Shadow filter */}
+          {/* BASE GRADIENT - ULTRA ENHANCED */}
+          <radialGradient id={`base-gradient-${label}`} cx="25%" cy="25%" r="75%">
+            <stop offset="0%" stopColor="#F8F9FA" />
+            <stop offset="30%" stopColor="#E9ECEF" />
+            <stop offset="60%" stopColor="#ADB5BD" />
+            <stop offset="100%" stopColor="#212529" />
+          </radialGradient>
+          
+          {/* Enhanced Shadow filter */}
           <filter id={`needle-shadow-${label}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.3)" />
+            <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.4)" />
+            <feDropShadow dx="1" dy="1" stdDeviation="1" floodColor="rgba(0,0,0,0.2)" />
           </filter>
           
-          {/* Metallic shine gradient */}
+          {/* Enhanced Metallic shine */}
           <linearGradient id={`metallic-shine-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
-            <stop offset="30%" stopColor="rgba(255,255,255,0.3)" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+            <stop offset="30%" stopColor="rgba(255,255,255,0.4)" />
             <stop offset="70%" stopColor="rgba(255,255,255,0.1)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.6)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.7)" />
           </linearGradient>
         </defs>
         
-        {/* Outer ring for luxury feel */}
+        {/* ULTRA-REALISTIC 5-LAYER CHROME BEZEL */}
+        {/* Layer 1: Base Chrome Foundation Ring */}
         <path
-          d={`M 10 ${size / 2} A ${size / 2 - 10} ${size / 2 - 10} 0 0 1 ${size - 10} ${size / 2}`}
+          d={`M 5 ${size / 2} A ${size / 2 - 5} ${size / 2 - 5} 0 0 1 ${size - 5} ${size / 2}`}
           fill="none"
-          stroke={alpha(theme.palette.text.primary, 0.1)}
-          strokeWidth="2"
+          stroke={`url(#chrome-base-${label})`}
+          strokeWidth="12"
+          strokeLinecap="round"
+          filter={`url(#chrome-shadow-${label})`}
         />
         
-        {/* Main gauge track */}
+        {/* Layer 2: Brushed Metal Texture Overlay */}
         <path
-          d={`M 15 ${size / 2} A ${size / 2 - 15} ${size / 2 - 15} 0 0 1 ${size - 15} ${size / 2}`}
+          d={`M 8 ${size / 2} A ${size / 2 - 8} ${size / 2 - 8} 0 0 1 ${size - 8} ${size / 2}`}
           fill="none"
-          stroke={`url(#gauge-bg-${label})`}
+          stroke={`url(#brushed-metal-${label})`}
           strokeWidth="8"
           strokeLinecap="round"
+          opacity="0.6"
+        />
+        
+        {/* Layer 3: Dynamic Reflection Bands */}
+        <motion.path
+          d={`M 10 ${size / 2} A ${size / 2 - 10} ${size / 2 - 10} 0 0 1 ${size - 10} ${size / 2}`}
+          fill="none"
+          stroke={`url(#reflection-bands-${label})`}
+          strokeWidth="6"
+          strokeLinecap="round"
+          opacity={isHovered ? 0.8 : 0.4}
+          animate={{ 
+            opacity: isHovered ? [0.4, 0.8, 0.4] : 0.4,
+            strokeDashoffset: isHovered ? [0, 100, 0] : 0
+          }}
+          transition={{ 
+            duration: isHovered ? 2 : 0.5,
+            repeat: isHovered ? Infinity : 0
+          }}
+        />
+        
+        {/* Layer 4: Edge Beveling */}
+        <path
+          d={`M 12 ${size / 2} A ${size / 2 - 12} ${size / 2 - 12} 0 0 1 ${size - 12} ${size / 2}`}
+          fill="none"
+          stroke={`url(#edge-bevel-${label})`}
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        
+        {/* Layer 5: Glass Overlay Effect */}
+        <path
+          d={`M 14 ${size / 2} A ${size / 2 - 14} ${size / 2 - 14} 0 0 1 ${size - 14} ${size / 2}`}
+          fill="none"
+          stroke={`url(#glass-overlay-${label})`}
+          strokeWidth="2"
+          strokeLinecap="round"
+          opacity="0.7"
+        />
+        
+        {/* Main gauge track with LED accent */}
+        <path
+          d={`M 18 ${size / 2} A ${size / 2 - 18} ${size / 2 - 18} 0 0 1 ${size - 18} ${size / 2}`}
+          fill="none"
+          stroke={`url(#gauge-bg-${label})`}
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        
+        {/* LED Accent Ring */}
+        <motion.path
+          d={`M 20 ${size / 2} A ${size / 2 - 20} ${size / 2 - 20} 0 0 1 ${size - 20} ${size / 2}`}
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          filter={`url(#led-glow-${label})`}
+          animate={{
+            opacity: isLive ? [0.6, 1, 0.6] : 0.8,
+            strokeWidth: isLive ? [2, 3, 2] : 2
+          }}
+          transition={{
+            duration: 2,
+            repeat: isLive ? Infinity : 0,
+            ease: "easeInOut"
+          }}
         />
         
         {/* Tick marks for luxury automotive feel */}
@@ -426,7 +608,7 @@ const CockpitGauge: React.FC<{
           }}
         />
 
-        {/* NEEDLE ROTATES FROM GAUGE CENTER (GLOWING DOT) */}
+        {/* ULTRA-ENHANCED NEEDLE SYSTEM */}
         <g 
           transform={`rotate(${hasLoaded || isSpinning ? needleRotation : -90} ${size / 2} ${size / 2})`}
           style={{
@@ -439,74 +621,98 @@ const CockpitGauge: React.FC<{
           onMouseEnter={handleMouseEnterNeedle}
           onMouseLeave={handleMouseLeaveNeedle}
         >
-          {/* FIXED LUXURY NEEDLE - PROPERLY ANCHORED AT CENTER */}
-          <g>
-            {/* Needle body - starts from center and extends outward */}
-            <path
-              d={`M ${size / 2 - 2} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} L ${size / 2 + 2} ${size / 2} Z`}
-              fill="url(#luxury-needle-gradient)"
-              stroke="#2C3E50"
-              strokeWidth="0.5"
-              filter={`url(#needle-shadow-${label})`}
-            />
-            
-            {/* Chrome tip */}
-            <path
-              d={`M ${size / 2 + (size / 2 - 25)} ${size / 2 - 1} L ${size / 2 + (size / 2 - 15)} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1} Z`}
-              fill="url(#chrome-tip-gradient)"
-              stroke="#BDC3C7"
-              strokeWidth="0.3"
-            />
-            
-            {/* Center cap to hide needle base */}
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r="3"
-              fill="#2C3E50"
-            />
-          </g>
+          {/* Base needle shadow */}
+          <path
+            d={`M ${size / 2 - 1 + 2} ${size / 2 + 2} L ${size / 2 + (size / 2 - 25) + 2} ${size / 2 - 1 + 2} L ${size / 2 + (size / 2 - 25) + 2} ${size / 2 + 1 + 2} L ${size / 2 + 1 + 2} ${size / 2 + 2} Z`}
+            fill="rgba(44, 62, 80, 0.4)"
+          />
+          
+          {/* Main needle shaft with luxury gradient */}
+          <path
+            d={`M ${size / 2 - 2} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1.5} L ${size / 2 + 2} ${size / 2} Z`}
+            fill={`url(#luxury-needle-${label})`}
+            stroke="rgba(44, 62, 80, 0.8)"
+            strokeWidth="0.5"
+            filter={`url(#chrome-shadow-${label})`}
+          />
+          
+          {/* Chrome highlight stripe */}
+          <path
+            d={`M ${size / 2 - 1} ${size / 2 - 0.5} L ${size / 2 + (size / 2 - 30)} ${size / 2 - 0.5} L ${size / 2 + (size / 2 - 30)} ${size / 2 + 0.5} L ${size / 2 - 1} ${size / 2 + 0.5} Z`}
+            fill="rgba(248, 249, 250, 0.8)"
+          />
+          
+          {/* Chrome needle tip */}
+          <path
+            d={`M ${size / 2 + (size / 2 - 25)} ${size / 2 - 1.5} L ${size / 2 + (size / 2 - 15)} ${size / 2} L ${size / 2 + (size / 2 - 25)} ${size / 2 + 1.5} Z`}
+            fill={`url(#chrome-tip-${label})`}
+            stroke="rgba(248, 249, 250, 0.6)"
+            strokeWidth="0.5"
+            filter={`url(#metallic-shine-${label})`}
+          />
         </g>
 
-        {/* FIXED CENTER HUB - PROPERLY COVERS NEEDLE BASE */}
+        {/* ULTRA-ENHANCED CENTER HUB WITH METALLIC DETAILS */}
         <g>
-          {/* Outer ring */}
+          {/* Outer chrome ring */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r="14"
+            fill={`url(#base-gradient-${label})`}
+            stroke="#2C3E50"
+            strokeWidth="2.5"
+            filter={`url(#chrome-shadow-${label})`}
+          />
+          
+          {/* Brushed metal ring */}
           <circle
             cx={size / 2}
             cy={size / 2}
             r="10"
-            fill="url(#base-gradient)"
-            stroke="#34495E"
-            strokeWidth="1.5"
+            fill={`url(#brushed-metal-${label})`}
+            stroke="rgba(248, 249, 250, 0.3)"
+            strokeWidth="1"
+            filter={`url(#metallic-shine-${label})`}
           />
           
-          {/* Middle ring */}
-          <circle
+          {/* LED accent ring */}
+          <motion.circle
             cx={size / 2}
             cy={size / 2}
             r="7"
-            fill="#34495E"
-            stroke="#2C3E50"
-            strokeWidth="1"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            filter={`url(#led-glow-${label})`}
+            animate={{
+              opacity: [0.6, 1, 0.6],
+              strokeWidth: [2, 3, 2]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut'
+            }}
           />
           
-          {/* Inner metallic detail */}
+          {/* Inner metallic core */}
           <circle
             cx={size / 2}
             cy={size / 2}
             r="5"
-            fill={`url(#metallic-shine-${label})`}
-            opacity="0.9"
+            fill="#0a0a0a"
+            stroke="rgba(248, 249, 250, 0.4)"
+            strokeWidth="1"
           />
           
-          {/* Center dot */}
+          {/* Center LED dot */}
           <circle
             cx={size / 2}
             cy={size / 2}
-            r="3"
+            r="2"
             fill={color}
-            stroke="#000"
-            strokeWidth="0.5"
+            filter={`url(#led-glow-${label})`}
           />
         </g>
         
