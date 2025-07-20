@@ -43,6 +43,7 @@ import {
   ToggleButtonGroup,
   Skeleton,
 } from '@mui/material';
+import SimpleGauge from './SimpleGauge';
 import {
   MapPin,
   Building2,
