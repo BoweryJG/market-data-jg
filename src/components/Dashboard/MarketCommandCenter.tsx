@@ -126,7 +126,7 @@ import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '..
 import SimpleGauge from './SimpleGauge';
 import { getCategoryIconConfig } from './CategoryIcons';
 
-// Luxury automotive-style gauge component with physics-based needle and chrome rim
+// Luxury automotive-style gauge component with physics-based needle and chrome rim - v2.0 ENHANCED
 const CockpitGauge: React.FC<{
   value: number;
   max: number;
