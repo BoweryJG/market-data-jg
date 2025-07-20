@@ -341,8 +341,15 @@ export default function EnhancedTerritoryIntelligence() {
         }
       }} />
       {/* Header with Territory Toggle */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-        <Box>
+      <Box sx={{ 
+        mb: 3, 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: { xs: 'flex-start', md: 'center' }, 
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: 2 
+      }}>
+        <Box sx={{ mb: { xs: 2, md: 0 } }}>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
             Territory Intelligence
           </Typography>
@@ -351,18 +358,32 @@ export default function EnhancedTerritoryIntelligence() {
           </Typography>
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          alignItems: 'center',
+          flexDirection: { xs: 'column', sm: 'row' },
+          width: { xs: '100%', md: 'auto' }
+        }}>
           <ToggleButtonGroup
             value={selectedTerritory}
             exclusive
             onChange={handleTerritoryChange}
             size="small"
+            sx={{ 
+              width: { xs: '100%', sm: 'auto' },
+              '& .MuiToggleButton-root': {
+                flex: { xs: 1, sm: 'none' },
+                px: { xs: 2, sm: 3 },
+                fontSize: { xs: '0.8rem', sm: '0.875rem' }
+              }
+            }}
           >
-            <ToggleButton value="NY" sx={{ px: 3 }}>
+            <ToggleButton value="NY">
               <MapPin size={16} style={{ marginRight: 8 }} />
               New York
             </ToggleButton>
-            <ToggleButton value="FL" sx={{ px: 3 }}>
+            <ToggleButton value="FL">
               <MapPin size={16} style={{ marginRight: 8 }} />
               Florida
             </ToggleButton>
@@ -373,6 +394,13 @@ export default function EnhancedTerritoryIntelligence() {
             exclusive
             onChange={handleViewModeChange}
             size="small"
+            sx={{
+              width: { xs: '100%', sm: 'auto' },
+              '& .MuiToggleButton-root': {
+                flex: { xs: 1, sm: 'none' },
+                minWidth: { xs: 'auto', sm: '48px' }
+              }
+            }}
           >
             <ToggleButton value="analytics">
               <BarChart3 size={16} />
@@ -389,31 +417,49 @@ export default function EnhancedTerritoryIntelligence() {
 
       {/* Key Metrics Cards */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Grow in timeout={500}>
             <Card sx={{ 
               background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
               height: '100%'
             }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <Box>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: { xs: 2, sm: 0 }
+                }}>
+                  <Box sx={{ flex: 1 }}>
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Total Providers
                     </Typography>
-                    <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
                       <animated.span>
                         {number.to(n => Math.floor(n).toLocaleString())}
                       </animated.span>
                     </Typography>
-                    <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+                    <Box sx={{ 
+                      mt: 1, 
+                      display: 'flex', 
+                      gap: 1,
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      '& .MuiChip-root': {
+                        fontSize: { xs: '0.75rem', sm: '0.8125rem' }
+                      }
+                    }}>
                       <Chip label={`${territoryData.medspas} Medspas`} size="small" color="primary" />
                       <Chip label={`${territoryData.dentalPractices} Dental`} size="small" />
                     </Box>
                   </Box>
-                  <Avatar sx={{ bgcolor: alpha(theme.palette.primary.main, 0.1) }}>
-                    <Building2 />
+                  <Avatar sx={{ 
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    width: { xs: 40, sm: 56 },
+                    height: { xs: 40, sm: 56 }
+                  }}>
+                    <Building2 size={20} />
                   </Avatar>
                 </Box>
               </CardContent>
@@ -421,31 +467,41 @@ export default function EnhancedTerritoryIntelligence() {
           </Grow>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Grow in timeout={700}>
             <Card sx={{ 
               background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
               height: '100%'
             }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <Box>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: { xs: 2, sm: 0 }
+                }}>
+                  <Box sx={{ flex: 1 }}>
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Market Value
                     </Typography>
-                    <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
                       {territoryData.marketValue}
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, flexWrap: 'wrap' }}>
                       <TrendingUp size={16} color={theme.palette.success.main} />
                       <Typography variant="body2" color="success.main" sx={{ ml: 0.5 }}>
                         +{territoryData.growthRate}% YoY
                       </Typography>
                     </Box>
                   </Box>
-                  <Avatar sx={{ bgcolor: alpha(theme.palette.success.main, 0.1) }}>
-                    <DollarSign />
+                  <Avatar sx={{ 
+                    bgcolor: alpha(theme.palette.success.main, 0.1),
+                    width: { xs: 40, sm: 56 },
+                    height: { xs: 40, sm: 56 }
+                  }}>
+                    <DollarSign size={20} />
                   </Avatar>
                 </Box>
               </CardContent>
@@ -453,28 +509,38 @@ export default function EnhancedTerritoryIntelligence() {
           </Grow>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Grow in timeout={900}>
             <Card sx={{ 
               background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.warning.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.warning.main, 0.2)}`,
               height: '100%'
             }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <Box>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: { xs: 2, sm: 0 }
+                }}>
+                  <Box sx={{ flex: 1 }}>
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Opportunities
                     </Typography>
-                    <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                    <Typography variant={{ xs: 'h4', sm: 'h3' }} sx={{ fontWeight: 700 }}>
                       {territoryData.opportunities.reduce((sum, opp) => sum + opp.count, 0)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                       Worth {territoryData.opportunities.reduce((sum, opp) => sum + parseFloat(opp.value.replace('$', '').replace('M', '')), 0).toFixed(1)}M
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: alpha(theme.palette.warning.main, 0.1) }}>
-                    <Target />
+                  <Avatar sx={{ 
+                    bgcolor: alpha(theme.palette.warning.main, 0.1),
+                    width: { xs: 40, sm: 56 },
+                    height: { xs: 40, sm: 56 }
+                  }}>
+                    <Target size={20} />
                   </Avatar>
                 </Box>
               </CardContent>
@@ -482,28 +548,40 @@ export default function EnhancedTerritoryIntelligence() {
           </Grow>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Grow in timeout={1100}>
             <Card sx={{ 
               background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)} 0%, ${alpha(theme.palette.info.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
               height: '100%'
             }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <Box>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: { xs: 2, sm: 0 }
+                }}>
+                  <Box sx={{ flex: 1 }}>
                     <Typography color="text.secondary" variant="body2" gutterBottom>
                       Demographics
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <Typography variant={{ xs: 'h5', sm: 'h6' }} sx={{ fontWeight: 600 }}>
                       {territoryData.demographics.population}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ 
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                    }}>
                       Avg Income: {territoryData.demographics.avgIncome}
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: alpha(theme.palette.info.main, 0.1) }}>
-                    <Users />
+                  <Avatar sx={{ 
+                    bgcolor: alpha(theme.palette.info.main, 0.1),
+                    width: { xs: 40, sm: 56 },
+                    height: { xs: 40, sm: 56 }
+                  }}>
+                    <Users size={20} />
                   </Avatar>
                 </Box>
               </CardContent>
@@ -520,11 +598,47 @@ export default function EnhancedTerritoryIntelligence() {
         overflow: 'hidden'
       }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
-            <Tab label="Market Overview" icon={<BarChart3 size={20} />} iconPosition="start" />
-            <Tab label="Top Opportunities" icon={<Target size={20} />} iconPosition="start" />
-            <Tab label="Provider Directory" icon={<Building2 size={20} />} iconPosition="start" />
-            <Tab label="Territory Insights" icon={<Brain size={20} />} iconPosition="start" />
+          <Tabs 
+            value={activeTab} 
+            onChange={(e, v) => setActiveTab(v)}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{
+              '& .MuiTab-root': {
+                minWidth: { xs: 'auto', sm: 160 },
+                fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                padding: { xs: '6px 8px', sm: '12px 16px' },
+                '& .MuiTab-iconWrapper': {
+                  marginRight: { xs: 1, sm: 2 }
+                }
+              }
+            }}
+          >
+            <Tab 
+              label={<Box sx={{ display: { xs: 'none', sm: 'block' } }}>Market Overview</Box>}
+              icon={<BarChart3 size={16} />} 
+              iconPosition="start"
+              sx={{ '& .MuiTab-iconWrapper': { display: { xs: 'block', sm: 'flex' } } }}
+            />
+            <Tab 
+              label={<Box sx={{ display: { xs: 'none', sm: 'block' } }}>Top Opportunities</Box>}
+              icon={<Target size={16} />} 
+              iconPosition="start"
+              sx={{ '& .MuiTab-iconWrapper': { display: { xs: 'block', sm: 'flex' } } }}
+            />
+            <Tab 
+              label={<Box sx={{ display: { xs: 'none', sm: 'block' } }}>Provider Directory</Box>}
+              icon={<Building2 size={16} />} 
+              iconPosition="start"
+              sx={{ '& .MuiTab-iconWrapper': { display: { xs: 'block', sm: 'flex' } } }}
+            />
+            <Tab 
+              label={<Box sx={{ display: { xs: 'none', sm: 'block' } }}>Territory Insights</Box>}
+              icon={<Brain size={16} />} 
+              iconPosition="start"
+              sx={{ '& .MuiTab-iconWrapper': { display: { xs: 'block', sm: 'flex' } } }}
+            />
           </Tabs>
         </Box>
 
@@ -659,27 +773,51 @@ export default function EnhancedTerritoryIntelligence() {
 
         {/* Provider Directory Tab */}
         <TabPanel value={activeTab} index={2}>
-          <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ 
+            mb: 3, 
+            display: 'flex', 
+            gap: 2, 
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { xs: 'stretch', md: 'center' }
+          }}>
             <TextField
               placeholder="Search providers..."
               variant="outlined"
               size="small"
-              sx={{ flexGrow: 1, maxWidth: 400 }}
+              sx={{ 
+                flexGrow: 1, 
+                maxWidth: { xs: '100%', md: 400 },
+                mb: { xs: 2, md: 0 }
+              }}
               InputProps={{
                 startAdornment: <Eye size={20} style={{ marginRight: 8, opacity: 0.5 }} />
               }}
             />
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Provider Type</InputLabel>
-              <Select label="Provider Type" defaultValue="all">
-                <MenuItem value="all">All Types</MenuItem>
-                <MenuItem value="medspa">Med Spas</MenuItem>
-                <MenuItem value="dental">Dental Practices</MenuItem>
-              </Select>
-            </FormControl>
-            <Button variant="outlined" startIcon={<Download />}>
-              Export Data
-            </Button>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2, 
+              flexDirection: { xs: 'column', sm: 'row' },
+              width: { xs: '100%', md: 'auto' }
+            }}>
+              <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 150 } }}>
+                <InputLabel>Provider Type</InputLabel>
+                <Select label="Provider Type" defaultValue="all">
+                  <MenuItem value="all">All Types</MenuItem>
+                  <MenuItem value="medspa">Med Spas</MenuItem>
+                  <MenuItem value="dental">Dental Practices</MenuItem>
+                </Select>
+              </FormControl>
+              <Button 
+                variant="outlined" 
+                startIcon={<Download />}
+                sx={{ 
+                  minWidth: { xs: '100%', sm: 'auto' },
+                  fontSize: { xs: '0.875rem', sm: '0.875rem' }
+                }}
+              >
+                Export Data
+              </Button>
+            </Box>
           </Box>
           
           <Alert severity="success" sx={{ mb: 2 }}>
@@ -748,14 +886,41 @@ export default function EnhancedTerritoryIntelligence() {
                 Quick Actions
               </Typography>
               <Stack spacing={2}>
-                <Button fullWidth variant="contained" startIcon={<Download />}>
-                  Download Full Report
+                <Button 
+                  fullWidth 
+                  variant="contained" 
+                  startIcon={<Download />}
+                  sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                    padding: { xs: '8px 16px', sm: '8px 22px' }
+                  }}
+                >
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Download Full Report</Box>
+                  <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Download Report</Box>
                 </Button>
-                <Button fullWidth variant="outlined" startIcon={<Mail />}>
-                  Schedule Territory Review
+                <Button 
+                  fullWidth 
+                  variant="outlined" 
+                  startIcon={<Mail />}
+                  sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                    padding: { xs: '8px 16px', sm: '8px 22px' }
+                  }}
+                >
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Schedule Territory Review</Box>
+                  <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Schedule Review</Box>
                 </Button>
-                <Button fullWidth variant="outlined" startIcon={<Settings />}>
-                  Configure Alerts
+                <Button 
+                  fullWidth 
+                  variant="outlined" 
+                  startIcon={<Settings />}
+                  sx={{ 
+                    fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                    padding: { xs: '8px 16px', sm: '8px 22px' }
+                  }}
+                >
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Configure Alerts</Box>
+                  <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Alerts</Box>
                 </Button>
               </Stack>
             </Grid>
