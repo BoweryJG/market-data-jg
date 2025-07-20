@@ -189,6 +189,14 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
     
     try {
       console.log('Starting logout process...');
+      
+      // Check if user is actually logged in before trying to sign out
+      if (!user) {
+        console.log('No user session found, closing modal...');
+        onClose();
+        return;
+      }
+      
       await signOut();
       console.log('SignOut completed successfully');
       
