@@ -662,8 +662,54 @@
     75% { transform: rotate(10.5deg); }
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
+/* Tablet Responsive - Smaller buttons but keep nav links */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .nav-cta,
+    .nav-cta-secondary {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+    
+    .nav-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .nav-inner {
+        padding: 0 18px;
+    }
+}
+
+/* Small Tablet - Further compress */
+@media (max-width: 768px) and (min-width: 641px) {
+    .nav-cta,
+    .nav-cta-secondary {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .nav-link {
+        padding: 5px 10px;
+        font-size: 11px;
+        gap: 4px;
+    }
+    
+    .nav-links {
+        gap: 4px;
+    }
+    
+    .nav-inner {
+        padding: 0 16px;
+    }
+    
+    .nav-actions {
+        gap: 8px;
+        margin-right: 18px;
+    }
+}
+
+/* Mobile Only - Show hamburger menu */
+@media (max-width: 640px) {
     .nav-links,
     .nav-more {
         display: none;
@@ -671,15 +717,15 @@
     
     .nav-hamburger {
         display: flex;
-        margin-right: 0; /* Reset margin for mobile */
+        margin-right: 0;
     }
     
     .nav-inner {
-        padding: 0 20px; /* Increased padding to ensure screws don't interfere */
+        padding: 0 20px;
     }
     
     .nav-actions {
-        margin-right: 20px; /* Maintain proper spacing from screws on mobile */
+        margin-right: 20px;
     }
     
     .nav-cta,

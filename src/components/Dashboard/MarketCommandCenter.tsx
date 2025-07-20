@@ -123,7 +123,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../services/supabaseClient';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
-import SimpleGauge from './SimpleGauge';
 import { getCategoryIconConfig } from './CategoryIcons';
 
 // Luxury automotive-style gauge component with physics-based needle and chrome rim - v2.0 ENHANCED
@@ -136,7 +135,7 @@ const CockpitGauge: React.FC<{
   size?: number;
   isLive?: boolean;
   industry?: 'dental' | 'aesthetic' | 'all';
-}> = ({ value, max, label, unit, color, size = 120, isLive = false, industry = 'all' }) => {
+}> = ({ value, max, label, unit, color, size = 140, isLive = false, industry = 'all' }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(-90); // Start at leftmost position
