@@ -337,6 +337,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
+    white-space: nowrap;
     gap: 6px;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid transparent;
@@ -413,6 +414,7 @@
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    white-space: nowrap;
     box-shadow: 
         0 4px 20px rgba(159, 88, 250, 0.3),
         0 0 0 1px rgba(255, 255, 255, 0.1) inset;

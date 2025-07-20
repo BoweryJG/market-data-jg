@@ -616,6 +616,8 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
         cursor: 'pointer',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: '0 8px 32px rgba(6, 182, 212, 0.15), 0 0 20px rgba(147, 51, 234, 0.08)',
+        minHeight: '180px',
+        height: 'auto',
         '&:hover': {
           transform: 'translateY(-3px) scale(1.01)',
           boxShadow: '0 12px 40px rgba(6, 182, 212, 0.25), 0 0 30px rgba(147, 51, 234, 0.15)',
@@ -1444,12 +1446,14 @@ const MarketCommandCenter: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} md={4}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
               <Box
                 sx={{
                   opacity: scrollTransitions.territory.opacity,
                   transform: `translateY(${scrollTransitions.territory.translateY}px) scale(${scrollTransitions.territory.scale})`,
                   transition: scrollTransitions.territory.transition,
+                  minHeight: '200px',
+                  flex: '0 0 auto',
                 }}
               >
                 <TerritoryPremiumData 
