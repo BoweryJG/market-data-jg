@@ -72,7 +72,6 @@ import {
   FiberManualRecord,
   MonetizationOn,
   PinDrop,
-  Person,
   // Category icons - comprehensive set
   Build,
   Straighten,
@@ -345,13 +344,9 @@ const CockpitGauge: React.FC<{
         height: size / 2 + 40,
         cursor: 'pointer',
         willChange: 'transform',
-        borderRadius: '16px',
-        background: `radial-gradient(circle at center, ${alpha(color, 0.15)} 0%, ${alpha(color, 0.08)} 50%, transparent 100%)`,
-        boxShadow: `0 0 30px ${alpha(color, 0.2)}, inset 0 0 20px ${alpha(color, 0.1)}`,
         '&:hover': {
           transform: 'scale(1.02)',
           transition: 'transform 0.2s ease',
-          boxShadow: `0 0 40px ${alpha(color, 0.3)}, inset 0 0 25px ${alpha(color, 0.15)}`,
         }
       }}
       onMouseEnter={handleMouseEnter}
@@ -911,100 +906,44 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
           </Typography>
         </Box>
         
-        {/* Territory Score Section */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2, color: '#06B6D4', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 8, height: 8, bgcolor: '#06B6D4', borderRadius: '50%' }} />
-            Territory Score
-          </Typography>
-          <Box sx={{ 
-            p: 2, 
-            background: 'rgba(6, 182, 212, 0.1)', 
-            borderRadius: 2,
-            border: '1px solid rgba(6, 182, 212, 0.3)'
-          }}>
-            <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 1 }}>
-              Market penetration and opportunity score for selected territory.
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Top Medical Influencers */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2, color: '#06B6D4', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 8, height: 8, bgcolor: '#06B6D4', borderRadius: '50%' }} />
-            Top Medical Influencers
-          </Typography>
-          
-          {territories.slice(0, 3).map((territory, index) => (
-            <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1, p: 1, borderRadius: 1, '&:hover': { bgcolor: 'rgba(6, 182, 212, 0.05)' } }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 6, height: 6, bgcolor: '#ff4444', borderRadius: '50%' }} />
-                <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
-                  {territory.name?.toUpperCase() || `TERRITORY ${index + 1}`}
-                </Typography>
-              </Box>
-              <Box sx={{ textAlign: 'right' }}>
-                <Typography variant="caption" sx={{ color: '#00ff88', fontWeight: 'bold' }}>
-                  REL: {territory.demographic_fit || 0}
-                </Typography>
-                <Typography variant="caption" sx={{ display: 'block', color: theme.palette.text.secondary }}>
-                  {(territory.opportunity_score || 0).toFixed(1)}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
-          
-          {territories.length === 0 && (
-            <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontStyle: 'italic' }}>
-              No territory data available
-            </Typography>
-          )}
-        </Box>
-
-        {/* Regional Coverage */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2, color: '#06B6D4', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 8, height: 8, bgcolor: '#06B6D4', borderRadius: '50%' }} />
-            Regional Coverage
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-            {territories.map((territory, index) => (
-              <Chip 
-                key={index}
-                label={territory.state || territory.name || `T${index + 1}`} 
-                size="small" 
+        {territories.map((territory, index) => (
+          <Box key={index} sx={{ mb: 2, p: 1, background: alpha(theme.palette.background.paper, 0.5), borderRadius: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                {territory.name}
+              </Typography>
+              <Chip
+                label={`$${territory.marketSize}M`}
+                size="small"
                 sx={{ 
-                  bgcolor: index === 0 ? '#06B6D4' : index === 1 ? '#00ff88' : '#ff4444', 
-                  color: index === 1 ? 'black' : 'white', 
-                  fontSize: '0.75rem' 
-                }} 
+                  background: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+                  color: 'white',
+                  fontWeight: 600,
+                  boxShadow: '0 2px 8px rgba(6, 182, 212, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                }}
               />
-            ))}
-            {territories.length === 0 && (
-              <Chip label="No Data" size="small" sx={{ bgcolor: '#ff4444', color: 'white', fontSize: '0.75rem' }} />
-            )}
+            </Box>
+            <Typography variant="caption" color="text.secondary">
+              {territory.procedures} procedures • {territory.companies} companies
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={territory.saturation}
+              sx={{
+                mt: 1,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+                  borderRadius: 3,
+                  boxShadow: '0 0 8px rgba(6, 182, 212, 0.4)'
+                },
+              }}
+            />
           </Box>
-        </Box>
-
-        {/* Full Dashboard Button */}
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{
-            background: 'linear-gradient(135deg, #8800ff, #06B6D4)',
-            color: 'white',
-            fontWeight: 'bold',
-            py: 1.5,
-            fontSize: '0.9rem',
-            '&:hover': {
-              background: 'linear-gradient(135deg, #7700dd, #0591b3)',
-            }
-          }}
-          onClick={onClick}
-        >
-          FULL DASHBOARD
-        </Button>
+        ))}
       </CardContent>
     </Card>
   );
@@ -1661,7 +1600,7 @@ const MarketCommandCenter: React.FC = () => {
                   max={200000}
                   label="Market Size"
                   unit="M"
-                  color="#00ff88"
+                  color={theme.palette.primary.main}
                   size={150}
                   isLive={liveData}
                   industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
@@ -1677,7 +1616,7 @@ const MarketCommandCenter: React.FC = () => {
                   max={50}
                   label="Avg Growth"
                   unit="%"
-                  color="#8800ff"
+                  color={theme.palette.success.main}
                   size={150}
                   isLive={liveData}
                   industry={selectedIndustry === 'all' ? 'all' : selectedIndustry}
@@ -2641,58 +2580,6 @@ const MarketCommandCenter: React.FC = () => {
           </Box>
         </DialogContent>
       </Dialog>
-
-      {/* Territory Intelligence Hub */}
-      <Card 
-        sx={{
-          mt: 4,
-          background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(147, 51, 234, 0.12) 35%, rgba(59, 130, 246, 0.08) 70%, rgba(6, 182, 212, 0.05) 100%)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(6, 182, 212, 0.3)',
-          borderRadius: 3,
-          overflow: 'visible',
-        }}
-      >
-        <CardContent sx={{ py: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <PinDrop sx={{ 
-                color: '#06B6D4',
-                fontSize: 28,
-                filter: 'drop-shadow(0 2px 4px rgba(6, 182, 212, 0.3))'
-              }} />
-              <Typography variant="h6" sx={{ 
-                background: 'linear-gradient(135deg, #06B6D4, #9333EA)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontWeight: 700,
-                fontSize: '1.25rem'
-              }}>
-                Territory Intelligence Hub
-              </Typography>
-              <Chip
-                label="ACTIVE"
-                size="small"
-                sx={{
-                  background: '#E74C3C',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: '0.75rem'
-                }}
-              />
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
-                <Person />
-              </IconButton>
-              <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
-                <ExpandMore />
-              </IconButton>
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
     </Box>
   );
 };
