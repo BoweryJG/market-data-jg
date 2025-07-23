@@ -1,0 +1,29 @@
+# Ignore scripts directory as these are utility scripts
+scripts/
+
+# Ignore temporary backup files
+temp_backup/
+
+# Ignore build and dist directories
+dist/
+build/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore coverage reports
+coverage/
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore configuration files that might have console statements
+vite.config.ts
+vitest.config.ts
+
+# Ignore test files that might need console statements for debugging
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx

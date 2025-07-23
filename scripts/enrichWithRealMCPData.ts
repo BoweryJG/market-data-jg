@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
-import { promises as fs } from 'fs';
+// Removed unused fs import
 
 dotenv.config();
 
@@ -198,7 +198,7 @@ async function enrichProceduresWithRealData() {
     );
 
     if (category) {
-      const [catName, catData] = category;
+      const [, catData] = category;
       const marketShare = Math.random() * 0.05 + 0.01; // 1-6% of category
       const marketSize = catData.size * marketShare;
       const growthRate = catData.growth + (Math.random() - 0.5) * 2;

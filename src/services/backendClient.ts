@@ -21,7 +21,7 @@ backendClient.interceptors.request.use(async (config) => {
       config.headers.Authorization = `Bearer ${session.access_token}`;
     }
   } catch (error) {
-    console.error('Error getting auth token:', error);
+    // Error getting auth token
   }
   return config;
 });
@@ -39,32 +39,29 @@ backendClient.interceptors.response.use(
 );
 
 export const backendApiClient = {
-  async get(endpoint: string, params?: any) {
+  async get(endpoint: string, params?: Record<string, unknown>) {
     try {
       const response = await backendClient.get(endpoint, { params });
       return response.data;
     } catch (error) {
-      console.error(`Backend API GET ${endpoint} failed:`, error);
       throw error;
     }
   },
 
-  async post(endpoint: string, data?: any) {
+  async post(endpoint: string, data?: unknown) {
     try {
       const response = await backendClient.post(endpoint, data);
       return response.data;
     } catch (error) {
-      console.error(`Backend API POST ${endpoint} failed:`, error);
       throw error;
     }
   },
 
-  async put(endpoint: string, data?: any) {
+  async put(endpoint: string, data?: unknown) {
     try {
       const response = await backendClient.put(endpoint, data);
       return response.data;
     } catch (error) {
-      console.error(`Backend API PUT ${endpoint} failed:`, error);
       throw error;
     }
   },
@@ -74,7 +71,6 @@ export const backendApiClient = {
       const response = await backendClient.delete(endpoint);
       return response.data;
     } catch (error) {
-      console.error(`Backend API DELETE ${endpoint} failed:`, error);
       throw error;
     }
   },

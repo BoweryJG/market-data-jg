@@ -21,7 +21,7 @@ interface MCPSearchResult {
 }
 
 class ProcedureMCPVerifier {
-  async verifyProcedure(procedureName: string, category: string): Promise<void> {
+  async verifyProcedure(procedureName: string, _category: string): Promise<void> {
     console.log(`\n=== Verifying ${procedureName} using MCP Tools ===\n`);
 
     // Example searches that would be performed:

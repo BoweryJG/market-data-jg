@@ -211,7 +211,7 @@ const SubscriptionManager: React.FC = () => {
       setUsage(usageData);
       setBillingHistory(history);
     } catch (error) {
-      console.error('Failed to load subscription data:', error);
+      // Failed to load subscription data
     }
   };
 
@@ -245,10 +245,10 @@ const SubscriptionManager: React.FC = () => {
       });
       
       if (error) {
-        console.error('Stripe redirect error:', error);
+        // Stripe redirect error occurred
       }
     } catch (error) {
-      console.error('Upgrade failed:', error);
+      // Upgrade failed
     } finally {
       setLoading(false);
     }
@@ -259,7 +259,7 @@ const SubscriptionManager: React.FC = () => {
       const data = await backendApiClient.post('/api/subscription/portal');
       window.location.href = data.url;
     } catch (error) {
-      console.error('Failed to open billing portal:', error);
+      // Failed to open billing portal
     }
   };
 
@@ -561,10 +561,10 @@ const SubscriptionManager: React.FC = () => {
         <DialogTitle>Upgrade to {plans.find(p => p.id === selectedPlan)?.name}</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>
-            Your plan will be upgraded immediately and you'll be charged a prorated amount.
+            Your plan will be upgraded immediately and you&apos;ll be charged a prorated amount.
           </Alert>
           <Typography variant="body2">
-            By upgrading, you'll get access to:
+            By upgrading, you&apos;ll get access to:
           </Typography>
           <List dense>
             <ListItem>

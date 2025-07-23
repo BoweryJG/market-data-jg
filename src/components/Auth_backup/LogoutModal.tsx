@@ -29,7 +29,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ open, onClose }) => {
       await signOut();
       onClose();
     } catch (error) {
-      console.error('Logout error:', error);
+      // Logout error occurred
       setLoading(false);
     }
   };

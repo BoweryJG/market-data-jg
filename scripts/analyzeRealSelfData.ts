@@ -11,14 +11,14 @@ async function analyzeRealSelfData() {
   console.log('=== RealSelf Data Analysis ===\n');
   
   // Get procedures with RealSelf data
-  const { data: withData, error: error1 } = await supabase
+  const { data: withData } = await supabase
     .from('aesthetic_procedures')
     .select('*')
     .not('realself_worth_it_rating', 'is', null)
     .order('realself_worth_it_rating', { ascending: false });
   
   // Get procedures without RealSelf data
-  const { data: withoutData, error: error2 } = await supabase
+  const { data: withoutData } = await supabase
     .from('aesthetic_procedures')
     .select('procedure_name, market_size_2025_usd_millions')
     .is('realself_worth_it_rating', null)

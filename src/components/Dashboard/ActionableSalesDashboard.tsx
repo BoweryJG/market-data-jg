@@ -561,7 +561,7 @@ const ActionableSalesDashboard: React.FC = () => {
       {/* Main Dashboard Tabs */}
       <Paper sx={{ mb: 2 }}>
         <Tabs value={activeTab} onChange={(e: React.SyntheticEvent, v: number) => setActiveTab(v)} variant="fullWidth">
-          <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Dashboard /> Today's Plan</Box>} />
+          <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Dashboard /> Today&apos;s Plan</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Whatshot /> Hot Leads</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><ShowChart /> Pipeline</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Insights /> Intelligence</Box>} />
@@ -589,7 +589,7 @@ const ActionableSalesDashboard: React.FC = () => {
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={4}>
                         <Alert severity="success" icon={<EmojiEvents />}>
-                          <AlertTitle>Yesterday's Win</AlertTitle>
+                          <AlertTitle>Yesterday&apos;s Win</AlertTitle>
                           Closed Smile Innovations - $125K deal! 🎉
                         </Alert>
                       </Grid>
@@ -617,7 +617,7 @@ const ActionableSalesDashboard: React.FC = () => {
                 <CardContent>
                   <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <CheckCircleOutline color="primary" />
-                    Today's Activities
+                    Today&apos;s Activities
                   </Typography>
                   <Grid container spacing={2}>
                     {Object.entries(dailyTargets.completed).map(([key, value]) => (

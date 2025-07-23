@@ -101,7 +101,6 @@ class MarketPulseService {
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error('Error fetching market pulse data:', error);
       // Return mock data as fallback
       return this.getMockMarketData();
     }

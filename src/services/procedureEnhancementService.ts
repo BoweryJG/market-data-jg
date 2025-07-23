@@ -47,11 +47,11 @@ class ProcedureEnhancementService {
     // Check cache first
     const cachedEntry = this.cache.get(cacheKey);
     if (cachedEntry && this.isValidCache(cachedEntry)) {
-      console.log(`✨ Using cached data for ${procedureName}`);
+      // Using cached data
       return cachedEntry.data;
     }
 
-    console.log(`🔍 Fetching enhanced data for ${procedureName}...`);
+    // Fetching enhanced data
 
     try {
       // Construct comprehensive search query
@@ -76,9 +76,7 @@ class ProcedureEnhancementService {
 
       return enhancedData;
     } catch (error) {
-      console.error(`❌ Error fetching enhanced data for ${procedureName}:`, error);
-      
-      // Return fallback data
+      // Error fetching enhanced data - return fallback
       return this.getFallbackData(procedureName, industry, existingDescription);
     }
   }

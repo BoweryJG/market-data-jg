@@ -360,7 +360,7 @@ const SalesDashboard: React.FC = () => {
             Sales Dashboard
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Welcome back, Sarah! Here's your performance overview.
+            Welcome back, Sarah! Here&apos;s your performance overview.
           </Typography>
         </Box>
         <Stack direction="row" spacing={1}>

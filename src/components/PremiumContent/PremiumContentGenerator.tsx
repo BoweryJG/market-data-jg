@@ -362,7 +362,7 @@ export const PremiumContentGenerator: React.FC = () => {
             </Typography>
           </Box>
           <Typography variant="body2" color="text.secondary">
-            A magic link will be sent to the recipient's email. The link will be valid for 48 hours.
+            A magic link will be sent to the recipient&apos;s email. The link will be valid for 48 hours.
           </Typography>
         </DialogContent>
         <DialogActions>

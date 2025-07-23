@@ -208,7 +208,7 @@ const Battlecard: React.FC<BattlecardProps> = ({
               <Box key={index} mb={2}>
                 <Alert severity="warning" icon={<Psychology />} sx={{ mb: 1 }}>
                   <Typography variant="subtitle2" fontWeight="bold">
-                    "{obj.question}"
+                    &quot;{obj.question}&quot;
                   </Typography>
                 </Alert>
                 <Alert severity="success" icon={<Lightbulb />}>
@@ -447,7 +447,7 @@ const CompetitivePricing: React.FC = () => {
       <Stack spacing={2} mt={3}>
         <Alert severity="success">
           <Typography variant="body2">
-            <strong>Pricing Advantage:</strong> We're competitively priced for most products with room for negotiation
+            <strong>Pricing Advantage:</strong> We&apos;re competitively priced for most products with room for negotiation
           </Typography>
         </Alert>
         <Alert severity="warning">

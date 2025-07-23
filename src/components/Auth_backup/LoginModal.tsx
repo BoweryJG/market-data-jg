@@ -291,7 +291,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose, onSwitchToSignup
                 Forgot your password?
               </Link>
               <Typography variant="body2" color="text.secondary">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link 
                   href="#" 
                   underline="hover" 

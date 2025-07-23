@@ -3,12 +3,11 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+// Removed unused imports: exec and promisify
 
 dotenv.config();
 
-const execAsync = promisify(exec);
+// const execAsync = promisify(exec); // Removed: unused variable
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -149,7 +148,7 @@ Use data from Grand View Research, Fortune Business Insights, Mordor Intelligenc
     
     for (const proc of procedures) {
       // Simulate research results based on procedure type
-      const isAesthetic = proc.table === 'aesthetic_procedures';
+      // const isAesthetic = proc.table === 'aesthetic_procedures'; // Removed: unused variable
       const baseSize = Math.random() * 500 + 100; // $100-600M
       const growthRate = Math.random() * 10 + 5; // 5-15% CAGR
       

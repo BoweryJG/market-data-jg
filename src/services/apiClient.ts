@@ -9,7 +9,7 @@ export const apiClient = {
     return data;
   },
 
-  async post(endpoint: string, body: any) {
+  async post(endpoint: string, body: unknown) {
     const { data, error } = await supabase.functions.invoke(endpoint, {
       method: 'POST',
       body
@@ -18,7 +18,7 @@ export const apiClient = {
     return data;
   },
 
-  async put(endpoint: string, body: any) {
+  async put(endpoint: string, body: unknown) {
     const { data, error } = await supabase.functions.invoke(endpoint, {
       method: 'PUT',
       body

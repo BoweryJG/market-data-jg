@@ -354,7 +354,7 @@ const FieldTools: React.FC = () => {
         {/* Today's Schedule */}
         <Box mb={3}>
           <Typography variant="subtitle1" fontWeight="bold" mb={2}>
-            Today's Schedule
+            Today&apos;s Schedule
           </Typography>
           <Stack spacing={2}>
             <Paper sx={{ p: 2 }}>

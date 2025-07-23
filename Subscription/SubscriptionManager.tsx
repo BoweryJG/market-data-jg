@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import type { BillingHistoryItem } from '../src/types/api';
 import {
   Box,
   Card,
@@ -6,7 +7,6 @@ import {
   Typography,
   Button,
   Grid,
-  Chip,
   List,
   ListItem,
   ListItemIcon,
@@ -22,10 +22,6 @@ import {
   Stack,
   Paper,
   IconButton,
-  Tooltip,
-  Badge,
-  Switch,
-  FormControlLabel,
   styled,
   alpha,
   useTheme
@@ -35,23 +31,13 @@ import {
   Cancel,
   Star,
   Rocket,
-  TrendingUp,
-  Speed,
   AutoAwesome,
-  Lock,
-  LockOpen,
   Payment,
   CreditCard,
   Receipt,
-  Timeline,
-  BarChart,
-  Warning,
-  Info,
   CheckCircleOutline,
-  RadioButtonUnchecked,
   Upgrade,
   Download,
-  CloudSync,
   Support,
   School,
   Groups,
@@ -189,7 +175,7 @@ const SubscriptionManager: React.FC = () => {
     categories: { used: 3, limit: 5 },
     automationRuns: { used: 0, limit: 0 }
   });
-  const [billingHistory, setBillingHistory] = useState<any[]>([]);
+  const [, setBillingHistory] = useState<BillingHistoryItem[]>([]);
   const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -560,10 +546,10 @@ const SubscriptionManager: React.FC = () => {
         <DialogTitle>Upgrade to {plans.find(p => p.id === selectedPlan)?.name}</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>
-            Your plan will be upgraded immediately and you'll be charged a prorated amount.
+            Your plan will be upgraded immediately and you&apos;ll be charged a prorated amount.
           </Alert>
           <Typography variant="body2">
-            By upgrading, you'll get access to:
+            By upgrading, you&apos;ll get access to:
           </Typography>
           <List dense>
             <ListItem>

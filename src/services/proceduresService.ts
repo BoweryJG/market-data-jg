@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import type { Category } from '../types/api';
 
 export interface DentalProcedure {
   id: string;
@@ -36,20 +37,17 @@ export const ProceduresService = {
       .select('*');
     
     if (error) {
-      console.error('Error fetching dental procedures:', error);
-      console.error('Full error details:', error);
+      // Error fetching dental procedures
       return [];
     }
     
-    console.log('Raw dental procedures data:', data);
-    
-    return (data || []).map((proc: any) => ({
+    return (data || []).map((proc: Record<string, unknown>) => ({
       ...proc,
       id: proc.id || `dental_${proc.procedure_name || proc.name}`,
       procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
       category: proc.category || proc.clinical_category || 'General Dentistry',
       industry: 'dental' as const,
-    }));
+    } as DentalProcedure));
   },
 
   /**
@@ -66,20 +64,17 @@ export const ProceduresService = {
       .select('*');
     
     if (procError) {
-      console.error('Error fetching aesthetic procedures:', procError);
+      // Error fetching aesthetic procedures
       return [];
     }
     
     if (catError) {
-      console.warn('Error fetching aesthetic categories:', catError);
+      // Error fetching aesthetic categories
     }
     
-    console.log('Raw aesthetic procedures data:', procedures);
-    console.log('Aesthetic categories data:', categories);
-    
-    return (procedures || []).map((proc: any) => {
+    return (procedures || []).map((proc: Record<string, unknown>) => {
       // Find the related category
-      const relatedCategory = (categories || []).find((cat: any) => 
+      const relatedCategory = (categories || []).find((cat: Record<string, unknown>) => 
         cat.id === proc.aesthetic_category_id || 
         cat.name === proc.category ||
         cat.name === proc.aesthetic_category
@@ -93,7 +88,7 @@ export const ProceduresService = {
         category_id: relatedCategory?.id || proc.aesthetic_category_id,
         category_description: relatedCategory?.description,
         industry: 'aesthetic' as const,
-      };
+      } as AestheticProcedure;
     });
   },
 
@@ -107,17 +102,17 @@ export const ProceduresService = {
       .or(`category.eq.${category},clinical_category.eq.${category}`);
     
     if (error) {
-      console.error(`Error fetching dental procedures for category ${category}:`, error);
+      // Error fetching dental procedures for category
       return [];
     }
     
-    return (data || []).map((proc: any) => ({
+    return (data || []).map((proc: Record<string, unknown>) => ({
       ...proc,
       id: proc.id || `dental_${proc.procedure_name || proc.name}`,
       procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
       category: proc.category || proc.clinical_category || 'General Dentistry',
       industry: 'dental' as const,
-    }));
+    } as DentalProcedure));
   },
 
   /**
@@ -130,17 +125,17 @@ export const ProceduresService = {
       .or(`category.eq.${category},aesthetic_category.eq.${category}`);
     
     if (error) {
-      console.error(`Error fetching aesthetic procedures for category ${category}:`, error);
+      // Error fetching aesthetic procedures for category
       return [];
     }
     
-    return (data || []).map((proc: any) => ({
+    return (data || []).map((proc: Record<string, unknown>) => ({
       ...proc,
       id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
       procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
       category: proc.category || 'Aesthetic Medicine',
       industry: 'aesthetic' as const,
-    }));
+    } as AestheticProcedure));
   },
 
   /**
@@ -158,16 +153,12 @@ export const ProceduresService = {
   /**
    * Test connection to both tables
    */
-  async testConnection(): Promise<{ dental: any; aesthetic: any }> {
-    console.log('🧪 Testing procedures connection...');
-    
+  async testConnection(): Promise<{ dental: PromiseSettledResult<unknown>; aesthetic: PromiseSettledResult<unknown> }> {
+    // Testing procedures connection
     const [dentalTest, aestheticTest] = await Promise.allSettled([
       supabase.from('dental_procedures').select('*').limit(3),
       supabase.from('aesthetic_procedures').select('*').limit(3),
     ]);
-
-    console.log('🦷 Dental test:', dentalTest);
-    console.log('💄 Aesthetic test:', aestheticTest);
 
     return {
       dental: dentalTest,

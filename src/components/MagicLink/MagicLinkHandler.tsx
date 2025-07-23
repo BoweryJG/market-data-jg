@@ -221,7 +221,7 @@ export const MagicLinkHandler: React.FC = () => {
           </Box>
           
           <Typography variant="caption" color="text.secondary" sx={{ mt: 2 }}>
-            If your email client doesn't open automatically, click the button above.
+            If your email client doesn&apos;t open automatically, click the button above.
           </Typography>
         </Box>
       );

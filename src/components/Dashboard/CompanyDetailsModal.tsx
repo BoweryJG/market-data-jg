@@ -481,7 +481,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
                     {marketShare && ` with a ${marketShare}% market share`}.
                   </Typography>
                   <Typography variant="body1">
-                    The company's focus on innovation and quality has positioned it well for continued growth
+                    The company&apos;s focus on innovation and quality has positioned it well for continued growth
                     in the expanding {industry} healthcare sector.
                   </Typography>
                 </CardContent>

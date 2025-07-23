@@ -5,14 +5,7 @@ const supabaseUrl = 'https://cbopynuvhcymbumjnvay.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNib3B5bnV2aGN5bWJ1bWpudmF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5OTUxNzMsImV4cCI6MjA1OTU3MTE3M30.UZElMkoHugIt984RtYWyfrRuv2rB67opQdCrFVPCfzU';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-interface ProcedureData {
-  id: number;
-  procedure_name: string;
-  category: string;
-  market_size_2025_usd_millions: number;
-  yearly_growth_percentage: number;
-  average_cost_usd: number;
-}
+// Removed unused interface ProcedureData
 
 interface MarketResearchResult {
   marketSize: number;
@@ -157,47 +150,7 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
   console.log(`✅ Enriched ${enrichedCount} procedures with mock data`);
 }
 
-async function applyValidatedData() {
-  console.log('\n🚀 Applying validated enrichment data to production tables...');
-  
-  // Get all validated entries from staging
-  const { data: validatedData, error } = await supabase
-    .from('procedure_enrichment_staging')
-    .select('*')
-    .eq('validation_status', 'validated')
-    .gte('confidence_score', 75);
-    
-  if (error) {
-    console.error('Error fetching validated data:', error);
-    return;
-  }
-  
-  console.log(`Found ${validatedData?.length || 0} validated entries to apply`);
-  
-  let appliedCount = 0;
-  
-  for (const entry of validatedData || []) {
-    const tableName = `${entry.procedure_type}_procedures`;
-    
-    const { error: updateError } = await supabase
-      .from(tableName)
-      .update({
-        market_size_2025_usd_millions: entry.new_market_size,
-        yearly_growth_percentage: entry.new_growth_rate,
-        average_cost_usd: entry.new_avg_cost
-      })
-      .eq('id', entry.original_id);
-      
-    if (updateError) {
-      console.error(`Error updating ${entry.procedure_name}:`, updateError);
-    } else {
-      appliedCount++;
-      console.log(`✓ Updated ${entry.procedure_name} with enriched data`);
-    }
-  }
-  
-  console.log(`\n✅ Successfully applied ${appliedCount} enriched records to production`);
-}
+// Removed unused function applyValidatedData - functionality moved to applyEnrichment.ts
 
 async function main() {
   console.log('Starting mock procedure data enrichment...');

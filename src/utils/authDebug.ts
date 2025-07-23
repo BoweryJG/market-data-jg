@@ -6,7 +6,9 @@
 import { supabase } from '../auth/supabase';
 
 export async function debugAuth() {
-  console.group('🔍 MarketData Auth Debug Info');
+  if (process.env.NODE_ENV === 'development') {
+    console.group('🔍 MarketData Auth Debug Info');
+  }
   
   // 1. Check current domain
   if (process.env.NODE_ENV === 'development') {
@@ -21,45 +23,49 @@ export async function debugAuth() {
       if (process.env.NODE_ENV === 'development') {
         console.error('Session Error:', error);
       }
-    } else if (session) {
+    } else if (session && process.env.NODE_ENV === 'development') {
       console.log('✅ Session found:', {
         user_id: session.user.id,
         email: session.user.email,
         expires_at: new Date(session.expires_at! * 1000).toLocaleString()
       });
-    } else {
+    } else if (process.env.NODE_ENV === 'development') {
       console.log('❌ No session found');
     }
   } catch (err) {
-    console.error('Failed to get session:', err);
-  }
-  
-  // 3. Check cookies
-  console.log('Cookies:', document.cookie);
-  
-  // 4. Check localStorage
-  console.log('LocalStorage auth keys:');
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && (key.includes('auth') || key.includes('supabase'))) {
-      console.log(`  ${key}:`, localStorage.getItem(key)?.substring(0, 50) + '...');
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to get session:', err);
     }
   }
   
-  // 5. Check sessionStorage
-  console.log('SessionStorage auth keys:');
-  for (let i = 0; i < sessionStorage.length; i++) {
-    const key = sessionStorage.key(i);
-    if (key && (key.includes('auth') || key.includes('return') || key.includes('destination'))) {
-      console.log(`  ${key}:`, sessionStorage.getItem(key));
+  if (process.env.NODE_ENV === 'development') {
+    // 3. Check cookies
+    console.log('Cookies:', document.cookie);
+    
+    // 4. Check localStorage
+    console.log('LocalStorage auth keys:');
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes('auth') || key.includes('supabase'))) {
+        console.log(`  ${key}:`, localStorage.getItem(key)?.substring(0, 50) + '...');
+      }
     }
+    
+    // 5. Check sessionStorage
+    console.log('SessionStorage auth keys:');
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key && (key.includes('auth') || key.includes('return') || key.includes('destination'))) {
+        console.log(`  ${key}:`, sessionStorage.getItem(key));
+      }
+    }
+    
+    console.groupEnd();
   }
-  
-  console.groupEnd();
 }
 
 // Make it available globally
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   (window as any).debugAuth = debugAuth;
   console.log('💡 Run window.debugAuth() to debug authentication issues');
 }

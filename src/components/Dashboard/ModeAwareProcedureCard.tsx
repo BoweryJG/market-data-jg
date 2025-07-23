@@ -237,7 +237,7 @@ export const ModeAwareProcedureCard: React.FC<ModeAwareProcedureCardProps> = ({
                     }}
                   >
                     <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                      "{modeData.elevator_pitch}"
+                      &quot;{modeData.elevator_pitch}&quot;
                     </Typography>
                     <IconButton 
                       size="small" 

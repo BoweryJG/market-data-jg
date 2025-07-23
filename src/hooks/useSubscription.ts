@@ -50,7 +50,6 @@ export const useSubscription = () => {
       const data = await backendApiClient.get('/api/subscription/status');
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to load subscription:', error);
       // Default to free tier if error
       setSubscription({
         isActive: false,
@@ -181,7 +180,7 @@ export const useSubscription = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to track usage:', error);
+      // Failed to track usage
     }
   }, [user, subscription]);
 
@@ -197,7 +196,6 @@ export const useSubscription = () => {
       
       return data;
     } catch (error) {
-      console.error('Failed to purchase addon:', error);
       throw error;
     }
   }, []);

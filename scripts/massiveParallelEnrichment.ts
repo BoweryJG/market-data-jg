@@ -79,7 +79,7 @@ class MassiveParallelEnrichment {
     await this.generateFinalReport();
   }
   
-  private async processBatch(batch: ProcedureData[], batchIndex: number) {
+  private async processBatch(batch: ProcedureData[], _batchIndex: number) {
     // Divide batch among different MCP tools
     const toolAssignments = [
       { tool: 'perplexity_deep', procedures: [] as ProcedureData[] },

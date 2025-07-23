@@ -23,7 +23,7 @@ async function executeWithSupabaseAdmin() {
   
   try {
     // Test if we can access the table
-    const { data, error } = await supabase.from('aesthetic_procedures').select('id').limit(1);
+    const { error } = await supabase.from('aesthetic_procedures').select('id').limit(1);
     if (error) throw error;
     console.log('✓ Connected to Supabase');
     return true;

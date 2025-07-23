@@ -2,7 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
-import { promises as fs } from 'fs';
+// Removed unused fs import
 
 dotenv.config();
 

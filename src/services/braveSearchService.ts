@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { SearchResult } from '../types/api';
 
 const NEWS_PROXY_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const BRAVE_API_KEY = import.meta.env.VITE_BRAVE_API_KEY;
@@ -19,7 +20,7 @@ interface BraveSearchResult {
   relevance_score?: number;
 }
 
-export async function search(query: string, limit: number = 10): Promise<any> {
+export async function search(query: string, limit: number = 10): Promise<SearchResult[]> {
   try {
     console.log('Brave Search Request:', {
       url: `${NEWS_PROXY_URL}/api/search/brave`,
@@ -33,24 +34,25 @@ export async function search(query: string, limit: number = 10): Promise<any> {
     });
     
     console.log('Brave Search Response:', response.data);
-    return response.data;
-  } catch (error: any) {
+    return response.data as SearchResult[];
+  } catch (error: unknown) {
+    const axiosError = error as { message?: string; response?: { data?: unknown; status?: number }; code?: string };
     console.error('Brave Search Error:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
+      message: axiosError.message,
+      response: axiosError.response?.data,
+      status: axiosError.response?.status,
       url: `${NEWS_PROXY_URL}/api/search/brave`
     });
     
     // Provide more specific error messages
-    if (error.code === 'ECONNREFUSED') {
+    if (axiosError.code === 'ECONNREFUSED') {
       throw new Error('Cannot connect to search service. Please ensure the server is running on port 3001.');
-    } else if (error.response?.status === 500) {
+    } else if (axiosError.response?.status === 500) {
       throw new Error('Search service error. Please check if BRAVE_SEARCH_API_KEY is configured in server/.env');
-    } else if (error.response?.status === 400) {
+    } else if (axiosError.response?.status === 400) {
       throw new Error('Invalid search query');
     } else {
-      throw new Error(error.message || 'Failed to perform search');
+      throw new Error(axiosError.message || 'Failed to perform search');
     }
   }
 }
@@ -62,7 +64,7 @@ export async function searchNews(query: string, options: BraveSearchOptions = {}
     
     // Transform results to match expected format
     if (Array.isArray(results)) {
-      return results.map((result: any) => ({
+      return results.map((result: Record<string, unknown>) => ({
         title: result.title || '',
         url: result.url || '',
         description: result.description || result.snippet || '',
@@ -93,7 +95,7 @@ export async function searchNews(query: string, options: BraveSearchOptions = {}
   }
 }
 
-export async function searchWithIntelligence(query: string, options: any = {}): Promise<any> {
+export async function searchWithIntelligence(query: string, options: Record<string, unknown> = {}): Promise<SearchResult[]> {
   try {
     // Enhanced search for market intelligence
     const enhancedQuery = `${query} market analysis trends statistics data ${new Date().getFullYear()}`;
@@ -101,7 +103,7 @@ export async function searchWithIntelligence(query: string, options: any = {}): 
     
     // Process and enhance results with intelligence scoring
     if (Array.isArray(results)) {
-      return results.map((result: any) => ({
+      return results.map((result: Record<string, unknown>) => ({
         ...result,
         intelligence_score: calculateIntelligenceScore(result),
         market_relevance: calculateMarketRelevance(result, query),
@@ -116,7 +118,7 @@ export async function searchWithIntelligence(query: string, options: any = {}): 
   }
 }
 
-function calculateIntelligenceScore(result: any): number {
+function calculateIntelligenceScore(result: Record<string, unknown>): number {
   let score = 0.5; // Base score
   
   // Boost for recent content
@@ -133,7 +135,7 @@ function calculateIntelligenceScore(result: any): number {
   return Math.min(score, 1.0);
 }
 
-function calculateMarketRelevance(result: any, originalQuery: string): number {
+function calculateMarketRelevance(result: Record<string, unknown>, originalQuery: string): number {
   const queryTerms = originalQuery.toLowerCase().split(' ');
   const content = (result.title + ' ' + result.description).toLowerCase();
   
@@ -145,7 +147,7 @@ function calculateMarketRelevance(result: any, originalQuery: string): number {
   return matches / queryTerms.length;
 }
 
-function extractActionableInsights(result: any): string[] {
+function extractActionableInsights(result: Record<string, unknown>): string[] {
   const insights: string[] = [];
   const content = (result.title + ' ' + result.description).toLowerCase();
   

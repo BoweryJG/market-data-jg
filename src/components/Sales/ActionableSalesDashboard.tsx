@@ -1029,7 +1029,7 @@ const ActionableSalesDashboard: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    Today's Performance
+                    Today&apos;s Performance
                   </Typography>
                   <Stack spacing={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -1090,7 +1090,7 @@ const ActionableSalesDashboard: React.FC = () => {
                     </Avatar>
                   </Box>
                   <Typography variant="body2" color="text.secondary" align="center" paragraph>
-                    You're in the top 15% of reps this quarter
+                    You&apos;re in the top 15% of reps this quarter
                   </Typography>
                   <Button fullWidth variant="outlined" size="small">
                     View Full Leaderboard

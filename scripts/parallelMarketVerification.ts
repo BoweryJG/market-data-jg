@@ -69,7 +69,7 @@ class ParallelMarketVerificationService {
   }
 
   private async searchBrave(procedureName: string, category: string): Promise<SearchResult> {
-    const queries = [
+    const _queries = [
       `"${procedureName}" market size 2025 2026 2027 2028 2029 2030 forecast`,
       `"${procedureName}" medical device market share manufacturers`,
       `${category} "${procedureName}" procedure volume statistics`
@@ -89,7 +89,7 @@ class ParallelMarketVerificationService {
   }
 
   private async searchPerplexity(procedureName: string, category: string): Promise<SearchResult> {
-    const query = `Provide comprehensive market analysis for ${procedureName} in the ${category} sector including:
+    const _query = `Provide comprehensive market analysis for ${procedureName} in the ${category} sector including:
     1. Global market size projections from 2025-2030
     2. Year-over-year growth rates and 5-year CAGR
     3. Top 3 device manufacturers and their market shares
@@ -111,8 +111,8 @@ class ParallelMarketVerificationService {
     };
   }
 
-  private async searchFirecrawl(procedureName: string, category: string): Promise<SearchResult> {
-    const targetUrls = [
+  private async searchFirecrawl(_procedureName: string, _category: string): Promise<SearchResult> {
+    const _targetUrls = [
       'https://www.grandviewresearch.com',
       'https://www.marketsandmarkets.com',
       'https://www.mordorintelligence.com',
@@ -132,9 +132,9 @@ class ParallelMarketVerificationService {
     };
   }
 
-  private async searchWithPuppeteer(procedureName: string, category: string): Promise<SearchResult> {
+  private async searchWithPuppeteer(_procedureName: string, _category: string): Promise<SearchResult> {
     // Target specific industry databases and manufacturer sites
-    const manufacturerSites = [
+    const _manufacturerSites = [
       'https://www.medtronic.com/investor-relations',
       'https://www.jnj.com/innovation',
       'https://www.abbott.com/investors'
@@ -262,7 +262,7 @@ class ParallelMarketVerificationService {
 
     // Calculate averages if we have data
     if (intelligence.market_sizes.length > 0) {
-      const avgMarketSize = intelligence.market_sizes.reduce((a, b) => a + b) / intelligence.market_sizes.length;
+      // const avgMarketSize = intelligence.market_sizes.reduce((a, b) => a + b) / intelligence.market_sizes.length;
       // Use this to verify/update 2025 market size if significantly different
     }
 

@@ -12,7 +12,7 @@ async function applyMigration() {
   
   try {
     // First, let's check if columns already exist by trying to select them
-    const { data: testData, error: testError } = await supabase
+    const { error: testError } = await supabase
       .from('aesthetic_procedures')
       .select('id, realself_worth_it_rating')
       .limit(1);

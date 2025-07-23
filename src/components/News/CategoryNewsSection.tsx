@@ -113,10 +113,7 @@ const CategoryNewsSection: React.FC<CategoryNewsSectionProps> = ({
   // Use real data if available, otherwise fall back to mock data
   const displayArticles = articles.length > 0 ? articles : mockArticles;
   
-  // Log when using mock data
-  if (articles.length === 0 && !loading) {
-    console.log(`Using mock ${industry} news for category: ${categoryName}`);
-  }
+  // Use mock data when no real data is available
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -166,7 +163,7 @@ const CategoryNewsSection: React.FC<CategoryNewsSectionProps> = ({
                 variant="outlined" 
                 color="primary" 
                 sx={{ borderRadius: theme.shape.borderRadius, mt: 2 }}
-                onClick={() => console.log('View More button clicked')}
+                onClick={() => { /* View More button clicked */ }}
               >
                 View More {categoryName} News
               </Button>

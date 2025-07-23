@@ -44,7 +44,6 @@ const ApiGatewayExample: React.FC = () => {
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch categories');
-        console.error('Error fetching categories:', err);
       } finally {
         setLoading(false);
       }
@@ -67,7 +66,6 @@ const ApiGatewayExample: React.FC = () => {
         setProcedures(proceduresData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch procedures');
-        console.error('Error fetching procedures:', err);
       } finally {
         setLoading(false);
       }
@@ -99,7 +97,6 @@ const ApiGatewayExample: React.FC = () => {
       setSelectedCategory(null); // Clear selected category when searching
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed');
-      console.error('Error searching procedures:', err);
     } finally {
       setLoading(false);
     }

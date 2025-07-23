@@ -10,14 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const BRAVE_API_KEY = process.env.BRAVE_API_KEY || '';
 const BRAVE_API_URL = 'https://api.search.brave.com/res/v1/web/search';
 
-interface ProcedureData {
-  id: number;
-  procedure_name: string;
-  category: string;
-  market_size_2025_usd_millions: number;
-  yearly_growth_percentage: number;
-  average_cost_usd: number;
-}
+// Removed unused interface ProcedureData
 
 interface MarketResearchResult {
   marketSize: number;
@@ -27,7 +20,7 @@ interface MarketResearchResult {
   confidence: number;
 }
 
-async function searchMarketData(procedureName: string, category: string): Promise<MarketResearchResult> {
+async function searchMarketData(procedureName: string, _category: string): Promise<MarketResearchResult> {
   try {
     // Search for market size
     const marketSizeQuery = `"${procedureName}" market size 2025 USD millions forecast`;
