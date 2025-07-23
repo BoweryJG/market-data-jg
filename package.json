@@ -71,6 +71,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "jsdom": "^26.1.0",
+    "terser": "^5.43.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.10",
