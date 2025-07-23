@@ -7,3 +7,16 @@ node_modules
 server/.env
 .DS_Store
 .env
+# Environment files - DO NOT COMMIT THESE
+.env
+.env.local
+.env.production
+.env.sphere1a
+server/.env
+server/server/.env
+
+# Keep example files
+!.env.example
+!.env.local.example
+!server/.env.example
+!server/server/.env.example
