@@ -418,4 +418,5 @@ const AutomationPanel: React.FC = () => {
   );
 };
 
-export default AutomationPanel;
+
+AutomationPanel.displayName = 'AutomationPanel';export default AutomationPanel;

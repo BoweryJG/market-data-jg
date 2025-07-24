@@ -265,3 +265,5 @@ export const QuickLoginModal: React.FC<QuickLoginModalProps> = ({
     </Dialog>
   );
 };
+
+QuickLoginModal.displayName = 'QuickLoginModal';

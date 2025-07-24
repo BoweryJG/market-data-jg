@@ -135,6 +135,8 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
   );
 };
 
+SubscriptionGate.displayName = 'SubscriptionGate';
+
 // Usage example component
 export const PremiumFeatureExample: React.FC = () => {
   const { subscription, trackUsage } = useSubscription();
@@ -166,3 +168,5 @@ export const PremiumFeatureExample: React.FC = () => {
     </SubscriptionGate>
   );
 };
+
+PremiumFeatureExample.displayName = 'PremiumFeatureExample';

@@ -51,4 +51,6 @@ const RealtimeNewsSection: React.FC<RealtimeNewsSectionProps> = ({
   );
 };
 
+RealtimeNewsSection.displayName = 'RealtimeNewsSection';
+
 export default RealtimeNewsSection;

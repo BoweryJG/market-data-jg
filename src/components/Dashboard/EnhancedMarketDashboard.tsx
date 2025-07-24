@@ -1051,4 +1051,5 @@ const EnhancedMarketDashboard: React.FC = () => {
   );
 };
 
-export default EnhancedMarketDashboard;
+
+EnhancedMarketDashboard.displayName = 'EnhancedMarketDashboard';export default EnhancedMarketDashboard;

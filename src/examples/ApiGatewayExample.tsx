@@ -1,20 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../services/api-client';
-
-interface Procedure {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  averageCost: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  procedureCount: number;
-}
+import type { Category, Procedure, Company } from '../types/api';
 
 /**
  * Example component demonstrating the use of the API Gateway
@@ -40,7 +26,7 @@ const ApiGatewayExample: React.FC = () => {
         
         // If categories exist, select the first one by default
         if (categoriesData.length > 0) {
-          setSelectedCategory(categoriesData[0].id);
+          setSelectedCategory(String(categoriesData[0].id));
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch categories');
@@ -61,8 +47,8 @@ const ApiGatewayExample: React.FC = () => {
         setLoading(true);
         setError(null);
         
-        // Use the API client to fetch procedures for the selected category
-        const proceduresData = await apiClient.getCompaniesByCategory(selectedCategory);
+        // Use the API client to fetch procedures
+        const proceduresData = await apiClient.getProcedures();
         setProcedures(proceduresData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch procedures');
@@ -128,8 +114,8 @@ const ApiGatewayExample: React.FC = () => {
         >
           <option value="">All Categories</option>
           {categories.map(category => (
-            <option key={category.id} value={category.id}>
-              {category.name} ({category.procedureCount})
+            <option key={category.id} value={String(category.id)}>
+              {category.name} ({category.procedures?.length || 0})
             </option>
           ))}
         </select>
@@ -146,7 +132,7 @@ const ApiGatewayExample: React.FC = () => {
         <div className="results">
           <h2>
             {selectedCategory 
-              ? `Procedures in ${categories.find(c => c.id === selectedCategory)?.name}` 
+              ? `Procedures in ${categories.find(c => String(c.id) === selectedCategory)?.name}` 
               : 'Search Results'}
           </h2>
           
@@ -154,16 +140,18 @@ const ApiGatewayExample: React.FC = () => {
             <p>No procedures found.</p>
           ) : (
             <ul className="procedures-list">
-              {procedures.map(procedure => (
-                <li key={procedure.id} className="procedure-item">
-                  <h3>{procedure.name}</h3>
-                  <p>{procedure.description}</p>
-                  <div className="procedure-details">
-                    <span className="category">Category: {procedure.category}</span>
-                    <span className="cost">Average Cost: ${procedure.averageCost.toLocaleString()}</span>
-                  </div>
-                </li>
-              ))}
+              {procedures
+                .filter(proc => !selectedCategory || String(proc.category_id) === selectedCategory)
+                .map(procedure => (
+                  <li key={procedure.id} className="procedure-item">
+                    <h3>{procedure.name}</h3>
+                    <p>{procedure.description || 'No description available'}</p>
+                    <div className="procedure-details">
+                      <span className="category">Category: {procedure.category_name || 'N/A'}</span>
+                      <span className="cost">Average Cost: ${(procedure.average_cost || 0).toLocaleString()}</span>
+                    </div>
+                  </li>
+                ))}
             </ul>
           )}
         </div>
@@ -180,8 +168,8 @@ import apiClient from '../services/api-client';
 // Get all categories
 const categories = await apiClient.getCategories();
 
-// Get procedures for a category
-const procedures = await apiClient.getCompaniesByCategory(categoryId);
+// Get procedures
+const procedures = await apiClient.getProcedures();
 
 // Search for procedures
 const searchResults = await apiClient.searchProcedures(searchQuery);

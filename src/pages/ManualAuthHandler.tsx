@@ -69,3 +69,5 @@ export default function ManualAuthHandler() {
     </Box>
   );
 }
+
+ManualAuthHandler.displayName = 'ManualAuthHandler';

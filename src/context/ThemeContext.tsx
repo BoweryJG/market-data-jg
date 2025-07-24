@@ -179,6 +179,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   );
 };
 
+ThemeProvider.displayName = 'ThemeProvider';
+
 export const useThemeContext = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {

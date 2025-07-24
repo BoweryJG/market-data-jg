@@ -450,4 +450,5 @@ const OpportunityFeed: React.FC = () => {
   );
 };
 
-export default OpportunityFeed;
+
+OpportunityFeed.displayName = 'OpportunityFeed';export default OpportunityFeed;

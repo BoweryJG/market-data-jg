@@ -1,5 +1,6 @@
 import { supabase } from '../auth/supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from './logging/logger';
 
 interface MagicLinkOptions {
   email: string;
@@ -280,6 +281,6 @@ CPT Intelligence by Sphere Medical Analytics
     // For now, we'll use Supabase Edge Functions or external email service
     
     // Placeholder for email sending logic
-    console.log(`Sending magic link to ${email}: ${magicLinkUrl}`);
+    logger.info('Magic link generated', { email, contentType: options.contentType, priceTier: options.priceTier });
   }
 }

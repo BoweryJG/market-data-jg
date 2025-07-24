@@ -117,8 +117,7 @@ class MarketIntelligenceService {
 
   // Search for emerging categories and trends
   async discoverEmergingCategories(
-    industry: 'dental' | 'aesthetic',
-    timeframe: 'week' | 'month' | 'quarter' = 'month'
+    industry: 'dental' | 'aesthetic'
   ): Promise<CategorySuggestion[]> {
     const queries = this.getIndustryTrendQueries(industry);
     const allCategories: CategorySuggestion[] = [];
@@ -166,7 +165,7 @@ class MarketIntelligenceService {
   // Get market trends for a specific procedure or category
   async getProcedureTrends(
     procedureName: string,
-    industry: 'dental' | 'aesthetic'
+    _industry: 'dental' | 'aesthetic'
   ): Promise<{
     trends: TrendData[];
     relatedProcedures: string[];

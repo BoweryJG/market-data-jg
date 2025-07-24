@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import './SignupModal.css';
 import { useAuth } from '../../auth';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../../services/logging/logger';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -240,7 +242,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSuccess })
         onClose();
       }, 800);
     } catch (error: any) {
-      console.error('Signup error:', error);
+      logger.error('Signup error', { error: getErrorMessage(error) });
       setError(error.message || 'Failed to create account');
       setIsLoading(false);
     }
@@ -253,7 +255,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSuccess })
       await signInWithProvider('google');
       // OAuth will redirect, so we don't need to do anything here
     } catch (error) {
-      console.error('Google signup error:', error);
+      logger.error('Google signup error', { error: getErrorMessage(error) });
       setIsLoading(false);
     }
   };
@@ -441,5 +443,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSuccess })
     </>
   );
 };
+
+SignUpModal.displayName = 'SignUpModal';
 
 export default SignUpModal;

@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import './LoginModal.css';
 import { useAuth } from '../../auth';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../../services/logging/logger';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -183,7 +185,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       await signInWithProvider('google');
       // OAuth will redirect, so we don't need to do anything here
     } catch (error) {
-      console.error('Google auth error:', error);
+      logger.error('Google auth error', { error: getErrorMessage(error) });
       setIsLoading(false);
     }
   };
@@ -195,7 +197,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       await signInWithProvider('facebook');
       // OAuth will redirect, so we don't need to do anything here
     } catch (error) {
-      console.error('Facebook auth error:', error);
+      logger.error('Facebook auth error', { error: getErrorMessage(error) });
       setIsLoading(false);
     }
   };
@@ -366,5 +368,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     </>
   );
 };
+
+LoginModal.displayName = 'LoginModal';
 
 export default LoginModal;

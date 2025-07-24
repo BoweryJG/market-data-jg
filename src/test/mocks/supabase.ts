@@ -26,7 +26,7 @@ const createChainableMock = (data: any = [], error: any = null) => {
 
 // Mock Supabase client for testing
 export const mockSupabaseClient = {
-  from: vi.fn((table: string) => {
+  from: vi.fn((_table: string) => {
     const chainableMock = createChainableMock();
     
     // Add insert, update, delete methods

@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 import type { Category, Procedure, Company, NewsItem, MarketGrowth } from '../types/api';
+import { logger } from './logging/logger';
+import env from '../setupEnv';
 
 // Define API Gateway configuration interface
 interface ApiGatewayConfig {
@@ -80,7 +82,7 @@ class ApiGateway {
       };
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
-      console.error(`GET ${url} failed:`, axiosError.message);
+      logger.error(`GET ${url} failed`, { message: axiosError.message, status: axiosError.response?.status });
       return {
         success: false,
         error: {
@@ -103,7 +105,7 @@ class ApiGateway {
       };
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
-      console.error(`POST ${url} failed:`, axiosError.message);
+      logger.error(`POST ${url} failed`, { message: axiosError.message, status: axiosError.response?.status });
       return {
         success: false,
         error: {
@@ -126,7 +128,7 @@ class ApiGateway {
       };
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
-      console.error(`PUT ${url} failed:`, error.message);
+      logger.error(`PUT ${url} failed`, { message: axiosError.message, status: axiosError.response?.status });
       return {
         success: false,
         error: {
@@ -149,7 +151,7 @@ class ApiGateway {
       };
     } catch (error: unknown) {
       const axiosError = error as AxiosError;
-      console.error(`DELETE ${url} failed:`, error.message);
+      logger.error(`DELETE ${url} failed`, { message: axiosError.message, status: axiosError.response?.status });
       return {
         success: false,
         error: {
@@ -165,7 +167,6 @@ class ApiGateway {
 /**
  * Market Insights API Client
  */
-import env from '../setupEnv'; // Import the env setup
 
 export class MarketInsightsApiClient {
   private apiGateway: ApiGateway;
@@ -205,7 +206,7 @@ export class MarketInsightsApiClient {
   private async handleResponse<T>(responsePromise: Promise<ApiResponse<T>>, errorMessagePrefix: string): Promise<T> {
     const response = await responsePromise;
     if (!response.success || response.data === undefined) {
-      console.error(`${errorMessagePrefix}:`, response.error);
+      logger.error(errorMessagePrefix, { error: response.error });
       throw new Error(`${errorMessagePrefix}: ${response.error?.message || 'Unknown API error'}`);
     }
     return response.data;
@@ -280,7 +281,7 @@ export class MarketInsightsApiClient {
     // Original executeQuery returned the whole ApiResponse, let's adjust if only data is needed
     const response = await this.apiGateway.post<unknown>('/api/query', { query });
     if (!response.success || response.data === undefined) {
-      console.error('Failed to execute query:', response.error);
+      logger.error('Failed to execute query', { error: response.error });
       throw new Error(`Failed to execute query: ${response.error?.message || 'Unknown API error'}`);
     }
     return response; // Returning the full ApiResponse as original, can be changed to response.data

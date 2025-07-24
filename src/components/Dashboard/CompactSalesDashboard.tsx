@@ -846,4 +846,5 @@ const CompactSalesDashboard: React.FC = () => {
   );
 };
 
-export default CompactSalesDashboard;
+
+CompactSalesDashboard.displayName = 'CompactSalesDashboard';export default CompactSalesDashboard;

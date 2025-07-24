@@ -562,4 +562,5 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
   );
 };
 
-export default CompanyDetailsModal;
+
+CompanyDetailsModal.displayName = 'CompanyDetailsModal';export default CompanyDetailsModal;

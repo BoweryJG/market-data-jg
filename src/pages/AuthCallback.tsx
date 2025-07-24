@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { supabase } from '../auth/supabase';
+import { logger } from '../services/logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ export default function AuthCallback() {
         const code = queryParams.get('code');
         
         if (code) {
-          console.log('Authorization code found, letting Supabase AuthContext handle PKCE exchange...');
+          logger.info('Authorization code found, letting Supabase AuthContext handle PKCE exchange');
           // The Supabase client with detectSessionInUrl: true will automatically handle this
           // Just wait for the auth state change and redirect
           setTimeout(() => {
@@ -42,7 +44,7 @@ export default function AuthCallback() {
               // Clean up stored tokens
               localStorage.removeItem('supabase.auth.token');
             } catch (e) {
-              console.error('Error parsing stored tokens:', e);
+              logger.error('Error parsing stored tokens', { error: getErrorMessage(e) });
             }
           }
         }
@@ -55,13 +57,13 @@ export default function AuthCallback() {
           });
           
           if (error) {
-            console.error('Auth callback error:', error);
+            logger.error('Auth callback error', { error: getErrorMessage(error) });
             navigate('/');
             return;
           }
           
           if (data.session) {
-            console.log('Auth callback successful, user logged in');
+            logger.info('Auth callback successful, user logged in');
             // Clear the URL hash to clean up the URL
             window.history.replaceState({}, document.title, window.location.pathname);
             // Navigate to dashboard
@@ -74,20 +76,20 @@ export default function AuthCallback() {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Auth callback error:', error);
+          logger.error('Auth callback error', { error: getErrorMessage(error) });
           navigate('/');
           return;
         }
 
         if (session) {
-          console.log('Existing session found');
+          logger.info('Existing session found');
           navigate('/');
         } else {
-          console.log('No session found, redirecting to home');
+          logger.info('No session found, redirecting to home');
           navigate('/');
         }
       } catch (error) {
-        console.error('Unexpected error during auth callback:', error);
+        logger.error('Unexpected error during auth callback', { error: getErrorMessage(error) });
         navigate('/');
       }
     };
@@ -113,3 +115,5 @@ export default function AuthCallback() {
     </Box>
   );
 }
+
+AuthCallback.displayName = 'AuthCallback';

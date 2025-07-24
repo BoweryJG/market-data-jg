@@ -122,4 +122,6 @@ const NewsCard: React.FC<NewsCardProps> = ({
   );
 };
 
+NewsCard.displayName = 'NewsCard';
+
 export default NewsCard;

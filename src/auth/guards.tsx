@@ -45,6 +45,8 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   return <>{children}</>;
 };
 
+AuthGuard.displayName = 'AuthGuard';
+
 interface GuestGuardProps {
   children: React.ReactNode;
   redirectTo?: string;
@@ -70,6 +72,8 @@ export const GuestGuard: React.FC<GuestGuardProps> = ({
   
   return <>{children}</>;
 };
+
+GuestGuard.displayName = 'GuestGuard';
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -99,6 +103,8 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
   return <>{children}</>;
 };
 
+RoleGuard.displayName = 'RoleGuard';
+
 /**
  * Higher-order component for requiring authentication
  */
@@ -106,7 +112,7 @@ export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
   redirectTo: string = '/login'
 ): React.FC<P> {
-  return (props: P) => {
+  const WithAuthComponent = (props: P) => {
     const { user, loading } = useRequireAuth(redirectTo);
     
     if (loading) {
@@ -119,4 +125,8 @@ export function withAuth<P extends object>(
     
     return <Component {...props} />;
   };
+  
+  WithAuthComponent.displayName = `withAuth(${Component.displayName || Component.name || 'Component'})`;
+  
+  return WithAuthComponent;
 }

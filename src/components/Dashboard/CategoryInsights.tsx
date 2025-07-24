@@ -375,4 +375,6 @@ const CategoryInsights: React.FC<CategoryInsightsProps> = ({
   );
 };
 
+CategoryInsights.displayName = 'CategoryInsights';
+
 export default CategoryInsights;

@@ -591,4 +591,5 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   );
 };
 
-export default AICommandBar;
+
+AICommandBar.displayName = 'AICommandBar';export default AICommandBar;

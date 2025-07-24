@@ -146,3 +146,5 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     </div>
   );
 };
+
+LoginForm.displayName = 'LoginForm';

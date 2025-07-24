@@ -1133,4 +1133,5 @@ const ActionableSalesDashboard: React.FC = () => {
   );
 };
 
-export default ActionableSalesDashboard;
+
+ActionableSalesDashboard.displayName = 'ActionableSalesDashboard';export default ActionableSalesDashboard;

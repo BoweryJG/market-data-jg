@@ -547,4 +547,5 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
   );
 };
 
-export default OpportunityRadar;
+
+OpportunityRadar.displayName = 'OpportunityRadar';export default OpportunityRadar;

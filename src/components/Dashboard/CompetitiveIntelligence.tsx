@@ -446,4 +446,5 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
   );
 };
 
-export default CompetitiveIntelligenceComponent;
+
+CompetitiveIntelligenceComponent.displayName = 'CompetitiveIntelligenceComponent';export default CompetitiveIntelligenceComponent;

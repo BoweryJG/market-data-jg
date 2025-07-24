@@ -4,16 +4,17 @@
  */
 
 import { supabase } from '../auth/supabase';
+import { logger } from '../services/logging/logger';
+import { getErrorMessage } from './errorUtils';
 
 export async function debugAuth() {
   if (process.env.NODE_ENV === 'development') {
-    console.group('🔍 MarketData Auth Debug Info');
+    logger.debug('=== MarketData Auth Debug Info ===');
   }
   
   // 1. Check current domain
   if (process.env.NODE_ENV === 'development') {
-    console.log('Current Domain:', window.location.hostname);
-    console.log('Current URL:', window.location.href);
+    logger.debug('Current location', { domain: window.location.hostname, url: window.location.href });
   }
   
   // 2. Check Supabase session
@@ -21,51 +22,51 @@ export async function debugAuth() {
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('Session Error:', error);
+        logger.error('Session Error', { error: getErrorMessage(error) });
       }
     } else if (session && process.env.NODE_ENV === 'development') {
-      console.log('✅ Session found:', {
+      logger.debug('Session found', {
         user_id: session.user.id,
         email: session.user.email,
         expires_at: new Date(session.expires_at! * 1000).toLocaleString()
       });
     } else if (process.env.NODE_ENV === 'development') {
-      console.log('❌ No session found');
+      logger.debug('No session found');
     }
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to get session:', err);
+      logger.error('Failed to get session', { error: getErrorMessage(err) });
     }
   }
   
   if (process.env.NODE_ENV === 'development') {
     // 3. Check cookies
-    console.log('Cookies:', document.cookie);
+    logger.debug('Cookies present', { cookieCount: document.cookie.split(';').length });
     
     // 4. Check localStorage
-    console.log('LocalStorage auth keys:');
+    logger.debug('LocalStorage auth keys:');
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && (key.includes('auth') || key.includes('supabase'))) {
-        console.log(`  ${key}:`, localStorage.getItem(key)?.substring(0, 50) + '...');
+        logger.debug(`LocalStorage key: ${key}`, { preview: localStorage.getItem(key)?.substring(0, 50) + '...' });
       }
     }
     
     // 5. Check sessionStorage
-    console.log('SessionStorage auth keys:');
+    logger.debug('SessionStorage auth keys:');
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
       if (key && (key.includes('auth') || key.includes('return') || key.includes('destination'))) {
-        console.log(`  ${key}:`, sessionStorage.getItem(key));
+        logger.debug(`SessionStorage key: ${key}`, { value: sessionStorage.getItem(key) });
       }
     }
     
-    console.groupEnd();
+    logger.debug('=== Auth Debug Info Complete ===');
   }
 }
 
 // Make it available globally
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   (window as any).debugAuth = debugAuth;
-  console.log('💡 Run window.debugAuth() to debug authentication issues');
+  logger.info('Debug utility available at window.debugAuth()');
 }

@@ -158,4 +158,5 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories, selectedC
   );
 };
 
-export default ConnectionLines;
+
+ConnectionLines.displayName = 'ConnectionLines';export default ConnectionLines;

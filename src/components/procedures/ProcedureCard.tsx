@@ -67,4 +67,6 @@ export const ProcedureCard: React.FC<ProcedureCardProps> = ({ procedure, onClick
   </Card>
 );
 
+ProcedureCard.displayName = 'ProcedureCard';
+
 export default ProcedureCard;

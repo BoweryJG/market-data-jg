@@ -1,3 +1,4 @@
+/* global RequestInit, RequestInfo */
 import { logger } from '../logging/logger';
 
 interface RequestConfig extends RequestInit {

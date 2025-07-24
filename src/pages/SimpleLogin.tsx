@@ -440,3 +440,5 @@ export default function SimpleLogin() {
     </div>
   );
 }
+
+SimpleLogin.displayName = 'SimpleLogin';

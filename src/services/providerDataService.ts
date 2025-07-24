@@ -1,4 +1,6 @@
 import { supabase } from './supabaseClient';
+import { logger } from './logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export interface ProviderLocation {
   id: string;
@@ -130,7 +132,7 @@ class ProviderDataService {
       this.setCache(cacheKey, data || []);
       return data || [];
     } catch (error) {
-      console.error('Error fetching providers by territory:', error);
+      logger.error('Error fetching providers by territory', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -146,7 +148,7 @@ class ProviderDataService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error fetching provider by ID:', error);
+      logger.error('Error fetching provider by ID', { error: getErrorMessage(error) });
       return null;
     }
   }
@@ -162,7 +164,7 @@ class ProviderDataService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching provider equipment:', error);
+      logger.error('Error fetching provider equipment', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -224,7 +226,7 @@ class ProviderDataService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error searching providers:', error);
+      logger.error('Error searching providers', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -253,7 +255,7 @@ class ProviderDataService {
       this.setCache(cacheKey, data || []);
       return data || [];
     } catch (error) {
-      console.error('Error fetching market territories:', error);
+      logger.error('Error fetching market territories', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -269,7 +271,7 @@ class ProviderDataService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error fetching territory by name:', error);
+      logger.error('Error fetching territory by name', { error: getErrorMessage(error) });
       return null;
     }
   }
@@ -341,7 +343,7 @@ class ProviderDataService {
         avg_equipment_value: row.avg_equipment_value,
       }));
     } catch (error) {
-      console.error('Error fetching provider market insights:', error);
+      logger.error('Error fetching provider market insights', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -371,7 +373,7 @@ class ProviderDataService {
         territories: territoriesResult.data || [],
       };
     } catch (error) {
-      console.error('Error fetching top opportunities:', error);
+      logger.error('Error fetching top opportunities', { error: getErrorMessage(error) });
       return { providers: [], territories: [] };
     }
   }
@@ -408,7 +410,7 @@ class ProviderDataService {
 
       return opportunities;
     } catch (error) {
-      console.error('Error fetching equipment replacement opportunities:', error);
+      logger.error('Error fetching equipment replacement opportunities', { error: getErrorMessage(error) });
       return [];
     }
   }

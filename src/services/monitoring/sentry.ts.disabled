@@ -1,0 +1,156 @@
+// This file is disabled because @sentry packages are not installed
+// To enable Sentry monitoring:
+// 1. Install dependencies: npm install @sentry/react @sentry/tracing @sentry/integrations
+// 2. Rename this file back to sentry.ts
+// 3. Import React hooks and router utilities at the top of the file
+
+/*
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
+import { CaptureConsole } from '@sentry/integrations';
+import { logger } from '../logging/logger';
+
+interface SentryConfig {
+  dsn: string;
+  environment: string;
+  release?: string;
+  debug?: boolean;
+  tracesSampleRate?: number;
+  replaysSessionSampleRate?: number;
+  replaysOnErrorSampleRate?: number;
+}
+
+export function initializeSentry(config: SentryConfig): void {
+  if (!config.dsn) {
+    logger.warn('Sentry DSN not provided. Skipping Sentry initialization');
+    return;
+  }
+
+  Sentry.init({
+    dsn: config.dsn,
+    environment: config.environment,
+    release: config.release,
+    debug: config.debug || false,
+    
+    // Performance Monitoring
+    integrations: [
+      new BrowserTracing({
+        // Set tracingOrigins to control what URLs are traced
+        tracingOrigins: [
+          'localhost',
+          'repspheres.com',
+          /^\//,
+        ],
+        // Capture interactions (clicks, scrolls, etc.)
+        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+          React.useEffect,
+          useLocation,
+          useNavigationType,
+          createRoutesFromChildren,
+          matchRoutes
+        ),
+      }),
+      new CaptureConsole({
+        levels: ['error', 'warn'],
+      }),
+    ],
+    
+    // Performance sample rate
+    tracesSampleRate: config.tracesSampleRate || 0.1,
+    
+    // Session Replay
+    replaysSessionSampleRate: config.replaysSessionSampleRate || 0.1,
+    replaysOnErrorSampleRate: config.replaysOnErrorSampleRate || 1.0,
+    
+    // Error filtering
+    beforeSend(event: any, hint: any) {
+      // Filter out non-error events in production
+      if (config.environment === 'production' && !hint.originalException) {
+        return null;
+      }
+      
+      // Filter out network errors that are expected (e.g., user offline)
+      if (hint.originalException instanceof Error) {
+        const error = hint.originalException;
+        if (
+          error.message.includes('Network request failed') ||
+          error.message.includes('Failed to fetch')
+        ) {
+          // Still log but with lower severity
+          event.level = 'warning';
+        }
+      }
+      
+      // Filter out errors from browser extensions
+      if (event.exception?.values?.[0]?.stacktrace?.frames) {
+        const frames = event.exception.values[0].stacktrace.frames;
+        if (frames.some((frame: any) => 
+          frame.filename?.includes('chrome-extension://') ||
+          frame.filename?.includes('moz-extension://')
+        )) {
+          return null;
+        }
+      }
+      
+      return event;
+    },
+    
+    // Breadcrumb filtering
+    beforeBreadcrumb(breadcrumb: any) {
+      // Filter out noisy breadcrumbs
+      if (breadcrumb.category === 'console' && breadcrumb.level === 'debug') {
+        return null;
+      }
+      
+      // Add more context to navigation breadcrumbs
+      if (breadcrumb.category === 'navigation') {
+        breadcrumb.data = {
+          ...breadcrumb.data,
+          timestamp: new Date().toISOString(),
+        };
+      }
+      
+      return breadcrumb;
+    },
+  });
+
+  logger.info('Sentry initialized', {
+    environment: config.environment,
+    release: config.release,
+  });
+}
+
+export function captureException(error: Error, context?: Record<string, unknown>): void {
+  logger.error('Capturing exception', { error: error.message, context });
+  Sentry.captureException(error, {
+    contexts: {
+      custom: context || {},
+    },
+  });
+}
+
+export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info'): void {
+  logger.info('Capturing message', { message, level });
+  Sentry.captureMessage(message, level);
+}
+
+export function setUserContext(user: { id: string; email?: string; [key: string]: unknown }): void {
+  Sentry.setUser(user);
+}
+
+export function clearUserContext(): void {
+  Sentry.setUser(null);
+}
+
+export function addBreadcrumb(breadcrumb: {
+  message: string;
+  category?: string;
+  level?: Sentry.SeverityLevel;
+  data?: Record<string, unknown>;
+}): void {
+  Sentry.addBreadcrumb(breadcrumb);
+}
+
+export const SentryErrorBoundary = Sentry.ErrorBoundary;
+export const withSentryRouting = Sentry.withSentryRouting;
+*/

@@ -452,3 +452,5 @@ export const PublicProceduresList: React.FC = () => {
     </Container>
   );
 };
+
+PublicProceduresList.displayName = 'PublicProceduresList';

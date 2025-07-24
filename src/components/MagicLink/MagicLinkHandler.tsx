@@ -250,3 +250,5 @@ export const MagicLinkHandler: React.FC = () => {
     </Box>
   );
 };
+
+MagicLinkHandler.displayName = 'MagicLinkHandler';

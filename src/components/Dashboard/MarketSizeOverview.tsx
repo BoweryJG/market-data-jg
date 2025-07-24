@@ -261,4 +261,5 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
   );
 };
 
-export default MarketSizeOverview;
+
+MarketSizeOverview.displayName = 'MarketSizeOverview';export default MarketSizeOverview;

@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export const apiClient = {
   async get(endpoint: string) {

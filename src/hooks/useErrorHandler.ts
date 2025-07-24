@@ -6,7 +6,7 @@ interface ErrorHandlerOptions {
   componentName?: string;
   showAlert?: boolean;
   logLevel?: 'warn' | 'error' | 'fatal';
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 export function useErrorHandler(options: ErrorHandlerOptions = {}) {
@@ -17,7 +17,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
     context = {},
   } = options;
 
-  const handleError = useCallback((error: Error | unknown, additionalContext?: Record<string, any>) => {
+  const handleError = useCallback((error: Error | unknown, additionalContext?: Record<string, unknown>) => {
     const errorObj = error instanceof Error ? error : new Error(String(error));
     
     // Combine contexts
@@ -53,8 +53,8 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
 
     // Show user alert if requested
     if (showAlert && process.env.NODE_ENV === 'production') {
-      // In production, show a generic error message
-      console.error('An error occurred. Please try again or contact support if the issue persists.');
+      // In production, log user-facing error message
+      logger.error('User-facing error displayed', { message: 'An error occurred. Please try again or contact support if the issue persists.' });
     }
 
     // Re-throw in development for better debugging
@@ -65,7 +65,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
 
   const handleAsyncError = useCallback(async <T,>(
     promise: Promise<T>,
-    additionalContext?: Record<string, any>
+    additionalContext?: Record<string, unknown>
   ): Promise<T | null> => {
     try {
       return await promise;
@@ -82,8 +82,15 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
 }
 
 // Type declaration for Sentry
+interface SentryInterface {
+  captureException: (error: Error, context?: Record<string, unknown>) => void;
+  setContext: (key: string, context: Record<string, unknown>) => void;
+  setTag: (key: string, value: string) => void;
+  withScope: (callback: (scope: unknown) => void) => void;
+}
+
 declare global {
   interface Window {
-    Sentry: any;
+    Sentry: SentryInterface;
   }
 }

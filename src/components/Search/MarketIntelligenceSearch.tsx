@@ -652,4 +652,6 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
   );
 };
 
+MarketIntelligenceSearch.displayName = 'MarketIntelligenceSearch';
+
 export default MarketIntelligenceSearch;

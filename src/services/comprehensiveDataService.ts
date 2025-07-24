@@ -1,4 +1,6 @@
 import { supabase } from './supabaseClient';
+import { logger } from './logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export interface TableInfo {
   tablename: string;
@@ -40,7 +42,7 @@ class ComprehensiveDataService {
   }
 
   async discoverAllTables(): Promise<TableInfo[]> {
-    console.log('🔍 Discovering all Supabase tables...');
+    logger.info('Discovering all Supabase tables');
     
     try {
       // Try to get all tables using RPC function first
@@ -52,12 +54,12 @@ class ComprehensiveDataService {
         tables = rpcResult.data;
         error = rpcResult.error;
       } catch (rpcError) {
-        console.warn('RPC function not available, trying alternative approach...');
+        logger.warn('RPC function not available, trying alternative approach');
         error = rpcError;
       }
 
       if (error) {
-        console.warn('Failed to get tables from RPC, trying direct query...');
+        logger.warn('Failed to get tables from RPC, trying direct query');
         
         // Alternative approach: Query known table patterns (only tables that exist)
         const knownTablePatterns = [
@@ -140,15 +142,15 @@ class ComprehensiveDataService {
             this.tableCache.set(tableName, tableInfo);
           }
         } catch (error) {
-          console.warn(`Failed to analyze table ${tableName}:`, error);
+          logger.warn('Failed to analyze table', { tableName, error: getErrorMessage(error) });
         }
       }
 
-      console.log(`✅ Discovered ${tableInfos.length} tables with comprehensive data`);
+      logger.info('Discovered tables with comprehensive data', { count: tableInfos.length });
       return tableInfos;
       
     } catch (error) {
-      console.error('Error discovering tables:', error);
+      logger.error('Error discovering tables', { error: getErrorMessage(error) });
       return [];
     }
   }
@@ -173,11 +175,11 @@ class ComprehensiveDataService {
       return this.dataCache;
     }
 
-    console.log('🚀 Fetching comprehensive market data...');
+    logger.info('Fetching comprehensive market data');
 
     try {
       // Only fetch the tables you actually have
-      console.log('📊 Fetching procedures and companies data...');
+      logger.debug('Fetching procedures and companies data');
       const [
         dentalProceduresResponse,
         aestheticProceduresResponse,
@@ -190,19 +192,21 @@ class ComprehensiveDataService {
         supabase.from('aesthetic_companies').select('*'),
       ]);
 
-      console.log('📊 Dental procedures response:', dentalProceduresResponse);
-      console.log('📊 Aesthetic procedures response:', aestheticProceduresResponse);
-      console.log('📊 Dental companies response:', dentalCompaniesResponse);
-      console.log('📊 Aesthetic companies response:', aestheticCompaniesResponse);
+      logger.debug('Data fetching responses received', {
+        dentalProceduresStatus: dentalProceduresResponse.status,
+        aestheticProceduresStatus: aestheticProceduresResponse.status,
+        dentalCompaniesStatus: dentalCompaniesResponse.status,
+        aestheticCompaniesStatus: aestheticCompaniesResponse.status
+      });
       
       // Debug: Check sample procedure data structure
       if (dentalProceduresResponse.status === 'fulfilled' && dentalProceduresResponse.value.data?.length > 0) {
         const sampleProc = dentalProceduresResponse.value.data[0];
-        console.log('🦷 Sample dental procedure fields:', {
-          has_market_size_2025: 'market_size_2025_usd_millions' in sampleProc,
-          has_market_size: 'market_size_usd_millions' in sampleProc,
-          has_market_size_alt: 'market_size' in sampleProc,
-          actual_fields: Object.keys(sampleProc).filter(k => k.includes('market'))
+        logger.debug('Sample dental procedure fields analyzed', {
+          hasMarketSize2025: 'market_size_2025_usd_millions' in sampleProc,
+          hasMarketSize: 'market_size_usd_millions' in sampleProc,
+          hasMarketSizeAlt: 'market_size' in sampleProc,
+          marketFieldCount: Object.keys(sampleProc).filter(k => k.includes('market')).length
         });
       }
 
@@ -217,9 +221,11 @@ class ComprehensiveDataService {
       const aestheticCategories = aestheticCategoriesResponse.status === 'fulfilled' ? aestheticCategoriesResponse.value.data || [] : [];
       const categoryHierarchy = categoryHierarchyResponse.status === 'fulfilled' ? categoryHierarchyResponse.value.data || [] : [];
 
-      console.log('📊 Dental categories:', dentalCategories);
-      console.log('📊 Aesthetic categories:', aestheticCategories);
-      console.log('📊 Category hierarchy:', categoryHierarchy);
+      logger.debug('Category data loaded', {
+        dentalCategoriesCount: dentalCategories?.length || 0,
+        aestheticCategoriesCount: aestheticCategories?.length || 0,
+        categoryHierarchyLoaded: !!categoryHierarchy
+      });
 
       // Process dental procedures with category joins
       const processedDentalProcedures = (dentalProceduresResponse.status === 'fulfilled' ? dentalProceduresResponse.value.data || [] : [])
@@ -341,9 +347,14 @@ class ComprehensiveDataService {
         ...processedAestheticCompanies,
       ];
 
-      console.log(`✅ Processed ${processedDentalProcedures.length} dental and ${processedAestheticProcedures.length} aesthetic procedures`);
-      console.log(`✅ Processed ${processedDentalCompanies.length} dental and ${processedAestheticCompanies.length} aesthetic companies`);
-      console.log(`✅ After deduplication: ${dedupedProcedures.length} unique procedures (removed ${allProcedures.length - dedupedProcedures.length} duplicates)`);
+      logger.info('Data processing complete', {
+        dentalProcedures: processedDentalProcedures.length,
+        aestheticProcedures: processedAestheticProcedures.length,
+        dentalCompanies: processedDentalCompanies.length,
+        aestheticCompanies: processedAestheticCompanies.length,
+        uniqueProcedures: dedupedProcedures.length,
+        duplicatesRemoved: allProcedures.length - dedupedProcedures.length
+      });
       
       // Debug: Check which market size fields are populated
       const marketSizeFieldUsage = dedupedProcedures.reduce((acc: any, proc: any) => {
@@ -354,7 +365,7 @@ class ComprehensiveDataService {
         return acc;
       }, { primary: 0, fallback1: 0, fallback2: 0, none: 0 });
       
-      console.log('📊 Market size field usage:', marketSizeFieldUsage);
+      logger.debug('Market size field usage analyzed', { fieldUsage: marketSizeFieldUsage });
 
       // Extract territory data from procedures regional_popularity
       const territories = this.extractTerritoryData(dedupedProcedures);
@@ -395,7 +406,7 @@ class ComprehensiveDataService {
       this.dataCache = comprehensiveData;
       this.lastFetch = now;
 
-      console.log('✅ Comprehensive market data loaded:', {
+      logger.info('Comprehensive market data loaded successfully', {
         procedures: allProcedures.length,
         dentalProcedures: processedDentalProcedures.length,
         aestheticProcedures: processedAestheticProcedures.length,
@@ -403,14 +414,14 @@ class ComprehensiveDataService {
         dentalCompanies: processedDentalCompanies.length,
         aestheticCompanies: processedAestheticCompanies.length,
         territories: territories.length,
-        totalMarketSize: (totalMarketSize as number).toFixed(2) + 'M',
-        avgGrowth: (avgGrowth as number).toFixed(1) + '%',
+        totalMarketSizeMB: (totalMarketSize as number).toFixed(2),
+        avgGrowthPercent: (avgGrowth as number).toFixed(1)
       });
 
       return comprehensiveData;
 
     } catch (error) {
-      console.error('Error fetching comprehensive market data:', error);
+      logger.error('Error fetching comprehensive market data', { error: getErrorMessage(error) });
       throw error;
     }
   }
@@ -528,7 +539,7 @@ class ComprehensiveDataService {
 
   // Special method to test specific tables for debugging
   async testSpecificTables(): Promise<any> {
-    console.log('🧪 Testing specific dental_procedures and aesthetic_procedures tables...');
+    logger.info('Testing specific dental_procedures and aesthetic_procedures tables');
     
     try {
       const [dentalTest, aestheticTest] = await Promise.allSettled([
@@ -536,15 +547,17 @@ class ComprehensiveDataService {
         supabase.from('aesthetic_procedures').select('*').limit(5),
       ]);
 
-      console.log('🦷 Dental procedures test:', dentalTest);
-      console.log('💄 Aesthetic procedures test:', aestheticTest);
+      logger.debug('Table tests completed', {
+        dentalTestRows: dentalTest?.data?.length || 0,
+        aestheticTestRows: aestheticTest?.data?.length || 0
+      });
 
       return {
         dental: dentalTest,
         aesthetic: aestheticTest,
       };
     } catch (error) {
-      console.error('❌ Table test failed:', error);
+      logger.error('Table test failed', { error: getErrorMessage(error) });
       return { error };
     }
   }

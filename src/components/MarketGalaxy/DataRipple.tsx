@@ -108,4 +108,5 @@ const DataRipple: React.FC<DataRippleProps> = ({ x, y }) => {
   );
 };
 
-export default DataRipple;
+
+DataRipple.displayName = 'DataRipple';export default DataRipple;

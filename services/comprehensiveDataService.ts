@@ -94,10 +94,10 @@ class ComprehensiveDataService {
                 sampleData: data,
                 hasMarketData,
                 hasGeoData,
-                dataType: this.categorizeTable(tableName, columns),
+                dataType: this.categorizeTable(tableName),
               });
             }
-          } catch (e) {
+          } catch {
             // Table doesn't exist, continue
           }
         }
@@ -134,7 +134,7 @@ class ComprehensiveDataService {
               sampleData: data,
               hasMarketData,
               hasGeoData,
-              dataType: this.categorizeTable(tableName, columns),
+              dataType: this.categorizeTable(tableName),
             };
 
             tableInfos.push(tableInfo);
@@ -154,7 +154,7 @@ class ComprehensiveDataService {
     }
   }
 
-  private categorizeTable(tableName: string, columns: string[]): TableInfo['dataType'] {
+  private categorizeTable(tableName: string): TableInfo['dataType'] {
     const name = tableName.toLowerCase();
     
     if (name.includes('procedure')) return 'procedures';
@@ -186,7 +186,6 @@ class ComprehensiveDataService {
         aestheticCompaniesResponse,
         dentalCategoriesResponse,
         aestheticCategoriesResponse,
-        providersResponse,
         trendsResponse,
         analyticsResponse,
       ] = await Promise.allSettled([
@@ -305,7 +304,7 @@ class ComprehensiveDataService {
               territoryData.saturation = Math.max(territoryData.saturation, data.popularity);
             }
           });
-        } catch (e) {
+        } catch {
           // Invalid JSON, skip
         }
       }

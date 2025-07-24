@@ -469,3 +469,5 @@ export const MonitoringDashboard: React.FC = () => {
     </Box>
   );
 };
+
+MonitoringDashboard.displayName = 'MonitoringDashboard';

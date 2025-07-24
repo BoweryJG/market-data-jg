@@ -1,6 +1,9 @@
 import { supabase } from './supabaseClient';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { logger } from './logging/logger';
+import { handleUnknownError, TypedError } from '../types/errors';
+import { getErrorMessage } from '../utils/errorUtils';
 
 // Types
 export interface NewsArticle {
@@ -58,9 +61,10 @@ export const useNewsByIndustry = (industry: 'dental' | 'aesthetic', limit: numbe
         if (fetchError) throw fetchError;
         
         setArticles(data || []);
-      } catch (err: any) {
-        console.error(`Error fetching ${industry} news:`, err);
-        setError(err.message || 'Failed to fetch news');
+      } catch (err: unknown) {
+        const error = handleUnknownError(err);
+        logger.error('Error fetching industry news', { industry, error: getErrorMessage(error) });
+        setError(error.message || 'Failed to fetch news');
       } finally {
         setLoading(false);
       }
@@ -132,8 +136,9 @@ export const useRealtimeNewsByProcedure = (
         }));
 
         setArticles(formatted);
-      } catch (err: any) {
-        console.error(`Error fetching real-time news for ${procedureId}:`, err);
+      } catch (err: unknown) {
+        const error = handleUnknownError(err);
+        logger.error('Error fetching real-time news for procedure', { procedureId, error: getErrorMessage(err) });
         setError(err.message || 'Failed to fetch real-time news');
       } finally {
         setLoading(false);
@@ -201,8 +206,9 @@ export const useNewsByProcedureCategory = (
         });
         
         setArticles(articlesWithImages);
-      } catch (err: any) {
-        console.error(`Error fetching news for procedure category ${procedureCategoryId}:`, err);
+      } catch (err: unknown) {
+        const error = handleUnknownError(err);
+        logger.error('Error fetching news for procedure category', { procedureCategoryId, error: getErrorMessage(err) });
         setError(err.message || 'Failed to fetch news');
       } finally {
         setLoading(false);
@@ -245,8 +251,9 @@ export const useTopProcedureCategoriesWithNews = (
         if (categoryError) throw categoryError;
         
         setCategories(categoryData || []);
-      } catch (err: any) {
-        console.error(`Error fetching top ${industry} categories:`, err);
+      } catch (err: unknown) {
+        const error = handleUnknownError(err);
+        logger.error('Error fetching top industry categories', { industry, error: getErrorMessage(err) });
         setError(err.message || 'Failed to fetch categories');
       } finally {
         setLoading(false);
@@ -292,7 +299,7 @@ export const fetchFeaturedNews = async (limit: number = 5): Promise<NewsArticle[
     
     return articlesWithImages;
   } catch (err) {
-    console.error('Error fetching featured news:', err);
+    logger.error('Error fetching featured news', { error: getErrorMessage(err) });
     return [];
   }
 };

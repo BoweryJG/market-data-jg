@@ -1,15 +1,22 @@
 import { useState, useCallback } from 'react';
+import { SearchResult } from '../src/types/common';
+
+interface MCPSearchResult {
+  title: string;
+  url: string;
+  description: string;
+}
 
 interface MCPToolResult {
-  results?: any[];
+  results?: MCPSearchResult[];
   error?: string;
 }
 
-export const useMCPTool = (_serverName: string) => {
+export const useMCPTool = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const executeTool = useCallback(async (toolName: string, _args: any): Promise<MCPToolResult> => {
+  const executeTool = useCallback(async (toolName: string): Promise<MCPToolResult> => {
     setLoading(true);
     setError(null);
 

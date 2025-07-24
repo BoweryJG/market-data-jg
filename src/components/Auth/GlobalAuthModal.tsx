@@ -512,3 +512,5 @@ export default function GlobalAuthModal({ open, onClose, onSuccess }: GlobalAuth
     </Dialog>
   );
 }
+
+GlobalAuthModal.displayName = 'GlobalAuthModal';

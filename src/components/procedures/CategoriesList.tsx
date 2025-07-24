@@ -82,3 +82,5 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ categories }) =>
     </Grid>
   );
 };
+
+CategoriesList.displayName = 'CategoriesList';

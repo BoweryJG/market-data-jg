@@ -42,7 +42,7 @@ class Logger {
     return level >= this.minLevel;
   }
 
-  private log(level: LogLevel, message: string, data?: any): void {
+  private log(level: LogLevel, message: string, data?: Record<string, unknown>): void {
     if (!this.shouldLog(level)) return;
 
     const entry: LogEntry = {
@@ -51,6 +51,9 @@ class Logger {
       timestamp: new Date().toISOString(),
       data
     };
+
+    // Store in local logs for monitoring
+    this.storeLocalLog(entry);
 
     this.transports.forEach(transport => {
       try {
@@ -61,26 +64,57 @@ class Logger {
     });
   }
 
-  debug(message: string, data?: any): void {
+  debug(message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, message, data);
   }
 
-  info(message: string, data?: any): void {
+  info(message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, data);
   }
 
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.WARN, message, data);
   }
 
-  error(message: string, data?: any): void {
+  error(message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.ERROR, message, data);
   }
 
-  fatal(message: string, data?: any): void {
+  fatal(message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.FATAL, message, data);
+  }
+
+  // Local log storage for development/monitoring
+  private localLogs: LogEntry[] = [];
+  private maxLocalLogs = 1000;
+
+  getLocalLogs(): LogEntry[] {
+    return [...this.localLogs];
+  }
+
+  clearLocalLogs(): void {
+    this.localLogs = [];
+  }
+
+  private storeLocalLog(entry: LogEntry): void {
+    this.localLogs.push(entry);
+    if (this.localLogs.length > this.maxLocalLogs) {
+      this.localLogs.shift();
+    }
+  }
+
+  // API logging methods
+  logRequest(method: string, url: string, data?: any): void {
+    this.debug(`API Request: ${method} ${url}`, { method, url, data });
+  }
+
+  logResponse(method: string, url: string, status: number, data?: any): void {
+    this.debug(`API Response: ${method} ${url} - ${status}`, { method, url, status, data });
   }
 }
 
 // Export singleton instance
 export const logger = Logger.getInstance();
+
+// Export types for external use
+export type { LogLevel, LogEntry } from './types';

@@ -928,4 +928,5 @@ const QuantumMarketDashboard: React.FC = () => {
   );
 };
 
-export default QuantumMarketDashboard;
+
+QuantumMarketDashboard.displayName = 'QuantumMarketDashboard';export default QuantumMarketDashboard;

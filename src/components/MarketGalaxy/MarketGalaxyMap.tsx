@@ -626,4 +626,5 @@ const MarketGalaxyMap: React.FC = () => {
   );
 };
 
-export default MarketGalaxyMap;
+
+MarketGalaxyMap.displayName = 'MarketGalaxyMap';export default MarketGalaxyMap;

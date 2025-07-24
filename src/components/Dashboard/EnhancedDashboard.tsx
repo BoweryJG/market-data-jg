@@ -434,4 +434,5 @@ const EnhancedDashboard: React.FC = () => {
   );
 };
 
-export default EnhancedDashboard;
+
+EnhancedDashboard.displayName = 'EnhancedDashboard';export default EnhancedDashboard;

@@ -1,13 +1,23 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { supabase, getRedirectUrl } from './supabase';
+import { supabase } from './supabase';
 // Cross-domain auth removed - local auth only
 import type { User, AuthSession, AuthState, AuthProvider as AuthProviderType, SignInOptions } from './types';
 import type { Session } from '@supabase/supabase-js';
+import { AppError } from '../types/common';
+
+interface UserMetadata {
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  role?: string;
+  phone?: string;
+  [key: string]: unknown;
+}
 
 interface AuthContextType extends AuthState {
   signInWithProvider: (provider: AuthProviderType, options?: SignInOptions) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string, metadata?: any) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, metadata?: UserMetadata) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
   subscription?: User['subscription'];
@@ -60,13 +70,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             error: null,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const appError = error as AppError;
         if (mounted) {
           setState({
             user: null,
             session: null,
             loading: false,
-            error: { message: error.message },
+            error: { message: appError.message },
           });
         }
       }
@@ -157,7 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUpWithEmail = useCallback(async (
     email: string, 
     password: string, 
-    metadata?: any
+    metadata?: UserMetadata
   ) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
@@ -246,6 +257,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+AuthProvider.displayName = 'AuthProvider';
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

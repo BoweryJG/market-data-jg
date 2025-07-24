@@ -245,4 +245,5 @@ const SimpleGauge: React.FC<SimpleGaugeProps> = ({
   );
 };
 
-export default SimpleGauge;
+
+SimpleGauge.displayName = 'SimpleGauge';export default SimpleGauge;

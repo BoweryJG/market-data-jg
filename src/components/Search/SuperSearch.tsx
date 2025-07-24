@@ -31,7 +31,7 @@ const SuperSearch: React.FC<SuperSearchProps> = ({ open, onClose }) => {
     setLoading(true);
     try {
       const data = await braveSearchService.search(query);
-      setResults(data.results || []);
+      setResults(data || []);
     } catch (err) {
       console.error('Brave search failed', err);
       setResults([]);
@@ -85,5 +85,7 @@ const SuperSearch: React.FC<SuperSearchProps> = ({ open, onClose }) => {
     </Dialog>
   );
 };
+
+SuperSearch.displayName = 'SuperSearch';
 
 export default SuperSearch;

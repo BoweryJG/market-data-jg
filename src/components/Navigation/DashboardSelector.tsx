@@ -97,4 +97,5 @@ const DashboardSelector: React.FC<{
   );
 };
 
-export default DashboardSelector;
+
+DashboardSelector.displayName = 'DashboardSelector';export default DashboardSelector;

@@ -597,4 +597,5 @@ const SubscriptionManager: React.FC = () => {
   );
 };
 
-export default SubscriptionManager;
+
+SubscriptionManager.displayName = 'SubscriptionManager';export default SubscriptionManager;

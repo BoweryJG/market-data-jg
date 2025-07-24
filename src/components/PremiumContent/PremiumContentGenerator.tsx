@@ -1,3 +1,4 @@
+/* global JSX */
 import React, { useState } from 'react';
 import {
   Box,
@@ -375,3 +376,5 @@ export const PremiumContentGenerator: React.FC = () => {
     </Box>
   );
 };
+
+PremiumContentGenerator.displayName = 'PremiumContentGenerator';

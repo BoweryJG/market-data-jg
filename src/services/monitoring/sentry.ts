@@ -1,6 +1,8 @@
-import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
-import { CaptureConsole } from '@sentry/integrations';
+// Sentry stub - Sentry packages are not installed
+// To enable real Sentry monitoring, install: @sentry/react @sentry/tracing @sentry/integrations
+
+import React from 'react';
+import { logger } from '../logging/logger';
 
 interface SentryConfig {
   dsn: string;
@@ -13,176 +15,45 @@ interface SentryConfig {
 }
 
 export function initializeSentry(config: SentryConfig): void {
-  if (!config.dsn) {
-    console.warn('Sentry DSN not provided. Skipping Sentry initialization.');
-    return;
-  }
-
-  Sentry.init({
-    dsn: config.dsn,
+  logger.info('Sentry initialization skipped (packages not installed)', {
     environment: config.environment,
     release: config.release,
-    debug: config.debug || false,
-    
-    // Performance Monitoring
-    integrations: [
-      new BrowserTracing({
-        // Set tracingOrigins to control what URLs are traced
-        tracingOrigins: [
-          'localhost',
-          'repspheres.com',
-          /^\//,
-        ],
-        // Capture interactions (clicks, scrolls, etc.)
-        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-          React.useEffect,
-          useLocation,
-          useNavigationType,
-          createRoutesFromChildren,
-          matchRoutes
-        ),
-      }),
-      new CaptureConsole({
-        levels: ['error', 'warn'],
-      }),
-    ],
-    
-    // Performance sample rate
-    tracesSampleRate: config.tracesSampleRate || 0.1,
-    
-    // Session Replay
-    replaysSessionSampleRate: config.replaysSessionSampleRate || 0.1,
-    replaysOnErrorSampleRate: config.replaysOnErrorSampleRate || 1.0,
-    
-    // Error filtering
-    beforeSend(event, hint) {
-      // Filter out non-error events in production
-      if (config.environment === 'production' && !hint.originalException) {
-        return null;
-      }
-      
-      // Filter out network errors that are expected (e.g., user offline)
-      if (hint.originalException instanceof Error) {
-        const error = hint.originalException;
-        if (
-          error.message.includes('Network request failed') ||
-          error.message.includes('Failed to fetch')
-        ) {
-          // Still log but with lower severity
-          event.level = 'warning';
-        }
-      }
-      
-      // Filter out errors from browser extensions
-      if (event.exception?.values?.[0]?.stacktrace?.frames) {
-        const frames = event.exception.values[0].stacktrace.frames;
-        if (frames.some(frame => 
-          frame.filename?.includes('chrome-extension://') ||
-          frame.filename?.includes('moz-extension://')
-        )) {
-          return null;
-        }
-      }
-      
-      return event;
-    },
-    
-    // Breadcrumb filtering
-    beforeBreadcrumb(breadcrumb) {
-      // Filter out noisy breadcrumbs
-      if (breadcrumb.category === 'console' && breadcrumb.level === 'debug') {
-        return null;
-      }
-      
-      // Add more context to navigation breadcrumbs
-      if (breadcrumb.category === 'navigation') {
-        breadcrumb.data = {
-          ...breadcrumb.data,
-          timestamp: new Date().toISOString(),
-        };
-      }
-      
-      return breadcrumb;
-    },
   });
 }
 
-// Error boundary component using Sentry
-export const SentryErrorBoundary = Sentry.ErrorBoundary;
-
-// Profiler for performance monitoring
-export const SentryProfiler = Sentry.Profiler;
-
-// Helper functions for manual error reporting
-export const captureException = Sentry.captureException;
-export const captureMessage = Sentry.captureMessage;
-export const captureEvent = Sentry.captureEvent;
-
-// Helper function to add context
-export function setSentryContext(key: string, context: Record<string, any>): void {
-  Sentry.setContext(key, context);
+export function captureException(error: Error, context?: Record<string, unknown>): void {
+  logger.error('Exception capture skipped (Sentry not installed)', { 
+    error: error.message, 
+    context 
+  });
 }
 
-// Helper function to set user
-export function setSentryUser(user: { id?: string; email?: string; username?: string; [key: string]: any } | null): void {
-  Sentry.setUser(user);
+export function captureMessage(message: string, level: 'debug' | 'info' | 'warning' | 'error' | 'fatal' = 'info'): void {
+  logger.info('Message capture skipped (Sentry not installed)', { message, level });
 }
 
-// Helper function to add breadcrumb
+export function setUserContext(user: { id: string; email?: string; [key: string]: unknown }): void {
+  logger.debug('User context not set (Sentry not installed)', { userId: user.id });
+}
+
+export function clearUserContext(): void {
+  logger.debug('User context not cleared (Sentry not installed)');
+}
+
 export function addBreadcrumb(breadcrumb: {
-  message?: string;
-  type?: string;
+  message: string;
   category?: string;
-  level?: 'debug' | 'info' | 'warning' | 'error' | 'critical';
-  data?: Record<string, any>;
+  level?: 'debug' | 'info' | 'warning' | 'error' | 'fatal';
+  data?: Record<string, unknown>;
 }): void {
-  Sentry.addBreadcrumb(breadcrumb);
+  logger.debug('Breadcrumb not added (Sentry not installed)', breadcrumb);
 }
 
-// Performance monitoring helpers
-export function startTransaction(name: string, op: string): any {
-  return Sentry.startTransaction({ name, op });
-}
+// Stub components
+export const SentryErrorBoundary: React.FC<{ children: React.ReactNode; fallback?: React.ComponentType }> = ({ children }) => {
+  return React.createElement(React.Fragment, null, children);
+};
 
-export function measurePerformance<T>(
-  name: string,
-  operation: () => T | Promise<T>
-): T | Promise<T> {
-  const transaction = startTransaction(name, 'function');
-  
-  try {
-    const result = operation();
-    
-    if (result instanceof Promise) {
-      return result
-        .then(value => {
-          transaction.setStatus('ok');
-          return value;
-        })
-        .catch(error => {
-          transaction.setStatus('internal_error');
-          throw error;
-        })
-        .finally(() => {
-          transaction.finish();
-        });
-    }
-    
-    transaction.setStatus('ok');
-    transaction.finish();
-    return result;
-  } catch (error) {
-    transaction.setStatus('internal_error');
-    transaction.finish();
-    throw error;
-  }
-}
-
-// Import required React Router v6 components
-import React from 'react';
-import { 
-  useLocation, 
-  useNavigationType, 
-  createRoutesFromChildren, 
-  matchRoutes 
-} from 'react-router-dom';
+export const withSentryRouting = <T extends React.ComponentType<any>>(Component: T): T => {
+  return Component;
+};

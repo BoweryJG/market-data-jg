@@ -63,4 +63,5 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ isPlaying }) => {
   );
 };
 
-export default ParticleField;
+
+ParticleField.displayName = 'ParticleField';export default ParticleField;

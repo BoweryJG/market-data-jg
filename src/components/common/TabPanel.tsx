@@ -1,11 +1,10 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-interface TabPanelProps {
+interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   index: number;
   value: number;
-  [key: string]: any;
 }
 
 export const TabPanel: React.FC<TabPanelProps> = (props) => {
@@ -28,4 +27,5 @@ export const TabPanel: React.FC<TabPanelProps> = (props) => {
   );
 };
 
-export default TabPanel;
+
+TabPanel.displayName = 'TabPanel';export default TabPanel;

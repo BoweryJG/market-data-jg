@@ -431,4 +431,5 @@ const SalesWorkspace: React.FC = () => {
   );
 };
 
-export default SalesWorkspace;
+
+SalesWorkspace.displayName = 'SalesWorkspace';export default SalesWorkspace;

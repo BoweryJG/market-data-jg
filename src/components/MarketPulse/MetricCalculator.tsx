@@ -422,4 +422,5 @@ const MetricCalculator: React.FC<MetricCalculatorProps> = ({
   );
 };
 
-export default MetricCalculator;
+
+MetricCalculator.displayName = 'MetricCalculator';export default MetricCalculator;

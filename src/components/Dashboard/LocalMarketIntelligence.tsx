@@ -600,3 +600,5 @@ export default function LocalMarketIntelligence() {
     </Box>
   );
 }
+
+LocalMarketIntelligence.displayName = 'LocalMarketIntelligence';

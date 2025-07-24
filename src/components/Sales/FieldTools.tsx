@@ -526,4 +526,5 @@ const FieldTools: React.FC = () => {
   );
 };
 
-export default FieldTools;
+
+FieldTools.displayName = 'FieldTools';export default FieldTools;

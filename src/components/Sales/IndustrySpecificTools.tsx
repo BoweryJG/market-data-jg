@@ -612,4 +612,5 @@ const IndustrySpecificTools: React.FC = () => {
   );
 };
 
-export default IndustrySpecificTools;
+
+IndustrySpecificTools.displayName = 'IndustrySpecificTools';export default IndustrySpecificTools;

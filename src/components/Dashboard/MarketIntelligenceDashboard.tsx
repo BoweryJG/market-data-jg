@@ -397,4 +397,5 @@ export const MarketIntelligenceDashboard: React.FC<MarketIntelligenceDashboardPr
   );
 };
 
-export default MarketIntelligenceDashboard;
+
+MarketIntelligenceDashboard.displayName = 'MarketIntelligenceDashboard';export default MarketIntelligenceDashboard;

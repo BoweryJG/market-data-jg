@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ActionableSalesDashboard from './components/Dashboard/ActionableSalesDashboard';
 import { QuantumMarketDashboard, EnhancedMarketDashboard, MarketCommandCenter } from './components/Dashboard';
@@ -15,19 +15,16 @@ import {
   SalesDashboard,
   FieldTools,
   IndustrySpecificTools,
-  SalesIntelligenceHub,
-  QuickActionsBar
+  SalesIntelligenceHub
 } from './components/Sales';
-import { MarketGalaxyMap } from './components/MarketGalaxy';
 import { SalesWorkspace } from './components/Workspace';
 import SupabaseTest from './components/Test/SupabaseTest';
 import { MagicLinkHandler } from './components/MagicLink/MagicLinkHandler';
 import { PremiumContentGenerator } from './components/PremiumContent/PremiumContentGenerator';
 import ErrorBoundary from './components/Dashboard/ErrorBoundary';
-import { Box, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
+import { Box } from '@mui/material';
 
 const App: React.FC = () => {
-  const [salesMode, setSalesMode] = useState(false);
 
   return (
     <ThemeProvider>
@@ -123,5 +120,7 @@ const App: React.FC = () => {
     </ThemeProvider>
   );
 };
+
+App.displayName = 'App';
 
 export default App;

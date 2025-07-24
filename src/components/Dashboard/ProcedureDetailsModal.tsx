@@ -244,7 +244,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
 
   const extractClinicalEvidence = (searchResults: any) => {
     const evidence = {
-      studies: [],
+      studies: [] as Array<{ title: string; summary: string; source: string }>,
       successRates: 'Based on current literature, success rates typically range from 85-98%',
       complications: 'Minor complications occur in less than 5% of cases when performed by experienced practitioners',
       patientSatisfaction: procedure.patient_satisfaction_score 
@@ -1670,4 +1670,5 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
   );
 };
 
-export default ProcedureDetailsModal;
+
+ProcedureDetailsModal.displayName = 'ProcedureDetailsModal';export default ProcedureDetailsModal;

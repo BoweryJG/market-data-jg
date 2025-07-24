@@ -2584,4 +2584,5 @@ const MarketCommandCenter: React.FC = () => {
   );
 };
 
-export default MarketCommandCenter;
+
+MarketCommandCenter.displayName = 'MarketCommandCenter';export default MarketCommandCenter;

@@ -175,4 +175,6 @@ const CategoryNewsSection: React.FC<CategoryNewsSectionProps> = ({
   );
 };
 
+CategoryNewsSection.displayName = 'CategoryNewsSection';
+
 export default CategoryNewsSection;

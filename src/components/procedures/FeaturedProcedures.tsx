@@ -25,3 +25,5 @@ export const FeaturedProcedures: React.FC<FeaturedProceduresProps> = ({ procedur
     </Grid>
   );
 };
+
+FeaturedProcedures.displayName = 'FeaturedProcedures';

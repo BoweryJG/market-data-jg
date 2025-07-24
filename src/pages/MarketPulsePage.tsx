@@ -172,4 +172,6 @@ const MarketPulsePage: React.FC = () => {
   );
 };
 
+MarketPulsePage.displayName = 'MarketPulsePage';
+
 export default MarketPulsePage;

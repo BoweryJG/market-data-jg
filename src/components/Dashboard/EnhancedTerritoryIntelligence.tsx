@@ -931,3 +931,5 @@ export default function EnhancedTerritoryIntelligence() {
     </Box>
   );
 }
+
+EnhancedTerritoryIntelligence.displayName = 'EnhancedTerritoryIntelligence';

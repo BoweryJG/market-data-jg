@@ -703,4 +703,5 @@ const SalesIntelligenceHub: React.FC = () => {
   );
 };
 
-export default SalesIntelligenceHub;
+
+SalesIntelligenceHub.displayName = 'SalesIntelligenceHub';export default SalesIntelligenceHub;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from './supabase';
-// import type { User } from './types';
 
 /**
  * Hook to get the current user

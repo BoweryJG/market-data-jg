@@ -360,4 +360,5 @@ export const ModeAwareProcedureCard: React.FC<ModeAwareProcedureCardProps> = ({
   );
 };
 
-export default ModeAwareProcedureCard;
+
+ModeAwareProcedureCard.displayName = 'ModeAwareProcedureCard';export default ModeAwareProcedureCard;

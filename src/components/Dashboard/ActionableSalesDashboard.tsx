@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Grid,
@@ -9,10 +9,8 @@ import {
   Button,
   IconButton,
   Chip,
-  LinearProgress,
   CircularProgress,
   Avatar,
-  Badge,
   List,
   ListItem,
   ListItemText,
@@ -25,7 +23,6 @@ import {
   AlertTitle,
   Tab,
   Tabs,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -1049,5 +1046,7 @@ const ActionableSalesDashboard: React.FC = () => {
     </Container>
   );
 };
+
+ActionableSalesDashboard.displayName = 'ActionableSalesDashboard';
 
 export default ActionableSalesDashboard;

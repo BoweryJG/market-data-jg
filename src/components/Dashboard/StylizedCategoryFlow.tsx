@@ -747,4 +747,5 @@ const StylizedCategoryFlow: React.FC<{ industry: 'dental' | 'aesthetic' }> = ({ 
   );
 };
 
-export default StylizedCategoryFlow;
+
+StylizedCategoryFlow.displayName = 'StylizedCategoryFlow';export default StylizedCategoryFlow;

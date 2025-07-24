@@ -350,3 +350,5 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
     </Container>
   );
 };
+
+PublicMarketDashboard.displayName = 'PublicMarketDashboard';

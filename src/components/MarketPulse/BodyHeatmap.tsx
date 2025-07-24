@@ -326,4 +326,5 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
   );
 };
 
-export default BodyHeatmap;
+
+BodyHeatmap.displayName = 'BodyHeatmap';export default BodyHeatmap;

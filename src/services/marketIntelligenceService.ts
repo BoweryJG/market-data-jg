@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { supabase } from './supabaseClient';
 import env from '../setupEnv'; // Use the centralized env setup
+import { logger } from './logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 // Use the API URL from the environment configuration
 const NEWS_PROXY_URL = env.VITE_API_URL;
@@ -110,7 +112,7 @@ class MarketIntelligenceService {
 
       return insight;
     } catch (error) {
-      console.error('Market intelligence search failed:', error);
+      logger.error('Market intelligence search failed', { error: getErrorMessage(error) });
       throw error;
     }
   }
@@ -129,7 +131,7 @@ class MarketIntelligenceService {
         const categories = await this.suggestCategories(results, industry);
         allCategories.push(...categories);
       } catch (error) {
-        console.error(`Failed to discover categories for query: ${query}`, error);
+        logger.error('Failed to discover categories for query', { query, error: getErrorMessage(error) });
       }
     }
 
@@ -156,7 +158,7 @@ class MarketIntelligenceService {
         const results = await this.performSearch(query, 10);
         allResults.push(...results);
       } catch (error) {
-        console.error(`Failed to get intelligence for query: ${query}`, error);
+        logger.error('Failed to get intelligence for query', { query, error: getErrorMessage(error) });
       }
     }
 
@@ -187,7 +189,7 @@ class MarketIntelligenceService {
         const results = await this.performSearch(query, 15);
         allResults.push(...results);
       } catch (error) {
-        console.error(`Failed to get trends for query: ${query}`, error);
+        logger.error('Failed to get trends for query', { query, error: getErrorMessage(error) });
       }
     }
 
@@ -342,17 +344,10 @@ class MarketIntelligenceService {
 
   private async storeSearchAnalytics(query: string, insight: MarketInsight) {
     try {
-      // TODO: Create search_analytics table or remove this tracking
-      // await supabase.from('search_analytics').insert({
-      //   query,
-      //   industry: insight.results[0]?.category || 'general',
-      //   result_count: insight.results.length,
-      //   sentiment: insight.sentiment.overall,
-      //   trends: insight.trends,
-      //   timestamp: new Date()
-      // });
+      // Analytics tracking is disabled - no table available
+      logger.debug('Search analytics tracking skipped', { query, resultCount: insight.results.length });
     } catch (error) {
-      console.error('Failed to store search analytics:', error);
+      logger.error('Failed to store search analytics', { error: getErrorMessage(error) });
     }
   }
 

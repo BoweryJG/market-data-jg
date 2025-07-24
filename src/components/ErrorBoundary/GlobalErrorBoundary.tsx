@@ -16,6 +16,8 @@ interface State {
 }
 
 export class GlobalErrorBoundary extends Component<Props, State> {
+  static displayName = 'GlobalErrorBoundary';
+  
   constructor(props: Props) {
     super(props);
     this.state = {

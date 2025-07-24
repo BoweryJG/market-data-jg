@@ -251,4 +251,5 @@ const CategoryHierarchyView: React.FC<CategoryHierarchyViewProps> = ({
   );
 };
 
-export default CategoryHierarchyView;
+
+CategoryHierarchyView.displayName = 'CategoryHierarchyView';export default CategoryHierarchyView;

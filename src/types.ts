@@ -1,8 +1,9 @@
 import { ComponentType, LazyExoticComponent } from 'react';
+import { BaseEntity, SocialLinks, ProcedureMetrics, CompanyMetrics } from './types/common';
 
 export interface RouteConfig {
   path: string;
-  element: LazyExoticComponent<ComponentType<any>>;
+  element: LazyExoticComponent<ComponentType<Record<string, unknown>>>;
   exact?: boolean;
   children?: RouteConfig[];
 }
@@ -37,7 +38,6 @@ export interface DentalCategory {
   procedure_count?: number;
   created_at?: string;
   updated_at?: string;
-  [key: string]: any;
 }
 
 export interface AestheticCategory {
@@ -49,7 +49,6 @@ export interface AestheticCategory {
   procedure_count?: number;
   created_at?: string;
   updated_at?: string;
-  [key: string]: any;
 }
 
 export interface CategoryHierarchy {
@@ -123,6 +122,10 @@ export interface Company {
   market_share_pct?: number;
   last_year_sales_usd_million?: number;
   projected_growth_pct?: number;
+  social_links?: SocialLinks;
+  metrics?: CompanyMetrics;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface MarketGrowth {

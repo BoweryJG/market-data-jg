@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import './LogoutModal.css';
 import { useAuth } from '../../auth';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../../services/logging/logger';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 interface LogoutModalProps {
   isOpen: boolean;
@@ -188,17 +190,17 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
     setIsLoading(true);
     
     try {
-      console.log('Starting logout process...');
+      logger.info('Starting logout process');
       
       // Check if user is actually logged in before trying to sign out
       if (!user) {
-        console.log('No user session found, closing modal...');
+        logger.info('No user session found, closing modal');
         onClose();
         return;
       }
       
       await signOut();
-      console.log('SignOut completed successfully');
+      logger.info('SignOut completed successfully');
       
       // Animate modal shrinking
       gsap.to(modalRef.current, {
@@ -208,7 +210,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
         opacity: 0,
         ease: "power2.in",
         onComplete: () => {
-          console.log('Animation completed, executing callbacks');
+          logger.debug('Animation completed, executing callbacks');
           setIsLoading(false);
           onSuccess?.();
           onClose();
@@ -217,7 +219,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
         }
       });
     } catch (error) {
-      console.error('Logout error:', error);
+      logger.error('Logout error', { error: getErrorMessage(error) });
       setIsLoading(false);
     }
   };
@@ -348,5 +350,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onSuccess })
     </>
   );
 };
+
+LogoutModal.displayName = 'LogoutModal';
 
 export default LogoutModal;

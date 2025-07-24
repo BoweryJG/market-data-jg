@@ -629,4 +629,5 @@ const QuickActionsBar: React.FC = () => {
   );
 };
 
-export default QuickActionsBar;
+
+QuickActionsBar.displayName = 'QuickActionsBar';export default QuickActionsBar;

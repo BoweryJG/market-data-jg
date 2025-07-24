@@ -102,4 +102,5 @@ export const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onChange }) => {
   );
 };
 
-export default ModeToggle;
+
+ModeToggle.displayName = 'ModeToggle';export default ModeToggle;

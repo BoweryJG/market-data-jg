@@ -370,4 +370,5 @@ const RepSpheresNavBar = ({
   );
 };
 
-export default RepSpheresNavBar;
+
+RepSpheresNavBar.displayName = 'RepSpheresNavBar';export default RepSpheresNavBar;

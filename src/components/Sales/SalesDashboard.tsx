@@ -459,4 +459,5 @@ const SalesDashboard: React.FC = () => {
   );
 };
 
-export default SalesDashboard;
+
+SalesDashboard.displayName = 'SalesDashboard';export default SalesDashboard;

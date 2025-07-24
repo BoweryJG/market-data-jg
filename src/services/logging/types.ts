@@ -10,12 +10,12 @@ export interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: string;
-  data?: any;
+  data?: Record<string, unknown>;
   context?: {
     userId?: string;
     sessionId?: string;
     requestId?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

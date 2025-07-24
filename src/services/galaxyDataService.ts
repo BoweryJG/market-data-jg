@@ -1,5 +1,7 @@
 import { supabase } from './supabaseClient';
 import { braveSearchService } from './braveSearchService';
+import { logger } from './logging/logger';
+import { CacheEntry, SearchResult } from '../types/common';
 
 export interface GalaxyProcedure {
   id: string;
@@ -64,7 +66,7 @@ export interface SalesOpportunity {
 }
 
 class GalaxyDataService {
-  private cache = new Map<string, { data: any; timestamp: number }>();
+  private cache = new Map<string, CacheEntry<unknown>>();
   private CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   async getCategoryAggregates(industry?: 'dental' | 'aesthetic'): Promise<CategoryAggregate[]> {
@@ -130,7 +132,7 @@ class GalaxyDataService {
       return aggregates;
 
     } catch (error) {
-      console.error('Error fetching category aggregates:', error);
+      logger.error('Error fetching category aggregates', { error: error.message });
       // Return demo data as fallback
       return this.getDemoCategories();
     }
@@ -149,7 +151,7 @@ class GalaxyDataService {
           });
 
           // Convert search results to market signals
-          const marketSignals: MarketSignal[] = searchResults.map((result: any) => ({
+          const marketSignals: MarketSignal[] = searchResults.map((result: SearchResult) => ({
             id: `signal_${Date.now()}_${Math.random()}`,
             type: this.categorizeSignal(result.title + ' ' + result.description),
             title: result.title,
@@ -168,7 +170,7 @@ class GalaxyDataService {
             market_signals: marketSignals
           };
         } catch (error) {
-          console.error(`Error enriching category ${category.name}:`, error);
+          logger.error('Error enriching category', { categoryName: category.name, error: error.message });
           return category;
         }
       })
@@ -229,7 +231,7 @@ class GalaxyDataService {
     return 'MARKET_TREND';
   }
 
-  private calculateUrgency(result: any): 'HIGH' | 'MEDIUM' | 'LOW' {
+  private calculateUrgency(result: SearchResult): 'HIGH' | 'MEDIUM' | 'LOW' {
     const keywords = ['immediate', 'urgent', 'now', 'breaking', 'alert'];
     const text = (result.title + ' ' + result.description).toLowerCase();
     const hasUrgentKeyword = keywords.some(kw => text.includes(kw));
@@ -239,7 +241,7 @@ class GalaxyDataService {
     return 'LOW';
   }
 
-  private generateSalesAction(result: any, category: CategoryAggregate): string {
+  private generateSalesAction(result: SearchResult, category: CategoryAggregate): string {
     const signal = this.categorizeSignal(result.title);
     
     switch (signal) {
@@ -256,16 +258,16 @@ class GalaxyDataService {
     }
   }
 
-  private getFromCache(key: string): any | null {
+  private getFromCache<T>(key: string): T | null {
     const cached = this.cache.get(key);
     if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
-      return cached.data;
+      return cached.data as T;
     }
     return null;
   }
 
-  private setCache(key: string, data: any): void {
-    this.cache.set(key, { data, timestamp: Date.now() });
+  private setCache<T>(key: string, data: T): void {
+    this.cache.set(key, { data, timestamp: Date.now(), key, ttl: this.CACHE_DURATION });
   }
 
   private getDemoCategories(): CategoryAggregate[] {

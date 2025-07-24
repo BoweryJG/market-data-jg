@@ -460,4 +460,5 @@ const MarketPulseEngine: React.FC<MarketPulseEngineProps> = ({
   );
 };
 
-export default MarketPulseEngine;
+
+MarketPulseEngine.displayName = 'MarketPulseEngine';export default MarketPulseEngine;

@@ -126,7 +126,7 @@ export async function handleCrossDomainRedirect(supabaseClient: any): Promise<bo
     }
     
     return false;
-  } catch (error) {
+  } catch {
     // Error handling cross-domain redirect silently
     return false;
   }
@@ -149,7 +149,7 @@ export function setupCrossDomainAuthListener(supabaseClient: any) {
       if (session) {
         try {
           await supabaseClient.auth.setSession(session);
-        } catch (error) {
+        } catch {
           // Error setting session handled internally
         }
       } else {
@@ -206,7 +206,7 @@ export function broadcastAuthState(session: any) {
             document.body.removeChild(iframe);
           }
         };
-      } catch (error) {
+      } catch {
         // Failed to sync auth with domain - handled internally
       }
     }

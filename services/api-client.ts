@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
+import { ApiResponse, PaginatedResponse, AppError, CacheEntry } from '../src/types/common';
+import { DentalCategory, AestheticCategory, CategoryHierarchy, DentalProcedure, AestheticProcedure, Company, NewsArticle, MarketGrowth } from '../src/types';
 
 // Define API Gateway configuration interface
 interface ApiGatewayConfig {
@@ -8,15 +10,15 @@ interface ApiGatewayConfig {
   withCredentials?: boolean;
 }
 
-// API response structure
-interface ApiResponse<T = any> {
+// API Gateway specific response structure
+interface ApiGatewayResponse<T = unknown> {
   success: boolean;
   data?: T;
   status?: number;
   error?: {
     message: string;
     status?: number;
-    data?: any; // To capture error response data
+    data?: unknown; // To capture error response data
   };
 }
 
@@ -69,7 +71,7 @@ class ApiGateway {
   }
   
   // GET request
-  async get<T = any>(url: string, options?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async get<T = unknown>(url: string, options?: AxiosRequestConfig): Promise<ApiGatewayResponse<T>> {
     try {
       const response = await this.client.get<T>(url, options);
       return {
@@ -77,21 +79,22 @@ class ApiGateway {
         data: response.data,
         status: response.status
       };
-    } catch (error: any) {
-      console.error(`GET ${url} failed:`, error.message);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
+      console.error(`GET ${url} failed:`, axiosError.message);
       return {
         success: false,
         error: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data
+          message: axiosError.message,
+          status: axiosError.response?.status,
+          data: axiosError.response?.data
         }
       };
     }
   }
   
   // POST request
-  async post<T = any>(url: string, data?: any, options?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async post<T = unknown>(url: string, data?: unknown, options?: AxiosRequestConfig): Promise<ApiGatewayResponse<T>> {
     try {
       const response = await this.client.post<T>(url, data, options);
       return {
@@ -99,21 +102,22 @@ class ApiGateway {
         data: response.data,
         status: response.status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
       console.error(`POST ${url} failed:`, error.message);
       return {
         success: false,
         error: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data
+          message: axiosError.message,
+          status: axiosError.response?.status,
+          data: axiosError.response?.data
         }
       };
     }
   }
   
   // PUT request
-  async put<T = any>(url: string, data?: any, options?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async put<T = unknown>(url: string, data?: unknown, options?: AxiosRequestConfig): Promise<ApiGatewayResponse<T>> {
     try {
       const response = await this.client.put<T>(url, data, options);
       return {
@@ -121,21 +125,22 @@ class ApiGateway {
         data: response.data,
         status: response.status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
       console.error(`PUT ${url} failed:`, error.message);
       return {
         success: false,
         error: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data
+          message: axiosError.message,
+          status: axiosError.response?.status,
+          data: axiosError.response?.data
         }
       };
     }
   }
   
   // DELETE request
-  async delete<T = any>(url: string, options?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async delete<T = unknown>(url: string, options?: AxiosRequestConfig): Promise<ApiGatewayResponse<T>> {
     try {
       const response = await this.client.delete<T>(url, options);
       return {
@@ -143,14 +148,15 @@ class ApiGateway {
         data: response.data,
         status: response.status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
       console.error(`DELETE ${url} failed:`, error.message);
       return {
         success: false,
         error: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data
+          message: axiosError.message,
+          status: axiosError.response?.status,
+          data: axiosError.response?.data
         }
       };
     }
@@ -197,7 +203,7 @@ export class MarketInsightsApiClient {
     this.apiGateway.setAuthToken(null);
   }
 
-  private async handleResponse<T>(responsePromise: Promise<ApiResponse<T>>, errorMessagePrefix: string): Promise<T> {
+  private async handleResponse<T>(responsePromise: Promise<ApiGatewayResponse<T>>, errorMessagePrefix: string): Promise<T> {
     const response = await responsePromise;
     if (!response.success || response.data === undefined) {
       console.error(`${errorMessagePrefix}:`, response.error);
@@ -206,74 +212,74 @@ export class MarketInsightsApiClient {
     return response.data;
   }
 
-  public async checkHealth(): Promise<any> {
-    return this.handleResponse(this.apiGateway.get<any>('/api/health'), 'Health check failed');
+  public async checkHealth(): Promise<{status: string; timestamp: string}> {
+    return this.handleResponse(this.apiGateway.get<{status: string; timestamp: string}>('/api/health'), 'Health check failed');
   }
 
-  public async getCategories(): Promise<any[]> {
-    return this.handleResponse(this.apiGateway.get<any[]>('/api/categories'), 'Failed to get categories');
+  public async getCategories(): Promise<CategoryHierarchy[]> {
+    return this.handleResponse(this.apiGateway.get<CategoryHierarchy[]>('/api/categories'), 'Failed to get categories');
   }
 
-  public async getCategoryById(id: string): Promise<any> {
-    return this.handleResponse(this.apiGateway.get<any>(`/api/categories/${id}`), `Failed to get category ${id}`);
+  public async getCategoryById(id: string): Promise<CategoryHierarchy> {
+    return this.handleResponse(this.apiGateway.get<CategoryHierarchy>(`/api/categories/${id}`), `Failed to get category ${id}`);
   }
 
-  public async getProcedures(limit: number = 20, offset: number = 0): Promise<any[]> {
+  public async getProcedures(limit: number = 20, offset: number = 0): Promise<(DentalProcedure | AestheticProcedure)[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>('/api/procedures', { params: { limit, offset } }),
+      this.apiGateway.get<(DentalProcedure | AestheticProcedure)[]>('/api/procedures', { params: { limit, offset } }),
       'Failed to get procedures'
     );
   }
 
-  public async getProcedureById(id: string): Promise<any> {
-    return this.handleResponse(this.apiGateway.get<any>(`/api/procedures/${id}`), `Failed to get procedure ${id}`);
+  public async getProcedureById(id: string): Promise<DentalProcedure | AestheticProcedure> {
+    return this.handleResponse(this.apiGateway.get<DentalProcedure | AestheticProcedure>(`/api/procedures/${id}`), `Failed to get procedure ${id}`);
   }
 
-  public async searchProcedures(query: string, filters?: Record<string, any>): Promise<any[]> {
+  public async searchProcedures(query: string, filters?: Record<string, unknown>): Promise<(DentalProcedure | AestheticProcedure)[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>('/api/procedures/search', { params: { q: query, ...filters } }),
+      this.apiGateway.get<(DentalProcedure | AestheticProcedure)[]>('/api/procedures/search', { params: { q: query, ...filters } }),
       'Search failed'
     );
   }
 
-  public async getMarketGrowth(procedureId: string, filters?: Record<string, any>): Promise<any> {
+  public async getMarketGrowth(procedureId: string, filters?: Record<string, unknown>): Promise<MarketGrowth[]> {
     return this.handleResponse(
-      this.apiGateway.get<any>(`/api/market-growth/${procedureId}`, { params: filters }),
+      this.apiGateway.get<MarketGrowth[]>(`/api/market-growth/${procedureId}`, { params: filters }),
       'Failed to get market growth data'
     );
   }
 
-  public async getNews(limit: number = 10, offset: number = 0): Promise<any[]> {
+  public async getNews(limit: number = 10, offset: number = 0): Promise<NewsArticle[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>('/api/news', { params: { limit, offset } }),
+      this.apiGateway.get<NewsArticle[]>('/api/news', { params: { limit, offset } }),
       'Failed to get news'
     );
   }
 
-  public async getNewsByCategory(categoryId: string, limit: number = 10, offset: number = 0): Promise<any[]> {
+  public async getNewsByCategory(categoryId: string, limit: number = 10, offset: number = 0): Promise<NewsArticle[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>(`/api/news/category/${categoryId}`, { params: { limit, offset } }),
+      this.apiGateway.get<NewsArticle[]>(`/api/news/category/${categoryId}`, { params: { limit, offset } }),
       `Failed to get news for category ${categoryId}`
     );
   }
 
-  public async getNewsByProcedureCategory(procedureCategoryId: string, limit: number = 10, offset: number = 0): Promise<any[]> {
+  public async getNewsByProcedureCategory(procedureCategoryId: string, limit: number = 10, offset: number = 0): Promise<NewsArticle[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>(`/api/news/procedure-category/${procedureCategoryId}`, { params: { limit, offset } }),
+      this.apiGateway.get<NewsArticle[]>(`/api/news/procedure-category/${procedureCategoryId}`, { params: { limit, offset } }),
       `Failed to get news for procedure category ${procedureCategoryId}`
     );
   }
 
-  public async getTopNewsByProcedureCategories(limit: number = 3): Promise<any[]> {
+  public async getTopNewsByProcedureCategories(limit: number = 3): Promise<NewsArticle[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>('/api/news/top-by-procedure-categories', { params: { limit } }),
+      this.apiGateway.get<NewsArticle[]>('/api/news/top-by-procedure-categories', { params: { limit } }),
       'Failed to get top news by procedure categories'
     );
   }
 
-  public async executeQuery(query: string): Promise<any> {
+  public async executeQuery(query: string): Promise<ApiGatewayResponse<unknown>> {
     // Original executeQuery returned the whole ApiResponse, let's adjust if only data is needed
-    const response = await this.apiGateway.post<any>('/api/query', { query });
+    const response = await this.apiGateway.post<unknown>('/api/query', { query });
     if (!response.success || response.data === undefined) {
       console.error('Failed to execute query:', response.error);
       throw new Error(`Failed to execute query: ${response.error?.message || 'Unknown API error'}`);
@@ -281,20 +287,20 @@ export class MarketInsightsApiClient {
     return response; // Returning the full ApiResponse as original, can be changed to response.data
   }
 
-  public async getCompanies(limit: number = 20, offset: number = 0): Promise<any[]> {
+  public async getCompanies(limit: number = 20, offset: number = 0): Promise<Company[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>('/api/companies', { params: { limit, offset } }),
+      this.apiGateway.get<Company[]>('/api/companies', { params: { limit, offset } }),
       'Failed to get companies'
     );
   }
 
-  public async getCompanyById(id: string): Promise<any> {
-    return this.handleResponse(this.apiGateway.get<any>(`/api/companies/${id}`), `Failed to get company ${id}`);
+  public async getCompanyById(id: string): Promise<Company> {
+    return this.handleResponse(this.apiGateway.get<Company>(`/api/companies/${id}`), `Failed to get company ${id}`);
   }
 
-  public async getCompaniesByCategory(categoryId: string, limit: number = 20, offset: number = 0): Promise<any[]> {
+  public async getCompaniesByCategory(categoryId: string, limit: number = 20, offset: number = 0): Promise<Company[]> {
     return this.handleResponse(
-      this.apiGateway.get<any[]>(`/api/companies/category/${categoryId}`, { params: { limit, offset } }),
+      this.apiGateway.get<Company[]>(`/api/companies/category/${categoryId}`, { params: { limit, offset } }),
       `Failed to get companies for category ${categoryId}`
     );
   }

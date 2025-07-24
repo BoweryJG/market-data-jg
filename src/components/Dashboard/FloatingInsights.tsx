@@ -355,4 +355,5 @@ const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights, onDismiss
   );
 };
 
-export default FloatingInsights;
+
+FloatingInsights.displayName = 'FloatingInsights';export default FloatingInsights;

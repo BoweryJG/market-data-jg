@@ -5,6 +5,8 @@ import {
   procedureBelongsToCategory,
   categorizeProcedure 
 } from '../components/Dashboard/CategoryMapping';
+import { logger } from './logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 export interface CategoryWithProcedures extends CategoryHierarchy {
   procedures?: any[];
@@ -147,7 +149,7 @@ class CategoryHierarchyService {
    * Update procedure category mappings in the database
    */
   async updateProcedureCategoryMappings(): Promise<void> {
-    console.log('🔄 Updating procedure category mappings...');
+    logger.info('Updating procedure category mappings');
     
     const [dentalProcedures, aestheticProcedures] = await Promise.all([
       this.fetchDentalProcedures(),
@@ -183,7 +185,7 @@ class CategoryHierarchyService {
     // Update procedure counts
     await this.updateCategoryProcedureCounts();
     
-    console.log('✅ Procedure category mappings updated');
+    logger.info('Procedure category mappings updated');
   }
 
   /**
@@ -193,7 +195,7 @@ class CategoryHierarchyService {
     const { error } = await supabase.rpc('update_category_procedure_counts');
     
     if (error) {
-      console.error('Error updating category procedure counts:', error);
+      logger.error('Error updating category procedure counts', { error: getErrorMessage(error) });
     }
   }
 
@@ -254,7 +256,7 @@ class CategoryHierarchyService {
       .order('display_order', { ascending: true });
 
     if (error) {
-      console.error('Error loading categories:', error);
+      logger.error('Error loading categories', { error: getErrorMessage(error) });
       return;
     }
 
@@ -268,7 +270,7 @@ class CategoryHierarchyService {
       .select('*');
     
     if (error) {
-      console.error('Error fetching dental procedures:', error);
+      logger.error('Error fetching dental procedures', { error: getErrorMessage(error) });
       return [];
     }
     
@@ -281,7 +283,7 @@ class CategoryHierarchyService {
       .select('*');
     
     if (error) {
-      console.error('Error fetching aesthetic procedures:', error);
+      logger.error('Error fetching aesthetic procedures', { error: getErrorMessage(error) });
       return [];
     }
     

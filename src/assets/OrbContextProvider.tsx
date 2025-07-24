@@ -54,5 +54,7 @@ export const OrbContextProvider = ({ children }: { children: React.ReactNode }) 
   );
 };
 
+OrbContextProvider.displayName = 'OrbContextProvider';
+
 export const useOrbContext = () => useContext(OrbContext);
 export const useColorMode = () => useContext(ColorModeContext);

@@ -334,4 +334,5 @@ const VelocityStreams: React.FC<VelocityStreamsProps> = ({
   );
 };
 
-export default VelocityStreams;
+
+VelocityStreams.displayName = 'VelocityStreams';export default VelocityStreams;

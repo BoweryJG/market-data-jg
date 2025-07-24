@@ -1,5 +1,7 @@
 import axios from 'axios';
 import type { SearchResult } from '../types/api';
+import { logger } from './logging/logger';
+import { getErrorMessage } from '../utils/errorUtils';
 
 const NEWS_PROXY_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const BRAVE_API_KEY = import.meta.env.VITE_BRAVE_API_KEY;
@@ -22,7 +24,7 @@ interface BraveSearchResult {
 
 export async function search(query: string, limit: number = 10): Promise<SearchResult[]> {
   try {
-    console.log('Brave Search Request:', {
+    logger.debug('Brave Search Request', {
       url: `${NEWS_PROXY_URL}/api/search/brave`,
       query,
       limit
@@ -33,13 +35,12 @@ export async function search(query: string, limit: number = 10): Promise<SearchR
       timeout: 10000 // 10 second timeout
     });
     
-    console.log('Brave Search Response:', response.data);
+    logger.debug('Brave Search Response received', { resultCount: response.data?.length });
     return response.data as SearchResult[];
   } catch (error: unknown) {
     const axiosError = error as { message?: string; response?: { data?: unknown; status?: number }; code?: string };
-    console.error('Brave Search Error:', {
+    logger.error('Brave Search Error', {
       message: axiosError.message,
-      response: axiosError.response?.data,
       status: axiosError.response?.status,
       url: `${NEWS_PROXY_URL}/api/search/brave`
     });
@@ -75,8 +76,9 @@ export async function searchNews(query: string, options: BraveSearchOptions = {}
     }
     
     // If results is an object with a results array
-    if (results && results.results && Array.isArray(results.results)) {
-      return results.results.map((result: any) => ({
+    const resultsObj = results as any;
+    if (resultsObj && resultsObj.results && Array.isArray(resultsObj.results)) {
+      return resultsObj.results.map((result: any) => ({
         title: result.title || '',
         url: result.url || '',
         description: result.description || result.snippet || '',
@@ -89,7 +91,7 @@ export async function searchNews(query: string, options: BraveSearchOptions = {}
     // Fallback to empty array
     return [];
   } catch (error) {
-    console.error('Brave Search News Error:', error);
+    logger.error('Brave Search News Error', { error: getErrorMessage(error) });
     // Return empty array instead of throwing to prevent breaking the app
     return [];
   }
@@ -113,7 +115,7 @@ export async function searchWithIntelligence(query: string, options: Record<stri
     
     return results;
   } catch (error) {
-    console.error('Brave Search Intelligence Error:', error);
+    logger.error('Brave Search Intelligence Error', { error: getErrorMessage(error) });
     return [];
   }
 }

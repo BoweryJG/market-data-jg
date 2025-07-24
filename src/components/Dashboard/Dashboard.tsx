@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo, ChangeEvent } from 'react';
 import MarketSizeOverview from './MarketSizeOverview';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
+import { logger } from '../../services/logging/logger';
+import { handleUnknownError, TypedError } from '../../types/errors';
+import { SocialLinks } from '../../types/common';
 import { 
   Container,
   Grid,
@@ -41,6 +44,7 @@ import {
   OpenInNew as OpenInNewIcon 
 } from '@mui/icons-material';
 import { supabase } from '../../services/supabaseClient';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 // Utility function to format market size (millions/billions)
 const formatMarketSize = (sizeInMillions: number | null | undefined): string => {
@@ -83,7 +87,10 @@ interface DentalProcedure {
   created_at?: string;
   updated_at?: string;
   cpt_cdt_code?: string;
-  [key: string]: any;
+  // Additional dental procedure fields
+  market_maturity_stage?: 'Emerging' | 'Growth' | 'Expansion' | 'Mature' | 'Saturated';
+  insurance_coverage?: 'full' | 'partial' | 'none';
+  regulatory_status?: 'approved' | 'pending' | 'experimental';
 }
 
 interface AestheticProcedure {
@@ -104,7 +111,10 @@ interface AestheticProcedure {
   patient_satisfaction_score?: number;
   created_at?: string;
   updated_at?: string;
-  [key: string]: any;
+  // Additional aesthetic procedure fields
+  market_maturity_stage?: 'Emerging' | 'Growth' | 'Expansion' | 'Mature' | 'Saturated';
+  treatment_area?: string;
+  certification_required?: boolean;
 }
 
 interface Company {
@@ -115,7 +125,7 @@ interface Company {
   website_url?: string;
   headquarters?: string;
   logo_url?: string;
-  social_links?: any;
+  social_links?: SocialLinks;
   founded_year?: number;
   ceo?: string;
   employee_count?: number;
@@ -133,7 +143,13 @@ interface Company {
   last_year_sales_usd_million?: number;
   created_at?: string;
   updated_at?: string;
-  [key: string]: any;
+  // Company-specific additional fields
+  industry?: 'dental' | 'aesthetic' | 'both';
+  ticker_symbol?: string;
+  public_company?: boolean;
+  annual_revenue_usd?: number;
+  founding_location?: string;
+  current_valuation_usd?: number;
 }
 
 interface CategoryType {
@@ -168,6 +184,8 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
     {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
   </div>
 );
+
+TabPanel.displayName = 'TabPanel';
 
 function a11yProps(index: number) {
   return { id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` };
@@ -283,7 +301,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Dental companies response:', { count: dentalData?.length || 0, data: dentalData, error: dentalError });
+      logger.debug('Dental companies response received', { count: dentalData?.length || 0, hasError: !!dentalError });
       
       if (dentalError) throw dentalError;
       setDentalCompanies(dentalData || []);
@@ -293,13 +311,14 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Aesthetic companies response:', { count: aestheticData?.length || 0, data: aestheticData, error: aestheticError });
+      logger.debug('Aesthetic companies response received', { count: aestheticData?.length || 0, hasError: !!aestheticError });
       
       if (aestheticError) throw aestheticError;
       setAestheticCompanies(aestheticData || []);
-    } catch (err: any) {
-      console.error('Companies fetch error:', err);
-      setError(`Failed to load companies: ${err.message}`);
+    } catch (err: unknown) {
+      const error = handleUnknownError(err);
+      logger.error('Companies fetch error', { error: getErrorMessage(err) });
+      setError(`Failed to load companies: ${getErrorMessage(err)}`);
     } finally {
       setCompaniesLoading(false);
     }
@@ -314,7 +333,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Dental categories response:', { count: dentalCatData?.length || 0, data: dentalCatData, error: dentalCatError });
+      logger.debug('Dental categories response received', { count: dentalCatData?.length || 0, hasError: !!dentalCatError });
       
       if (dentalCatError) throw dentalCatError;
       setDentalCategories(dentalCatData || []);
@@ -324,13 +343,14 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Aesthetic categories response:', { count: aestheticCatData?.length || 0, data: aestheticCatData, error: aestheticCatError });
+      logger.debug('Aesthetic categories response received', { count: aestheticCatData?.length || 0, hasError: !!aestheticCatError });
       
       if (aestheticCatError) throw aestheticCatError;
       setAestheticCategories(aestheticCatData || []);
-    } catch (err: any) {
-      console.error('Categories fetch error:', err);
-      setError(`Failed to load categories: ${err.message}`);
+    } catch (err: unknown) {
+      const error = handleUnknownError(err);
+      logger.error('Categories fetch error', { error: getErrorMessage(err) });
+      setError(`Failed to load categories: ${getErrorMessage(err)}`);
     } finally {
       setCategoriesLoading(false);
     }
@@ -345,7 +365,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Dental procedures response:', { count: dentalData?.length || 0, data: dentalData, error: dentalError });
+      logger.debug('Dental procedures response received', { count: dentalData?.length || 0, hasError: !!dentalError });
       
       if (dentalError) throw dentalError;
       setDentalProcedures(dentalData || []);
@@ -355,13 +375,14 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      console.log('Aesthetic procedures response:', { count: aestheticData?.length || 0, data: aestheticData, error: aestheticError });
+      logger.debug('Aesthetic procedures response received', { count: aestheticData?.length || 0, hasError: !!aestheticError });
       
       if (aestheticError) throw aestheticError;
       setAestheticProcedures(aestheticData || []);
-    } catch (err: any) {
-      console.error('Procedures fetch error:', err);
-      setError(`Failed to load procedures: ${err.message}`);
+    } catch (err: unknown) {
+      const error = handleUnknownError(err);
+      logger.error('Procedures fetch error', { error: getErrorMessage(err) });
+      setError(`Failed to load procedures: ${getErrorMessage(err)}`);
     } finally {
       setProceduresLoading(false);
     }
@@ -371,13 +392,13 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Starting data fetch...');
+        logger.debug('Starting data fetch');
         await Promise.all([
           fetchProcedures(),
           fetchCategories(),
           fetchCompanies()
         ]);
-        console.log('Data fetch completed', {
+        logger.info('Data fetch completed', {
           dentalProcedures: dentalProcedures.length,
           aestheticProcedures: aestheticProcedures.length,
           dentalCategories: dentalCategories.length,
@@ -385,9 +406,10 @@ const Dashboard: React.FC = () => {
           dentalCompanies: dentalCompanies.length,
           aestheticCompanies: aestheticCompanies.length
         });
-      } catch (err: any) {
-        console.error('Data fetch error:', err);
-        setError(`Failed to load data: ${err.message}`);
+      } catch (err: unknown) {
+      const error = handleUnknownError(err);
+        logger.error('Data fetch error', { error: getErrorMessage(err) });
+        setError(`Failed to load data: ${getErrorMessage(err)}`);
       }
     };
 
@@ -578,7 +600,7 @@ const Dashboard: React.FC = () => {
                                 : 'N/A'}
                             </TableCell>
                             {selectedIndustry === 'dental' && (
-                              <TableCell>{procedure.cpt_cdt_code || 'N/A'}</TableCell>
+                              <TableCell>{'cpt_cdt_code' in procedure ? procedure.cpt_cdt_code || 'N/A' : 'N/A'}</TableCell>
                             )}
                           </TableRow>
                         ))
@@ -722,5 +744,7 @@ const Dashboard: React.FC = () => {
     </Container>
   );
 };
+
+Dashboard.displayName = 'Dashboard';
 
 export default Dashboard;

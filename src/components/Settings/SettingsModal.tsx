@@ -636,4 +636,5 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
   );
 };
 
-export default SettingsModal;
+
+SettingsModal.displayName = 'SettingsModal';export default SettingsModal;

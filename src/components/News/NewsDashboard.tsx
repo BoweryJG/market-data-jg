@@ -199,4 +199,6 @@ const NewsDashboard: React.FC = () => {
   );
 };
 
+NewsDashboard.displayName = 'NewsDashboard';
+
 export default NewsDashboard;

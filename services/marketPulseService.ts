@@ -100,7 +100,7 @@ class MarketPulseService {
         },
         timestamp: new Date().toISOString()
       };
-    } catch (error) {
+    } catch {
       // Return mock data as fallback
       return this.getMockMarketData();
     }
@@ -132,13 +132,6 @@ class MarketPulseService {
 
   calculateConvergenceIndex(marketData: any): number {
     // Calculate overlap between dental and aesthetic procedures
-    const dentalProcedures = marketData?.procedures?.filter((p: any) => 
-      p.industry === 'dental' || p.industry === 'both'
-    ) || [];
-    
-    const aestheticProcedures = marketData?.procedures?.filter((p: any) => 
-      p.industry === 'aesthetic' || p.industry === 'both'
-    ) || [];
 
     const convergenceProcedures = [
       'Smile Makeover',
@@ -165,7 +158,6 @@ class MarketPulseService {
 
   calculateOpportunityGap(marketData: any): OpportunityGap {
     const floridaData = marketData?.metrics?.floridaData;
-    const dentalShortage = floridaData?.dental?.dental_workforce?.shortage_vs_national_percent || 14.1;
     const providerDensity = floridaData?.dental?.dental_workforce?.dentists_per_100k_population || 51.88;
     const nationalAvg = floridaData?.dental?.dental_workforce?.national_avg_per_100k || 60.4;
 

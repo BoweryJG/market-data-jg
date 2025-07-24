@@ -1,4 +1,21 @@
 import { supabase } from './supabaseClient';
+import { DentalProcedure, AestheticProcedure } from '../types';
+
+interface ProcedureData {
+  procedure_name: string;
+  yearly_growth_percentage: number;
+  average_cost_usd: number;
+  industry: 'dental' | 'aesthetic';
+  market_size_2025_usd_millions?: number;
+  [key: string]: unknown;
+}
+
+interface MarketData {
+  procedures: ProcedureData[];
+  totalMarketSize?: number;
+  averageGrowthRate?: number;
+  [key: string]: unknown;
+}
 
 interface MarketPulseQuery {
   state?: string;
@@ -106,7 +123,7 @@ class MarketPulseService {
     }
   }
 
-  calculateMarketVelocity(marketData: any): MarketVelocity {
+  calculateMarketVelocity(marketData: MarketData): MarketVelocity {
     const growthRate = marketData?.metrics?.averageGrowthRate || 5;
     const providerExpansion = this.calculateProviderExpansionRate(marketData);
     const technologyAdoption = this.calculateTechAdoptionRate(marketData);
@@ -130,13 +147,13 @@ class MarketPulseService {
     };
   }
 
-  calculateConvergenceIndex(marketData: any): number {
+  calculateConvergenceIndex(marketData: MarketData): number {
     // Calculate overlap between dental and aesthetic procedures
-    const dentalProcedures = marketData?.procedures?.filter((p: any) => 
+    const dentalProcedures = marketData?.procedures?.filter((p: ProcedureData) => 
       p.industry === 'dental' || p.industry === 'both'
     ) || [];
     
-    const aestheticProcedures = marketData?.procedures?.filter((p: any) => 
+    const aestheticProcedures = marketData?.procedures?.filter((p: ProcedureData) => 
       p.industry === 'aesthetic' || p.industry === 'both'
     ) || [];
 
@@ -148,7 +165,7 @@ class MarketPulseService {
       'Facial Aesthetics'
     ];
 
-    const convergenceCount = marketData?.procedures?.filter((p: any) => 
+    const convergenceCount = marketData?.procedures?.filter((p: ProcedureData) => 
       convergenceProcedures.some(cp => p.procedure_name?.toLowerCase().includes(cp.toLowerCase()))
     ).length || 0;
 
@@ -157,13 +174,13 @@ class MarketPulseService {
 
     // Factor in market growth of convergence procedures
     const convergenceGrowth = marketData?.procedures
-      ?.filter((p: any) => convergenceProcedures.some(cp => p.procedure_name?.toLowerCase().includes(cp.toLowerCase())))
-      ?.reduce((sum: number, p: any) => sum + (p.yearly_growth_percentage || 0), 0) / convergenceCount || 0;
+      ?.filter((p: ProcedureData) => convergenceProcedures.some(cp => p.procedure_name?.toLowerCase().includes(cp.toLowerCase())))
+      ?.reduce((sum: number, p: ProcedureData) => sum + (p.yearly_growth_percentage || 0), 0) / convergenceCount || 0;
 
     return Math.min(100, Math.round(convergenceRatio * 2 + convergenceGrowth));
   }
 
-  calculateOpportunityGap(marketData: any): OpportunityGap {
+  calculateOpportunityGap(marketData: MarketData): OpportunityGap {
     const floridaData = marketData?.metrics?.floridaData;
     const dentalShortage = floridaData?.dental?.dental_workforce?.shortage_vs_national_percent || 14.1;
     const providerDensity = floridaData?.dental?.dental_workforce?.dentists_per_100k_population || 51.88;
@@ -194,7 +211,7 @@ class MarketPulseService {
     };
   }
 
-  calculateRevenuePerMinute(marketData: any): number {
+  calculateRevenuePerMinute(marketData: MarketData): number {
     // Average procedure times and revenues
     const procedureMetrics = [
       { name: 'Cleaning', time: 60, revenue: 200 },
@@ -217,7 +234,7 @@ class MarketPulseService {
     return Math.round(baseRPM * demandMultiplier);
   }
 
-  calculateFloridaEffect(marketData: any): FloridaEffect {
+  calculateFloridaEffect(marketData: MarketData): FloridaEffect {
     const floridaData = this.floridaData;
     
     // Population growth impact
@@ -241,7 +258,7 @@ class MarketPulseService {
     };
   }
 
-  private calculateProviderExpansionRate(marketData: any): number {
+  private calculateProviderExpansionRate(marketData: MarketData): number {
     // Simplified calculation based on DSO growth and new practices
     const dsoGrowth = 8.5; // Annual DSO expansion rate
     const independentGrowth = 2.3; // Independent practice growth
@@ -249,7 +266,7 @@ class MarketPulseService {
     return weightedGrowth;
   }
 
-  private calculateTechAdoptionRate(marketData: any): number {
+  private calculateTechAdoptionRate(marketData: MarketData): number {
     // Technology adoption indicators
     const digitalAdoption = 65; // % practices with digital systems
     const aiAdoption = 15; // % using AI tools

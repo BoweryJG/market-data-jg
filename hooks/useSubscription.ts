@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiClient } from '../services/apiClient';
+import { logger } from '../src/services/logging/logger';
 
 interface SubscriptionStatus {
   isActive: boolean;
@@ -49,7 +50,7 @@ export const useSubscription = () => {
       setLoading(true);
       const { data } = await apiClient.get('/subscription/status');
       setSubscription(data);
-    } catch (error) {
+    } catch {
       // Default to free tier if error
       setSubscription({
         isActive: false,
@@ -179,7 +180,7 @@ export const useSubscription = () => {
           };
         });
       }
-    } catch (error) {
+    } catch {
       // Failed to track usage
     }
   }, [user, subscription]);
@@ -196,6 +197,7 @@ export const useSubscription = () => {
       
       return data;
     } catch (error) {
+      logger.error('Failed to purchase addon', { error: error.message });
       throw error;
     }
   }, []);

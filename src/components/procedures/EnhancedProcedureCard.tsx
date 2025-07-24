@@ -262,4 +262,6 @@ export const EnhancedProcedureCard: React.FC<EnhancedProcedureCardProps> = ({
   );
 };
 
+EnhancedProcedureCard.displayName = 'EnhancedProcedureCard';
+
 export default EnhancedProcedureCard;

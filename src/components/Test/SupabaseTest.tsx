@@ -80,4 +80,5 @@ const SupabaseTest: React.FC = () => {
   );
 };
 
-export default SupabaseTest;
+
+SupabaseTest.displayName = 'SupabaseTest';export default SupabaseTest;

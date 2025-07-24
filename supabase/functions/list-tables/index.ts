@@ -1,3 +1,5 @@
+/* eslint-env deno */
+/* global Deno */
 // Use the types from our local types.d.ts file instead of a remote reference
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.21.0';
@@ -52,7 +54,7 @@ serve(async (req) => {
     // For each table, get row count and sample data
     const tableData: TableInfo[] = await Promise.all(
       (tables as PgTable[]).map(async (table) => {
-        const { count, error: countError } = await supabase
+        const { count } = await supabase
           .from(table.tablename)
           .select('*', { count: 'exact', head: true })
         

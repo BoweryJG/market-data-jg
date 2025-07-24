@@ -251,4 +251,6 @@ const CategorySphere: React.FC<CategorySphereProps> = ({
   );
 };
 
+CategorySphere.displayName = 'CategorySphere';
+
 export default CategorySphere;

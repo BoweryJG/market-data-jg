@@ -437,4 +437,5 @@ const TerritoryMap: React.FC = () => {
   );
 };
 
-export default TerritoryMap;
+
+TerritoryMap.displayName = 'TerritoryMap';export default TerritoryMap;
