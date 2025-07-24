@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Dashboard from './Dashboard';
 
@@ -11,8 +11,13 @@ vi.mock('../../auth/AuthContext', () => ({
 }));
 
 describe('Dashboard', () => {
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     render(<Dashboard />);
-    expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
+    // Wait for loading to complete and check for rendered content
+    await waitFor(() => {
+      expect(screen.queryByText(/loading data/i)).not.toBeInTheDocument();
+    });
+    // The component should render successfully with the dashboard title
+    expect(screen.getByText(/market intelligence dashboard/i)).toBeInTheDocument();
   });
 });

@@ -10,5 +10,13 @@ vi.mock('../auth/supabase', () => ({
       signUp: vi.fn(),
       signOut: vi.fn(),
     },
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        order: vi.fn(() => Promise.resolve({
+          data: [],
+          error: null,
+        })),
+      })),
+    })),
   },
 }));
