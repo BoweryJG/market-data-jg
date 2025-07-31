@@ -1,10 +1,7 @@
 [build]
   command = "npm install && npm run build:vite-only"
   publish = "dist"
-  # Disable secrets scanning for this build
-  environment = { SECRETS_SCAN_ENABLED = "false" }
 
-# Force clear cache
 [build.environment]
   NODE_VERSION = "18.19.0"
   NPM_VERSION = "10.2.3"
