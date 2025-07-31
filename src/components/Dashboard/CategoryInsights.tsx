@@ -122,7 +122,7 @@ const CategoryInsights: React.FC<CategoryInsightsProps> = ({
               last_updated: new Date()
             } as EnhancedCategory;
           } catch (error) {
-            logger.error(`Failed to enhance category ${category.name}:`, error);
+            logger.error(`Failed to enhance category ${category.name}:`, { error });
             return category as EnhancedCategory;
           }
         })
@@ -143,7 +143,7 @@ const CategoryInsights: React.FC<CategoryInsightsProps> = ({
         });
       }
     } catch (error) {
-      logger.error('Failed to load category insights:', error);
+      logger.error('Failed to load category insights:', { error });
       setError('Failed to load category insights. Please try again.');
     } finally {
       setLoading(false);

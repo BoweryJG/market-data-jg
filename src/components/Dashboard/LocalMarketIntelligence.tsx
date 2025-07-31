@@ -59,7 +59,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(_props: TabPanelProps) {
+function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (

@@ -112,7 +112,7 @@ export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
   redirectTo: string = '/login'
 ): React.FC<P> {
-  const WithAuthComponent = (_props: P) => {
+  const WithAuthComponent = (props: P) => {
     const { user, loading } = useRequireAuth(redirectTo);
     
     if (loading) {

@@ -97,7 +97,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
           }
         }
       } catch (error) {
-        logger.error('Failed to load companies:', error);
+        logger.error('Failed to load companies:', { error });
         setError('Failed to load companies');
       } finally {
         setLoadingCompanies(false);
@@ -118,7 +118,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
       );
       setIntelligence(intel);
     } catch (error) {
-      logger.error('Failed to fetch competitive intelligence:', error);
+      logger.error('Failed to fetch competitive intelligence:', { error });
       setError('Failed to fetch competitive intelligence');
     } finally {
       setLoading(false);
@@ -175,7 +175,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
           getOptionLabel={(option) => option.name}
           value={selectedCompany}
           onChange={(_event,  newValue) => handleCompanySelect(newValue)}
-          renderInput={(_params) => (
+          renderInput={(params) => (
             <TextField
               {...params}
               label="Select a company to analyze"

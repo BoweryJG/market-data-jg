@@ -1,5 +1,4 @@
 import { LogLevel, LogEntry, LogTransport } from './types';
-import { logger } from './logger';
 
 
 export class ConsoleTransport implements LogTransport {
@@ -35,24 +34,24 @@ export class ConsoleTransport implements LogTransport {
       case LogLevel.DEBUG:
       case LogLevel.INFO:
         if (entry.data) {
-          logger.info(prefix, entry.message, entry.data);
+          console.info(prefix, entry.message, entry.data);
         } else {
-          logger.info(prefix, entry.message);
+          console.info(prefix, entry.message);
         }
         break;
       case LogLevel.WARN:
         if (entry.data) {
-          logger.warn(prefix, entry.message, entry.data);
+          console.warn(prefix, entry.message, entry.data);
         } else {
-          logger.warn(prefix, entry.message);
+          console.warn(prefix, entry.message);
         }
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
         if (entry.data) {
-          logger.error(prefix, entry.message, entry.data);
+          console.error(prefix, entry.message, entry.data);
         } else {
-          logger.error(prefix, entry.message);
+          console.error(prefix, entry.message);
         }
         break;
     }

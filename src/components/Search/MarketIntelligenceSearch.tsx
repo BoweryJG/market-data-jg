@@ -228,7 +228,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             options={suggestions}
             value={query}
             onInputChange={(_event,  newValue) => setQuery(newValue)}
-            renderInput={(_params) => (
+            renderInput={(params) => (
               <TextField
                 {...params}
                 fullWidth

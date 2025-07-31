@@ -215,7 +215,7 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
         </Typography>
         
         <Box sx={{ mt: 2 }}>
-          {categoryMarketSizes.map(([category,  size], _index) => (
+          {categoryMarketSizes.map(([category,  size], index) => (
             <Box key={category} sx={{ mb: 2 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
                 <Typography variant="body2">

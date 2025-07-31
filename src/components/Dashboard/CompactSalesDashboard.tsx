@@ -267,7 +267,7 @@ const CompactSalesDashboard: React.FC = () => {
       setCategories(enhancedCategories);
       setProcedures(enhancedProcedures);
     } catch (error) {
-      logger.error('Failed to load data:', error);
+      logger.error('Failed to load data:', { error });
     } finally {
       setLoading(false);
     }

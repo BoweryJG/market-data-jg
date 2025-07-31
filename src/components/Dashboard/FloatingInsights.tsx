@@ -35,7 +35,7 @@ const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights,  onDismis
 
   useEffect(() => {
     // Stagger the appearance of insights
-    insights.forEach((insight, _index) => {
+    insights.forEach((insight, index) => {
       setTimeout(() => {
         setVisibleInsights(prev => [...prev, insight]);
       }, index * 200);

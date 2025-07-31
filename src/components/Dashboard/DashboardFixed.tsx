@@ -230,8 +230,8 @@ const Dashboard: React.FC = () => {
         if (dentalResponse.error) throw new Error(`Dental procedures: ${dentalResponse.error.message}`);
         if (aestheticResponse.error) throw new Error(`Aesthetic procedures: ${aestheticResponse.error.message}`);
         
-        logger.info('Dental data:', dentalResponse.data);
-        logger.info('Aesthetic data:', aestheticResponse.data);
+        logger.info('Dental data:', { data: dentalResponse.data });
+        logger.info('Aesthetic data:', { data: aestheticResponse.data });
         
         const dentalProcs = (dentalResponse.data || []).map(proc => ({
           ...proc,

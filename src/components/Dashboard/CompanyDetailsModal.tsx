@@ -105,7 +105,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
         results: response.data.results || response.data.web?.results || []
       });
     } catch (err) {
-      logger.error('Error fetching company insights:', err);
+      logger.error('Error fetching company insights:', { error: err });
       setError('Failed to fetch latest insights. Please try again.');
     } finally {
       setLoading(false);
@@ -359,7 +359,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
             <Alert severity="error">{error}</Alert>
           ) : searchResults && searchResults.results ? (
             <List>
-              {searchResults.results.map((result: any, _index: number) => (
+              {searchResults.results.map((result: any, index: number) => (
                 <Paper key={index} elevation={0} sx={{ mb: 2, p: 2, backgroundColor: '#F8FAFC' }}>
                   <ListItem alignItems="flex-start" disablePadding>
                     <ListItemIcon>
@@ -441,7 +441,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
                       Specialties
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {specialties.split(',').map((specialty: string, _index: number) => (
+                      {specialties.split(',').map((specialty: string, index: number) => (
                         <Chip
                           key={index}
                           label={specialty.trim()}

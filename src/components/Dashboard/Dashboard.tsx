@@ -187,7 +187,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
 
 TabPanel.displayName = 'TabPanel';
 
-function a11yProps(_index: number) {
+function a11yProps(index: number) {
   return { id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` };
 }
 
@@ -663,7 +663,7 @@ const Dashboard: React.FC = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {paginatedCompanies.map((company: Company, _index: number) => (
+                          {paginatedCompanies.map((company: Company, index: number) => (
                             <TableRow 
                               key={`${selectedIndustry}-${company.id || index}`} 
                               hover

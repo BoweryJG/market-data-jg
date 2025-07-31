@@ -7,7 +7,7 @@ interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   value: number;
 }
 
-export const TabPanel: React.FC<TabPanelProps> = (_props) => {
+export const TabPanel: React.FC<TabPanelProps> = (props) => {
   const { children, value, index, ...other } = props;
 
   return (
