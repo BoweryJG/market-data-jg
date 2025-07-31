@@ -42,5 +42,6 @@ module.exports = {
     'node_modules/',
     '*.config.js',
     '*.config.ts',
+    'src/unified-auth/dist/**/*',
   ],
 };

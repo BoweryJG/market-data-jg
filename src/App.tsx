@@ -10,7 +10,8 @@ import { PublicProceduresList } from './components/procedures/PublicProceduresLi
 import { OrbContextProvider } from './assets/OrbContextProvider';
 import { RepSpheresNavBar } from './components/ui/nav';
 import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider, AuthGuard } from './auth';
+import { UnifiedAuthWrapper } from './auth/UnifiedAuthWrapper';
+import { AuthGuard } from './auth';
 import { 
   SalesDashboard,
   FieldTools,
@@ -28,7 +29,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <AuthProvider>
+      <UnifiedAuthWrapper>
         <Router>
           <ErrorBoundary>
             <OrbContextProvider>
@@ -116,7 +117,7 @@ const App: React.FC = () => {
             </OrbContextProvider>
           </ErrorBoundary>
         </Router>
-      </AuthProvider>
+      </UnifiedAuthWrapper>
     </ThemeProvider>
   );
 };

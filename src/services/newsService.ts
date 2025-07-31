@@ -139,7 +139,7 @@ export const useRealtimeNewsByProcedure = (
       } catch (err: unknown) {
         const error = handleUnknownError(err);
         logger.error('Error fetching real-time news for procedure', { procedureId, error: getErrorMessage(err) });
-        setError(err.message || 'Failed to fetch real-time news');
+        setError((err as Error).message || 'Failed to fetch real-time news');
       } finally {
         setLoading(false);
       }
@@ -209,7 +209,7 @@ export const useNewsByProcedureCategory = (
       } catch (err: unknown) {
         const error = handleUnknownError(err);
         logger.error('Error fetching news for procedure category', { procedureCategoryId, error: getErrorMessage(err) });
-        setError(err.message || 'Failed to fetch news');
+        setError((err as Error).message || 'Failed to fetch news');
       } finally {
         setLoading(false);
       }
@@ -254,7 +254,7 @@ export const useTopProcedureCategoriesWithNews = (
       } catch (err: unknown) {
         const error = handleUnknownError(err);
         logger.error('Error fetching top industry categories', { industry, error: getErrorMessage(err) });
-        setError(err.message || 'Failed to fetch categories');
+        setError((err as Error).message || 'Failed to fetch categories');
       } finally {
         setLoading(false);
       }

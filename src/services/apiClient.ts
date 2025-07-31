@@ -13,7 +13,7 @@ export const apiClient = {
   async post(endpoint: string, body: unknown) {
     const { data, error } = await supabase.functions.invoke(endpoint, {
       method: 'POST',
-      body
+      body: body as Record<string, any>
     });
     if (error) throw error;
     return data;
@@ -22,7 +22,7 @@ export const apiClient = {
   async put(endpoint: string, body: unknown) {
     const { data, error } = await supabase.functions.invoke(endpoint, {
       method: 'PUT',
-      body
+      body: body as Record<string, any>
     });
     if (error) throw error;
     return data;

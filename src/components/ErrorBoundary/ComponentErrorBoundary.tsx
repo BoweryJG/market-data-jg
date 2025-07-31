@@ -199,9 +199,4 @@ export function withComponentErrorBoundary<P extends object>(
   return WrappedComponent;
 }
 
-// Type declaration for Sentry
-declare global {
-  interface Window {
-    Sentry: any;
-  }
-}
+// Sentry type declaration removed - using the one from useErrorHandler.ts

@@ -82,8 +82,8 @@ export const ProceduresService = {
 
       return {
         ...proc,
-        id: proc.id || `aesthetic_${proc.procedure_name || proc.name}`,
-        procedure_name: proc.procedure_name || proc.name || 'Unknown Procedure',
+        id: String(proc.id || Math.floor(Math.random() * 1000000)),
+        procedure_name: String(proc.procedure_name || proc.name || 'Unknown Procedure'),
         category: relatedCategory?.name || proc.category || 'Aesthetic Medicine',
         category_id: relatedCategory?.id || proc.aesthetic_category_id,
         category_description: relatedCategory?.description,

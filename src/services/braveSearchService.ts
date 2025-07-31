@@ -13,7 +13,7 @@ interface BraveSearchOptions {
   country?: string;
 }
 
-interface BraveSearchResult {
+export interface BraveSearchResult {
   title: string;
   url: string;
   description: string;
@@ -63,33 +63,15 @@ export async function searchNews(query: string, options: BraveSearchOptions = {}
     // For now, use the general search endpoint until we have a dedicated news endpoint
     const results = await search(query, options.count || 5);
     
-    // Transform results to match expected format
-    if (Array.isArray(results)) {
-      return results.map((result: Record<string, unknown>) => ({
-        title: result.title || '',
-        url: result.url || '',
-        description: result.description || result.snippet || '',
-        age: result.age,
-        source: result.source || result.publisher,
-        relevance_score: result.relevance_score || 0.5
-      }));
-    }
-    
-    // If results is an object with a results array
-    const resultsObj = results as any;
-    if (resultsObj && resultsObj.results && Array.isArray(resultsObj.results)) {
-      return resultsObj.results.map((result: any) => ({
-        title: result.title || '',
-        url: result.url || '',
-        description: result.description || result.snippet || '',
-        age: result.age,
-        source: result.source || result.publisher,
-        relevance_score: result.relevance_score || 0.5
-      }));
-    }
-    
-    // Fallback to empty array
-    return [];
+    // Transform SearchResult[] to BraveSearchResult[]
+    return results.map((result: SearchResult) => ({
+      title: result.title,
+      url: result.url,
+      description: result.snippet || '',
+      age: (result as any).published || undefined,
+      source: (result as any).source || undefined,
+      relevance_score: 0.5 // Default relevance score
+    }));
   } catch (error) {
     logger.error('Brave Search News Error', { error: getErrorMessage(error) });
     // Return empty array instead of throwing to prevent breaking the app
@@ -101,18 +83,9 @@ export async function searchWithIntelligence(query: string, options: Record<stri
   try {
     // Enhanced search for market intelligence
     const enhancedQuery = `${query} market analysis trends statistics data ${new Date().getFullYear()}`;
-    const results = await search(enhancedQuery, options.count || 10);
+    const results = await search(enhancedQuery, Number(options.count || 10));
     
-    // Process and enhance results with intelligence scoring
-    if (Array.isArray(results)) {
-      return results.map((result: Record<string, unknown>) => ({
-        ...result,
-        intelligence_score: calculateIntelligenceScore(result),
-        market_relevance: calculateMarketRelevance(result, query),
-        actionable_insights: extractActionableInsights(result)
-      }));
-    }
-    
+    // Return the results as-is since SearchResult doesn't have intelligence fields
     return results;
   } catch (error) {
     logger.error('Brave Search Intelligence Error', { error: getErrorMessage(error) });
@@ -124,12 +97,13 @@ function calculateIntelligenceScore(result: Record<string, unknown>): number {
   let score = 0.5; // Base score
   
   // Boost for recent content
-  if (result.age && result.age.includes('hour')) score += 0.2;
-  if (result.age && result.age.includes('day')) score += 0.1;
+  const age = String(result.age || '');
+  if (age.includes('hour')) score += 0.2;
+  if (age.includes('day')) score += 0.1;
   
   // Boost for market-related keywords
   const marketKeywords = ['market', 'growth', 'trend', 'forecast', 'analysis', 'report'];
-  const content = (result.title + ' ' + result.description).toLowerCase();
+  const content = (String(result.title || '') + ' ' + String(result.description || '')).toLowerCase();
   marketKeywords.forEach(keyword => {
     if (content.includes(keyword)) score += 0.05;
   });
@@ -139,7 +113,7 @@ function calculateIntelligenceScore(result: Record<string, unknown>): number {
 
 function calculateMarketRelevance(result: Record<string, unknown>, originalQuery: string): number {
   const queryTerms = originalQuery.toLowerCase().split(' ');
-  const content = (result.title + ' ' + result.description).toLowerCase();
+  const content = (String(result.title || '') + ' ' + String(result.description || '')).toLowerCase();
   
   let matches = 0;
   queryTerms.forEach(term => {

@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import { braveSearchService } from './braveSearchService';
+import { braveSearchService, BraveSearchResult } from './braveSearchService';
 import { logger } from './logging/logger';
 import { CacheEntry, SearchResult } from '../types/common';
 
@@ -71,7 +71,7 @@ class GalaxyDataService {
 
   async getCategoryAggregates(industry?: 'dental' | 'aesthetic'): Promise<CategoryAggregate[]> {
     const cacheKey = `categories_${industry || 'all'}`;
-    const cached = this.getFromCache(cacheKey);
+    const cached = this.getFromCache<CategoryAggregate[]>(cacheKey);
     if (cached) return cached;
 
     try {
@@ -132,7 +132,7 @@ class GalaxyDataService {
       return aggregates;
 
     } catch (error) {
-      logger.error('Error fetching category aggregates', { error: error.message });
+      logger.error('Error fetching category aggregates', { error: (error as Error).message });
       // Return demo data as fallback
       return this.getDemoCategories();
     }
@@ -151,7 +151,7 @@ class GalaxyDataService {
           });
 
           // Convert search results to market signals
-          const marketSignals: MarketSignal[] = searchResults.map((result: SearchResult) => ({
+          const marketSignals: MarketSignal[] = searchResults.map((result: BraveSearchResult) => ({
             id: `signal_${Date.now()}_${Math.random()}`,
             type: this.categorizeSignal(result.title + ' ' + result.description),
             title: result.title,
@@ -170,7 +170,7 @@ class GalaxyDataService {
             market_signals: marketSignals
           };
         } catch (error) {
-          logger.error('Error enriching category', { categoryName: category.name, error: error.message });
+          logger.error('Error enriching category', { categoryName: category.name, error: (error as Error).message });
           return category;
         }
       })
@@ -231,17 +231,17 @@ class GalaxyDataService {
     return 'MARKET_TREND';
   }
 
-  private calculateUrgency(result: SearchResult): 'HIGH' | 'MEDIUM' | 'LOW' {
+  private calculateUrgency(result: BraveSearchResult): 'HIGH' | 'MEDIUM' | 'LOW' {
     const keywords = ['immediate', 'urgent', 'now', 'breaking', 'alert'];
     const text = (result.title + ' ' + result.description).toLowerCase();
     const hasUrgentKeyword = keywords.some(kw => text.includes(kw));
     
-    if (hasUrgentKeyword || result.relevance_score > 0.8) return 'HIGH';
-    if (result.relevance_score > 0.5) return 'MEDIUM';
+    if (hasUrgentKeyword || (result.relevance_score || 0) > 0.8) return 'HIGH';
+    if ((result.relevance_score || 0) > 0.5) return 'MEDIUM';
     return 'LOW';
   }
 
-  private generateSalesAction(result: SearchResult, category: CategoryAggregate): string {
+  private generateSalesAction(result: BraveSearchResult, category: CategoryAggregate): string {
     const signal = this.categorizeSignal(result.title);
     
     switch (signal) {

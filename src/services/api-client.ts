@@ -179,7 +179,10 @@ export class MarketInsightsApiClient {
   public static getInstance(): MarketInsightsApiClient {
     if (!MarketInsightsApiClient.instance) {
       // Use env from setupEnv, which handles REACT_APP_ mapping
-      const baseURL = env.VITE_API_URL || 'https://osbackend-zl1h.onrender.com'; // Fallback
+      const baseURL = env.VITE_API_URL;
+      if (!baseURL) {
+        throw new Error('Missing API URL environment variable');
+      }
       const defaultConfig: ApiGatewayConfig = {
         baseURL,
         timeout: 15000, // Default timeout

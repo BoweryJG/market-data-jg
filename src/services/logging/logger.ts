@@ -117,4 +117,5 @@ class Logger {
 export const logger = Logger.getInstance();
 
 // Export types for external use
-export type { LogLevel, LogEntry } from './types';
+export { LogLevel } from './types';
+export type { LogEntry } from './types';

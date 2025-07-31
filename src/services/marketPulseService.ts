@@ -5,7 +5,7 @@ interface ProcedureData {
   procedure_name: string;
   yearly_growth_percentage: number;
   average_cost_usd: number;
-  industry: 'dental' | 'aesthetic';
+  industry: 'dental' | 'aesthetic' | 'both';
   market_size_2025_usd_millions?: number;
   [key: string]: unknown;
 }
@@ -124,7 +124,7 @@ class MarketPulseService {
   }
 
   calculateMarketVelocity(marketData: MarketData): MarketVelocity {
-    const growthRate = marketData?.metrics?.averageGrowthRate || 5;
+    const growthRate = marketData?.averageGrowthRate || 5;
     const providerExpansion = this.calculateProviderExpansionRate(marketData);
     const technologyAdoption = this.calculateTechAdoptionRate(marketData);
 
@@ -181,7 +181,7 @@ class MarketPulseService {
   }
 
   calculateOpportunityGap(marketData: MarketData): OpportunityGap {
-    const floridaData = marketData?.metrics?.floridaData;
+    const floridaData = (marketData as any)?.floridaData;
     const dentalShortage = floridaData?.dental?.dental_workforce?.shortage_vs_national_percent || 14.1;
     const providerDensity = floridaData?.dental?.dental_workforce?.dentists_per_100k_population || 51.88;
     const nationalAvg = floridaData?.dental?.dental_workforce?.national_avg_per_100k || 60.4;
@@ -228,7 +228,7 @@ class MarketPulseService {
     const baseRPM = totalRevenue / totalTime;
     
     // Apply market factors
-    const marketGrowth = marketData?.metrics?.averageGrowthRate || 10;
+    const marketGrowth = marketData?.averageGrowthRate || 10;
     const demandMultiplier = 1 + (marketGrowth / 100);
     
     return Math.round(baseRPM * demandMultiplier);

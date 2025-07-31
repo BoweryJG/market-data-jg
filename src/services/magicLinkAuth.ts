@@ -281,6 +281,6 @@ CPT Intelligence by Sphere Medical Analytics
     // For now, we'll use Supabase Edge Functions or external email service
     
     // Placeholder for email sending logic
-    logger.info('Magic link generated', { email, contentType: options.contentType, priceTier: options.priceTier });
+    logger.info('Magic link generated', { email, contentType: contentType });
   }
 }

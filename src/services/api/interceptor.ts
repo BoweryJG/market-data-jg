@@ -81,7 +81,8 @@ class APIInterceptor {
 
           // Log error responses
           if (response.status >= 500) {
-            logger.error(`Server error on ${method} ${url}`, error, {
+            logger.error(`Server error on ${method} ${url}`, {
+              error,
               status: response.status,
               statusText: response.statusText,
               duration: metrics.duration,
@@ -110,7 +111,8 @@ class APIInterceptor {
         metrics.error = error as Error;
 
         // Log network errors
-        logger.error(`Network error on ${method} ${url}`, error as Error, {
+        logger.error(`Network error on ${method} ${url}`, {
+          error: error as Error,
           duration: metrics.duration,
           errorType: (error as Error).name,
           errorMessage: (error as Error).message,
@@ -177,7 +179,8 @@ class APIInterceptor {
     }
 
     // All retries failed
-    logger.error(`All retry attempts failed for ${fetchOptions.method || 'GET'} ${url}`, lastError!, {
+    logger.error(`All retry attempts failed for ${fetchOptions.method || 'GET'} ${url}`, {
+      error: lastError!,
       retries,
       timeout,
     });

@@ -37,7 +37,7 @@ const ACCENT_COLOR = '#00ffc6';
 
 // Main navigation links
 const getNavLinks = (currentUrl: string) => {
-  const links = [
+  const links: { label: string; href: string; icon?: React.ReactNode }[] = [
     // Removed external domain links - each app manages its own auth independently
   ];
   
@@ -231,7 +231,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
       {/* Navigation Links */}
       <List sx={{ mb: 2 }}>
         {navLinks.map((link) => (
-          <ListItem key={link.key} disablePadding sx={{ mb: 1 }}>
+          <ListItem key={link.href} disablePadding sx={{ mb: 1 }}>
             <ListItemButton
               component="a"
               href={link.href}
@@ -451,7 +451,7 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
             }}>
               {navLinks.map((link) => (
                 <Button
-                  key={link.key}
+                  key={link.href}
                   component="a"
                   href={link.href}
                   sx={{

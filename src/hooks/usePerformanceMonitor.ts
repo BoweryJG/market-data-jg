@@ -96,10 +96,14 @@ export function usePerformanceMonitor(options: UsePerformanceMonitorOptions) {
     operationName: string,
     operation: () => Promise<T>
   ): Promise<T> => {
-    return measurePerformance(
+    let result: T;
+    await measurePerformance(
       `${componentName}.${operationName}`,
-      operation
-    ) as Promise<T>;
+      async () => {
+        result = await operation();
+      }
+    );
+    return result!;
   }, [componentName]);
 
   // Measure sync operations
@@ -121,7 +125,8 @@ export function usePerformanceMonitor(options: UsePerformanceMonitorOptions) {
     } catch (error) {
       const duration = performance.now() - startTime;
       
-      logger.error(`${componentName}.${operationName} failed`, error as Error, {
+      logger.error(`${componentName}.${operationName} failed`, {
+        error: error as Error,
         duration: `${duration.toFixed(2)}ms`,
       });
       

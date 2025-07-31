@@ -57,3 +57,8 @@ export const SentryErrorBoundary: React.FC<{ children: React.ReactNode; fallback
 export const withSentryRouting = <T extends React.ComponentType<any>>(Component: T): T => {
   return Component;
 };
+
+export function measurePerformance(name: string, callback: () => void | Promise<void>): void | Promise<void> {
+  logger.debug('Performance measurement skipped (Sentry not installed)', { name });
+  return callback();
+}

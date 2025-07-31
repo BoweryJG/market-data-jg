@@ -2,7 +2,11 @@ import axios from 'axios';
 import env from '../setupEnv';
 import { supabase } from '../auth/supabase';
 
-const API_URL = env.VITE_API_URL || 'https://osbackend-zl1h.onrender.com';
+const API_URL = env.VITE_API_URL;
+
+if (!API_URL) {
+  throw new Error('Missing API URL environment variable');
+}
 
 // Create axios instance with default config
 const backendClient = axios.create({

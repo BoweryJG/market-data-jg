@@ -200,7 +200,7 @@ class ComprehensiveDataService {
       });
       
       // Debug: Check sample procedure data structure
-      if (dentalProceduresResponse.status === 'fulfilled' && dentalProceduresResponse.value.data?.length > 0) {
+      if (dentalProceduresResponse.status === 'fulfilled' && dentalProceduresResponse.value.data && dentalProceduresResponse.value.data.length > 0) {
         const sampleProc = dentalProceduresResponse.value.data[0];
         logger.debug('Sample dental procedure fields analyzed', {
           hasMarketSize2025: 'market_size_2025_usd_millions' in sampleProc,
@@ -548,8 +548,8 @@ class ComprehensiveDataService {
       ]);
 
       logger.debug('Table tests completed', {
-        dentalTestRows: dentalTest?.data?.length || 0,
-        aestheticTestRows: aestheticTest?.data?.length || 0
+        dentalTestRows: dentalTest.status === 'fulfilled' ? dentalTest.value.data?.length || 0 : 0,
+        aestheticTestRows: aestheticTest.status === 'fulfilled' ? aestheticTest.value.data?.length || 0 : 0
       });
 
       return {

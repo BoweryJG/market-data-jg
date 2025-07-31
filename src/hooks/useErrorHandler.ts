@@ -30,13 +30,13 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
     // Log the error
     switch (logLevel) {
       case 'warn':
-        logger.warn(`Error in ${componentName}: ${errorObj.message}`, fullContext);
+        logger.warn(`Error in ${componentName}: ${errorObj.message}`, { ...fullContext, error: errorObj });
         break;
       case 'fatal':
-        logger.fatal(`Fatal error in ${componentName}: ${errorObj.message}`, errorObj, fullContext);
+        logger.fatal(`Fatal error in ${componentName}: ${errorObj.message}`, { ...fullContext, error: errorObj });
         break;
       default:
-        logger.error(`Error in ${componentName}: ${errorObj.message}`, errorObj, fullContext);
+        logger.error(`Error in ${componentName}: ${errorObj.message}`, { ...fullContext, error: errorObj });
     }
 
     // Report to Sentry
@@ -81,16 +81,4 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
   };
 }
 
-// Type declaration for Sentry
-interface SentryInterface {
-  captureException: (error: Error, context?: Record<string, unknown>) => void;
-  setContext: (key: string, context: Record<string, unknown>) => void;
-  setTag: (key: string, value: string) => void;
-  withScope: (callback: (scope: unknown) => void) => void;
-}
-
-declare global {
-  interface Window {
-    Sentry: SentryInterface;
-  }
-}
+// Type declaration for Sentry is already declared in GlobalErrorBoundary.tsx

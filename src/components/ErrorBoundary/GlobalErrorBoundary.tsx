@@ -217,6 +217,6 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 // Type declaration for Sentry
 declare global {
   interface Window {
-    Sentry: any;
+    Sentry?: any;
   }
 }

@@ -7,10 +7,12 @@ export enum LogLevel {
 }
 
 export interface LogEntry {
+  id?: string;
   level: LogLevel;
   message: string;
   timestamp: string;
   data?: Record<string, unknown>;
+  error?: any;
   context?: {
     userId?: string;
     sessionId?: string;

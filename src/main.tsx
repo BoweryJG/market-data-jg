@@ -2,6 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { initializeUnifiedAuth } from './auth/initializeUnifiedAuth';
+
+// Initialize unified auth
+initializeUnifiedAuth();
 
 // Import auth debug utility for development
 if (process.env.NODE_ENV === 'development') {
