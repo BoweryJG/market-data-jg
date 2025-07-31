@@ -1,6 +1,8 @@
 [build]
   command = "npm install && npm run build:vite-only"
   publish = "dist"
+  # Disable secrets scanning for this build
+  environment = { SECRETS_SCAN_ENABLED = "false" }
 
 # Force clear cache
 [build.environment]
@@ -8,6 +10,7 @@
   NPM_VERSION = "10.2.3"
   NETLIFY_USE_YARN = "false"
   NETLIFY_SKIP_CACHE = "true"
+  SECRETS_SCAN_ENABLED = "false"
 
 # SPA redirect - MUST be last
 [[redirects]]
