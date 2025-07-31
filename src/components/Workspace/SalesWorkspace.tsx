@@ -48,7 +48,7 @@ import TerritoryMap from './TerritoryMap';
 import OpportunityFeed from './OpportunityFeed';
 import AutomationPanel from './AutomationPanel';
 import { motion, AnimatePresence } from 'framer-motion';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface TabPanelProps {

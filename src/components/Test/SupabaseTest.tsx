@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
 
 import { ProceduresService } from '../../services/proceduresService';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 const SupabaseTest: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState<string>('Testing...');

@@ -58,7 +58,7 @@ import { CategorySuggestion } from '../../services/marketIntelligenceService';
 
 // Import the original Dashboard for procedure/company tables
 import OriginalDashboard from './Dashboard';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;

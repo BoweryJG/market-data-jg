@@ -10,7 +10,7 @@ import {
   Skeleton
 } from '@mui/material';
 import { format, parseISO } from 'date-fns';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface NewsCardProps {

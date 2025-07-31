@@ -39,7 +39,7 @@ import { DentalCategory, AestheticCategory, CategoryHierarchy } from '../../type
 import CategoryHierarchyView from './CategoryHierarchyView';
 import MarketSizeOverview, { formatMarketSize } from './MarketSizeOverview';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 const Dashboard: React.FC = () => {
   // State for procedures and companies

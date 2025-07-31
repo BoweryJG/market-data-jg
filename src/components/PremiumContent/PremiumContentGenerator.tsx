@@ -27,7 +27,7 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import MapIcon from '@mui/icons-material/Map';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { MagicLinkAuthService } from '../../services/magicLinkAuth';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface ContentOption {

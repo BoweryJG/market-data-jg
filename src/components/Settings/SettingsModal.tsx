@@ -42,7 +42,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useAuth } from '../../auth';
 import { useThemeContext } from '../../context/ThemeContext';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;

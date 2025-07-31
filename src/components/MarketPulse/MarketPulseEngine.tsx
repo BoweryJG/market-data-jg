@@ -48,7 +48,7 @@ import VelocityStreams from './VelocityStreams';
 import OpportunityRadar from './OpportunityRadar';
 import MetricCalculator from './MetricCalculator';
 import { marketPulseService } from '../../services/marketPulseService';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface MarketPulseEngineProps {

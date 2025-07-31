@@ -26,7 +26,7 @@ import {
 import { supabase } from '../../services/supabaseClient';
 import { DentalCategory, AestheticCategory, CategoryHierarchy, DentalProcedure as DentalProcedureType, AestheticProcedure as AestheticProcedureType, Company as CompanyType } from '../../types';
 import CategoryHierarchyView from './CategoryHierarchyView';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 const Dashboard: React.FC = () => {

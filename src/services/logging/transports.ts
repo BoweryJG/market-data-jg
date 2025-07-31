@@ -1,5 +1,5 @@
 import { LogLevel, LogEntry, LogTransport } from './types';
-import { logger } from '../services/logging/logger';
+import { logger } from './logger';
 
 
 export class ConsoleTransport implements LogTransport {

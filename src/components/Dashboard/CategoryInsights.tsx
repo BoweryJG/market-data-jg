@@ -35,7 +35,7 @@ import {
 } from '@mui/icons-material';
 import { marketIntelligenceService, CategorySuggestion } from '../../services/marketIntelligenceService';
 import { supabase } from '../../services/supabaseClient';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface CategoryInsightsProps {

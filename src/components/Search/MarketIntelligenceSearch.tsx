@@ -47,7 +47,7 @@ import {
 } from '@mui/icons-material';
 import { marketIntelligenceService, MarketInsight, CategorySuggestion } from '../../services/marketIntelligenceService';
 import { useDebounce } from '../../hooks/useDebounce';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 interface MarketIntelligenceSearchProps {
   open: boolean;

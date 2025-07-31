@@ -48,7 +48,7 @@ import {
   Speed
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface Automation {

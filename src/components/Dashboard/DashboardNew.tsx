@@ -26,7 +26,7 @@ import {
 } from '@mui/material';
 import { supabase } from '../../services/supabaseClient';
 import { DentalCategory, AestheticCategory } from '../../types';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 // Define interfaces based on the actual database schema

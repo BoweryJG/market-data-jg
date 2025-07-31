@@ -55,7 +55,7 @@ import {
   Check,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface QuickActionProps {

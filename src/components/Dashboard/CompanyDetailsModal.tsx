@@ -45,7 +45,7 @@ import {
   CheckCircle as CheckIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface CompanyDetailsModalProps {

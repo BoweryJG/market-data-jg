@@ -50,7 +50,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { providerDataService, ProviderLocation, MarketTerritory, ProviderEquipment } from '../../services/providerDataService';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface TabPanelProps {

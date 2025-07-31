@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '../../hooks/useSubscription';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 const BlurredContent = styled(Box)(({ theme }) => ({

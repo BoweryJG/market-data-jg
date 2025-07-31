@@ -51,7 +51,7 @@ import {
 } from '@mui/icons-material';
 import { search as braveSearch } from '../../services/braveSearchService';
 import { procedureEnhancementService, EnhancedProcedureData } from '../../services/procedureEnhancementService';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface ProcedureDetailsModalProps {

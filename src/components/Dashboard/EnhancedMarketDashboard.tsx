@@ -83,7 +83,7 @@ import MarketIntelligenceSearch from '../Search/MarketIntelligenceSearch';
 import { supabase } from '../../services/supabaseClient';
 import { CategorySuggestion } from '../../services/marketIntelligenceService';
 import { braveSearchService } from '../../services/braveSearchService';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 // Animation keyframes
 const pulse = keyframes`

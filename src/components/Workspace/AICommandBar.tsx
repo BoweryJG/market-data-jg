@@ -38,7 +38,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as braveSearchService from '../../services/braveSearchService';
 
 import { supabase } from '../../services/supabaseClient';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 interface CommandResult {
   id: string;

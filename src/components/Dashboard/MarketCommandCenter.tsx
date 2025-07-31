@@ -54,7 +54,7 @@ import { motion } from 'framer-motion';
 
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import { getCategoryIconConfig } from './CategoryIcons';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 // Luxury automotive-style gauge component with physics-based needle and chrome rim - v2.0 ENHANCED
 const CockpitGauge: React.FC<{

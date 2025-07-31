@@ -116,7 +116,7 @@ import {
 
 import { supabase } from '../../services/supabaseClient';
 
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 // Animation keyframes
 const pulse = keyframes`

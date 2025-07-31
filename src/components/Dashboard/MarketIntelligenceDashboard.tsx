@@ -36,7 +36,7 @@ import {
 import { supabase } from '../../services/supabaseClient';
 import { EnhancedProcedure, formatMarketSize, getMaturityColor } from '../../types/marketIntelligence';
 import EnhancedProcedureCard from '../procedures/EnhancedProcedureCard';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface MarketIntelligenceDashboardProps {

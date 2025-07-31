@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { QuickLoginModal } from '../Auth/QuickLoginModal';
 import { supabase } from '../../services/supabaseClient';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 // Styled components

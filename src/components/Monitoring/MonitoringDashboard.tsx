@@ -38,7 +38,7 @@ import {
 } from '@mui/icons-material';
 import { logger, LogLevel, LogEntry } from '../../services/logging/logger';
 import { apiInterceptor, RequestMetrics } from '../../services/api/interceptor';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface HealthStatus {

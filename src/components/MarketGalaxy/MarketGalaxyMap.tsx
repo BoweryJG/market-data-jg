@@ -47,7 +47,7 @@ import ParticleField from './ParticleField';
 import CategorySphere from './CategorySphere';
 import ConnectionLines from './ConnectionLines';
 import DataRipple from './DataRipple';
-import { logger } from '../services/logging/logger';
+import { logger } from '../../services/logging/logger';
 
 
 interface EnhancedCategoryData extends CategoryAggregate {
