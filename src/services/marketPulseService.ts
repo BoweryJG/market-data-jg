@@ -210,7 +210,7 @@ class MarketPulseService {
     };
   }
 
-  calculateRevenuePerMinute(marketData: MarketData): number {
+  calculateRevenuePerMinute(_marketData: MarketData): number {
     // Average procedure times and revenues
     const procedureMetrics = [
       { name: 'Cleaning', time: 60, revenue: 200 },
@@ -233,12 +233,7 @@ class MarketPulseService {
     return Math.round(baseRPM * demandMultiplier);
   }
 
-  calculateFloridaEffect(marketData: MarketData): FloridaEffect {
-    const floridaData = this.floridaData;
-    
-    // Population growth impact
-    const populationGrowth = 2.9; // Annual %
-    const retireePercentage = 21.12;
+  calculateFloridaEffect(_marketData: MarketData): FloridaEffect {
     const avgSpendIncrease = 1.4; // Retirees spend 40% more
     
     // Calculate migration impact

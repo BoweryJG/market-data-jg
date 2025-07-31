@@ -168,7 +168,7 @@ class MarketIntelligenceService {
   // Get market trends for a specific procedure or category
   async getProcedureTrends(
     procedureName: string,
-    industry: 'dental' | 'aesthetic'
+    _industry: 'dental' | 'aesthetic'
   ): Promise<{
     trends: TrendData[];
     relatedProcedures: string[];
