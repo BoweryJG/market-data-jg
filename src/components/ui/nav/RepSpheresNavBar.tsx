@@ -196,7 +196,7 @@ const RepSpheresNavBar = ({
                   </a>
                 ) : (
                   <Link 
-                    key={index} 
+                    key={_index} 
                     to={link.href} 
                     className={`nav-link ${location.pathname === link.href ? 'active' : ''}`}
                     onClick={(e) => handleLinkClick(e, link.href)}
@@ -293,7 +293,7 @@ const RepSpheresNavBar = ({
                 </a>
               ) : (
                 <Link 
-                  key={index}
+                  key={_index}
                   to={link.href} 
                   className="mobile-menu-link"
                   onClick={(e) => handleLinkClick(e, link.href)}

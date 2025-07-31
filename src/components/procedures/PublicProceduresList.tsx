@@ -344,7 +344,7 @@ export const PublicProceduresList: React.FC = () => {
                           All Procedures in {category.name}
                         </Typography>
                         <Grid container spacing={2}>
-                          {category.procedures.map((proc, _index) => (
+                          {category.procedures.map((proc, index) => (
                             <Grid item xs={12} sm={6} md={4} key={proc.id}>
                               <Box
                                 sx={{

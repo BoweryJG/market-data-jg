@@ -391,7 +391,7 @@ const TerritoryPrioritization: React.FC = () => {
                         fontWeight: 'bold',
                       }}
                     >
-                      {index + 1}
+                      {_index + 1}
                     </Avatar>
                     <Box>
                       <Typography variant="h6" fontWeight="bold">
