@@ -26,6 +26,13 @@ import ErrorBoundary from './components/Dashboard/ErrorBoundary';
 import { Box } from '@mui/material';
 
 const App: React.FC = () => {
+  // Debug environment variables
+  console.log('App mounting with env:', {
+    hasSupabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
+    hasSupabaseKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
+    hasApiUrl: !!import.meta.env.VITE_API_URL,
+    apiUrl: import.meta.env.VITE_API_URL
+  });
 
   return (
     <ThemeProvider>

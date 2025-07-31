@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-// FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS - DEPLOYED AT: ${new Date().toISOString()}
+// FORCE RELOAD v2.0 - CATEGORY ICONS FIXED WITH MUI COLORS
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 import EnhancedTerritoryIntelligence from './EnhancedTerritoryIntelligence';

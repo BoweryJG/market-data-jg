@@ -8,7 +8,7 @@ import { initializeUnifiedAuth } from './auth/initializeUnifiedAuth';
 initializeUnifiedAuth();
 
 // Import auth debug utility for development
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   import('./utils/authDebug').then(module => {
     // Auth debug utility loaded
   });
