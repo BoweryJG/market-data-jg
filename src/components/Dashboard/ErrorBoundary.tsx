@@ -63,6 +63,11 @@ class ErrorBoundary extends Component<Props, State> {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               An error occurred while loading the dashboard. Please try refreshing the page.
             </Typography>
+            {this.state.error && (
+              <Typography variant="caption" color="error" sx={{ display: 'block', mb: 2 }}>
+                {this.state.error.message}
+              </Typography>
+            )}
             <Button
               variant="contained"
               onClick={this.handleReset}
