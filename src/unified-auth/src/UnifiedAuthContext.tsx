@@ -13,8 +13,25 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const UnifiedAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // This is a placeholder - the actual implementation should be provided by the app
-  return <>{children}</>;
+  // Provide a minimal auth context to prevent errors
+  const value: AuthContextType = {
+    user: null,
+    loading: false,
+    signInWithProvider: async () => {
+      console.warn('Auth not configured');
+    },
+    signInWithEmail: async () => {
+      console.warn('Auth not configured');
+    },
+    signUpWithEmail: async () => {
+      console.warn('Auth not configured');
+    },
+    signOut: async () => {
+      console.warn('Auth not configured');
+    },
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
