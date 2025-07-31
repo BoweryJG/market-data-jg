@@ -1,11 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { MCPToolResult, MCPToolArgs } from '../types/api';
-
-interface SearchResult {
-  title: string;
-  url: string;
-  description: string;
-}
+import type { MCPToolResult, MCPToolArgs, SearchResult } from '../types/api';
 
 export const useMCPTool = (serverName: string) => {
   const [loading, setLoading] = useState(false);
