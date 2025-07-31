@@ -44,7 +44,7 @@ export class ComponentErrorBoundary extends Component<Props, State> {
     if (
       props.resetKeys &&
       state.prevResetKeys &&
-      props.resetKeys.some((key, _index) => key !== state.prevResetKeys?.[index])
+      props.resetKeys.some((key, index) => key !== state.prevResetKeys?.[index])
     ) {
       return {
         hasError: false,
