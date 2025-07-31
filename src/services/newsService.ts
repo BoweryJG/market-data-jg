@@ -114,9 +114,10 @@ export const useRealtimeNewsByProcedure = (
         setLoading(true);
         setError(null);
 
-        const NEWS_PROXY_URL = process.env.NODE_ENV === 'production'
-          ? 'https://repspheres-news-proxy.onrender.com'
-          : 'http://localhost:3001';
+        const NEWS_PROXY_URL = import.meta.env.VITE_NEWS_PROXY_URL || 
+          (import.meta.env.PROD 
+            ? 'https://repspheres-news-proxy.onrender.com' 
+            : 'http://localhost:3001');
 
         const response = await axios.get(
           `${NEWS_PROXY_URL}/api/news/realtime/${procedureId}?limit=${limit}`
@@ -236,9 +237,10 @@ export const useTopProcedureCategoriesWithNews = (
         setLoading(true);
         setError(null);
         
-        const NEWS_PROXY_URL = process.env.NODE_ENV === 'production' 
-          ? 'https://repspheres-news-proxy.onrender.com' 
-          : 'http://localhost:3001';
+        const NEWS_PROXY_URL = import.meta.env.VITE_NEWS_PROXY_URL || 
+          (import.meta.env.PROD 
+            ? 'https://repspheres-news-proxy.onrender.com' 
+            : 'http://localhost:3001');
 
         // Get top procedure categories by market size
         const { data: categoryData, error: categoryError } = await supabase

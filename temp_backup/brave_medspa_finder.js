@@ -4,7 +4,11 @@ const { parse } = require('json2csv');
 // Use Brave Search API to find medspas
 // This is more reliable than web scraping and provides rich results
 
-const BRAVE_API_KEY = process.env.BRAVE_SEARCH_API_KEY || 'BSA9AzPzmrTcPfaAxx0keBgoelvQoMp';
+const BRAVE_API_KEY = process.env.BRAVE_SEARCH_API_KEY;
+if (!BRAVE_API_KEY) {
+  console.error('Missing required environment variable: BRAVE_SEARCH_API_KEY');
+  process.exit(1);
+}
 
 const LOCATIONS = [
   // New York

@@ -12,7 +12,7 @@ const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
 // Middleware
 const corsOptions = {
-  origin: 'https://marketdata.repspheres.com',
+  origin: process.env.CORS_ORIGIN || 'https://marketdata.repspheres.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
