@@ -5,6 +5,7 @@ export * from './src/UnifiedAuthContext';
 export * from './src/unifiedSupabase';
 export * from './src/hooks/useRepXTier';
 export * from './src/hooks/useFeatureAccess';
+export * from './src/hooks/useAgentTimeLimit';
 export * from './src/components/FeatureGate';
 export * from './src/components/TierBadge';
 export * from './src/components/UpgradePrompt';
