@@ -38,8 +38,7 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as braveSearchService from '../../services/braveSearchService';
-import { useAgentTimeLimit, useRepXTier } from '../../unified-auth';
-import { RepXTier, TIER_NAMES } from '../../unified-auth/src/constants';
+import { useAgentTimeLimit, useRepXTier, RepXTier, TIER_NAMES } from '../../unified-auth';
 
 import { supabase } from '../../services/supabaseClient';
 import { logger } from '../../services/logging/logger';

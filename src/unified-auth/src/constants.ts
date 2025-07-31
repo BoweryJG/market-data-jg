@@ -1,6 +1,9 @@
 import { RepXTier } from './types';
 import type { FeatureAccess } from './types';
 
+// Re-export RepXTier so it can be imported from constants
+export { RepXTier } from './types';
+
 // Backend URL - must be provided by environment variable
 export const DEFAULT_BACKEND_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '';
 
