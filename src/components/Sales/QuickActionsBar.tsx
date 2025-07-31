@@ -70,6 +70,8 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../services/logging/logger';
+
 
 interface QuickSearchResult {
   type: 'account' | 'contact' | 'product' | 'procedure';
@@ -128,12 +130,12 @@ const QuickActionsBar: React.FC = () => {
   ];
 
   const quickActions = [
-    { icon: <Phone />, name: 'Call', action: () => console.log('Call') },
-    { icon: <Email />, name: 'Email', action: () => console.log('Email') },
-    { icon: <CalendarToday />, name: 'Schedule', action: () => console.log('Schedule') },
+    { icon: <Phone />, name: 'Call', action: () => logger.info('Call') },
+    { icon: <Email />, name: 'Email', action: () => logger.info('Email') },
+    { icon: <CalendarToday />, name: 'Schedule', action: () => logger.info('Schedule') },
     { icon: <Note />, name: 'Note', action: () => setQuickNoteOpen(true) },
-    { icon: <FormatQuote />, name: 'Quote', action: () => console.log('Quote') },
-    { icon: <CameraAlt />, name: 'Photo', action: () => console.log('Photo') },
+    { icon: <FormatQuote />, name: 'Quote', action: () => logger.info('Quote') },
+    { icon: <CameraAlt />, name: 'Photo', action: () => logger.info('Photo') },
   ];
 
   const searchResults: QuickSearchResult[] = [
@@ -141,19 +143,19 @@ const QuickActionsBar: React.FC = () => {
       type: 'account',
       name: 'Smile Dental Group',
       subtitle: 'Last visit: 3 days ago',
-      action: () => console.log('Open account'),
+      action: () => logger.info('Open account'),
     },
     {
       type: 'contact',
       name: 'Dr. Sarah Johnson',
       subtitle: 'Smile Dental Group',
-      action: () => console.log('Open contact'),
+      action: () => logger.info('Open contact'),
     },
     {
       type: 'product',
       name: 'Botox Cosmetic',
       subtitle: '50 units package',
-      action: () => console.log('Open product'),
+      action: () => logger.info('Open product'),
     },
   ];
 
@@ -163,9 +165,9 @@ const QuickActionsBar: React.FC = () => {
     }
   }, [searchOpen]);
 
-  const handleSearch = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      console.log('Searching for:', searchQuery);
+  const handleSearch = (_event: React.KeyboardEvent) => {
+    if (_event.key === 'Enter') {
+      logger.info('Searching for:', searchQuery);
       // Implement search logic
     }
   };
@@ -188,9 +190,9 @@ const QuickActionsBar: React.FC = () => {
     <AppBar
       position="sticky"
       sx={{
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        boxShadow: theme.shadows[2],
+        backgroundColor: theme.palette.background.paper, 
+        color: theme.palette.text.primary, 
+        boxShadow: theme.shadows[2], 
       }}
     >
       <Toolbar>
@@ -198,10 +200,10 @@ const QuickActionsBar: React.FC = () => {
         <Box display="flex" alignItems="center" sx={{ mr: 4 }}>
           <Avatar
             sx={{
-              backgroundColor: theme.palette.primary.main,
-              mr: 2,
-              width: 36,
-              height: 36,
+              backgroundColor: theme.palette.primary.main, 
+              mr: 2, 
+              width: 36, 
+              height: 36, 
             }}
           >
             RS
@@ -247,22 +249,22 @@ const QuickActionsBar: React.FC = () => {
         <AnimatePresence>
           {searchOpen ? (
             <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 300, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
+              initial={{ width: 0,  opacity: 0 }}
+              animate={{ width: 300,  opacity: 1 }}
+              exit={{ width: 0,  opacity: 0 }}
             >
               <Paper
                 sx={{
-                  p: '2px 4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: 300,
-                  mr: 2,
+                  p: '2px 4px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: 300, 
+                  mr: 2, 
                 }}
               >
                 <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Search accounts, contacts, products..."
+                  sx={{ ml: 1,  flex: 1 }}
+                  placeholder="Search accounts,  contacts,  products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleSearch}
@@ -304,9 +306,9 @@ const QuickActionsBar: React.FC = () => {
       <AppBar
         position="sticky"
         sx={{
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-          boxShadow: theme.shadows[2],
+          backgroundColor: theme.palette.background.paper, 
+          color: theme.palette.text.primary, 
+          boxShadow: theme.shadows[2], 
         }}
       >
         <Toolbar>
@@ -329,7 +331,7 @@ const QuickActionsBar: React.FC = () => {
 
       <BottomNavigation
         value={selectedNav}
-        onChange={(_: React.SyntheticEvent, newValue: number) => setSelectedNav(newValue)}
+        onChange={(_: React.SyntheticEvent,  newValue: number) => setSelectedNav(newValue)}
         sx={{
           position: 'absolute',
           bottom: 0,
@@ -352,9 +354,9 @@ const QuickActionsBar: React.FC = () => {
     <SpeedDial
       ariaLabel="Quick actions"
       sx={{
-        position: 'absolute',
-        bottom: isMobile ? 80 : 16,
-        right: 16,
+        position: 'absolute', 
+        bottom: isMobile ? 80 : 16, 
+        right: 16, 
       }}
       icon={<SpeedDialIcon />}
     >
@@ -404,7 +406,7 @@ const QuickActionsBar: React.FC = () => {
         <ListItemText>Settings</ListItemText>
       </MenuItem>
       <Divider />
-      <MenuItem onClick={() => console.log('Logout')}>
+      <MenuItem onClick={() => logger.info('Logout')}>
         <ListItemIcon>
           <Logout fontSize="small" />
         </ListItemIcon>
@@ -596,9 +598,9 @@ const QuickActionsBar: React.FC = () => {
               }}
             >
               <List>
-                {searchResults.map((result, index) => (
+                {searchResults.map((result, _index) => (
                   <ListItem
-                    key={index}
+                    key={_index}
                     button
                     onClick={() => {
                       result.action();

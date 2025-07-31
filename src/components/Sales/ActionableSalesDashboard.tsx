@@ -122,7 +122,7 @@ const AIInsightCard: React.FC<{
   urgency: 'high' | 'medium' | 'low';
   confidence: number;
   onAction: () => void;
-}> = ({ title, insight, action, urgency, confidence, onAction }) => {
+}> = ({ title,  insight,  action,  urgency,  confidence,  onAction }) => {
   const theme = useTheme();
   const urgencyColors = {
     high: theme.palette.error.main,
@@ -253,9 +253,9 @@ const MorningBriefing: React.FC = () => {
 
         <Collapse in={expanded}>
           <Stack spacing={2}>
-            {briefingItems.map((item, index) => (
+            {briefingItems.map((item, _index) => (
               <Paper
-                key={index}
+                key={_index}
                 sx={{
                   p: 2,
                   backgroundColor: 'rgba(255,255,255,0.1)',
@@ -355,9 +355,9 @@ const TerritoryPrioritization: React.FC = () => {
         </Box>
 
         <Stack spacing={2}>
-          {priorityVisits.map((visit, index) => (
+          {priorityVisits.map((visit, _index) => (
             <Paper
-              key={index}
+              key={_index}
               elevation={0}
               sx={{
                 p: 2,
@@ -433,7 +433,7 @@ const TerritoryPrioritization: React.FC = () => {
                     Why visit today:
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap">
-                    {visit.reasons.map((reason, i) => (
+                    {visit.reasons.map((reason,  i) => (
                       <Chip
                         key={i}
                         size="small"
@@ -553,13 +553,13 @@ const OpportunityAlerts: React.FC = () => {
 
         <Stack spacing={1}>
           <AnimatePresence>
-            {visibleAlerts.map((alert, index) => (
+            {visibleAlerts.map((alert, _index) => (
               <motion.div
-                key={index}
+                key={_index}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
+                transition={{ duration: 0.2, delay: _index * 0.05 }}
               >
                 <Paper
                   sx={{
@@ -673,9 +673,9 @@ const PredictiveDealScoring: React.FC = () => {
         </Box>
 
         <Stack spacing={2}>
-          {deals.map((deal, index) => (
+          {deals.map((deal, _index) => (
             <Paper
-              key={index}
+              key={_index}
               sx={{
                 p: 2,
                 border: `1px solid ${theme.palette.divider}`,
@@ -743,7 +743,7 @@ const PredictiveDealScoring: React.FC = () => {
                   Success Factors:
                 </Typography>
                 <Stack direction="row" spacing={0.5} flexWrap="wrap">
-                  {deal.keyFactors.map((factor, i) => (
+                  {deal.keyFactors.map((factor,  i) => (
                     <Chip
                       key={i}
                       size="small"
@@ -893,17 +893,17 @@ const ActionableSalesDashboard: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default }}>
+    <Box sx={{ minHeight: '100vh',  backgroundColor: theme.palette.background.default }}>
       {/* Header */}
       <Paper
         elevation={0}
         sx={{
-          p: 2,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          position: 'sticky',
-          top: 0,
-          zIndex: 1000,
-          backgroundColor: theme.palette.background.paper,
+          p: 2, 
+          borderBottom: `1px solid ${theme.palette.divider}`, 
+          position: 'sticky', 
+          top: 0, 
+          zIndex: 1000, 
+          backgroundColor: theme.palette.background.paper, 
         }}
       >
         <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -912,7 +912,7 @@ const ActionableSalesDashboard: React.FC = () => {
               Sales Intelligence Hub
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Tuesday, March 14 • Territory: West Coast
+              Tuesday,  March 14 • Territory: West Coast
             </Typography>
           </Box>
 

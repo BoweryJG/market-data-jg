@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 #!/usr/bin/env node
 
 const fs = require('fs');
@@ -109,7 +111,7 @@ function loadEnvFile(filename) {
 
 // Main validation function
 function validateEnvironment() {
-  console.log(`${colors.blue}Environment Configuration Validator${colors.reset}\n`);
+  logger.info(`${colors.blue}Environment Configuration Validator${colors.reset}\n`);
   
   // Check which environment files exist
   const envFiles = ['.env', '.env.local', '.env.production'];
@@ -119,22 +121,22 @@ function validateEnvironment() {
   for (const file of envFiles) {
     const vars = loadEnvFile(file);
     if (vars) {
-      console.log(`${colors.green}✓${colors.reset} Found ${file}`);
+      logger.info(`${colors.green}✓${colors.reset} Found ${file}`);
       envVars = { ...envVars, ...vars };
       foundEnvFile = true;
     }
   }
   
   if (!foundEnvFile) {
-    console.log(`${colors.red}✗ No environment files found!${colors.reset}`);
-    console.log(`\nPlease create a .env.local file based on .env.example`);
+    logger.info(`${colors.red}✗ No environment files found!${colors.reset}`);
+    logger.info(`\nPlease create a .env.local file based on .env.example`);
     process.exit(1);
   }
   
-  console.log('\n' + '='.repeat(50) + '\n');
+  logger.info('\n' + '='.repeat(50) + '\n');
   
   // Validate frontend variables
-  console.log(`${colors.blue}Frontend Environment Variables:${colors.reset}`);
+  logger.info(`${colors.blue}Frontend Environment Variables:${colors.reset}`);
   let hasErrors = false;
   
   requiredEnvVars.frontend.forEach(envVar => {
@@ -142,61 +144,61 @@ function validateEnvironment() {
     const result = checkEnvVar(envVar, value);
     
     if (result.valid) {
-      console.log(`${colors.green}✓${colors.reset} ${envVar.name}`);
+      logger.info(`${colors.green}✓${colors.reset} ${envVar.name}`);
     } else {
-      console.log(`${colors.red}✗${colors.reset} ${envVar.name}: ${result.error}`);
-      console.log(`  ${colors.yellow}Description:${colors.reset} ${envVar.description}`);
-      console.log(`  ${colors.yellow}Example:${colors.reset} ${envVar.example}`);
+      logger.info(`${colors.red}✗${colors.reset} ${envVar.name}: ${result.error}`);
+      logger.info(`  ${colors.yellow}Description:${colors.reset} ${envVar.description}`);
+      logger.info(`  ${colors.yellow}Example:${colors.reset} ${envVar.example}`);
       hasErrors = true;
     }
   });
   
   // Validate backend variables (if running on backend)
   if (process.env.NODE_ENV === 'production' || process.argv.includes('--backend')) {
-    console.log(`\n${colors.blue}Backend Environment Variables:${colors.reset}`);
+    logger.info(`\n${colors.blue}Backend Environment Variables:${colors.reset}`);
     
     requiredEnvVars.backend.forEach(envVar => {
       const value = envVars[envVar.name];
       const result = checkEnvVar(envVar, value);
       
       if (result.valid) {
-        console.log(`${colors.green}✓${colors.reset} ${envVar.name}`);
+        logger.info(`${colors.green}✓${colors.reset} ${envVar.name}`);
       } else {
-        console.log(`${colors.red}✗${colors.reset} ${envVar.name}: ${result.error}`);
-        console.log(`  ${colors.yellow}Description:${colors.reset} ${envVar.description}`);
-        console.log(`  ${colors.yellow}Example:${colors.reset} ${envVar.example}`);
+        logger.info(`${colors.red}✗${colors.reset} ${envVar.name}: ${result.error}`);
+        logger.info(`  ${colors.yellow}Description:${colors.reset} ${envVar.description}`);
+        logger.info(`  ${colors.yellow}Example:${colors.reset} ${envVar.example}`);
         hasErrors = true;
       }
     });
   }
   
   // Check optional variables
-  console.log(`\n${colors.blue}Optional Environment Variables:${colors.reset}`);
+  logger.info(`\n${colors.blue}Optional Environment Variables:${colors.reset}`);
   
   requiredEnvVars.optional.forEach(envVar => {
     const value = envVars[envVar.name];
     if (value) {
       const result = checkEnvVar(envVar, value);
       if (result.valid) {
-        console.log(`${colors.green}✓${colors.reset} ${envVar.name} (configured)`);
+        logger.info(`${colors.green}✓${colors.reset} ${envVar.name} (configured)`);
       } else {
-        console.log(`${colors.yellow}⚠${colors.reset} ${envVar.name}: ${result.error}`);
+        logger.info(`${colors.yellow}⚠${colors.reset} ${envVar.name}: ${result.error}`);
       }
     } else {
-      console.log(`${colors.yellow}-${colors.reset} ${envVar.name} (not configured)`);
+      logger.info(`${colors.yellow}-${colors.reset} ${envVar.name} (not configured)`);
     }
   });
   
   // Summary
-  console.log('\n' + '='.repeat(50) + '\n');
+  logger.info('\n' + '='.repeat(50) + '\n');
   
   if (hasErrors) {
-    console.log(`${colors.red}✗ Environment validation failed!${colors.reset}`);
-    console.log('\nPlease fix the errors above before proceeding.');
+    logger.info(`${colors.red}✗ Environment validation failed!${colors.reset}`);
+    logger.info('\nPlease fix the errors above before proceeding.');
     process.exit(1);
   } else {
-    console.log(`${colors.green}✓ Environment validation passed!${colors.reset}`);
-    console.log('\nYour environment is properly configured.');
+    logger.info(`${colors.green}✓ Environment validation passed!${colors.reset}`);
+    logger.info('\nYour environment is properly configured.');
   }
 }
 

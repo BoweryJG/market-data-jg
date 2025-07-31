@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const https = require('https');
 
 // Test different parameter combinations
@@ -36,8 +38,8 @@ async function testQuery(queryInfo) {
     const queryString = new URLSearchParams(queryInfo.params).toString();
     const url = `https://npiregistry.cms.hhs.gov/api/?${queryString}`;
     
-    console.log(`\nTesting: ${queryInfo.name}`);
-    console.log(`URL: ${url}`);
+    logger.info(`\nTesting: ${queryInfo.name}`);
+    logger.info(`URL: ${url}`);
     
     https.get(url, (res) => {
       let data = '';
@@ -49,34 +51,34 @@ async function testQuery(queryInfo) {
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
-          console.log(`Result count: ${parsed.result_count}`);
-          console.log(`Results length: ${parsed.results ? parsed.results.length : 0}`);
+          logger.info(`Result count: ${parsed.result_count}`);
+          logger.info(`Results length: ${parsed.results ? parsed.results.length : 0}`);
           
           if (parsed.results && parsed.results[0]) {
             const provider = parsed.results[0];
-            console.log('First provider:');
-            console.log(`  NPI: ${provider.number}`);
-            console.log(`  Name: ${provider.basic.first_name || provider.basic.organization_name}`);
+            logger.info('First provider:');
+            logger.info(`  NPI: ${provider.number}`);
+            logger.info(`  Name: ${provider.basic.first_name || provider.basic.organization_name}`);
             if (provider.taxonomies && provider.taxonomies[0]) {
-              console.log(`  Taxonomy: ${provider.taxonomies[0].code} - ${provider.taxonomies[0].desc}`);
+              logger.info(`  Taxonomy: ${provider.taxonomies[0].code} - ${provider.taxonomies[0].desc}`);
             }
           }
           
           resolve();
         } catch (e) {
-          console.error('Error:', e.message);
+          logger.error('Error:', e.message);
           resolve();
         }
       });
     }).on('error', (e) => {
-      console.error('Request error:', e.message);
+      logger.error('Request error:', e.message);
       resolve();
     });
   });
 }
 
 async function main() {
-  console.log('Testing NPI API parameter combinations...');
+  logger.info('Testing NPI API parameter combinations...');
   
   for (const query of testQueries) {
     await testQuery(query);
@@ -84,7 +86,7 @@ async function main() {
   }
   
   // Now test searching for dentists specifically
-  console.log('\n\nSearching for dentists in NY state...');
+  logger.info('\n\nSearching for dentists in NY state...');
   const dentistUrl = 'https://npiregistry.cms.hhs.gov/api/?version=2.1&state=NY&enumeration_type=NPI-1&limit=200';
   
   https.get(dentistUrl, (res) => {
@@ -97,7 +99,7 @@ async function main() {
     res.on('end', () => {
       try {
         const parsed = JSON.parse(data);
-        console.log(`Total providers in NY: ${parsed.result_count}`);
+        logger.info(`Total providers in NY: ${parsed.result_count}`);
         
         // Count dentists
         let dentistCount = 0;
@@ -116,13 +118,13 @@ async function main() {
           }
         }
         
-        console.log(`In first 200 results:`);
-        console.log(`  Dentists found: ${dentistCount}`);
-        console.log(`  Dermatologists found: ${dermCount}`);
-        console.log(`  Plastic surgeons found: ${plasticCount}`);
+        logger.info(`In first 200 results:`);
+        logger.info(`  Dentists found: ${dentistCount}`);
+        logger.info(`  Dermatologists found: ${dermCount}`);
+        logger.info(`  Plastic surgeons found: ${plasticCount}`);
         
       } catch (e) {
-        console.error('Error:', e.message);
+        logger.error('Error:', e.message);
       }
     });
   }).on('error', console.error);

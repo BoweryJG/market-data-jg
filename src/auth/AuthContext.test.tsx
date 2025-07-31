@@ -2,7 +2,6 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthProvider, useAuth } from './AuthContext';
 import { supabase } from './supabase';
-import React from 'react';
 
 // Mock supabase
 vi.mock('./supabase');

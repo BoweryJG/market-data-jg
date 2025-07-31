@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Typography, Tooltip, useTheme, alpha, Chip, Paper } from '@mui/material';
+import { Box, Typography, useTheme, alpha, Chip, Paper } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LocalFireDepartment, AcUnit, WaterDrop } from '@mui/icons-material';
 
@@ -23,9 +23,9 @@ interface BodyHeatmapProps {
 }
 
 const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
-  marketData,
-  onProcedureSelect,
-  activeLayers,
+  marketData, 
+  onProcedureSelect, 
+  activeLayers, 
   isAnimating
 }) => {
   const theme = useTheme();
@@ -124,7 +124,7 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
     }
   }, [isAnimating]);
 
-  const getHeatColor = (intensity: number, growth: number) => {
+  const getHeatColor = (intensity: number,  growth: number) => {
     if (growth > 12) return theme.palette.error.main; // Hot - high growth
     if (growth > 8) return theme.palette.warning.main; // Warm - moderate growth
     return theme.palette.info.main; // Cool - low growth
@@ -163,7 +163,7 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
         />
 
         {/* Heat spots */}
-        {hotspots.map((spot, index) => {
+        {hotspots.map((spot, _index) => {
           const color = getHeatColor(spot.intensity, spot.growth);
           const isHovered = hoveredSpot === spot.id;
           const pulseScale = 1 + Math.sin((pulseAnimation + index * 30) * Math.PI / 180) * 0.1;
@@ -325,6 +325,5 @@ const BodyHeatmap: React.FC<BodyHeatmapProps> = ({
     </Box>
   );
 };
-
 
 BodyHeatmap.displayName = 'BodyHeatmap';export default BodyHeatmap;

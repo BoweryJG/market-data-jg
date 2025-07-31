@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from '@/services/logging/logger';
+
 
 // Initialize Supabase client
 const supabaseUrl = 'https://cbopynuvhcymbumjnvay.supabase.co';
@@ -25,11 +27,11 @@ function calculateMaturityStage(growthRate: number | null): string | null {
 }
 
 async function addMarketMaturityColumn() {
-  console.log('🚀 Starting market maturity column migration...\n');
+  logger.info('🚀 Starting market maturity column migration...\n');
   
   try {
     // Step 1: Test the update with a small batch first
-    console.log('📋 Testing update on small batch...');
+    logger.info('📋 Testing update on small batch...');
     
     // Get 5 aesthetic procedures to test
     const { data: testAesthetic, error: testError1 } = await supabase
@@ -38,21 +40,21 @@ async function addMarketMaturityColumn() {
       .limit(5);
       
     if (testError1) {
-      console.error('❌ Error fetching test data:', testError1);
+      logger.error('❌ Error fetching test data:', testError1);
       return;
     }
     
-    console.log('Test procedures:', testAesthetic);
+    logger.info('Test procedures:', testAesthetic);
     
     // Step 2: Update all aesthetic procedures
-    console.log('\n📊 Updating aesthetic procedures...');
+    logger.info('\n📊 Updating aesthetic procedures...');
     
     const { data: aestheticProcedures, error: aestheticError } = await supabase
       .from('aesthetic_procedures')
       .select('id, procedure_name, yearly_growth_percentage');
       
     if (aestheticError) {
-      console.error('❌ Error fetching aesthetic procedures:', aestheticError);
+      logger.error('❌ Error fetching aesthetic procedures:', aestheticError);
       return;
     }
     
@@ -72,10 +74,10 @@ async function addMarketMaturityColumn() {
             .eq('id', proc.id);
             
           if (updateError) {
-            console.error(`❌ Error updating ${proc.procedure_name}:`, updateError);
+            logger.error(`❌ Error updating ${proc.procedure_name}:`, updateError);
           } else {
             aestheticUpdated++;
-            console.log(`✓ Updated ${proc.procedure_name}: ${maturityStage} (${proc.yearly_growth_percentage}% growth)`);
+            logger.info(`✓ Updated ${proc.procedure_name}: ${maturityStage} (${proc.yearly_growth_percentage}% growth)`);
           }
         }
       }
@@ -84,17 +86,17 @@ async function addMarketMaturityColumn() {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
-    console.log(`\n✅ Updated ${aestheticUpdated} aesthetic procedures`);
+    logger.info(`\n✅ Updated ${aestheticUpdated} aesthetic procedures`);
     
     // Step 3: Update all dental procedures
-    console.log('\n🦷 Updating dental procedures...');
+    logger.info('\n🦷 Updating dental procedures...');
     
     const { data: dentalProcedures, error: dentalError } = await supabase
       .from('dental_procedures')
       .select('id, procedure_name, yearly_growth_percentage');
       
     if (dentalError) {
-      console.error('❌ Error fetching dental procedures:', dentalError);
+      logger.error('❌ Error fetching dental procedures:', dentalError);
       return;
     }
     
@@ -114,10 +116,10 @@ async function addMarketMaturityColumn() {
             .eq('id', proc.id);
             
           if (updateError) {
-            console.error(`❌ Error updating ${proc.procedure_name}:`, updateError);
+            logger.error(`❌ Error updating ${proc.procedure_name}:`, updateError);
           } else {
             dentalUpdated++;
-            console.log(`✓ Updated ${proc.procedure_name}: ${maturityStage} (${proc.yearly_growth_percentage}% growth)`);
+            logger.info(`✓ Updated ${proc.procedure_name}: ${maturityStage} (${proc.yearly_growth_percentage}% growth)`);
           }
         }
       }
@@ -126,10 +128,10 @@ async function addMarketMaturityColumn() {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
-    console.log(`\n✅ Updated ${dentalUpdated} dental procedures`);
+    logger.info(`\n✅ Updated ${dentalUpdated} dental procedures`);
     
     // Step 4: Verify the results
-    console.log('\n📊 Verification Report:');
+    logger.info('\n📊 Verification Report:');
     
     // Get summary for aesthetic procedures
     const { data: aestheticSummary } = await supabase
@@ -154,27 +156,27 @@ async function addMarketMaturityColumn() {
       return acc;
     }, {} as Record<string, number>) || {};
     
-    console.log('\nAesthetic Procedures by Maturity Stage:');
+    logger.info('\nAesthetic Procedures by Maturity Stage:');
     Object.entries(aestheticCounts).forEach(([stage, count]) => {
-      console.log(`  ${stage}: ${count} procedures`);
+      logger.info(`  ${stage}: ${count} procedures`);
     });
     
-    console.log('\nDental Procedures by Maturity Stage:');
+    logger.info('\nDental Procedures by Maturity Stage:');
     Object.entries(dentalCounts).forEach(([stage, count]) => {
-      console.log(`  ${stage}: ${count} procedures`);
+      logger.info(`  ${stage}: ${count} procedures`);
     });
     
-    console.log('\n✨ Market maturity column migration complete!');
-    console.log(`Total procedures updated: ${aestheticUpdated + dentalUpdated}`);
+    logger.info('\n✨ Market maturity column migration complete!');
+    logger.info(`Total procedures updated: ${aestheticUpdated + dentalUpdated}`);
     
   } catch (error) {
-    console.error('❌ Migration failed:', error);
+    logger.error('❌ Migration failed:', error);
   }
 }
 
 // Add helper function to display sample data
 async function displaySampleData() {
-  console.log('\n📋 Sample Data with Market Maturity:');
+  logger.info('\n📋 Sample Data with Market Maturity:');
   
   const { data: samples } = await supabase
     .from('aesthetic_procedures')

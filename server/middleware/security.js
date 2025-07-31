@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -172,7 +174,7 @@ const sanitizeRequest = (req, res, next) => {
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
   // Log error
-  console.error('Error:', err);
+  logger.error('Error:', err);
 
   // Don't leak error details in production
   if (process.env.NODE_ENV === 'production') {

@@ -134,9 +134,6 @@ import {
   ShowChart
 } from '@mui/icons-material';
 
-import { supabase } from '../../services/supabaseClient';
-import * as braveSearchService from '../../services/braveSearchService';
-
 // Animations
 const pulse = keyframes`
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
@@ -156,7 +153,7 @@ const glow = keyframes`
 `;
 
 // Styled Components
-const HotLeadCard = styled(Card, { shouldForwardProp: (prop) => prop !== 'priority' })<{ priority: 'hot' | 'warm' | 'cold' }>(({ theme, priority }) => ({
+const HotLeadCard = styled(Card,  { shouldForwardProp: (prop) => prop !== 'priority' })<{ priority: 'hot' | 'warm' | 'cold' }>(({ theme,  priority }) => ({
   position: 'relative',
   overflow: 'visible',
   background: priority === 'hot' 
@@ -188,7 +185,7 @@ const HotLeadCard = styled(Card, { shouldForwardProp: (prop) => prop !== 'priori
   }
 }));
 
-const MetricCard = styled(Card, { shouldForwardProp: (prop) => prop !== 'trend' })<{ trend?: 'up' | 'down' }>(({ theme, trend }) => ({
+const MetricCard = styled(Card,  { shouldForwardProp: (prop) => prop !== 'trend' })<{ trend?: 'up' | 'down' }>(({ theme,  trend }) => ({
   height: '100%',
   background: trend === 'up' 
     ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.05)}, ${alpha(theme.palette.success.light, 0.1)})`
@@ -557,7 +554,7 @@ const ActionableSalesDashboard: React.FC = () => {
 
       {/* Main Dashboard Tabs */}
       <Paper sx={{ mb: 2 }}>
-        <Tabs value={activeTab} onChange={(e: React.SyntheticEvent, v: number) => setActiveTab(v)} variant="fullWidth">
+        <Tabs value={activeTab} onChange={(e: React.SyntheticEvent,  v: number) => setActiveTab(v)} variant="fullWidth">
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Dashboard /> Today&apos;s Plan</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><Whatshot /> Hot Leads</Box>} />
           <Tab label={<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}><ShowChart /> Pipeline</Box>} />
@@ -573,8 +570,8 @@ const ActionableSalesDashboard: React.FC = () => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex',  justifyContent: 'space-between',  alignItems: 'center',  mb: 2 }}>
+                    <Typography variant="h6" sx={{ display: 'flex',  alignItems: 'center',  gap: 1 }}>
                       <Coffee color="primary" />
                       Morning Briefing
                     </Typography>
@@ -617,7 +614,7 @@ const ActionableSalesDashboard: React.FC = () => {
                     Today&apos;s Activities
                   </Typography>
                   <Grid container spacing={2}>
-                    {Object.entries(dailyTargets.completed).map(([key, value]) => (
+                    {Object.entries(dailyTargets.completed).map(([key,  value]) => (
                       <Grid item xs={6} md={3} key={key}>
                         <Box sx={{ textAlign: 'center' }}>
                           <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
@@ -713,9 +710,9 @@ const ActionableSalesDashboard: React.FC = () => {
                   </Box>
                   <Collapse in={expandedSections.opportunities}>
                     <List>
-                      {opportunityAlerts.map((alert, index) => (
+                      {opportunityAlerts.map((alert, _index) => (
                         <React.Fragment key={alert.id}>
-                          {index > 0 && <Divider />}
+                          {_index > 0 && <Divider />}
                           <ListItem 
                             sx={{ 
                               py: 2,
@@ -783,15 +780,15 @@ const ActionableSalesDashboard: React.FC = () => {
           <Grid container spacing={2}>
             {/* Hot Leads Priority List */}
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex',  alignItems: 'center',  gap: 1 }}>
                 <LocalFireDepartment color="error" />
-                If you only visit 3 practices today, visit these:
+                If you only visit 3 practices today,  visit these:
               </Typography>
             </Grid>
             
-            {hotLeads.map((lead, index) => (
+            {hotLeads.map((lead, _index) => (
               <Grid item xs={12} key={lead.id}>
-                <Zoom in style={{ transitionDelay: `${index * 100}ms` }}>
+                <Zoom in style={{ transitionDelay: `${_index * 100}ms` }}>
                   <HotLeadCard 
                     priority={lead.priority}
                     onClick={() => setSelectedLead(lead)}

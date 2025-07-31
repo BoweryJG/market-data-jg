@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Box, Typography, IconButton, Tooltip, Fade, Grow, useTheme, alpha, Fab } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip, useTheme, alpha, Fab } from '@mui/material';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { 
   TrendingUp, 
@@ -177,7 +177,7 @@ const QuantumMarketDashboard: React.FC = () => {
     if (!selectedCategory) return [];
     
     const procedures = [...selectedCategory.procedures];
-    procedures.sort((a, b) => {
+    procedures.sort((a,  b) => {
       const aValue = a[sortConfig.key as keyof Procedure];
       const bValue = b[sortConfig.key as keyof Procedure];
       
@@ -194,7 +194,7 @@ const QuantumMarketDashboard: React.FC = () => {
   }, [selectedCategory, sortConfig]);
 
   // CSS-only Category Sphere Component
-  const CategorySphere: React.FC<{ data: CategoryData; isSelected: boolean }> = ({ data, isSelected }) => {
+  const CategorySphere: React.FC<{ data: CategoryData; isSelected: boolean }> = ({ data,  isSelected }) => {
     const [hovered, setHovered] = useState(false);
     
     const sphereSize = 120 + (data.marketSize / 100000);
@@ -205,23 +205,23 @@ const QuantumMarketDashboard: React.FC = () => {
     return (
       <motion.div
         style={{
-          position: 'absolute',
-          left: x,
-          top: y,
-          width: sphereSize,
-          height: sphereSize,
-          cursor: 'pointer',
-          transformStyle: 'preserve-3d',
+          position: 'absolute', 
+          left: x, 
+          top: y, 
+          width: sphereSize, 
+          height: sphereSize, 
+          cursor: 'pointer', 
+          transformStyle: 'preserve-3d', 
         }}
         animate={{
-          rotateY: 360,
-          y: [0, -10, 0],
-          scale: hovered || isSelected ? 1.2 : 1,
+          rotateY: 360, 
+          y: [0,  -10,  0], 
+          scale: hovered || isSelected ? 1.2 : 1, 
         }}
         transition={{
-          rotateY: { duration: 20, repeat: Infinity, ease: 'linear' },
-          y: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-          scale: { duration: 0.3 },
+          rotateY: { duration: 20,  repeat: Infinity,  ease: 'linear' }, 
+          y: { duration: 3,  repeat: Infinity,  ease: 'easeInOut' }, 
+          scale: { duration: 0.3 }, 
         }}
         onMouseEnter={() => {
           setHovered(true);
@@ -351,12 +351,12 @@ const QuantumMarketDashboard: React.FC = () => {
     return (
       <motion.div
         style={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          transformStyle: 'preserve-3d',
-          rotateX,
-          rotateY,
+          position: 'absolute', 
+          top: 20, 
+          right: 20, 
+          transformStyle: 'preserve-3d', 
+          rotateX, 
+          rotateY, 
         }}
       >
         <motion.div
@@ -418,11 +418,11 @@ const QuantumMarketDashboard: React.FC = () => {
     return (
       <Box sx={{ p: 3 }}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0,  scale: 0.9 }}
+          animate={{ opacity: 1,  scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {categoryData.map((category, categoryIndex) => (
+          {categoryData.map((category,  categoryIndex) => (
             <motion.div
               key={category.id}
               initial={{ x: -100, opacity: 0 }}
@@ -504,7 +504,7 @@ const QuantumMarketDashboard: React.FC = () => {
                     
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 2 }}>
                       {category.procedures
-                        .sort((a, b) => {
+                        .sort((a,  b) => {
                           const aValue = a[sortConfig.key as keyof Procedure];
                           const bValue = b[sortConfig.key as keyof Procedure];
                           
@@ -516,12 +516,12 @@ const QuantumMarketDashboard: React.FC = () => {
                             ? String(aValue).localeCompare(String(bValue))
                             : String(bValue).localeCompare(String(aValue));
                         })
-                        .map((procedure, index) => (
+                        .map((procedure, _index) => (
                           <motion.div
                             key={procedure.id}
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: index * 0.05 }}
+                            initial={{ y: 20,  opacity: 0 }}
+                            animate={{ y: 0,  opacity: 1 }}
+                            transition={{ delay: _index * 0.05 }}
                             whileHover={{ scale: 1.02 }}
                             onHoverStart={() => setHoveredItem(procedure.id)}
                             onHoverEnd={() => setHoveredItem(null)}
@@ -789,7 +789,7 @@ const QuantumMarketDashboard: React.FC = () => {
                 }}
               >
                 {/* Animated stars */}
-                {Array.from({ length: 100 }, (_, i) => (
+                {Array.from({ length: 100 },  (_,  i) => (
                   <motion.div
                     key={i}
                     style={{
@@ -870,12 +870,12 @@ const QuantumMarketDashboard: React.FC = () => {
                 
                 <Typography variant="h6" sx={{ mb: 2 }}>Procedures</Typography>
                 
-                {sortedData.map((procedure, index) => (
+                {sortedData.map((procedure, _index) => (
                   <motion.div
                     key={procedure.id}
                     initial={{ x: 50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: _index * 0.1 }}
                   >
                     <Box
                       sx={{
@@ -927,6 +927,5 @@ const QuantumMarketDashboard: React.FC = () => {
     </Box>
   );
 };
-
 
 QuantumMarketDashboard.displayName = 'QuantumMarketDashboard';export default QuantumMarketDashboard;

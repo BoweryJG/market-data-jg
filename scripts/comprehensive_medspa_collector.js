@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const { parse } = require('json2csv');
 
@@ -345,8 +347,8 @@ function processSearchResults() {
 
 // Main execution
 async function main() {
-  console.log('Comprehensive MedSpa Data Collection');
-  console.log('====================================\n');
+  logger.info('Comprehensive MedSpa Data Collection');
+  logger.info('====================================\n');
   
   // Collect all medspas
   const allMedSpas = processSearchResults();
@@ -355,7 +357,7 @@ async function main() {
   allMedSpas.sort((a, b) => b.confidenceScore - a.confidenceScore);
   
   // Save results
-  console.log('\n=== Saving Results ===');
+  logger.info('\n=== Saving Results ===');
   
   const timestamp = new Date().toISOString().split('T')[0];
   
@@ -372,7 +374,7 @@ async function main() {
     const csv = parse(allMedSpas, { fields });
     const filename = `comprehensive_medspas_NY_FL_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allMedSpas.length} medspas to ${filename}`);
+    logger.info(`Saved ${allMedSpas.length} medspas to ${filename}`);
     
     // Save verified medspas
     const verified = allMedSpas.filter(m => m.isVerifiedMedSpa);
@@ -380,7 +382,7 @@ async function main() {
       const csvVerified = parse(verified, { fields });
       const filenameVerified = `verified_medspas_NY_FL_${timestamp}.csv`;
       fs.writeFileSync(filenameVerified, csvVerified);
-      console.log(`Saved ${verified.length} verified medspas to ${filenameVerified}`);
+      logger.info(`Saved ${verified.length} verified medspas to ${filenameVerified}`);
     }
     
     // Save JSON for analysis
@@ -425,38 +427,38 @@ async function main() {
   );
   
   // Display summary
-  console.log('\n=== Collection Summary ===');
-  console.log(`Total MedSpas Found: ${summary.totalMedSpasFound}`);
-  console.log(`  Verified MedSpas: ${allMedSpas.filter(m => m.isVerifiedMedSpa).length}`);
-  console.log(`  Chain Locations: ${summary.chains}`);
+  logger.info('\n=== Collection Summary ===');
+  logger.info(`Total MedSpas Found: ${summary.totalMedSpasFound}`);
+  logger.info(`  Verified MedSpas: ${allMedSpas.filter(m => m.isVerifiedMedSpa).length}`);
+  logger.info(`  Chain Locations: ${summary.chains}`);
   
-  console.log('\nBy State:');
+  logger.info('\nBy State:');
   Object.entries(summary.byState).forEach(([state, count]) => {
-    console.log(`  ${state}: ${count}`);
+    logger.info(`  ${state}: ${count}`);
   });
   
-  console.log('\nTop Cities:');
+  logger.info('\nTop Cities:');
   Object.entries(summary.byCity)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .forEach(([city, count]) => {
-      console.log(`  ${city}: ${count}`);
+      logger.info(`  ${city}: ${count}`);
     });
   
-  console.log('\nTop Services Offered:');
+  logger.info('\nTop Services Offered:');
   Object.entries(summary.services)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .forEach(([service, count]) => {
-      console.log(`  ${service}: ${count}`);
+      logger.info(`  ${service}: ${count}`);
     });
   
-  console.log('\nData collection complete!');
-  console.log('\nNext steps for comprehensive coverage:');
-  console.log('1. Run searches for each city listed in LOCATIONS array');
-  console.log('2. Scrape Yelp medical spa category');
-  console.log('3. Use Google Places API for radius searches');
-  console.log('4. Cross-reference with state business registrations');
+  logger.info('\nData collection complete!');
+  logger.info('\nNext steps for comprehensive coverage:');
+  logger.info('1. Run searches for each city listed in LOCATIONS array');
+  logger.info('2. Scrape Yelp medical spa category');
+  logger.info('3. Use Google Places API for radius searches');
+  logger.info('4. Cross-reference with state business registrations');
 }
 
 // Run the collector

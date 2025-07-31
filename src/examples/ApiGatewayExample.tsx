@@ -61,14 +61,14 @@ const ApiGatewayExample: React.FC = () => {
   }, [selectedCategory]);
 
   // Handle category selection
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(event.target.value);
+  const handleCategoryChange = (_event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(_event.target.value);
   };
 
   // Handle search
-  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const handleSearch = async (_event: React.FormEvent<HTMLFormElement>) => {
+    _event.preventDefault();
+    const formData = new FormData(_event.currentTarget);
     const searchQuery = formData.get('searchQuery') as string;
     
     if (!searchQuery.trim()) return;

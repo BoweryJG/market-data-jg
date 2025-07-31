@@ -48,6 +48,8 @@ import VelocityStreams from './VelocityStreams';
 import OpportunityRadar from './OpportunityRadar';
 import MetricCalculator from './MetricCalculator';
 import { marketPulseService } from '../../services/marketPulseService';
+import { logger } from '../services/logging/logger';
+
 
 interface MarketPulseEngineProps {
   onProcedureSelect?: (procedure: any) => void;
@@ -100,7 +102,7 @@ const MarketPulseEngine: React.FC<MarketPulseEngineProps> = ({
         const velocity = data.metrics?.averageGrowthRate || 5;
         setPulseRate(Math.min(120, 60 + velocity * 4));
       } catch (error) {
-        console.error('Error loading market data:', error);
+        logger.error('Error loading market data:', error);
       } finally {
         setLoading(false);
       }

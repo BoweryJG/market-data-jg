@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 // Load environment variables
 dotenv.config();
@@ -8,7 +10,7 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing Supabase credentials');
+  logger.error('Missing Supabase credentials');
   process.exit(1);
 }
 
@@ -206,49 +208,49 @@ const additionalTerritories = [
 ];
 
 async function populateProviderData() {
-  console.log('🚀 Starting provider data population...');
+  logger.info('🚀 Starting provider data population...');
 
   try {
     // Insert NYC providers
-    console.log('📍 Inserting NYC providers...');
+    logger.info('📍 Inserting NYC providers...');
     const { error: nycError } = await supabase
       .from('provider_locations')
       .insert(nycProviders);
 
     if (nycError) {
-      console.error('Error inserting NYC providers:', nycError);
+      logger.error('Error inserting NYC providers:', nycError);
     } else {
-      console.log(`✅ Inserted ${nycProviders.length} NYC providers`);
+      logger.info(`✅ Inserted ${nycProviders.length} NYC providers`);
     }
 
     // Insert Miami providers
-    console.log('📍 Inserting Miami providers...');
+    logger.info('📍 Inserting Miami providers...');
     const { error: miamiError } = await supabase
       .from('provider_locations')
       .insert(miamiProviders);
 
     if (miamiError) {
-      console.error('Error inserting Miami providers:', miamiError);
+      logger.error('Error inserting Miami providers:', miamiError);
     } else {
-      console.log(`✅ Inserted ${miamiProviders.length} Miami providers`);
+      logger.info(`✅ Inserted ${miamiProviders.length} Miami providers`);
     }
 
     // Insert additional territories
-    console.log('🗺️ Inserting additional market territories...');
+    logger.info('🗺️ Inserting additional market territories...');
     const { error: territoryError } = await supabase
       .from('market_territories')
       .insert(additionalTerritories);
 
     if (territoryError) {
-      console.error('Error inserting territories:', territoryError);
+      logger.error('Error inserting territories:', territoryError);
     } else {
-      console.log(`✅ Inserted ${additionalTerritories.length} additional territories`);
+      logger.info(`✅ Inserted ${additionalTerritories.length} additional territories`);
     }
 
-    console.log('🎉 Provider data population complete!');
+    logger.info('🎉 Provider data population complete!');
     
   } catch (error) {
-    console.error('Fatal error:', error);
+    logger.error('Fatal error:', error);
   }
 }
 

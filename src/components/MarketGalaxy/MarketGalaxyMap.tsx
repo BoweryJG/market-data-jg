@@ -47,6 +47,8 @@ import ParticleField from './ParticleField';
 import CategorySphere from './CategorySphere';
 import ConnectionLines from './ConnectionLines';
 import DataRipple from './DataRipple';
+import { logger } from '../services/logging/logger';
+
 
 interface EnhancedCategoryData extends CategoryAggregate {
   position: { x: number; y: number; z: number };
@@ -71,7 +73,7 @@ const MarketGalaxyMap: React.FC = () => {
   const controls = useAnimation();
 
   // Calculate category positions in orbital pattern
-  const calculateOrbitalPosition = (index: number, total: number, marketSize: number) => {
+  const calculateOrbitalPosition = (_index: number,  total: number,  marketSize: number) => {
     const angle = (index / total) * Math.PI * 2;
     const baseRadius = 300;
     const radius = baseRadius + (marketSize / 100) * 30; // Adjusted for real market sizes
@@ -100,9 +102,9 @@ const MarketGalaxyMap: React.FC = () => {
         const enrichedData = await galaxyDataService.enrichWithMarketIntelligence(aggregates);
         
         // Transform for visualization
-        const visualData: EnhancedCategoryData[] = enrichedData.map((cat, index) => ({
+        const visualData: EnhancedCategoryData[] = enrichedData.map((cat, _index) => ({
           ...cat,
-          position: calculateOrbitalPosition(index, enrichedData.length, cat.total_market_size),
+          position: calculateOrbitalPosition(_index, enrichedData.length, cat.total_market_size),
           velocity: { 
             x: cat.avg_growth_rate * 0.01, 
             y: cat.innovation_score * 0.001 
@@ -114,7 +116,7 @@ const MarketGalaxyMap: React.FC = () => {
         
         setCategories(visualData);
       } catch (err) {
-        console.error('Error loading galaxy data:', err);
+        logger.error('Error loading galaxy data:', err);
         setError('Failed to load market data. Please check your connection.');
       } finally {
         setLoading(false);
@@ -138,7 +140,7 @@ const MarketGalaxyMap: React.FC = () => {
   }, [isPlaying, timeScale, loading]);
 
   // Handle category click
-  const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
+  const handleCategoryClick = (categoryId: string, _event: React.MouseEvent) => {
     const category = categories.find(c => c.id === categoryId);
     if (category) {
       setSelectedCategory(category);
@@ -162,9 +164,9 @@ const MarketGalaxyMap: React.FC = () => {
 
   // Calculate market totals
   const marketTotals = useMemo(() => {
-    const total = categories.reduce((sum, cat) => sum + cat.total_market_size, 0);
-    const avgGrowth = categories.reduce((sum, cat) => sum + cat.avg_growth_rate, 0) / (categories.length || 1);
-    const totalOpportunities = categories.reduce((sum, cat) => sum + (cat.sales_opportunities?.length || 0), 0);
+    const total = categories.reduce((sum,  cat) => sum + cat.total_market_size, 0);
+    const avgGrowth = categories.reduce((sum,  cat) => sum + cat.avg_growth_rate, 0) / (categories.length || 1);
+    const totalOpportunities = categories.reduce((sum,  cat) => sum + (cat.sales_opportunities?.length || 0), 0);
     return { total, avgGrowth, totalOpportunities };
   }, [categories]);
 
@@ -175,7 +177,7 @@ const MarketGalaxyMap: React.FC = () => {
     return (
       <Card elevation={6} sx={{ mb: 2 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex',  alignItems: 'center',  gap: 1 }}>
             <Campaign color="primary" />
             Sales Actions
           </Typography>
@@ -185,7 +187,7 @@ const MarketGalaxyMap: React.FC = () => {
               variant="contained" 
               fullWidth
               startIcon={<Analytics />}
-              onClick={() => console.log('Generate pitch deck for', selectedCategory.name)}
+              onClick={() => logger.info('Generate pitch deck for', selectedCategory.name)}
             >
               Generate Pitch Deck
             </Button>
@@ -194,7 +196,7 @@ const MarketGalaxyMap: React.FC = () => {
               variant="outlined" 
               fullWidth
               startIcon={<Groups />}
-              onClick={() => console.log('Find decision makers')}
+              onClick={() => logger.info('Find decision makers')}
             >
               Find Decision Makers
             </Button>
@@ -203,7 +205,7 @@ const MarketGalaxyMap: React.FC = () => {
               variant="outlined" 
               fullWidth
               startIcon={<Schedule />}
-              onClick={() => console.log('Schedule campaign')}
+              onClick={() => logger.info('Schedule campaign')}
             >
               Schedule Campaign
             </Button>
@@ -422,7 +424,7 @@ const MarketGalaxyMap: React.FC = () => {
         )}
 
         {/* Category Spheres */}
-        {categories.map((category, index) => (
+        {categories.map((category, _index) => (
           <CategorySphere
             key={category.id}
             category={{
@@ -434,7 +436,7 @@ const MarketGalaxyMap: React.FC = () => {
             }}
             isSelected={selectedCategory?.id === category.id}
             onClick={handleCategoryClick}
-            delay={index * 0.1}
+            delay={_index * 0.1}
           />
         ))}
 
@@ -470,7 +472,7 @@ const MarketGalaxyMap: React.FC = () => {
           <Typography variant="caption" color="text.secondary">Time Scale</Typography>
           <Slider
             value={timeScale}
-            onChange={(_: Event, value: number | number[]) => setTimeScale(value as number)}
+            onChange={(_: Event,  value: number | number[]) => setTimeScale(value as number)}
             min={0.1}
             max={3}
             step={0.1}
@@ -606,7 +608,7 @@ const MarketGalaxyMap: React.FC = () => {
                       Top Procedures
                     </Typography>
                     <List dense>
-                      {selectedCategory.top_procedures.slice(0, 3).map((proc, idx) => (
+                      {selectedCategory.top_procedures.slice(0, 3).map((proc,  idx) => (
                         <ListItem key={proc.id}>
                           <ListItemText
                             primary={`${idx + 1}. ${proc.procedure_name}`}

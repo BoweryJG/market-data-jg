@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from '@/services/logging/logger';
+
 
 // Initialize Supabase client
 const supabaseUrl = 'https://cbopynuvhcymbumjnvay.supabase.co';
@@ -6,7 +8,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function applyValidatedData() {
-  console.log('🚀 Applying validated enrichment data to production tables...\n');
+  logger.info('🚀 Applying validated enrichment data to production tables...\n');
   
   // Get all validated entries from staging
   const { data: validatedData, error } = await supabase
@@ -17,11 +19,11 @@ async function applyValidatedData() {
     .order('confidence_score', { ascending: false });
     
   if (error) {
-    console.error('Error fetching validated data:', error);
+    logger.error('Error fetching validated data:', error);
     return;
   }
   
-  console.log(`Found ${validatedData?.length || 0} validated entries to apply`);
+  logger.info(`Found ${validatedData?.length || 0} validated entries to apply`);
   
   let appliedAesthetic = 0;
   let appliedDental = 0;
@@ -36,16 +38,16 @@ async function applyValidatedData() {
     return acc;
   }, {} as Record<string, any[]>) || {};
   
-  console.log('\n📊 Data to apply:');
-  console.log(`- Aesthetic procedures: ${byType.aesthetic?.length || 0}`);
-  console.log(`- Dental procedures: ${byType.dental?.length || 0}`);
-  console.log('\n');
+  logger.info('\n📊 Data to apply:');
+  logger.info(`- Aesthetic procedures: ${byType.aesthetic?.length || 0}`);
+  logger.info(`- Dental procedures: ${byType.dental?.length || 0}`);
+  logger.info('\n');
   
   // Apply updates in batches
   for (const entry of validatedData || []) {
     const tableName = `${entry.procedure_type}_procedures`;
     
-    console.log(`Updating ${entry.procedure_name} in ${tableName}...`);
+    logger.info(`Updating ${entry.procedure_name} in ${tableName}...`);
     
     const updateData: any = {
       market_size_2025_usd_millions: entry.new_market_size,
@@ -63,7 +65,7 @@ async function applyValidatedData() {
       .eq('id', entry.original_id);
       
     if (updateError) {
-      console.error(`❌ Error updating ${entry.procedure_name}:`, updateError);
+      logger.error(`❌ Error updating ${entry.procedure_name}:`, updateError);
       errors++;
     } else {
       if (entry.procedure_type === 'aesthetic') {
@@ -71,15 +73,15 @@ async function applyValidatedData() {
       } else {
         appliedDental++;
       }
-      console.log(`✓ Updated ${entry.procedure_name} - Market Size: $${entry.new_market_size}M, Growth: ${entry.new_growth_rate}%`);
+      logger.info(`✓ Updated ${entry.procedure_name} - Market Size: $${entry.new_market_size}M, Growth: ${entry.new_growth_rate}%`);
     }
   }
   
-  console.log('\n✅ Enrichment Application Complete!');
-  console.log(`- Aesthetic procedures updated: ${appliedAesthetic}`);
-  console.log(`- Dental procedures updated: ${appliedDental}`);
-  console.log(`- Total updates: ${appliedAesthetic + appliedDental}`);
-  console.log(`- Errors: ${errors}`);
+  logger.info('\n✅ Enrichment Application Complete!');
+  logger.info(`- Aesthetic procedures updated: ${appliedAesthetic}`);
+  logger.info(`- Dental procedures updated: ${appliedDental}`);
+  logger.info(`- Total updates: ${appliedAesthetic + appliedDental}`);
+  logger.info(`- Errors: ${errors}`);
   
   // Create audit log
   const auditEntry = {
@@ -93,26 +95,26 @@ async function applyValidatedData() {
     notes: `Applied validated enrichment data from staging table. Confidence threshold: 75%`
   };
   
-  console.log('\n📝 Creating audit log...');
+  logger.info('\n📝 Creating audit log...');
   const { error: auditError } = await supabase
     .from('data_enrichment_audit')
     .insert(auditEntry);
     
   if (auditError) {
     // If audit table doesn't exist, just log it
-    console.log('Audit log:', JSON.stringify(auditEntry, null, 2));
+    logger.info('Audit log:', JSON.stringify(auditEntry, null, 2));
   } else {
-    console.log('✓ Audit log created');
+    logger.info('✓ Audit log created');
   }
   
   // Summary report
-  console.log('\n📊 Market Data Quality Report:');
-  console.log('- Procedures with unique market sizes: Successfully enriched');
-  console.log('- Data coverage improved from ~50% to >80%');
-  console.log('- Average confidence score: 86.8%');
-  console.log('- Data validation: All enriched values have been verified');
+  logger.info('\n📊 Market Data Quality Report:');
+  logger.info('- Procedures with unique market sizes: Successfully enriched');
+  logger.info('- Data coverage improved from ~50% to >80%');
+  logger.info('- Average confidence score: 86.8%');
+  logger.info('- Data validation: All enriched values have been verified');
   
-  console.log('\n✨ Enrichment process complete!');
+  logger.info('\n✨ Enrichment process complete!');
 }
 
 // Run the application

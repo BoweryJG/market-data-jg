@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const csv = require('csv-parser');
 const { createClient } = require('@supabase/supabase-js');
@@ -8,14 +10,14 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing Supabase credentials in .env file');
+  logger.error('Missing Supabase credentials in .env file');
   process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function importCSVToSupabase(csvFile) {
-  console.log(`📥 Importing ${csvFile} to Supabase...`);
+  logger.info(`📥 Importing ${csvFile} to Supabase...`);
   
   const providers = [];
   let count = 0;
@@ -64,7 +66,7 @@ async function importCSVToSupabase(csvFile) {
         if (providers.length > 0) {
           await insertBatch(providers, count);
         }
-        console.log(`✅ Import complete! Total processed: ${count}`);
+        logger.info(`✅ Import complete! Total processed: ${count}`);
         resolve(count);
       })
       .on('error', reject);
@@ -72,23 +74,23 @@ async function importCSVToSupabase(csvFile) {
 }
 
 async function insertBatch(providers, totalCount) {
-  console.log(`📤 Inserting batch of ${providers.length} providers (total: ${totalCount})...`);
+  logger.info(`📤 Inserting batch of ${providers.length} providers (total: ${totalCount})...`);
   
   const { data, error } = await supabase
     .from('provider_locations')
     .insert(providers);
     
   if (error) {
-    console.error('❌ Error inserting batch:', error);
+    logger.error('❌ Error inserting batch:', error);
     // Continue with next batch even if this one fails
   } else {
-    console.log(`✅ Batch inserted successfully`);
+    logger.info(`✅ Batch inserted successfully`);
   }
 }
 
 // Main execution
 async function main() {
-  console.log('🚀 Starting CSV to Supabase import...\n');
+  logger.info('🚀 Starting CSV to Supabase import...\n');
   
   const csvFiles = [
     'npi_all_providers_complete_2025-06-04.csv' // 9,136 total providers
@@ -98,11 +100,11 @@ async function main() {
     try {
       await importCSVToSupabase(file);
     } catch (error) {
-      console.error(`Error processing ${file}:`, error);
+      logger.error(`Error processing ${file}:`, error);
     }
   }
   
-  console.log('\n🎉 All imports complete!');
+  logger.info('\n🎉 All imports complete!');
 }
 
 // Run if called directly

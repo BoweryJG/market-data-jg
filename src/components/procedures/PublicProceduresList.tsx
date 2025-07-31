@@ -32,6 +32,8 @@ import {
 } from '@mui/icons-material';
 import { QuickLoginModal } from '../Auth/QuickLoginModal';
 import { supabase } from '../../services/supabaseClient';
+import { logger } from '../services/logging/logger';
+
 
 // Styled components
 const GradientButton = styled(Button)(({ theme }) => ({
@@ -49,9 +51,9 @@ const GradientButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const CategoryCard = styled(Card, {
+const CategoryCard = styled(Card,  {
   shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded: boolean }>(({ theme, expanded }) => ({
+})<{ expanded: boolean }>(({ theme,  expanded }) => ({
   transition: 'all 0.3s ease',
   cursor: 'pointer',
   '&:hover': {
@@ -127,11 +129,11 @@ export const PublicProceduresList: React.FC = () => {
 
       // Convert to array and sort by market size
       const categoriesArray = Array.from(categoryMap.values())
-        .sort((a, b) => b.total_market_size - a.total_market_size);
+        .sort((a,  b) => b.total_market_size - a.total_market_size);
 
       setCategories(categoriesArray);
     } catch (error) {
-      console.error('Error fetching procedures:', error);
+      logger.error('Error fetching procedures:', error);
     } finally {
       setLoading(false);
     }
@@ -240,7 +242,7 @@ export const PublicProceduresList: React.FC = () => {
       {/* Categories Grid */}
       {loading ? (
         <Grid container spacing={3}>
-          {[1, 2, 3, 4].map((i) => (
+          {[1,  2,  3,  4].map((i) => (
             <Grid item xs={12} key={i}>
               <Skeleton variant="rectangular" height={200} />
             </Grid>
@@ -342,7 +344,7 @@ export const PublicProceduresList: React.FC = () => {
                           All Procedures in {category.name}
                         </Typography>
                         <Grid container spacing={2}>
-                          {category.procedures.map((proc, index) => (
+                          {category.procedures.map((proc, _index) => (
                             <Grid item xs={12} sm={6} md={4} key={proc.id}>
                               <Box
                                 sx={{

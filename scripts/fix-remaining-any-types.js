@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 #!/usr/bin/env node
 
 const fs = require('fs');
@@ -88,9 +90,9 @@ methodReplacements.forEach(({ from, to }) => {
 // Write the file back
 fs.writeFileSync(filePath, content, 'utf8');
 
-console.log('✅ Fixed all remaining "any" types in api-client.ts');
-console.log('📝 Changes made:');
-console.log('  - Added proper type imports');
-console.log('  - Replaced all method return types with specific types');
-console.log('  - Updated generic parameters in API calls');
-console.log('\nPlease run TypeScript compilation to verify all types are correct.');
+logger.info('✅ Fixed all remaining "any" types in api-client.ts');
+logger.info('📝 Changes made:');
+logger.info('  - Added proper type imports');
+logger.info('  - Replaced all method return types with specific types');
+logger.info('  - Updated generic parameters in API calls');
+logger.info('\nPlease run TypeScript compilation to verify all types are correct.');

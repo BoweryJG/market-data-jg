@@ -5,6 +5,8 @@ import { MagicLinkAuthService } from '../../services/magicLinkAuth';
 import EmailIcon from '@mui/icons-material/Email';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { logger } from '../services/logging/logger';
+
 
 export const MagicLinkHandler: React.FC = () => {
   const { token } = useParams<{ token: string }>();
@@ -68,7 +70,7 @@ export const MagicLinkHandler: React.FC = () => {
       }, 2000);
       
     } catch (err) {
-      console.error('Magic link error:', err);
+      logger.error('Magic link error:', err);
       setStatus('error');
       setError('An error occurred processing your request.');
     } finally {

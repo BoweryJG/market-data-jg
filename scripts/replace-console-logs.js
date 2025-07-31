@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { globSync } = require('glob');
+const glob = require('glob');
 
 // Colors for terminal output
 const colors = {
@@ -100,16 +100,16 @@ function processFile(filePath) {
       fs.writeFileSync(filePath, modifiedContent, 'utf8');
       fileReplacements[filePath] = replacementCount;
       totalReplacements += replacementCount;
-      console.log(`${colors.green}✓${colors.reset} ${filePath} - ${replacementCount} replacements`);
+      logger.info(`${colors.green}✓${colors.reset} ${filePath} - ${replacementCount} replacements`);
     }
   } catch (error) {
-    console.error(`${colors.red}✗${colors.reset} Error processing ${filePath}:`, error.message);
+    logger.error(`${colors.red}✗${colors.reset} Error processing ${filePath}:`, error.message);
   }
 }
 
 // Main function
 function main() {
-  console.log(`${colors.blue}Starting console.log replacement...${colors.reset}\n`);
+  logger.info(`${colors.blue}Starting console.log replacement...${colors.reset}\n`);
   
   // Find all TypeScript and JavaScript files
   const patterns = [
@@ -120,43 +120,43 @@ function main() {
   
   const files = [];
   patterns.forEach(pattern => {
-    const matchedFiles = globSync(pattern, {
-      ignore: ['**/node_modules/**', '**/dist/**', '**/build/**']
+    const matchedFiles = glob.sync(pattern, {
+      ignore: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/unified-auth/**']
     });
     files.push(...matchedFiles);
   });
   
   totalFiles = files.length;
-  console.log(`Found ${totalFiles} files to process\n`);
+  logger.info(`Found ${totalFiles} files to process\n`);
   
   // Process each file
   files.forEach(processFile);
   
   // Print summary
-  console.log(`\n${colors.blue}Summary:${colors.reset}`);
-  console.log(`Total files processed: ${totalFiles}`);
-  console.log(`Total replacements: ${totalReplacements}`);
-  console.log(`Files modified: ${Object.keys(fileReplacements).length}`);
+  logger.info(`\n${colors.blue}Summary:${colors.reset}`);
+  logger.info(`Total files processed: ${totalFiles}`);
+  logger.info(`Total replacements: ${totalReplacements}`);
+  logger.info(`Files modified: ${Object.keys(fileReplacements).length}`);
   
   if (Object.keys(fileReplacements).length > 0) {
-    console.log(`\n${colors.yellow}Modified files:${colors.reset}`);
+    logger.info(`\n${colors.yellow}Modified files:${colors.reset}`);
     Object.entries(fileReplacements)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .forEach(([file, count]) => {
-        console.log(`  ${count} replacements in ${file}`);
+        logger.info(`  ${count} replacements in ${file}`);
       });
     
     if (Object.keys(fileReplacements).length > 10) {
-      console.log(`  ... and ${Object.keys(fileReplacements).length - 10} more files`);
+      logger.info(`  ... and ${Object.keys(fileReplacements).length - 10} more files`);
     }
   }
   
-  console.log(`\n${colors.green}✓ Console.log replacement completed!${colors.reset}`);
-  console.log(`\n${colors.yellow}Note:${colors.reset} Make sure to:`);
-  console.log('1. Review the changes with git diff');
-  console.log('2. Test the application to ensure logging works correctly');
-  console.log('3. Commit the changes');
+  logger.info(`\n${colors.green}✓ Console.log replacement completed!${colors.reset}`);
+  logger.info(`\n${colors.yellow}Note:${colors.reset} Make sure to:`);
+  logger.info('1. Review the changes with git diff');
+  logger.info('2. Test the application to ensure logging works correctly');
+  logger.info('3. Commit the changes');
 }
 
 // Run the script

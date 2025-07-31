@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -18,7 +20,7 @@ interface ProcedureToVerify {
 }
 
 async function verifyRemainingProcedures() {
-  console.log('=== Verifying Remaining Procedures ===\n');
+  logger.info('=== Verifying Remaining Procedures ===\n');
   
   const startTime = new Date();
   let totalProcessed = 0;
@@ -31,7 +33,7 @@ async function verifyRemainingProcedures() {
     .is('data_verification_date', null);
 
   if (aestheticError) {
-    console.error('Error fetching aesthetic procedures:', aestheticError);
+    logger.error('Error fetching aesthetic procedures:', aestheticError);
     return;
   }
 
@@ -42,27 +44,27 @@ async function verifyRemainingProcedures() {
     .is('data_verification_date', null);
 
   if (dentalError) {
-    console.error('Error fetching dental procedures:', dentalError);
+    logger.error('Error fetching dental procedures:', dentalError);
     return;
   }
 
   const aestheticToProcess = aestheticProcs?.map(p => ({ ...p, table_name: 'aesthetic_procedures' })) || [];
   const dentalToProcess = dentalProcs?.map(p => ({ ...p, table_name: 'dental_procedures' })) || [];
   
-  console.log(`Found ${aestheticToProcess.length} unverified aesthetic procedures`);
-  console.log(`Found ${dentalToProcess.length} unverified dental procedures`);
-  console.log(`Total to process: ${aestheticToProcess.length + dentalToProcess.length}\n`);
+  logger.info(`Found ${aestheticToProcess.length} unverified aesthetic procedures`);
+  logger.info(`Found ${dentalToProcess.length} unverified dental procedures`);
+  logger.info(`Total to process: ${aestheticToProcess.length + dentalToProcess.length}\n`);
 
   // Process aesthetic procedures
   if (aestheticToProcess.length > 0) {
-    console.log('Processing Aesthetic Procedures...');
+    logger.info('Processing Aesthetic Procedures...');
     for (const proc of aestheticToProcess) {
       try {
         await verifyProcedure(proc);
         totalProcessed++;
-        console.log(`✓ ${proc.procedure_name} (${totalProcessed}/${aestheticToProcess.length + dentalToProcess.length})`);
+        logger.info(`✓ ${proc.procedure_name} (${totalProcessed}/${aestheticToProcess.length + dentalToProcess.length})`);
       } catch (error) {
-        console.error(`✗ Failed: ${proc.procedure_name}`, error);
+        logger.error(`✗ Failed: ${proc.procedure_name}`, error);
         errors++;
       }
     }
@@ -70,14 +72,14 @@ async function verifyRemainingProcedures() {
 
   // Process dental procedures
   if (dentalToProcess.length > 0) {
-    console.log('\nProcessing Dental Procedures...');
+    logger.info('\nProcessing Dental Procedures...');
     for (const proc of dentalToProcess) {
       try {
         await verifyProcedure(proc);
         totalProcessed++;
-        console.log(`✓ ${proc.procedure_name} (${totalProcessed}/${aestheticToProcess.length + dentalToProcess.length})`);
+        logger.info(`✓ ${proc.procedure_name} (${totalProcessed}/${aestheticToProcess.length + dentalToProcess.length})`);
       } catch (error) {
-        console.error(`✗ Failed: ${proc.procedure_name}`, error);
+        logger.error(`✗ Failed: ${proc.procedure_name}`, error);
         errors++;
       }
     }
@@ -86,10 +88,10 @@ async function verifyRemainingProcedures() {
   const endTime = new Date();
   const duration = (endTime.getTime() - startTime.getTime()) / 1000;
 
-  console.log('\n=== Verification Complete ===');
-  console.log(`Total processed: ${totalProcessed}`);
-  console.log(`Errors: ${errors}`);
-  console.log(`Duration: ${duration.toFixed(1)} seconds`);
+  logger.info('\n=== Verification Complete ===');
+  logger.info(`Total processed: ${totalProcessed}`);
+  logger.info(`Errors: ${errors}`);
+  logger.info(`Duration: ${duration.toFixed(1)} seconds`);
 
   // Generate final report
   await generateFinalReport();
@@ -206,9 +208,9 @@ async function generateFinalReport() {
   const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/FINAL_VERIFICATION_REPORT_${new Date().toISOString().split('T')[0]}.json`;
   await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
 
-  console.log('\n=== Final Report Summary ===');
-  console.log(JSON.stringify(report.summary, null, 2));
-  console.log(`\nFull report saved to: ${reportPath}`);
+  logger.info('\n=== Final Report Summary ===');
+  logger.info(JSON.stringify(report.summary, null, 2));
+  logger.info(`\nFull report saved to: ${reportPath}`);
 }
 
 // Execute

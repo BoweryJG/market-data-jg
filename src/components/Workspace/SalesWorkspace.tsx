@@ -48,6 +48,8 @@ import TerritoryMap from './TerritoryMap';
 import OpportunityFeed from './OpportunityFeed';
 import AutomationPanel from './AutomationPanel';
 import { motion, AnimatePresence } from 'framer-motion';
+import { logger } from '../services/logging/logger';
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,7 +57,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => {
   return (
     <Box hidden={value !== index} sx={{ height: '100%' }}>
       {value === index && children}
@@ -102,7 +104,7 @@ const SalesWorkspace: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', position: 'relative' }}>
+    <Box sx={{ display: 'flex',  height: '100vh',  position: 'relative' }}>
       {/* Left Sidebar - Navigation */}
       <Drawer
         variant={isMobile ? 'temporary' : 'permanent'}
@@ -270,16 +272,16 @@ const SalesWorkspace: React.FC = () => {
             <Paper
               elevation={3}
               sx={{
-                flex: 0.35,
-                borderLeft: `1px solid ${theme.palette.divider}`,
-                display: 'flex',
-                flexDirection: 'column',
+                flex: 0.35, 
+                borderLeft: `1px solid ${theme.palette.divider}`, 
+                display: 'flex', 
+                flexDirection: 'column', 
                 overflow: 'hidden'
               }}
             >
               <Tabs
                 value={rightPanelTab}
-                onChange={(_: React.SyntheticEvent, value: number) => setRightPanelTab(value)}
+                onChange={(_: React.SyntheticEvent,  value: number) => setRightPanelTab(value)}
                 sx={{ borderBottom: 1, borderColor: 'divider' }}
               >
                 <Tab label="Insights" icon={<Analytics />} iconPosition="start" />
@@ -364,7 +366,7 @@ const SalesWorkspace: React.FC = () => {
                         { time: '2:00 PM', event: 'Follow-up: Aesthetic Excellence', type: 'call' },
                         { time: '3:30 PM', event: 'Proposal deadline: Miami Smiles', type: 'deadline' },
                         { time: 'Tomorrow', event: 'Quarterly review', type: 'important' }
-                      ].map((item, idx) => (
+                      ].map((item,  idx) => (
                         <Card key={idx} variant="outlined">
                           <CardContent sx={{ py: 1.5 }}>
                             <Typography variant="caption" color="text.secondary">
@@ -418,8 +420,8 @@ const SalesWorkspace: React.FC = () => {
             >
               <AICommandBar
                 onClose={() => setShowAICommand(false)}
-                onResultSelect={(result) => {
-                  console.log('Selected:', result);
+                onResultSelect={(_result) => {
+                  logger.info('Selected:', result);
                   setShowAICommand(false);
                 }}
               />

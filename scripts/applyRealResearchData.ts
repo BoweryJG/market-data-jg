@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -93,13 +95,13 @@ const REAL_MARKET_DATA = {
 };
 
 async function applyRealResearchData() {
-  console.log('=== APPLYING REAL MCP RESEARCH DATA ===\n');
+  logger.info('=== APPLYING REAL MCP RESEARCH DATA ===\n');
   
   let updated = 0;
   let failed = 0;
   
   for (const [procedureName, data] of Object.entries(REAL_MARKET_DATA)) {
-    console.log(`\nUpdating: ${procedureName}`);
+    logger.info(`\nUpdating: ${procedureName}`);
     
     // Calculate projections
     const rate = data.cagr / 100;
@@ -138,32 +140,32 @@ async function applyRealResearchData() {
         .eq('procedure_name', procedureName);
         
       if (dentalError) {
-        console.log(`  ✗ Failed to update: ${dentalError.message}`);
+        logger.info(`  ✗ Failed to update: ${dentalError.message}`);
         failed++;
       } else {
-        console.log(`  ✓ Updated in dental_procedures`);
-        console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-        console.log(`    CAGR: ${data.cagr}%`);
-        console.log(`    Confidence: ${data.confidence}/10`);
+        logger.info(`  ✓ Updated in dental_procedures`);
+        logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+        logger.info(`    CAGR: ${data.cagr}%`);
+        logger.info(`    Confidence: ${data.confidence}/10`);
         updated++;
       }
     } else {
-      console.log(`  ✓ Updated in aesthetic_procedures`);
-      console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-      console.log(`    CAGR: ${data.cagr}%`);
-      console.log(`    Confidence: ${data.confidence}/10`);
+      logger.info(`  ✓ Updated in aesthetic_procedures`);
+      logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+      logger.info(`    CAGR: ${data.cagr}%`);
+      logger.info(`    Confidence: ${data.confidence}/10`);
       updated++;
     }
   }
   
-  console.log(`\n\n=== SUMMARY ===`);
-  console.log(`Successfully updated: ${updated} procedures`);
-  console.log(`Failed: ${failed} procedures`);
-  console.log(`\nAll data sourced from REAL MCP tools:`);
-  console.log(`- Perplexity Deep Research`);
-  console.log(`- Brave Search`);
-  console.log(`- Firecrawl`);
-  console.log(`- Serper Search`);
+  logger.info(`\n\n=== SUMMARY ===`);
+  logger.info(`Successfully updated: ${updated} procedures`);
+  logger.info(`Failed: ${failed} procedures`);
+  logger.info(`\nAll data sourced from REAL MCP tools:`);
+  logger.info(`- Perplexity Deep Research`);
+  logger.info(`- Brave Search`);
+  logger.info(`- Firecrawl`);
+  logger.info(`- Serper Search`);
 }
 
 // Execute

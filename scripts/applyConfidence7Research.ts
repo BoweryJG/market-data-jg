@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -91,13 +93,13 @@ const CONFIDENCE_7_DATA = {
 };
 
 async function applyConfidence7Research() {
-  console.log('=== APPLYING REAL RESEARCH FOR CONFIDENCE 7 PROCEDURES ===\n');
+  logger.info('=== APPLYING REAL RESEARCH FOR CONFIDENCE 7 PROCEDURES ===\n');
   
   let updated = 0;
   let failed = 0;
   
   for (const [procedureName, data] of Object.entries(CONFIDENCE_7_DATA)) {
-    console.log(`\nUpdating: ${procedureName}`);
+    logger.info(`\nUpdating: ${procedureName}`);
     
     // Calculate projections
     const rate = data.cagr / 100;
@@ -130,25 +132,25 @@ async function applyConfidence7Research() {
       .eq('procedure_name', procedureName);
       
     if (error) {
-      console.log(`  ✗ Failed: ${error.message}`);
+      logger.info(`  ✗ Failed: ${error.message}`);
       failed++;
     } else {
-      console.log(`  ✓ Updated successfully`);
-      console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-      console.log(`    CAGR: ${data.cagr}%`);
-      console.log(`    Confidence: ${data.confidence}/10`);
-      console.log(`    Key Player: ${data.manufacturers[0]}`);
+      logger.info(`  ✓ Updated successfully`);
+      logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+      logger.info(`    CAGR: ${data.cagr}%`);
+      logger.info(`    Confidence: ${data.confidence}/10`);
+      logger.info(`    Key Player: ${data.manufacturers[0]}`);
       updated++;
     }
   }
   
-  console.log(`\n\n=== SUMMARY ===`);
-  console.log(`Successfully updated: ${updated} procedures`);
-  console.log(`Failed: ${failed} procedures`);
-  console.log(`\nData Quality Improvements:`);
-  console.log(`- All procedures now have confidence 8-9`);
-  console.log(`- Based on real market research and industry reports`);
-  console.log(`- Identified key manufacturers and market positions`);
+  logger.info(`\n\n=== SUMMARY ===`);
+  logger.info(`Successfully updated: ${updated} procedures`);
+  logger.info(`Failed: ${failed} procedures`);
+  logger.info(`\nData Quality Improvements:`);
+  logger.info(`- All procedures now have confidence 8-9`);
+  logger.info(`- Based on real market research and industry reports`);
+  logger.info(`- Identified key manufacturers and market positions`);
 }
 
 // Execute

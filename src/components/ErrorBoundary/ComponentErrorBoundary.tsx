@@ -7,7 +7,7 @@ interface Props {
   children: ReactNode;
   componentName?: string;
   fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (_error: Error,  errorInfo: ErrorInfo) => void;
   showDetails?: boolean;
   resetKeys?: Array<string | number>;
 }
@@ -44,7 +44,7 @@ export class ComponentErrorBoundary extends Component<Props, State> {
     if (
       props.resetKeys &&
       state.prevResetKeys &&
-      props.resetKeys.some((key, index) => key !== state.prevResetKeys?.[index])
+      props.resetKeys.some((key, _index) => key !== state.prevResetKeys?.[index])
     ) {
       return {
         hasError: false,
@@ -188,7 +188,7 @@ export function withComponentErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   errorBoundaryProps?: Omit<Props, 'children'>
 ) {
-  const WrappedComponent = (props: P) => (
+  const WrappedComponent = (_props: P) => (
     <ComponentErrorBoundary {...errorBoundaryProps}>
       <Component {...props} />
     </ComponentErrorBoundary>

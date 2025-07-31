@@ -49,7 +49,7 @@ interface MetricCardProps {
   subtitle?: string;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon, color, subtitle }) => {
+const MetricCard: React.FC<MetricCardProps> = ({ title,  value,  change,  icon,  color,  subtitle }) => {
   const theme = useTheme();
   
   return (
@@ -119,7 +119,7 @@ interface AccountCardProps {
   nextAction: string;
 }
 
-const AccountCard: React.FC<AccountCardProps> = ({ name, type, lastVisit, health, revenue, nextAction }) => {
+const AccountCard: React.FC<AccountCardProps> = ({ name,  type,  lastVisit,  health,  revenue,  nextAction }) => {
   const theme = useTheme();
   const healthColors = {
     good: theme.palette.success.main,
@@ -214,7 +214,7 @@ interface OpportunityProps {
   daysLeft: number;
 }
 
-const OpportunityCard: React.FC<OpportunityProps> = ({ title, account, value, probability, daysLeft }) => {
+const OpportunityCard: React.FC<OpportunityProps> = ({ title,  account,  value,  probability,  daysLeft }) => {
   const theme = useTheme();
   
   return (
@@ -383,8 +383,8 @@ const SalesDashboard: React.FC = () => {
 
       {/* Metrics Grid */}
       <Grid container spacing={3} mb={4}>
-        {metrics.map((metric, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
+        {metrics.map((metric, _index) => (
+          <Grid item xs={12} sm={6} md={3} key={_index}>
             <MetricCard {...metric} />
           </Grid>
         ))}
@@ -394,7 +394,7 @@ const SalesDashboard: React.FC = () => {
       <Paper sx={{ mb: 3 }}>
         <Tabs
           value={selectedTab}
-          onChange={(_: React.SyntheticEvent, value: number) => setSelectedTab(value)}
+          onChange={(_: React.SyntheticEvent,  value: number) => setSelectedTab(value)}
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -408,8 +408,8 @@ const SalesDashboard: React.FC = () => {
       {/* Tab Content */}
       {selectedTab === 0 && (
         <Grid container spacing={3}>
-          {topAccounts.map((account, index) => (
-            <Grid item xs={12} md={4} key={index}>
+          {topAccounts.map((account, _index) => (
+            <Grid item xs={12} md={4} key={_index}>
               <AccountCard {...account} />
             </Grid>
           ))}
@@ -421,8 +421,8 @@ const SalesDashboard: React.FC = () => {
           <Typography variant="h6" fontWeight="bold" mb={2}>
             Opportunities Requiring Attention
           </Typography>
-          {opportunities.map((opp, index) => (
-            <OpportunityCard key={index} {...opp} />
+          {opportunities.map((opp, _index) => (
+            <OpportunityCard key={_index} {...opp} />
           ))}
           <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
             View All Opportunities

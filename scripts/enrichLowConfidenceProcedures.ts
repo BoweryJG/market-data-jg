@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -10,7 +12,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function getLowConfidenceProcedures() {
-  console.log('=== GETTING LOW CONFIDENCE PROCEDURES ===\n');
+  logger.info('=== GETTING LOW CONFIDENCE PROCEDURES ===\n');
   
   // Get aesthetic procedures with confidence <= 8
   const { data: aestheticProcs, error: aestheticError } = await supabase
@@ -21,7 +23,7 @@ async function getLowConfidenceProcedures() {
     .order('procedure_name');
     
   if (aestheticError) {
-    console.error('Error fetching aesthetic procedures:', aestheticError);
+    logger.error('Error fetching aesthetic procedures:', aestheticError);
     return;
   }
   
@@ -34,7 +36,7 @@ async function getLowConfidenceProcedures() {
     .order('procedure_name');
     
   if (dentalError) {
-    console.error('Error fetching dental procedures:', dentalError);
+    logger.error('Error fetching dental procedures:', dentalError);
     return;
   }
   
@@ -43,7 +45,7 @@ async function getLowConfidenceProcedures() {
     ...(dentalProcs || []).map(p => ({ ...p, table: 'dental_procedures' }))
   ];
   
-  console.log(`Found ${allProcedures.length} procedures needing enrichment:\n`);
+  logger.info(`Found ${allProcedures.length} procedures needing enrichment:\n`);
   
   // Group by confidence score
   const byConfidence: Record<string, any[]> = {};
@@ -55,20 +57,20 @@ async function getLowConfidenceProcedures() {
   
   // Display breakdown
   Object.keys(byConfidence).sort((a, b) => Number(a) - Number(b)).forEach(score => {
-    console.log(`Confidence ${score}: ${byConfidence[score].length} procedures`);
+    logger.info(`Confidence ${score}: ${byConfidence[score].length} procedures`);
     if (Number(score) <= 5) {
       // Show first 5 for low confidence
       byConfidence[score].slice(0, 5).forEach(p => {
-        console.log(`  - ${p.procedure_name} (${p.table.replace('_procedures', '')})`);
+        logger.info(`  - ${p.procedure_name} (${p.table.replace('_procedures', '')})`);
       });
       if (byConfidence[score].length > 5) {
-        console.log(`  ... and ${byConfidence[score].length - 5} more`);
+        logger.info(`  ... and ${byConfidence[score].length - 5} more`);
       }
     }
   });
   
-  console.log(`\nTotal procedures to enrich: ${allProcedures.length}`);
-  console.log('\nStarting with lowest confidence procedures first...\n');
+  logger.info(`\nTotal procedures to enrich: ${allProcedures.length}`);
+  logger.info('\nStarting with lowest confidence procedures first...\n');
   
   return allProcedures;
 }

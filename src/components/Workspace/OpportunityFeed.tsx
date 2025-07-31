@@ -40,7 +40,7 @@ import {
   Business
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { galaxyDataService, SalesOpportunity } from '../../services/galaxyDataService';
+import { SalesOpportunity } from '../../services/galaxyDataService';
 
 interface EnhancedOpportunity extends SalesOpportunity {
   account?: string;
@@ -174,8 +174,8 @@ const OpportunityFeed: React.FC = () => {
     }
   });
 
-  const totalPipeline = opportunities.reduce((sum, opp) => sum + opp.potential_revenue, 0);
-  const weightedPipeline = opportunities.reduce((sum, opp) => 
+  const totalPipeline = opportunities.reduce((sum,  opp) => sum + opp.potential_revenue, 0);
+  const weightedPipeline = opportunities.reduce((sum,  opp) => 
     sum + (opp.potential_revenue * opp.probability), 0
   );
 
@@ -258,13 +258,13 @@ const OpportunityFeed: React.FC = () => {
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         <AnimatePresence>
           <Stack spacing={2}>
-            {filteredOpportunities.map((opp, index) => (
+            {filteredOpportunities.map((opp, _index) => (
               <motion.div
                 key={opp.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: _index * 0.05 }}
               >
                 <Card 
                   elevation={opp.urgency_score > 80 ? 4 : 1}
@@ -410,7 +410,7 @@ const OpportunityFeed: React.FC = () => {
                         Recommended Actions
                       </Typography>
                       <Stack spacing={1}>
-                        {opp.recommended_actions.slice(0, 2).map((action, idx) => (
+                        {opp.recommended_actions.slice(0, 2).map((action,  idx) => (
                           <Box key={idx} sx={{ display: 'flex', alignItems: 'center' }}>
                             <CheckCircle 
                               sx={{ 
@@ -449,6 +449,5 @@ const OpportunityFeed: React.FC = () => {
     </Box>
   );
 };
-
 
 OpportunityFeed.displayName = 'OpportunityFeed';export default OpportunityFeed;

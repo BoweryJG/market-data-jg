@@ -43,7 +43,7 @@ import {
   ToggleButtonGroup,
   Skeleton,
 } from '@mui/material';
-import SimpleGauge from './SimpleGauge';
+
 import {
   MapPin,
   Building2,
@@ -75,8 +75,7 @@ import {
   Brain,
   Sparkles,
 } from 'lucide-react';
-import { providerDataService } from '../../services/providerDataService';
-import { motion } from 'framer-motion';
+
 import { useSpring, animated } from '@react-spring/web';
 
 // Mock data for NY/FL territories
@@ -137,7 +136,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(_props: TabPanelProps) {
   const { children, value, index, ...other } = props;
   return (
     <div
@@ -188,13 +187,13 @@ export default function EnhancedTerritoryIntelligence() {
     api.start({ number: territoryData.totalProviders });
   }, [selectedTerritory, api, territoryData.totalProviders]);
 
-  const handleTerritoryChange = (event: React.MouseEvent<HTMLElement>, newTerritory: 'NY' | 'FL' | null) => {
+  const handleTerritoryChange = (_event: React.MouseEvent<HTMLElement>,  newTerritory: 'NY' | 'FL' | null) => {
     if (newTerritory) {
       setSelectedTerritory(newTerritory);
     }
   };
 
-  const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, newMode: 'map' | 'list' | 'analytics' | null) => {
+  const handleViewModeChange = (_event: React.MouseEvent<HTMLElement>,  newMode: 'map' | 'list' | 'analytics' | null) => {
     if (newMode) {
       setViewMode(newMode);
     }
@@ -530,10 +529,10 @@ export default function EnhancedTerritoryIntelligence() {
                       Opportunities
                     </Typography>
                     <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                      {territoryData.opportunities.reduce((sum, opp) => sum + opp.count, 0)}
+                      {territoryData.opportunities.reduce((sum,  opp) => sum + opp.count, 0)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      Worth {territoryData.opportunities.reduce((sum, opp) => sum + parseFloat(opp.value.replace('$', '').replace('M', '')), 0).toFixed(1)}M
+                      Worth {territoryData.opportunities.reduce((sum,  opp) => sum + parseFloat(opp.value.replace('$', '').replace('M', '')), 0).toFixed(1)}M
                     </Typography>
                   </Box>
                   <Avatar sx={{ 
@@ -601,7 +600,7 @@ export default function EnhancedTerritoryIntelligence() {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs 
             value={activeTab} 
-            onChange={(e, v) => setActiveTab(v)}
+            onChange={(e,  v) => setActiveTab(v)}
             variant="scrollable"
             scrollButtons="auto"
             allowScrollButtonsMobile
@@ -691,8 +690,8 @@ export default function EnhancedTerritoryIntelligence() {
               <Typography variant="h6" gutterBottom>
                 Opportunity Breakdown
               </Typography>
-              {territoryData.opportunities.map((opp, index) => (
-                <Card key={index} sx={{ mb: 2, bgcolor: alpha(theme.palette.primary.main, 0.02) }}>
+              {territoryData.opportunities.map((opp, _index) => (
+                <Card key={_index} sx={{ mb: 2, bgcolor: alpha(theme.palette.primary.main, 0.02) }}>
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box>
@@ -729,12 +728,12 @@ export default function EnhancedTerritoryIntelligence() {
               AI-Powered Opportunity Detection
             </Typography>
             <Typography variant="body2">
-              Our system has identified {territoryData.opportunities.reduce((sum, opp) => sum + opp.count, 0)} high-value opportunities in your territory based on market gaps, growth patterns, and provider capabilities.
+              Our system has identified {territoryData.opportunities.reduce((sum,  opp) => sum + opp.count, 0)} high-value opportunities in your territory based on market gaps, growth patterns, and provider capabilities.
             </Typography>
           </Alert>
           
           <Grid container spacing={2}>
-            {['High Growth Markets', 'Underserved Areas', 'Technology Upgrades'].map((category, idx) => (
+            {['High Growth Markets', 'Underserved Areas', 'Technology Upgrades'].map((category,  idx) => (
               <Grid item xs={12} md={4} key={idx}>
                 <Card sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
                   <Box sx={{ 

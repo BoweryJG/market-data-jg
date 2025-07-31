@@ -111,9 +111,9 @@ const MarketPulsePage: React.FC = () => {
           </Typography>
           
           <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ mt: 2 }} flexWrap="wrap">
-            {trackedProcedures.map((proc, index) => (
+            {trackedProcedures.map((proc, _index) => (
               <Paper
-                key={index}
+                key={_index}
                 variant="outlined"
                 sx={{
                   p: 2,
@@ -157,9 +157,9 @@ const MarketPulsePage: React.FC = () => {
           <Fab
             color="primary"
             sx={{
-              position: 'fixed',
-              bottom: 16,
-              right: 16,
+              position: 'fixed', 
+              bottom: 16, 
+              right: 16, 
               zIndex: 1000
             }}
             onClick={() => navigate('/sales')}

@@ -38,6 +38,8 @@ import {
 } from '@mui/icons-material';
 import { logger, LogLevel, LogEntry } from '../../services/logging/logger';
 import { apiInterceptor, RequestMetrics } from '../../services/api/interceptor';
+import { logger } from '../services/logging/logger';
+
 
 interface HealthStatus {
   status: 'healthy' | 'unhealthy' | 'degraded' | 'unknown';
@@ -78,7 +80,7 @@ export const MonitoringDashboard: React.FC = () => {
 
   const loadLogs = () => {
     const localLogs = logger.getLocalLogs();
-    setLogs(localLogs.sort((a, b) => 
+    setLogs(localLogs.sort((a,  b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     ));
   };
@@ -89,13 +91,13 @@ export const MonitoringDashboard: React.FC = () => {
       const data = await response.json();
       setHealthStatus(data);
     } catch (error) {
-      console.error('Failed to load health status:', error);
+      logger.error('Failed to load health status:', error);
     }
   };
 
   const loadApiMetrics = () => {
     const metrics = apiInterceptor.getMetrics();
-    setApiMetrics(metrics.sort((a, b) => b.startTime - a.startTime));
+    setApiMetrics(metrics.sort((a,  b) => b.startTime - a.startTime));
   };
 
   const clearLogs = () => {
@@ -149,7 +151,7 @@ export const MonitoringDashboard: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: 'flex',  justifyContent: 'space-between',  alignItems: 'center',  mb: 3 }}>
         <Typography variant="h4">System Monitoring</Typography>
         <Box>
           <Button
@@ -269,7 +271,7 @@ export const MonitoringDashboard: React.FC = () => {
             Health Checks
           </Typography>
           <Grid container spacing={2}>
-            {Object.entries(healthStatus.checks).map(([name, check]) => (
+            {Object.entries(healthStatus.checks).map(([name,  check]) => (
               <Grid item xs={12} sm={6} md={3} key={name}>
                 <Alert
                   severity={
@@ -322,8 +324,8 @@ export const MonitoringDashboard: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {apiMetrics.slice(0, 10).map((metric, index) => (
-                <TableRow key={index}>
+              {apiMetrics.slice(0, 10).map((metric, _index) => (
+                <TableRow key={_index}>
                   <TableCell>
                     <Chip
                       label={metric.method}

@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -144,7 +146,7 @@ async function fetchCityProviders(city, state) {
     plastic_surgeon: []
   };
   
-  console.log(`\nFetching all providers in ${city}, ${state}...`);
+  logger.info(`\nFetching all providers in ${city}, ${state}...`);
   
   let skip = 0;
   let hasMore = true;
@@ -160,7 +162,7 @@ async function fetchCityProviders(city, state) {
         skip: skip
       };
       
-      console.log(`  Fetching batch starting at ${skip}...`);
+      logger.info(`  Fetching batch starting at ${skip}...`);
       const response = await makeApiRequest(params);
       
       if (response.results && response.results.length > 0) {
@@ -174,8 +176,8 @@ async function fetchCityProviders(city, state) {
         }
         
         totalFound += response.results.length;
-        console.log(`    Processed ${response.results.length} providers (Total seen: ${totalFound})`);
-        console.log(`    Current counts - Dentists: ${categorizedProviders.dentist.length}, Dermatologists: ${categorizedProviders.dermatologist.length}, Plastic Surgeons: ${categorizedProviders.plastic_surgeon.length}`);
+        logger.info(`    Processed ${response.results.length} providers (Total seen: ${totalFound})`);
+        logger.info(`    Current counts - Dentists: ${categorizedProviders.dentist.length}, Dermatologists: ${categorizedProviders.dermatologist.length}, Plastic Surgeons: ${categorizedProviders.plastic_surgeon.length}`);
         
         if (response.results.length < 200) {
           hasMore = false;
@@ -186,30 +188,30 @@ async function fetchCityProviders(city, state) {
         
         // Safety limit to prevent infinite loops
         if (skip > 10000) {
-          console.log('  Reached safety limit of 10,000 providers');
+          logger.info('  Reached safety limit of 10,000 providers');
           hasMore = false;
         }
       } else {
         hasMore = false;
       }
     } catch (error) {
-      console.error(`  Error fetching data: ${error.message}`);
+      logger.error(`  Error fetching data: ${error.message}`);
       hasMore = false;
     }
   }
   
-  console.log(`\nCompleted ${city}, ${state}:`);
-  console.log(`  Total Dentists: ${categorizedProviders.dentist.length}`);
-  console.log(`  Total Dermatologists: ${categorizedProviders.dermatologist.length}`);
-  console.log(`  Total Plastic Surgeons: ${categorizedProviders.plastic_surgeon.length}`);
+  logger.info(`\nCompleted ${city}, ${state}:`);
+  logger.info(`  Total Dentists: ${categorizedProviders.dentist.length}`);
+  logger.info(`  Total Dermatologists: ${categorizedProviders.dermatologist.length}`);
+  logger.info(`  Total Plastic Surgeons: ${categorizedProviders.plastic_surgeon.length}`);
   
   return categorizedProviders;
 }
 
 // Main execution
 async function main() {
-  console.log('Starting NPI Registry data collection...');
-  console.log('==================================\n');
+  logger.info('Starting NPI Registry data collection...');
+  logger.info('==================================\n');
   
   const allData = {
     dentists: [],
@@ -227,7 +229,7 @@ async function main() {
   }
   
   // Save to CSV files
-  console.log('\n=== Saving data to CSV files ===');
+  logger.info('\n=== Saving data to CSV files ===');
   
   // Define CSV fields
   const fields = [
@@ -250,7 +252,7 @@ async function main() {
     const csv = parse(allData.dentists, { fields });
     const filename = `npi_dentists_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${allData.dentists.length} dentists to ${filename}`);
+    logger.info(`  Saved ${allData.dentists.length} dentists to ${filename}`);
   }
   
   // Save dermatologists
@@ -258,7 +260,7 @@ async function main() {
     const csv = parse(allData.dermatologists, { fields });
     const filename = `npi_dermatologists_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${allData.dermatologists.length} dermatologists to ${filename}`);
+    logger.info(`  Saved ${allData.dermatologists.length} dermatologists to ${filename}`);
   }
   
   // Save plastic surgeons
@@ -266,7 +268,7 @@ async function main() {
     const csv = parse(allData.plasticSurgeons, { fields });
     const filename = `npi_plastic_surgeons_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${allData.plasticSurgeons.length} plastic surgeons to ${filename}`);
+    logger.info(`  Saved ${allData.plasticSurgeons.length} plastic surgeons to ${filename}`);
   }
   
   // Save combined data
@@ -280,17 +282,17 @@ async function main() {
     const combinedCsv = parse(combinedData, { fields });
     const combinedFilename = `npi_all_providers_${timestamp}.csv`;
     fs.writeFileSync(combinedFilename, combinedCsv);
-    console.log(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
+    logger.info(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
   }
   
   // Summary
-  console.log('\n=== Collection Summary ===');
-  console.log(`Total Dentists: ${allData.dentists.length}`);
-  console.log(`Total Dermatologists: ${allData.dermatologists.length}`);
-  console.log(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
-  console.log(`Grand Total: ${combinedData.length} providers`);
+  logger.info('\n=== Collection Summary ===');
+  logger.info(`Total Dentists: ${allData.dentists.length}`);
+  logger.info(`Total Dermatologists: ${allData.dermatologists.length}`);
+  logger.info(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
+  logger.info(`Grand Total: ${combinedData.length} providers`);
   
-  console.log('\nData collection complete!');
+  logger.info('\nData collection complete!');
 }
 
 // Run the script

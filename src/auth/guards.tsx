@@ -14,10 +14,10 @@ interface AuthGuardProps {
  * Component that requires authentication to render children
  */
 export const AuthGuard: React.FC<AuthGuardProps> = ({ 
-  children, 
-  fallback = <div>Loading...</div>,
-  redirectTo = '/login',
-  allowPublic = false,
+  children,  
+  fallback = <div>Loading...</div>, 
+  redirectTo = '/login', 
+  allowPublic = false, 
   publicComponent
 }) => {
   const { user, loading } = useAuth();
@@ -56,7 +56,7 @@ interface GuestGuardProps {
  * Component that only renders for non-authenticated users
  */
 export const GuestGuard: React.FC<GuestGuardProps> = ({ 
-  children, 
+  children,  
   redirectTo = '/dashboard' 
 }) => {
   const { user, loading } = useAuth();
@@ -85,8 +85,8 @@ interface RoleGuardProps {
  * Component that requires specific role to render children
  */
 export const RoleGuard: React.FC<RoleGuardProps> = ({ 
-  children, 
-  role,
+  children,  
+  role, 
   fallback = <div>Unauthorized</div>
 }) => {
   const { user } = useAuth();
@@ -112,7 +112,7 @@ export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
   redirectTo: string = '/login'
 ): React.FC<P> {
-  const WithAuthComponent = (props: P) => {
+  const WithAuthComponent = (_props: P) => {
     const { user, loading } = useRequireAuth(redirectTo);
     
     if (loading) {

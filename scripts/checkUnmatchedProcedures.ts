@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -56,19 +58,19 @@ async function checkUnmatched() {
     .order('procedure_name');
 
   if (error) {
-    console.error('Error:', error);
+    logger.error('Error:', error);
     return;
   }
 
   const dbNames = dbProcedures?.map(p => p.procedure_name) || [];
   
-  console.log('=== Unmatched Procedures ===\n');
-  console.log('Procedures we tried to update but didn\'t match database names:\n');
+  logger.info('=== Unmatched Procedures ===\n');
+  logger.info('Procedures we tried to update but didn\'t match database names:\n');
   
   const unmatched = attemptedNames.filter(name => !dbNames.includes(name));
-  unmatched.forEach(name => console.log(`- ${name}`));
+  unmatched.forEach(name => logger.info(`- ${name}`));
   
-  console.log('\n=== Close Matches ===\n');
+  logger.info('\n=== Close Matches ===\n');
   
   // Find close matches
   unmatched.forEach(searchName => {
@@ -80,18 +82,18 @@ async function checkUnmatched() {
     });
     
     if (matches.length > 0) {
-      console.log(`"${searchName}" might match:`);
-      matches.forEach(m => console.log(`  - ${m}`));
-      console.log('');
+      logger.info(`"${searchName}" might match:`);
+      matches.forEach(m => logger.info(`  - ${m}`));
+      logger.info('');
     }
   });
 
   // Count total procedures
-  console.log(`\n=== Summary ===`);
-  console.log(`Total aesthetic procedures: ${dbNames.length}`);
-  console.log(`Procedures with RealSelf mappings: ${attemptedNames.length}`);
-  console.log(`Successfully matched: ${attemptedNames.length - unmatched.length}`);
-  console.log(`Unmatched: ${unmatched.length}`);
+  logger.info(`\n=== Summary ===`);
+  logger.info(`Total aesthetic procedures: ${dbNames.length}`);
+  logger.info(`Procedures with RealSelf mappings: ${attemptedNames.length}`);
+  logger.info(`Successfully matched: ${attemptedNames.length - unmatched.length}`);
+  logger.info(`Unmatched: ${unmatched.length}`);
 }
 
 checkUnmatched().catch(console.error);

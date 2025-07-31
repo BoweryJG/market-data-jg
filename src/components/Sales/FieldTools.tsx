@@ -55,6 +55,8 @@ import {
   Check,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
+import { logger } from '../services/logging/logger';
+
 
 interface QuickActionProps {
   icon: React.ReactNode;
@@ -63,7 +65,7 @@ interface QuickActionProps {
   onClick: () => void;
 }
 
-const QuickAction: React.FC<QuickActionProps> = ({ icon, label, color, onClick }) => {
+const QuickAction: React.FC<QuickActionProps> = ({ icon,  label,  color,  onClick }) => {
   const theme = useTheme();
   
   return (
@@ -112,7 +114,7 @@ interface VoiceNoteProps {
   onToggle: () => void;
 }
 
-const VoiceNote: React.FC<VoiceNoteProps> = ({ isRecording, onToggle }) => {
+const VoiceNote: React.FC<VoiceNoteProps> = ({ isRecording,  onToggle }) => {
   const theme = useTheme();
   const [duration, setDuration] = useState(0);
 
@@ -210,7 +212,7 @@ const QuoteGenerator: React.FC = () => {
     { procedure: 'Dermal Filler', quantity: 2, price: 600 },
   ]);
 
-  const total = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const total = items.reduce((sum,  item) => sum + item.quantity * item.price, 0);
 
   return (
     <Card>
@@ -220,8 +222,8 @@ const QuoteGenerator: React.FC = () => {
         </Typography>
         
         <List>
-          {items.map((item, index) => (
-            <ListItem key={index} sx={{ px: 0 }}>
+          {items.map((item, _index) => (
+            <ListItem key={_index} sx={{ px: 0 }}>
               <ListItemText
                 primary={item.procedure}
                 secondary={`Qty: ${item.quantity}`}
@@ -275,7 +277,7 @@ const FieldTools: React.FC = () => {
       icon: <Phone />,
       label: 'Call Client',
       color: theme.palette.primary.main,
-      onClick: () => console.log('Call'),
+      onClick: () => logger.info('Call'),
     },
     {
       icon: <PresentToAll />,
@@ -287,7 +289,7 @@ const FieldTools: React.FC = () => {
       icon: <CloudDownload />,
       label: 'Sync Data',
       color: theme.palette.info.main,
-      onClick: () => console.log('Sync'),
+      onClick: () => logger.info('Sync'),
     },
     {
       icon: <BusinessCenter />,
@@ -299,7 +301,7 @@ const FieldTools: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ p: 2, pb: 10 }}>
+      <Box sx={{ p: 2,  pb: 10 }}>
         {/* Header */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Box>
@@ -345,8 +347,8 @@ const FieldTools: React.FC = () => {
             gridTemplateColumns="repeat(2, 1fr)"
             gap={2}
           >
-            {quickActions.map((action, index) => (
-              <QuickAction key={index} {...action} />
+            {quickActions.map((action, _index) => (
+              <QuickAction key={_index} {...action} />
             ))}
           </Box>
         </Box>
@@ -489,13 +491,13 @@ const FieldTools: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: theme.palette.background.default,
-              zIndex: 9999,
+              position: 'fixed', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              backgroundColor: theme.palette.background.default, 
+              zIndex: 9999, 
             }}
           >
             <AppBar position="static" color="transparent" elevation={0}>

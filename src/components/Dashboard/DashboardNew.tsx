@@ -26,6 +26,8 @@ import {
 } from '@mui/material';
 import { supabase } from '../../services/supabaseClient';
 import { DentalCategory, AestheticCategory } from '../../types';
+import { logger } from '../services/logging/logger';
+
 
 // Define interfaces based on the actual database schema
 interface DentalProcedure {
@@ -197,24 +199,24 @@ const Dashboard: React.FC = () => {
       setError(null);
       try {
         // Try multiple possible table names with detailed error logging
-        console.log('Attempting to fetch dental procedures...');
+        logger.info('Attempting to fetch dental procedures...');
         let dentalResponse = await supabase.from('dental_procedures').select('*');
         if (dentalResponse.error) {
-          console.log('Error with dental_procedures table, trying v_dental_procedures view...');
+          logger.info('Error with dental_procedures table, trying v_dental_procedures view...');
           dentalResponse = await supabase.from('v_dental_procedures').select('*');
           if (dentalResponse.error) {
-            console.log('Error with v_dental_procedures view, trying all_procedures with filtering...');
+            logger.info('Error with v_dental_procedures view, trying all_procedures with filtering...');
             dentalResponse = await supabase.from('all_procedures').select('*').eq('industry', 'dental');
           }
         }
         
-        console.log('Attempting to fetch aesthetic procedures...');
+        logger.info('Attempting to fetch aesthetic procedures...');
         let aestheticResponse = await supabase.from('aesthetic_procedures').select('*');
         if (aestheticResponse.error) {
-          console.log('Error with aesthetic_procedures table, trying v_aesthetic_procedures view...');
+          logger.info('Error with aesthetic_procedures table, trying v_aesthetic_procedures view...');
           aestheticResponse = await supabase.from('aesthetic_procedures_view').select('*');
           if (aestheticResponse.error) {
-            console.log('Error with aesthetic_procedures_view, trying all_procedures with filtering...');
+            logger.info('Error with aesthetic_procedures_view, trying all_procedures with filtering...');
             aestheticResponse = await supabase.from('all_procedures').select('*').eq('industry', 'aesthetic');
           }
         }
@@ -222,8 +224,8 @@ const Dashboard: React.FC = () => {
         if (dentalResponse.error) throw new Error(`Dental procedures: ${dentalResponse.error.message}`);
         if (aestheticResponse.error) throw new Error(`Aesthetic procedures: ${aestheticResponse.error.message}`);
         
-        console.log('Dental data:', dentalResponse.data);
-        console.log('Aesthetic data:', aestheticResponse.data);
+        logger.info('Dental data:', dentalResponse.data);
+        logger.info('Aesthetic data:', aestheticResponse.data);
         
         const dentalProcs = (dentalResponse.data || []).map(proc => ({
           ...proc,
@@ -248,8 +250,8 @@ const Dashboard: React.FC = () => {
           body_areas_applicable: proc.body_areas_applicable || proc.body_area || ''
         }));
         
-        console.log(`Loaded ${dentalProcs.length} dental procedures`);
-        console.log(`Loaded ${aestheticProcs.length} aesthetic procedures`);
+        logger.info(`Loaded ${dentalProcs.length} dental procedures`);
+        logger.info(`Loaded ${aestheticProcs.length} aesthetic procedures`);
         
         setDentalProcedures(dentalProcs);
         setAestheticProcedures(aestheticProcs);
@@ -258,7 +260,7 @@ const Dashboard: React.FC = () => {
         await fetchCompanies();
         await fetchCategories();
       } catch (e: any) {
-        console.error('Error fetching data:', e);
+        logger.error('Error fetching data:', e);
         setError(`Failed to load procedures: ${e.message}`);
       } finally {
         setLoading(false);
@@ -269,59 +271,59 @@ const Dashboard: React.FC = () => {
   }, []);
 
   // Pagination handlers for procedures
-  const handleDentalChangePage = (_: unknown, newPage: number) => {
+  const handleDentalChangePage = (_: unknown,  newPage: number) => {
     setDentalPage(newPage);
   };
 
-  const handleDentalChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalRowsPerPage(parseInt(_event.target.value, 10));
     setDentalPage(0);
   };
 
-  const handleAestheticChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticChangePage = (_: unknown,  newPage: number) => {
     setAestheticPage(newPage);
   };
 
-  const handleAestheticChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticPage(0);
   };
 
   // Pagination handlers for companies
-  const handleDentalCompanyChangePage = (_: unknown, newPage: number) => {
+  const handleDentalCompanyChangePage = (_: unknown,  newPage: number) => {
     setDentalCompanyPage(newPage);
   };
 
-  const handleDentalCompanyChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalCompanyRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalCompanyChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalCompanyRowsPerPage(parseInt(_event.target.value, 10));
     setDentalCompanyPage(0);
   };
 
-  const handleAestheticCompanyChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticCompanyChangePage = (_: unknown,  newPage: number) => {
     setAestheticCompanyPage(newPage);
   };
 
-  const handleAestheticCompanyChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticCompanyRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticCompanyChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticCompanyRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticCompanyPage(0);
   };
 
   // Pagination handlers for categories
-  const handleDentalCategoryChangePage = (_: unknown, newPage: number) => {
+  const handleDentalCategoryChangePage = (_: unknown,  newPage: number) => {
     setDentalCategoryPage(newPage);
   };
 
-  const handleDentalCategoryChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalCategoryRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalCategoryChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalCategoryRowsPerPage(parseInt(_event.target.value, 10));
     setDentalCategoryPage(0);
   };
 
-  const handleAestheticCategoryChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticCategoryChangePage = (_: unknown,  newPage: number) => {
     setAestheticCategoryPage(newPage);
   };
 
-  const handleAestheticCategoryChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticCategoryRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticCategoryChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticCategoryRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticCategoryPage(0);
   };
 
@@ -354,7 +356,7 @@ const Dashboard: React.FC = () => {
   const sortProcedures = (procedures: any[]) => {
     if (!sortConfig.field) return procedures;
     
-    return [...procedures].sort((a, b) => {
+    return [...procedures].sort((a,  b) => {
       let aValue = a[sortConfig.field];
       let bValue = b[sortConfig.field];
       
@@ -394,7 +396,7 @@ const Dashboard: React.FC = () => {
   };
 
   // Safe rendering function for any field
-  const safeRender = (value: any, isPercent = false, decimalPlaces = 1) => {
+  const safeRender = (value: any,  isPercent = false,  decimalPlaces = 1) => {
     if (value === null || value === undefined || value === '') return '-';
     if (isPercent) {
       const numValue = parseFloat(String(value));
@@ -433,7 +435,7 @@ const Dashboard: React.FC = () => {
   }
 
   // Calculate category distributions for visualization
-  const calculateCategoryDistribution = (procedures: any[], categories: any[]) => {
+  const calculateCategoryDistribution = (procedures: any[],  categories: any[]) => {
     // Create a map to count procedures by category
     const categoryMap = new Map<number, { count: number, name: string, marketSize: number }>();
     
@@ -460,8 +462,8 @@ const Dashboard: React.FC = () => {
     
     // Convert to array and sort by count (descending)
     return Array.from(categoryMap.entries())
-      .map(([id, data]) => ({ id, ...data }))
-      .sort((a, b) => b.count - a.count)
+      .map(([id,  data]) => ({ id, ...data }))
+      .sort((a,  b) => b.count - a.count)
       .slice(0, 10); // Top 10 categories
   };
   
@@ -517,7 +519,7 @@ const Dashboard: React.FC = () => {
   );
   
   // Helper component for sortable table headers
-  const SortableTableHeader = ({ field, children, align = 'left' }: { field: string; children: React.ReactNode, align?: 'left' | 'right' | 'center' }) => {
+  const SortableTableHeader = ({ field,  children,  align = 'left' }: { field: string; children: React.ReactNode,  align?: 'left' | 'right' | 'center' }) => {
     const isActive = sortConfig.field === field;
     return (
       <TableCell 
@@ -565,19 +567,19 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold', mb: 4 }}>
+      <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold',  mb: 4 }}>
         Market Intelligence Dashboard
       </Typography>
 
       {/* Industry Toggle Switch */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-        <Card elevation={3} sx={{ px: 4, py: 2, borderRadius: 2 }}>
+      <Box sx={{ display: 'flex',  justifyContent: 'center',  mb: 4 }}>
+        <Card elevation={3} sx={{ px: 4,  py: 2,  borderRadius: 2 }}>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
               <Typography 
                 variant="h6" 
                 sx={{ 
-                  fontWeight: selectedIndustry === 'dental' ? 'bold' : 'normal',
+                  fontWeight: selectedIndustry === 'dental' ? 'bold' : 'normal', 
                   color: selectedIndustry === 'dental' ? '#2196f3' : 'text.secondary'
                 }}
               >
@@ -834,7 +836,7 @@ const Dashboard: React.FC = () => {
                 </Box>
               ) : (
                 <>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                  <Box sx={{ display: 'flex',  flexWrap: 'wrap',  gap: 1,  mb: 2 }}>
                     {selectedIndustry === 'dental' ? 
                       paginatedDentalCategories.map((category) => (
                         <Chip 
@@ -933,8 +935,8 @@ const Dashboard: React.FC = () => {
                   </TableHead>
                   <TableBody>
                     {selectedIndustry === 'dental' ? (
-                      paginatedDentalProcedures.map((procedure, index) => (
-                        <TableRow key={`dental-${procedure.id || index}`} hover>
+                      paginatedDentalProcedures.map((procedure, _index) => (
+                        <TableRow key={`dental-${procedure.id || _index}`} hover>
                           <TableCell>{safeRender(procedure.name)}</TableCell>
                           <TableCell>{safeRender(procedure.category)}</TableCell>
                           <TableCell>{safeRender(procedure.clinical_category)}</TableCell>
@@ -952,8 +954,8 @@ const Dashboard: React.FC = () => {
                         </TableRow>
                       ))
                     ) : (
-                      paginatedAestheticProcedures.map((procedure, index) => (
-                        <TableRow key={`aesthetic-${procedure.id || index}`} hover>
+                      paginatedAestheticProcedures.map((procedure, _index) => (
+                        <TableRow key={`aesthetic-${procedure.id || _index}`} hover>
                           <TableCell>{safeRender(procedure.name)}</TableCell>
                           <TableCell>{safeRender(procedure.category)}</TableCell>
                           <TableCell align="right">
@@ -1014,8 +1016,8 @@ const Dashboard: React.FC = () => {
                       </TableHead>
                       <TableBody>
                         {(selectedIndustry === 'dental' ? paginatedDentalCompanies : paginatedAestheticCompanies)
-                          .map((company, index) => (
-                            <TableRow key={`${selectedIndustry}-company-${company.id || index}`} hover>
+                          .map((company, _index) => (
+                            <TableRow key={`${selectedIndustry}-company-${company.id || _index}`} hover>
                               <TableCell>{company.name || 'N/A'}</TableCell>
                               <TableCell>{company.description || 'N/A'}</TableCell>
                               <TableCell>

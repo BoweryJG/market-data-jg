@@ -3,6 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -44,45 +46,45 @@ class MarketVerificationExecutor {
   private unverifiableProcedures: Array<{name: string, reason: string}> = [];
 
   async execute(): Promise<void> {
-    console.log('=== Market Data Verification & Enrichment Process ===');
-    console.log(`Started at: ${this.stats.startTime.toISOString()}\n`);
+    logger.info('=== Market Data Verification & Enrichment Process ===');
+    logger.info(`Started at: ${this.stats.startTime.toISOString()}\n`);
 
     try {
       // Step 1: Apply database migration
-      console.log('Step 1: Checking database schema...');
+      logger.info('Step 1: Checking database schema...');
       await this.checkDatabaseSchema();
 
       // Step 2: Identify procedures needing verification
-      console.log('\nStep 2: Identifying procedures for verification...');
+      logger.info('\nStep 2: Identifying procedures for verification...');
       const proceduresToVerify = await this.identifyProceduresForVerification();
-      console.log(`Found ${proceduresToVerify.length} procedures needing verification`);
+      logger.info(`Found ${proceduresToVerify.length} procedures needing verification`);
 
       // Step 3: Process high-priority procedures first
-      console.log('\nStep 3: Processing high-priority procedures (>$1B market size)...');
+      logger.info('\nStep 3: Processing high-priority procedures (>$1B market size)...');
       const highPriorityProcs = proceduresToVerify.filter(p => p.market_size_2025_usd_millions > 1000);
       this.stats.highPriority = highPriorityProcs.length;
-      console.log(`Found ${highPriorityProcs.length} high-priority procedures`);
+      logger.info(`Found ${highPriorityProcs.length} high-priority procedures`);
 
       // Step 4: Process suspicious growth rates
-      console.log('\nStep 4: Identifying suspicious growth rates...');
+      logger.info('\nStep 4: Identifying suspicious growth rates...');
       const suspiciousProcs = proceduresToVerify.filter(p => p.yearly_growth_percentage === 35.5);
       this.stats.suspiciousGrowthRates = suspiciousProcs.length;
-      console.log(`Found ${suspiciousProcs.length} procedures with default 35.5% growth rate`);
+      logger.info(`Found ${suspiciousProcs.length} procedures with default 35.5% growth rate`);
 
       // Step 5: Execute verification in batches
-      console.log('\nStep 5: Executing batch verification...');
+      logger.info('\nStep 5: Executing batch verification...');
       await this.executeBatchVerification(proceduresToVerify);
 
       // Step 6: Generate final report
-      console.log('\nStep 6: Generating final report...');
+      logger.info('\nStep 6: Generating final report...');
       await this.generateFinalReport();
 
     } catch (error) {
-      console.error('Error during verification process:', error);
+      logger.error('Error during verification process:', error);
     } finally {
       this.stats.endTime = new Date();
-      console.log(`\nProcess completed at: ${this.stats.endTime.toISOString()}`);
-      console.log(`Total duration: ${this.calculateDuration()} minutes`);
+      logger.info(`\nProcess completed at: ${this.stats.endTime.toISOString()}`);
+      logger.info(`Total duration: ${this.calculateDuration()} minutes`);
     }
   }
 
@@ -94,11 +96,11 @@ class MarketVerificationExecutor {
       .limit(1);
 
     if (error && error.message.includes('column')) {
-      console.log('New columns not yet added. Please run the migration first.');
-      console.log('Migration file: supabase/migrations/20250622000000_add_market_intelligence_fields.sql');
+      logger.info('New columns not yet added. Please run the migration first.');
+      logger.info('Migration file: supabase/migrations/20250622000000_add_market_intelligence_fields.sql');
       throw new Error('Database schema not updated');
     }
-    console.log('✓ Database schema is up to date');
+    logger.info('✓ Database schema is up to date');
   }
 
   private async identifyProceduresForVerification(): Promise<ProcedureToVerify[]> {
@@ -137,15 +139,15 @@ class MarketVerificationExecutor {
       const batch = procedures.slice(i, i + batchSize);
       const batchNumber = Math.floor(i / batchSize) + 1;
       
-      console.log(`\nProcessing batch ${batchNumber}/${batches}`);
-      console.log(`Procedures in batch: ${batch.map(p => p.procedure_name).join(', ')}`);
+      logger.info(`\nProcessing batch ${batchNumber}/${batches}`);
+      logger.info(`Procedures in batch: ${batch.map(p => p.procedure_name).join(', ')}`);
 
       for (const procedure of batch) {
         try {
           await this.verifyAndEnrichProcedure(procedure);
           this.stats.successfullyVerified++;
         } catch (error) {
-          console.error(`Failed to verify ${procedure.procedure_name}:`, error);
+          logger.error(`Failed to verify ${procedure.procedure_name}:`, error);
           this.stats.failed++;
           this.unverifiableProcedures.push({
             name: procedure.procedure_name,
@@ -157,14 +159,14 @@ class MarketVerificationExecutor {
 
       // Rate limiting between batches
       if (i + batchSize < procedures.length) {
-        console.log('Waiting 5 seconds before next batch...');
+        logger.info('Waiting 5 seconds before next batch...');
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
     }
   }
 
   private async verifyAndEnrichProcedure(procedure: ProcedureToVerify): Promise<void> {
-    console.log(`\nVerifying: ${procedure.procedure_name}`);
+    logger.info(`\nVerifying: ${procedure.procedure_name}`);
     
     // Calculate projections based on current data
     const projections = this.calculateProjections(
@@ -194,7 +196,7 @@ class MarketVerificationExecutor {
       throw error;
     }
 
-    console.log(`✓ Updated ${procedure.procedure_name} with projections`);
+    logger.info(`✓ Updated ${procedure.procedure_name} with projections`);
   }
 
   private calculateProjections(baseSizeStr: string | number, growthRateStr: string | number) {
@@ -247,14 +249,14 @@ class MarketVerificationExecutor {
     // Write report to file
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     
-    console.log('\n=== Verification Report Summary ===');
-    console.log(JSON.stringify(report.executionSummary, null, 2));
-    console.log(`\nFull report saved to: ${reportPath}`);
+    logger.info('\n=== Verification Report Summary ===');
+    logger.info(JSON.stringify(report.executionSummary, null, 2));
+    logger.info(`\nFull report saved to: ${reportPath}`);
     
     if (this.unverifiableProcedures.length > 0) {
-      console.log('\n⚠️  Procedures that need manual verification:');
+      logger.info('\n⚠️  Procedures that need manual verification:');
       this.unverifiableProcedures.forEach(p => {
-        console.log(`   - ${p.name}: ${p.reason}`);
+        logger.info(`   - ${p.name}: ${p.reason}`);
       });
     }
   }

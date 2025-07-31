@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const puppeteer = require('puppeteer');
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
@@ -6,7 +8,7 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.VITE_SUPABASE_ANON_KEY; // Using anon key for now
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing Supabase credentials');
+  logger.error('Missing Supabase credentials');
   process.exit(1);
 }
 
@@ -220,7 +222,7 @@ const miamiProviders = [
 ];
 
 async function scrapeWithPuppeteer(url) {
-  console.log(`🌐 Scraping ${url} with Puppeteer...`);
+  logger.info(`🌐 Scraping ${url} with Puppeteer...`);
   
   try {
     const browser = await puppeteer.launch({
@@ -269,21 +271,21 @@ async function scrapeWithPuppeteer(url) {
     
     await browser.close();
     
-    console.log(`✅ Scraped: ${providerData.providers.length} providers, ${providerData.addresses.length} addresses, ${providerData.phones.length} phones`);
+    logger.info(`✅ Scraped: ${providerData.providers.length} providers, ${providerData.addresses.length} addresses, ${providerData.phones.length} phones`);
     return providerData;
     
   } catch (error) {
-    console.error(`❌ Error scraping ${url}:`, error.message);
+    logger.error(`❌ Error scraping ${url}:`, error.message);
     return null;
   }
 }
 
 async function insertProviders() {
-  console.log('🚀 Starting provider data insertion...');
+  logger.info('🚀 Starting provider data insertion...');
   
   try {
     // Insert NYC providers from research
-    console.log('\n📍 Inserting NYC providers from research...');
+    logger.info('\n📍 Inserting NYC providers from research...');
     for (const provider of providersFromResearch) {
       try {
         const { error } = await supabase
@@ -291,17 +293,17 @@ async function insertProviders() {
           .insert(provider);
         
         if (error) {
-          console.error(`Error inserting ${provider.practice_name}:`, error.message);
+          logger.error(`Error inserting ${provider.practice_name}:`, error.message);
         } else {
-          console.log(`✅ Inserted: ${provider.practice_name}`);
+          logger.info(`✅ Inserted: ${provider.practice_name}`);
         }
       } catch (err) {
-        console.error(`Failed to insert ${provider.practice_name}:`, err);
+        logger.error(`Failed to insert ${provider.practice_name}:`, err);
       }
     }
     
     // Insert Miami providers
-    console.log('\n📍 Inserting Miami providers...');
+    logger.info('\n📍 Inserting Miami providers...');
     for (const provider of miamiProviders) {
       try {
         const { error } = await supabase
@@ -309,17 +311,17 @@ async function insertProviders() {
           .insert(provider);
         
         if (error) {
-          console.error(`Error inserting ${provider.practice_name}:`, error.message);
+          logger.error(`Error inserting ${provider.practice_name}:`, error.message);
         } else {
-          console.log(`✅ Inserted: ${provider.practice_name}`);
+          logger.info(`✅ Inserted: ${provider.practice_name}`);
         }
       } catch (err) {
-        console.error(`Failed to insert ${provider.practice_name}:`, err);
+        logger.error(`Failed to insert ${provider.practice_name}:`, err);
       }
     }
     
     // Generate additional providers using variations
-    console.log('\n🔧 Generating additional provider variations...');
+    logger.info('\n🔧 Generating additional provider variations...');
     const neighborhoods = [
       { name: 'Upper West Side', city: 'New York', state: 'NY' },
       { name: 'Financial District', city: 'New York', state: 'NY' },
@@ -373,26 +375,26 @@ async function insertProviders() {
             .insert(provider);
           
           if (error) {
-            console.error(`Error inserting generated provider:`, error.message);
+            logger.error(`Error inserting generated provider:`, error.message);
           }
         } catch (err) {
-          console.error(`Failed to insert generated provider:`, err);
+          logger.error(`Failed to insert generated provider:`, err);
         }
       }
-      console.log(`✅ Generated 20 providers for ${neighborhood.name}`);
+      logger.info(`✅ Generated 20 providers for ${neighborhood.name}`);
     }
     
-    console.log('\n🎉 Provider data insertion complete!');
+    logger.info('\n🎉 Provider data insertion complete!');
     
     // Get final count
     const { count } = await supabase
       .from('provider_locations')
       .select('*', { count: 'exact', head: true });
     
-    console.log(`\n📊 Total providers in database: ${count}`);
+    logger.info(`\n📊 Total providers in database: ${count}`);
     
   } catch (error) {
-    console.error('Fatal error:', error);
+    logger.error('Fatal error:', error);
   }
 }
 

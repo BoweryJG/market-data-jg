@@ -146,8 +146,8 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
 
       {/* Market Stats */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {marketStats.map((stat, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
+        {marketStats.map((stat, _index) => (
+          <Grid item xs={12} sm={6} md={3} key={_index}>
             <Card sx={{ position: 'relative', height: '100%' }}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <Typography variant="h4" color="primary" fontWeight="bold">
@@ -214,18 +214,18 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {sampleProcedures.map((procedure, index) => (
-                <TableRow key={index}>
+              {sampleProcedures.map((procedure, _index) => (
+                <TableRow key={_index}>
                   <TableCell>
                     <Chip 
-                      label={`#${index + 1}`} 
+                      label={`#${_index + 1}`} 
                       color="primary" 
                       variant="outlined"
                       size="small"
                     />
                   </TableCell>
                   <TableCell>
-                    {index < 5 ? (
+                    {_index < 5 ? (
                       <Typography variant="body2" fontWeight="medium">
                         {procedure.name}
                       </Typography>

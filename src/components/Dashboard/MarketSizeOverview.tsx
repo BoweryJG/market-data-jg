@@ -77,8 +77,8 @@ const pulse = keyframes`
 `;
 
 export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({ 
-  dentalProcedures, 
-  aestheticProcedures, 
+  dentalProcedures,  
+  aestheticProcedures,  
   selectedIndustry 
 }) => {
   const currentProcedures = useMemo(() => 
@@ -90,7 +90,7 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
   const totalMarketSize = useMemo(
     () =>
       currentProcedures.reduce(
-        (sum, p) => sum + (Number(p.market_size_usd_millions) || 0),
+        (sum,  p) => sum + (Number(p.market_size_usd_millions) || 0),
         0
       ),
     [currentProcedures]
@@ -115,7 +115,7 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
     if (procedures.length === 0) return null;
     return (
       procedures.reduce(
-        (sum, p) => sum + (Number(p.yearly_growth_percentage) || 0),
+        (sum,  p) => sum + (Number(p.yearly_growth_percentage) || 0),
         0
       ) / procedures.length
     );
@@ -132,7 +132,7 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
     });
     
     return Array.from(categories.entries())
-      .sort((a, b) => b[1] - a[1])
+      .sort((a,  b) => b[1] - a[1])
       .slice(0, 5); // Top 5 categories
   }, [currentProcedures]);
 
@@ -215,7 +215,7 @@ export const MarketSizeOverview: React.FC<MarketSizeOverviewProps> = ({
         </Typography>
         
         <Box sx={{ mt: 2 }}>
-          {categoryMarketSizes.map(([category, size], index) => (
+          {categoryMarketSizes.map(([category,  size], _index) => (
             <Box key={category} sx={{ mb: 2 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
                 <Typography variant="body2">

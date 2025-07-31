@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { supabase } from '../auth/supabase';
+import { logger } from '../services/logging/logger';
+
 
 export default function ManualAuthHandler() {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ export default function ManualAuthHandler() {
         const accessToken = hashParams.get('access_token');
         const refreshToken = hashParams.get('refresh_token');
 
-        console.log('Manual auth handler - tokens found:', !!accessToken, !!refreshToken);
+        logger.info('Manual auth handler - tokens found:', !!accessToken, !!refreshToken);
 
         if (accessToken && refreshToken) {
           // Set the session manually
@@ -25,9 +27,9 @@ export default function ManualAuthHandler() {
           });
 
           if (error) {
-            console.error('Manual auth error:', error);
+            logger.error('Manual auth error:', error);
           } else if (data.session) {
-            console.log('Manual auth successful:', data.session.user.email);
+            logger.info('Manual auth successful:', data.session.user.email);
             // Clear the hash and redirect
             window.history.replaceState({}, document.title, window.location.pathname);
             navigate('/');
@@ -36,10 +38,10 @@ export default function ManualAuthHandler() {
         }
 
         // If no tokens or auth failed, go to home
-        console.log('No tokens found or auth failed, redirecting to home');
+        logger.info('No tokens found or auth failed, redirecting to home');
         navigate('/');
       } catch (error) {
-        console.error('Manual auth handler error:', error);
+        logger.error('Manual auth handler error:', error);
         navigate('/');
       }
     };

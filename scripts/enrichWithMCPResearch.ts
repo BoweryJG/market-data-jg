@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -260,7 +262,7 @@ function calculateProjections(baseSize2025: number, baseSize2030: number) {
 }
 
 async function enrichWithRealMarketData() {
-  console.log('=== Enriching Procedures with REAL Market Research Data ===\n');
+  logger.info('=== Enriching Procedures with REAL Market Research Data ===\n');
   
   // Get all procedures
   const { data: aestheticProcs, error: aestheticError } = await supabase
@@ -274,7 +276,7 @@ async function enrichWithRealMarketData() {
     .order('procedure_name');
 
   if (aestheticError || dentalError) {
-    console.error('Error fetching procedures:', aestheticError || dentalError);
+    logger.error('Error fetching procedures:', aestheticError || dentalError);
     return;
   }
 
@@ -283,7 +285,7 @@ async function enrichWithRealMarketData() {
     ...(dentalProcs || []).map(p => ({ ...p, table: 'dental_procedures' }))
   ];
 
-  console.log(`Processing ${allProcedures.length} total procedures\n`);
+  logger.info(`Processing ${allProcedures.length} total procedures\n`);
 
   let updated = 0;
   let highConfidence = 0;
@@ -324,7 +326,7 @@ async function enrichWithRealMarketData() {
             .update(updateData)
             .eq('id', procedure.id);
           
-          console.log(`⚠️  ${procedure.procedure_name}: Generic estimate $${baseSize}M @ ${growthRate}%`);
+          logger.info(`⚠️  ${procedure.procedure_name}: Generic estimate $${baseSize}M @ ${growthRate}%`);
         } else {
           // Use real market data
           const projections = calculateProjections(
@@ -349,17 +351,17 @@ async function enrichWithRealMarketData() {
             .eq('id', procedure.id);
           
           if (updateError) {
-            console.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
+            logger.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
             errors++;
           } else {
             const icon = marketData.confidence >= 9 ? '✓' : '○';
-            console.log(`${icon} ${procedure.procedure_name}: $${marketData.market_size_2025}M → $${marketData.market_size_2030}M @ ${marketData.cagr}% (Confidence: ${marketData.confidence}/10)`);
+            logger.info(`${icon} ${procedure.procedure_name}: $${marketData.market_size_2025}M → $${marketData.market_size_2030}M @ ${marketData.cagr}% (Confidence: ${marketData.confidence}/10)`);
             updated++;
             if (marketData.confidence >= 9) highConfidence++;
           }
         }
       } catch (error) {
-        console.error(`✗ Failed: ${procedure.procedure_name}`, error);
+        logger.error(`✗ Failed: ${procedure.procedure_name}`, error);
         errors++;
       }
     }
@@ -394,11 +396,11 @@ async function enrichWithRealMarketData() {
   const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/REAL_MARKET_ENRICHMENT_${new Date().toISOString().split('T')[0]}.json`;
   await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
 
-  console.log('\n=== Enrichment Complete ===');
-  console.log(`Successfully updated: ${updated} procedures`);
-  console.log(`High confidence data: ${highConfidence} procedures`);
-  console.log(`Errors: ${errors}`);
-  console.log(`\nReport saved to: ${reportPath}`);
+  logger.info('\n=== Enrichment Complete ===');
+  logger.info(`Successfully updated: ${updated} procedures`);
+  logger.info(`High confidence data: ${highConfidence} procedures`);
+  logger.info(`Errors: ${errors}`);
+  logger.info(`\nReport saved to: ${reportPath}`);
 }
 
 // Execute

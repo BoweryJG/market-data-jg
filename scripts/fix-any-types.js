@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 #!/usr/bin/env node
 
 const fs = require('fs');
@@ -52,9 +54,9 @@ content = content.replace(
 // Write the file back
 fs.writeFileSync(filePath, content, 'utf8');
 
-console.log('✅ Fixed all "any" types in api-client.ts');
-console.log('📝 Changes made:');
-console.log('  - Replaced "any" with "unknown" in generic type parameters');
-console.log('  - Updated error handling to use proper type checking');
-console.log('  - Added axios error type checking');
-console.log('\nPlease review the changes and ensure TypeScript compilation passes.');
+logger.info('✅ Fixed all "any" types in api-client.ts');
+logger.info('📝 Changes made:');
+logger.info('  - Replaced "any" with "unknown" in generic type parameters');
+logger.info('  - Updated error handling to use proper type checking');
+logger.info('  - Added axios error type checking');
+logger.info('\nPlease review the changes and ensure TypeScript compilation passes.');

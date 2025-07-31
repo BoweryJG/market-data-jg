@@ -13,15 +13,15 @@ interface ConnectionLinesProps {
   selectedCategory: string | null;
 }
 
-const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories, selectedCategory }) => {
+const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories,  selectedCategory }) => {
   const theme = useTheme();
 
   // Calculate connections based on market correlation
   const connections = useMemo(() => {
     const links: Array<{ from: number; to: number; strength: number }> = [];
     
-    categories.forEach((cat1, i) => {
-      categories.forEach((cat2, j) => {
+    categories.forEach((cat1,  i) => {
+      categories.forEach((cat2,  j) => {
         if (i < j) {
           // Calculate connection strength based on growth rate similarity
           const growthDiff = Math.abs(cat1.avg_growth_rate - cat2.avg_growth_rate);
@@ -42,11 +42,11 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories, selectedC
   return (
     <svg
       style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
         pointerEvents: 'none'
       }}
       viewBox="-500 -500 1000 1000"
@@ -70,7 +70,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories, selectedC
         </filter>
       </defs>
 
-      {connections.map((connection, index) => {
+      {connections.map((connection, _index) => {
         const from = categories[connection.from];
         const to = categories[connection.to];
         

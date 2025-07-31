@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
 // Create chainable mock methods
-const createChainableMock = (data: any = [], error: any = null) => {
+const createChainableMock = (_data: any = [], _error: any = null) => {
   const mockResult = Promise.resolve({ data, error });
   
   const mock: any = {

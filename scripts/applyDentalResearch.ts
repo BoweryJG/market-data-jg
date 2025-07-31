@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -143,13 +145,13 @@ const DENTAL_MARKET_DATA = {
 };
 
 async function applyDentalResearch() {
-  console.log('=== APPLYING REAL DENTAL MARKET RESEARCH ===\n');
+  logger.info('=== APPLYING REAL DENTAL MARKET RESEARCH ===\n');
   
   let updated = 0;
   let failed = 0;
   
   for (const [procedureName, data] of Object.entries(DENTAL_MARKET_DATA)) {
-    console.log(`\nUpdating: ${procedureName}`);
+    logger.info(`\nUpdating: ${procedureName}`);
     
     // Calculate projections
     const rate = data.cagr / 100;
@@ -183,25 +185,25 @@ async function applyDentalResearch() {
       .eq('procedure_name', procedureName);
       
     if (error) {
-      console.log(`  ✗ Failed: ${error.message}`);
+      logger.info(`  ✗ Failed: ${error.message}`);
       failed++;
     } else {
-      console.log(`  ✓ Updated successfully`);
-      console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-      console.log(`    CAGR: ${data.cagr}%`);
-      console.log(`    Confidence: ${data.confidence}/10`);
-      console.log(`    Leader: ${data.manufacturers[0]}`);
+      logger.info(`  ✓ Updated successfully`);
+      logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+      logger.info(`    CAGR: ${data.cagr}%`);
+      logger.info(`    Confidence: ${data.confidence}/10`);
+      logger.info(`    Leader: ${data.manufacturers[0]}`);
       updated++;
     }
   }
   
-  console.log(`\n\n=== SUMMARY ===`);
-  console.log(`Successfully updated: ${updated} dental procedures`);
-  console.log(`Failed: ${failed} procedures`);
-  console.log(`\nKey Findings:`);
-  console.log(`- Highest Growth: Clear Aligners (21.8% CAGR)`);
-  console.log(`- Largest Market: Teeth Whitening ($8.93B)`);
-  console.log(`- Most Stable: Root Canal Treatment (4.8% CAGR)`);
+  logger.info(`\n\n=== SUMMARY ===`);
+  logger.info(`Successfully updated: ${updated} dental procedures`);
+  logger.info(`Failed: ${failed} procedures`);
+  logger.info(`\nKey Findings:`);
+  logger.info(`- Highest Growth: Clear Aligners (21.8% CAGR)`);
+  logger.info(`- Largest Market: Teeth Whitening ($8.93B)`);
+  logger.info(`- Most Stable: Root Canal Treatment (4.8% CAGR)`);
 }
 
 // Execute

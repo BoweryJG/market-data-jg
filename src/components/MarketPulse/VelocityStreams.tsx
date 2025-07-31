@@ -24,14 +24,14 @@ interface StateNode {
 interface VelocityStreamsProps {
   marketData: any;
   selectedState: string;
-  onStateSelect: (state: string) => void;
+  onStateSelect: (_state: string) => void;
   isAnimating: boolean;
 }
 
 const VelocityStreams: React.FC<VelocityStreamsProps> = ({
-  marketData,
-  selectedState,
-  onStateSelect,
+  marketData, 
+  selectedState, 
+  onStateSelect, 
   isAnimating
 }) => {
   const theme = useTheme();
@@ -71,7 +71,7 @@ const VelocityStreams: React.FC<VelocityStreamsProps> = ({
   useEffect(() => {
     if (isAnimating) {
       const newParticles: any[] = [];
-      streams.forEach((stream, index) => {
+      streams.forEach((stream, _index) => {
         const fromNode = stateNodes.find(n => n.id === stream.from);
         const toNode = stateNodes.find(n => n.id === stream.to);
         
@@ -175,10 +175,10 @@ const VelocityStreams: React.FC<VelocityStreamsProps> = ({
   const getStateMetrics = (stateId: string) => {
     const inflow = streams
       .filter(s => s.to === stateId)
-      .reduce((sum, s) => sum + s.value, 0);
+      .reduce((sum,  s) => sum + s.value, 0);
     const outflow = streams
       .filter(s => s.from === stateId)
-      .reduce((sum, s) => sum + s.value, 0);
+      .reduce((sum,  s) => sum + s.value, 0);
     const netFlow = inflow - outflow;
     
     return { inflow, outflow, netFlow };

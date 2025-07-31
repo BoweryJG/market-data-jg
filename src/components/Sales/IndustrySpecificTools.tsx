@@ -65,7 +65,6 @@ import {
   CreditCard,
   AccountBalance,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -73,7 +72,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value, _index,  ...other }) => {
   return (
     <div
       role="tabpanel"
@@ -122,7 +121,7 @@ const AestheticTools: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" mb={3}>
-            <Calculate sx={{ mr: 1, verticalAlign: 'middle' }} />
+            <Calculate sx={{ mr: 1,  verticalAlign: 'middle' }} />
             Treatment ROI Calculator
           </Typography>
           
@@ -177,7 +176,7 @@ const AestheticTools: React.FC = () => {
                 <Typography gutterBottom>Overhead (%)</Typography>
                 <Slider
                   value={roiInputs.overhead}
-                  onChange={(event: Event, value: number | number[]) => setRoiInputs({ ...roiInputs, overhead: value as number })}
+                  onChange={(_event: Event,  value: number | number[]) => setRoiInputs({ ...roiInputs, overhead: value as number })}
                   valueLabelDisplay="auto"
                   min={0}
                   max={50}
@@ -219,8 +218,8 @@ const AestheticTools: React.FC = () => {
           </Typography>
           
           <Grid container spacing={2}>
-            {trendingTreatments.map((treatment, index) => (
-              <Grid item xs={12} sm={6} key={index}>
+            {trendingTreatments.map((treatment, _index) => (
+              <Grid item xs={12} sm={6} key={_index}>
                 <Paper
                   sx={{
                     p: 2,
@@ -312,8 +311,8 @@ const AestheticTools: React.FC = () => {
           </Typography>
           
           <List>
-            {influencers.map((influencer, index) => (
-              <React.Fragment key={index}>
+            {influencers.map((influencer, _index) => (
+              <React.Fragment key={_index}>
                 <ListItem>
                   <ListItemIcon>
                     <Avatar sx={{ backgroundColor: theme.palette.secondary.main }}>
@@ -365,7 +364,7 @@ const DentalTools: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" mb={3}>
-            <Description sx={{ mr: 1, verticalAlign: 'middle' }} />
+            <Description sx={{ mr: 1,  verticalAlign: 'middle' }} />
             CDT Code Quick Reference
           </Typography>
           
@@ -376,12 +375,12 @@ const DentalTools: React.FC = () => {
             size="small"
             sx={{ mb: 2 }}
             InputProps={{
-              startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
+              startAdornment: <InputAdornment position="start"><Search /></InputAdornment>, 
             }}
           />
           
           <List>
-            {cdtCodes.map((code, index) => (
+            {cdtCodes.map((code, _index) => (
               <React.Fragment key={code.code}>
                 <ListItem
                   button
@@ -435,7 +434,7 @@ const DentalTools: React.FC = () => {
             <Typography gutterBottom>Average Patients per Month</Typography>
             <Slider
               value={patientVolume}
-              onChange={(event: Event, value: number | number[]) => setPatientVolume(value as number)}
+              onChange={(_event: Event,  value: number | number[]) => setPatientVolume(value as number)}
               valueLabelDisplay="auto"
               min={50}
               max={500}
@@ -481,8 +480,8 @@ const DentalTools: React.FC = () => {
             Insurance Mix Analysis
           </Typography>
           
-          {insuranceProviders.map((provider, index) => (
-            <Box key={index} mb={2}>
+          {insuranceProviders.map((provider, _index) => (
+            <Box key={_index} mb={2}>
               <Box display="flex" justifyContent="space-between" mb={1}>
                 <Typography variant="body1">{provider.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -520,7 +519,7 @@ const DentalTools: React.FC = () => {
           <ToggleButtonGroup
             value={financingOption}
             exclusive
-            onChange={(_, value) => value && setFinancingOption(value)}
+            onChange={(_,  value) => value && setFinancingOption(value)}
             fullWidth
             sx={{ mb: 3 }}
           >
@@ -578,7 +577,7 @@ const IndustrySpecificTools: React.FC = () => {
       <Paper sx={{ mb: 3 }}>
         <Tabs
           value={industry}
-          onChange={(_: React.SyntheticEvent, value: number) => setIndustry(value)}
+          onChange={(_: React.SyntheticEvent,  value: number) => setIndustry(value)}
           variant="fullWidth"
           sx={{
             '& .MuiTab-root': {
@@ -611,6 +610,5 @@ const IndustrySpecificTools: React.FC = () => {
     </Box>
   );
 };
-
 
 IndustrySpecificTools.displayName = 'IndustrySpecificTools';export default IndustrySpecificTools;

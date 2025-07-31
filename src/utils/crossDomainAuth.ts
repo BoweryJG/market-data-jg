@@ -136,7 +136,7 @@ export async function handleCrossDomainRedirect(supabaseClient: any): Promise<bo
  * Setup cross-domain auth message listener with Supabase client
  */
 export function setupCrossDomainAuthListener(supabaseClient: any) {
-  window.addEventListener('message', async (event) => {
+  window.addEventListener('message',  async (_event) => {
     // Validate origin
     if (!isValidRepSpheresUrl(event.origin)) {
       return;
@@ -176,7 +176,7 @@ export function broadcastAuthState(session: any) {
   if (!window.postMessage) return;
   
   const domains = window.location.hostname === 'localhost' 
-    ? Object.entries(DEV_PORTS).map(([, port]) => `http://localhost:${port}`)
+    ? Object.entries(DEV_PORTS).map(([,  port]) => `http://localhost:${port}`)
     : Object.values(REPSPHERES_DOMAINS);
   
   domains.forEach(domain => {

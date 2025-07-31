@@ -1,5 +1,4 @@
 import { supabase } from './supabaseClient';
-import { DentalProcedure, AestheticProcedure } from '../types';
 
 interface ProcedureData {
   procedure_name: string;

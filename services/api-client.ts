@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
-import { ApiResponse, PaginatedResponse, AppError, CacheEntry } from '../src/types/common';
-import { DentalCategory, AestheticCategory, CategoryHierarchy, DentalProcedure, AestheticProcedure, Company, NewsArticle, MarketGrowth } from '../src/types';
+import { CategoryHierarchy, DentalProcedure, AestheticProcedure, Company, NewsArticle, MarketGrowth } from '../src/types';
 
 // Define API Gateway configuration interface
 interface ApiGatewayConfig {

@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from '@/services/logging/logger';
+
 
 // Initialize Supabase client
 const supabaseUrl = 'https://cbopynuvhcymbumjnvay.supabase.co';
@@ -74,7 +76,7 @@ function generateMockMarketData(procedureName: string, category: string, current
 }
 
 async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
-  console.log(`Starting mock enrichment for ${procedureType} procedures...`);
+  logger.info(`Starting mock enrichment for ${procedureType} procedures...`);
   
   // Get procedures needing enrichment
   const { data: procedures, error } = await supabase
@@ -88,11 +90,11 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
     .order('procedure_name');
 
   if (error) {
-    console.error('Error fetching procedures:', error);
+    logger.error('Error fetching procedures:', error);
     return;
   }
 
-  console.log(`Found ${procedures?.length || 0} procedures needing enrichment`);
+  logger.info(`Found ${procedures?.length || 0} procedures needing enrichment`);
 
   // Process in batches
   const batchSize = 10;
@@ -103,7 +105,7 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
     
     await Promise.all(
       batch.map(async (procedure) => {
-        console.log(`Enriching: ${procedure.procedure_name}`);
+        logger.info(`Enriching: ${procedure.procedure_name}`);
         
         const mockData = generateMockMarketData(
           procedure.procedure_name,
@@ -132,13 +134,13 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
             });
             
           if (insertError) {
-            console.error(`Error saving research for ${procedure.procedure_name}:`, insertError);
+            logger.error(`Error saving research for ${procedure.procedure_name}:`, insertError);
           } else {
             enrichedCount++;
-            console.log(`✓ Saved mock data for ${procedure.procedure_name} (confidence: ${mockData.confidence}%)`);
+            logger.info(`✓ Saved mock data for ${procedure.procedure_name} (confidence: ${mockData.confidence}%)`);
           }
         } else {
-          console.log(`✗ Low confidence for ${procedure.procedure_name} (${mockData.confidence}%)`);
+          logger.info(`✗ Low confidence for ${procedure.procedure_name} (${mockData.confidence}%)`);
         }
         
         // Simulate API rate limiting
@@ -147,14 +149,14 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
     );
   }
   
-  console.log(`✅ Enriched ${enrichedCount} procedures with mock data`);
+  logger.info(`✅ Enriched ${enrichedCount} procedures with mock data`);
 }
 
 // Removed unused function applyValidatedData - functionality moved to applyEnrichment.ts
 
 async function main() {
-  console.log('Starting mock procedure data enrichment...');
-  console.log('This will generate realistic market data based on procedure characteristics\n');
+  logger.info('Starting mock procedure data enrichment...');
+  logger.info('This will generate realistic market data based on procedure characteristics\n');
   
   // Process both aesthetic and dental procedures
   await enrichProcedures('aesthetic');
@@ -172,14 +174,14 @@ async function main() {
     return acc;
   }, {} as Record<string, number>);
   
-  console.log('\n📊 Enrichment Summary:');
-  console.log('Aesthetic validated:', stats?.aesthetic_validated || 0);
-  console.log('Aesthetic pending:', stats?.aesthetic_pending || 0);
-  console.log('Dental validated:', stats?.dental_validated || 0);
-  console.log('Dental pending:', stats?.dental_pending || 0);
+  logger.info('\n📊 Enrichment Summary:');
+  logger.info('Aesthetic validated:', stats?.aesthetic_validated || 0);
+  logger.info('Aesthetic pending:', stats?.aesthetic_pending || 0);
+  logger.info('Dental validated:', stats?.dental_validated || 0);
+  logger.info('Dental pending:', stats?.dental_pending || 0);
   
   // Ask if we should apply the validated data
-  console.log('\n💡 To apply validated data to production, run: npm run apply:enrichment');
+  logger.info('\n💡 To apply validated data to production, run: npm run apply:enrichment');
 }
 
 // Run the enrichment

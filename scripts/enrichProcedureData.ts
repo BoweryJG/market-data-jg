@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
+import { logger } from '@/services/logging/logger';
+
 
 // Initialize Supabase client using Vite env vars (since they're in .env)
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.REACT_APP_SUPABASE_URL || '';
@@ -61,7 +63,7 @@ async function searchMarketData(procedureName: string, _category: string): Promi
       confidence: calculateConfidence(marketSize, growthRate, sources.length)
     };
   } catch (error) {
-    console.error(`Error searching for ${procedureName}:`, error);
+    logger.error(`Error searching for ${procedureName}:`, error);
     return {
       marketSize: 0,
       growthRate: 0,
@@ -151,7 +153,7 @@ function calculateConfidence(marketSize: number, growthRate: number, sourceCount
 }
 
 async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
-  console.log(`Starting enrichment for ${procedureType} procedures...`);
+  logger.info(`Starting enrichment for ${procedureType} procedures...`);
   
   // Get procedures needing enrichment
   const { data: procedures, error } = await supabase
@@ -165,11 +167,11 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
     .order('procedure_name');
 
   if (error) {
-    console.error('Error fetching procedures:', error);
+    logger.error('Error fetching procedures:', error);
     return;
   }
 
-  console.log(`Found ${procedures?.length || 0} procedures needing enrichment`);
+  logger.info(`Found ${procedures?.length || 0} procedures needing enrichment`);
 
   // Process in batches
   const batchSize = 5;
@@ -178,7 +180,7 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
     
     await Promise.all(
       batch.map(async (procedure) => {
-        console.log(`Researching: ${procedure.procedure_name}`);
+        logger.info(`Researching: ${procedure.procedure_name}`);
         
         const researchResult = await searchMarketData(
           procedure.procedure_name,
@@ -206,12 +208,12 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
             });
             
           if (insertError) {
-            console.error(`Error saving research for ${procedure.procedure_name}:`, insertError);
+            logger.error(`Error saving research for ${procedure.procedure_name}:`, insertError);
           } else {
-            console.log(`✓ Saved research for ${procedure.procedure_name} (confidence: ${researchResult.confidence}%)`);
+            logger.info(`✓ Saved research for ${procedure.procedure_name} (confidence: ${researchResult.confidence}%)`);
           }
         } else {
-          console.log(`✗ Low confidence for ${procedure.procedure_name} (${researchResult.confidence}%)`);
+          logger.info(`✗ Low confidence for ${procedure.procedure_name} (${researchResult.confidence}%)`);
         }
         
         // Rate limiting
@@ -222,13 +224,13 @@ async function enrichProcedures(procedureType: 'aesthetic' | 'dental') {
 }
 
 async function main() {
-  console.log('Starting procedure data enrichment...');
+  logger.info('Starting procedure data enrichment...');
   
   // Process both aesthetic and dental procedures
   await enrichProcedures('aesthetic');
   await enrichProcedures('dental');
   
-  console.log('Enrichment process complete!');
+  logger.info('Enrichment process complete!');
   
   // Generate summary report
   const { data: summary } = await supabase
@@ -236,8 +238,8 @@ async function main() {
     .select('procedure_type, validation_status, count')
     .eq('created_at', new Date().toISOString().split('T')[0]);
     
-  console.log('\nEnrichment Summary:');
-  console.log(summary);
+  logger.info('\nEnrichment Summary:');
+  logger.info(summary);
 }
 
 // Run the enrichment

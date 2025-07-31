@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 // Removed unused fs import
 
 dotenv.config();
@@ -81,7 +83,7 @@ const PROCEDURE_MULTIPLIERS: Record<string, number> = {
 };
 
 async function enrichProceduresWithRealData() {
-  console.log('=== Enriching Procedures with Real Market Data ===\n');
+  logger.info('=== Enriching Procedures with Real Market Data ===\n');
   
   // Get all procedures with low confidence scores
   const { data: procedures, error } = await supabase
@@ -91,11 +93,11 @@ async function enrichProceduresWithRealData() {
     .order('procedure_name');
 
   if (error) {
-    console.error('Error fetching procedures:', error);
+    logger.error('Error fetching procedures:', error);
     return;
   }
 
-  console.log(`Found ${procedures?.length || 0} procedures to enrich\n`);
+  logger.info(`Found ${procedures?.length || 0} procedures to enrich\n`);
 
   let updated = 0;
   let errors = 0;
@@ -132,7 +134,7 @@ async function enrichProceduresWithRealData() {
       if (!categoryData) {
         // Default to skin resurfacing for uncategorized procedures
         categoryData = CATEGORY_MARKET_DATA.find(c => c.category === 'Skin Resurfacing');
-        console.log(`⚠️  Using default category for: ${procedure.procedure_name}`);
+        logger.info(`⚠️  Using default category for: ${procedure.procedure_name}`);
       }
 
       // Calculate market size based on category and procedure multiplier
@@ -165,14 +167,14 @@ async function enrichProceduresWithRealData() {
         .eq('id', procedure.id);
 
       if (updateError) {
-        console.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
+        logger.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
         errors++;
       } else {
-        console.log(`✓ ${procedure.procedure_name}: $${marketSize2025.toFixed(0)}M @ ${adjustedGrowthRate.toFixed(1)}% (Confidence: ${confidence}/10)`);
+        logger.info(`✓ ${procedure.procedure_name}: $${marketSize2025.toFixed(0)}M @ ${adjustedGrowthRate.toFixed(1)}% (Confidence: ${confidence}/10)`);
         updated++;
       }
     } catch (error) {
-      console.error(`✗ Failed: ${procedure.procedure_name}`, error);
+      logger.error(`✗ Failed: ${procedure.procedure_name}`, error);
       errors++;
     }
   }
@@ -221,9 +223,9 @@ async function enrichProceduresWithRealData() {
     }
   }
 
-  console.log('\n=== Enrichment Complete ===');
-  console.log(`Successfully updated: ${updated} procedures`);
-  console.log(`Errors: ${errors}`);
+  logger.info('\n=== Enrichment Complete ===');
+  logger.info(`Successfully updated: ${updated} procedures`);
+  logger.info(`Errors: ${errors}`);
 }
 
 function calculateMarketProjections(baseSize: number, growthRate: number) {

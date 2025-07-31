@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const { parse } = require('json2csv');
 
@@ -193,19 +195,19 @@ async function searchBrave(query) {
 
 // Search for medspas in a location
 async function searchLocation(location) {
-  console.log(`\nSearching ${location.city}, ${location.state}...`);
+  logger.info(`\nSearching ${location.city}, ${location.state}...`);
   const allResults = [];
   const seenUrls = new Set();
   
   for (const baseQuery of SEARCH_QUERIES) {
     const query = `${baseQuery} ${location.city} ${location.state}`;
-    console.log(`  Query: "${query}"`);
+    logger.info(`  Query: "${query}"`);
     
     try {
       const response = await searchBrave(query);
       
       if (response.web && response.web.results) {
-        console.log(`    Found ${response.web.results.length} results`);
+        logger.info(`    Found ${response.web.results.length} results`);
         
         response.web.results.forEach((result, index) => {
           result.rank = index + 1;
@@ -223,21 +225,21 @@ async function searchLocation(location) {
       await new Promise(resolve => setTimeout(resolve, 500));
       
     } catch (error) {
-      console.error(`  Error searching: ${error.message}`);
+      logger.error(`  Error searching: ${error.message}`);
     }
   }
   
-  console.log(`  Total medspas found: ${allResults.length}`);
+  logger.info(`  Total medspas found: ${allResults.length}`);
   return allResults;
 }
 
 // Main execution
 async function main() {
-  console.log('Brave Search MedSpa Finder');
-  console.log('==========================\n');
+  logger.info('Brave Search MedSpa Finder');
+  logger.info('==========================\n');
   
   if (!BRAVE_API_KEY) {
-    console.error('Error: BRAVE_SEARCH_API_KEY not set');
+    logger.error('Error: BRAVE_SEARCH_API_KEY not set');
     return;
   }
   
@@ -262,7 +264,7 @@ async function main() {
   allMedSpas.sort((a, b) => b.confidenceScore - a.confidenceScore);
   
   // Save results
-  console.log('\n=== Saving Results ===');
+  logger.info('\n=== Saving Results ===');
   
   const timestamp = new Date().toISOString().split('T')[0];
   
@@ -279,7 +281,7 @@ async function main() {
     const csv = parse(allMedSpas, { fields });
     const filename = `brave_medspas_NY_FL_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allMedSpas.length} medspas to ${filename}`);
+    logger.info(`Saved ${allMedSpas.length} medspas to ${filename}`);
     
     // Save high confidence
     const highConfidence = allMedSpas.filter(m => m.confidenceScore >= 70);
@@ -287,7 +289,7 @@ async function main() {
       const csvHigh = parse(highConfidence, { fields });
       const filenameHigh = `brave_medspas_verified_${timestamp}.csv`;
       fs.writeFileSync(filenameHigh, csvHigh);
-      console.log(`Saved ${highConfidence.length} verified medspas to ${filenameHigh}`);
+      logger.info(`Saved ${highConfidence.length} verified medspas to ${filenameHigh}`);
     }
     
     // Save JSON
@@ -298,8 +300,8 @@ async function main() {
   }
   
   // Summary
-  console.log('\n=== Summary ===');
-  console.log(`Total MedSpas Found: ${allMedSpas.length}`);
+  logger.info('\n=== Summary ===');
+  logger.info(`Total MedSpas Found: ${allMedSpas.length}`);
   
   // By state
   const byState = {};
@@ -307,16 +309,16 @@ async function main() {
     byState[m.state] = (byState[m.state] || 0) + 1;
   });
   
-  console.log('\nBy State:');
+  logger.info('\nBy State:');
   Object.entries(byState).forEach(([state, count]) => {
-    console.log(`  ${state}: ${count}`);
+    logger.info(`  ${state}: ${count}`);
   });
   
   // By confidence
-  console.log('\nBy Confidence:');
-  console.log(`  High (70+): ${allMedSpas.filter(m => m.confidenceScore >= 70).length}`);
-  console.log(`  Medium (50-69): ${allMedSpas.filter(m => m.confidenceScore >= 50 && m.confidenceScore < 70).length}`);
-  console.log(`  Low (40-49): ${allMedSpas.filter(m => m.confidenceScore < 50).length}`);
+  logger.info('\nBy Confidence:');
+  logger.info(`  High (70+): ${allMedSpas.filter(m => m.confidenceScore >= 70).length}`);
+  logger.info(`  Medium (50-69): ${allMedSpas.filter(m => m.confidenceScore >= 50 && m.confidenceScore < 70).length}`);
+  logger.info(`  Low (40-49): ${allMedSpas.filter(m => m.confidenceScore < 50).length}`);
   
   // Top cities
   const byCities = {};
@@ -324,15 +326,15 @@ async function main() {
     byCities[m.city] = (byCities[m.city] || 0) + 1;
   });
   
-  console.log('\nTop Cities:');
+  logger.info('\nTop Cities:');
   Object.entries(byCities)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .forEach(([city, count]) => {
-      console.log(`  ${city}: ${count}`);
+      logger.info(`  ${city}: ${count}`);
     });
   
-  console.log('\nBrave search complete!');
+  logger.info('\nBrave search complete!');
 }
 
 // Run the script

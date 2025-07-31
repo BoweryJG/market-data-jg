@@ -15,6 +15,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import braveSearchService from '../../services/braveSearchService';
+import { logger } from '../services/logging/logger';
+
 
 interface SuperSearchProps {
   open: boolean;
@@ -33,7 +35,7 @@ const SuperSearch: React.FC<SuperSearchProps> = ({ open, onClose }) => {
       const data = await braveSearchService.search(query);
       setResults(data || []);
     } catch (err) {
-      console.error('Brave search failed', err);
+      logger.error('Brave search failed', err);
       setResults([]);
     } finally {
       setLoading(false);

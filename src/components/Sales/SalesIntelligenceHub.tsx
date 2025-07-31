@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { categorizeProcedure } from '../Dashboard/CategoryMapping';
+
 import {
   Box,
   Card,
@@ -76,7 +76,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => {
   return (
     <div hidden={value !== index}>
       {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
@@ -96,14 +96,14 @@ interface BattlecardProps {
 }
 
 const Battlecard: React.FC<BattlecardProps> = ({
-  competitor,
-  product,
-  category,
-  ourStrengths,
-  theirStrengths,
-  objections,
-  winRate,
-  saved = false,
+  competitor, 
+  product, 
+  category, 
+  ourStrengths, 
+  theirStrengths, 
+  objections, 
+  winRate, 
+  saved = false, 
 }) => {
   const theme = useTheme();
   const [isSaved, setIsSaved] = useState(saved);
@@ -165,8 +165,8 @@ const Battlecard: React.FC<BattlecardProps> = ({
                 Our Advantages
               </Typography>
               <List dense>
-                {ourStrengths.map((strength, index) => (
-                  <ListItem key={index} sx={{ py: 0 }}>
+                {ourStrengths.map((strength, _index) => (
+                  <ListItem key={_index} sx={{ py: 0 }}>
                     <ListItemIcon sx={{ minWidth: 32 }}>
                       <CheckCircle color="success" fontSize="small" />
                     </ListItemIcon>
@@ -184,8 +184,8 @@ const Battlecard: React.FC<BattlecardProps> = ({
                 Their Advantages
               </Typography>
               <List dense>
-                {theirStrengths.map((strength, index) => (
-                  <ListItem key={index} sx={{ py: 0 }}>
+                {theirStrengths.map((strength, _index) => (
+                  <ListItem key={_index} sx={{ py: 0 }}>
                     <ListItemIcon sx={{ minWidth: 32 }}>
                       <Cancel color="error" fontSize="small" />
                     </ListItemIcon>
@@ -204,8 +204,8 @@ const Battlecard: React.FC<BattlecardProps> = ({
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {objections.map((obj, index) => (
-              <Box key={index} mb={2}>
+            {objections.map((obj, _index) => (
+              <Box key={_index} mb={2}>
                 <Alert severity="warning" icon={<Psychology />} sx={{ mb: 1 }}>
                   <Typography variant="subtitle2" fontWeight="bold">
                     &quot;{obj.question}&quot;
@@ -248,9 +248,9 @@ const WinLossAnalysis: React.FC = () => {
     { reason: 'Poor Timing', percentage: 15, trend: 'stable', count: 11 },
   ];
 
-  const renderReasonsList = (reasons: WinLossData[], type: 'win' | 'loss') => {
-    return reasons.map((reason, index) => (
-      <Box key={index} mb={2}>
+  const renderReasonsList = (reasons: WinLossData[],  type: 'win' | 'loss') => {
+    return reasons.map((reason, _index) => (
+      <Box key={_index} mb={2}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Box display="flex" alignItems="center" gap={1}>
             <Typography variant="body1">{reason.reason}</Typography>
@@ -289,7 +289,7 @@ const WinLossAnalysis: React.FC = () => {
         <ToggleButtonGroup
           value={timeframe}
           exclusive
-          onChange={(_, value) => value && setTimeframe(value)}
+          onChange={(_,  value) => value && setTimeframe(value)}
           size="small"
         >
           <ToggleButton value="month">Month</ToggleButton>
@@ -395,8 +395,8 @@ const CompetitivePricing: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pricingData.map((row, index) => (
-              <TableRow key={index}>
+            {pricingData.map((row, _index) => (
+              <TableRow key={_index}>
                 <TableCell>
                   <Typography fontWeight="medium">{row.product}</Typography>
                 </TableCell>
@@ -599,7 +599,7 @@ const SalesIntelligenceHub: React.FC = () => {
           Sales Intelligence Hub
         </Typography>
         <TextField
-          placeholder="Search battlecards, competitors, products..."
+          placeholder="Search battlecards,  competitors,  products..."
           variant="outlined"
           size="small"
           value={searchQuery}
@@ -614,7 +614,7 @@ const SalesIntelligenceHub: React.FC = () => {
       <Paper sx={{ mb: 3 }}>
         <Tabs
           value={activeTab}
-          onChange={(_: React.SyntheticEvent, value: number) => setActiveTab(value)}
+          onChange={(_: React.SyntheticEvent,  value: number) => setActiveTab(value)}
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -651,12 +651,12 @@ const SalesIntelligenceHub: React.FC = () => {
         </Box>
         
         {filteredBattlecards.length > 0 ? (
-          filteredBattlecards.map((card, index) => (
+          filteredBattlecards.map((card, _index) => (
             <motion.div
-              key={index}
+              key={_index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: _index * 0.1 }}
             >
               <Battlecard {...card} />
             </motion.div>
@@ -702,6 +702,5 @@ const SalesIntelligenceHub: React.FC = () => {
     </Box>
   );
 };
-
 
 SalesIntelligenceHub.displayName = 'SalesIntelligenceHub';export default SalesIntelligenceHub;

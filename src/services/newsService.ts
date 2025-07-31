@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { logger } from './logging/logger';
-import { handleUnknownError, TypedError } from '../types/errors';
+import { handleUnknownError } from '../types/errors';
 import { getErrorMessage } from '../utils/errorUtils';
 
 // Types

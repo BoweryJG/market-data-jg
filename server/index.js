@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -48,7 +50,7 @@ app.get('/api/news/procedure-category/:categoryId', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching news by procedure category:', error);
+    logger.error('Error fetching news by procedure category:', error);
     res.status(500).json({ error: 'Failed to fetch news articles' });
   }
 });
@@ -92,7 +94,7 @@ app.get('/api/news/industry/:industry', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching news by industry:', error);
+    logger.error('Error fetching news by industry:', error);
     res.status(500).json({ error: 'Failed to fetch news articles' });
   }
 });
@@ -124,7 +126,7 @@ app.get('/api/news/category/:categoryId', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching news by category:', error);
+    logger.error('Error fetching news by category:', error);
     res.status(500).json({ error: 'Failed to fetch news articles' });
   }
 });
@@ -165,7 +167,7 @@ app.post('/api/news/generate-image', async (req, res) => {
     
     res.json({ imageUrl: randomImage });
   } catch (error) {
-    console.error('Error generating image:', error);
+    logger.error('Error generating image:', error);
     res.status(500).json({ error: 'Failed to generate image' });
   }
 });
@@ -200,7 +202,7 @@ app.get('/api/news/search', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error searching news:', error);
+    logger.error('Error searching news:', error);
     res.status(500).json({ error: 'Failed to search news articles' });
   }
 });
@@ -226,7 +228,7 @@ app.get('/api/news/realtime/:procedureId', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching Brave news:', error);
+    logger.error('Error fetching Brave news:', error);
     res.status(500).json({ error: 'Failed to fetch Brave news' });
   }
 });
@@ -258,10 +260,10 @@ app.get('/api/search/brave', async (req, res) => {
     cache.set(cacheKey, response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching Brave search results:', error);
+    logger.error('Error fetching Brave search results:', error);
     if (error.response) {
-      console.error('Error response data:', JSON.stringify(error.response.data, null, 2));
-      console.error('Error status:', error.response.status);
+      logger.error('Error response data:', JSON.stringify(error.response.data, null, 2));
+      logger.error('Error status:', error.response.status);
     }
     res.status(500).json({ 
       error: 'Failed to fetch Brave search results',
@@ -272,5 +274,5 @@ app.get('/api/search/brave', async (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`News proxy service running on port ${port}`);
+  logger.info(`News proxy service running on port ${port}`);
 });

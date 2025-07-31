@@ -1,5 +1,5 @@
 // This file handles mapping between old category structures and the new hierarchy
-import { supabase } from '../../services/supabaseClient';
+
 import { CategoryHierarchy } from '../../types';
 
 // Map dental categories to hierarchy IDs

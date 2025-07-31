@@ -36,8 +36,9 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as braveSearchService from '../../services/braveSearchService';
-import { galaxyDataService } from '../../services/galaxyDataService';
+
 import { supabase } from '../../services/supabaseClient';
+import { logger } from '../services/logging/logger';
 
 interface CommandResult {
   id: string;
@@ -51,11 +52,11 @@ interface CommandResult {
 }
 
 interface AICommandBarProps {
-  onResultSelect?: (result: CommandResult) => void;
+  onResultSelect?: (_result: CommandResult) => void;
   onClose?: () => void;
 }
 
-const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) => {
+const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<CommandResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -122,7 +123,7 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
   };
 
   // Search procedures in database
-  const searchProcedures = async (query: string, industry?: string): Promise<CommandResult[]> => {
+  const searchProcedures = async (query: string,  industry?: string): Promise<CommandResult[]> => {
     try {
       let dbQuery = supabase
         .from('procedures')
@@ -149,13 +150,13 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
         relevance: proc.trending_score_1_to_100 / 100
       }));
     } catch (error) {
-      console.error('Error searching procedures:', error);
+      logger.error('Error searching procedures:', error);
       return [];
     }
   };
 
   // Search practices (mock for now)
-  const searchPractices = async (location?: string, procedure?: string, revenue?: number): Promise<CommandResult[]> => {
+  const searchPractices = async (location?: string,  procedure?: string,  revenue?: number): Promise<CommandResult[]> => {
     // In a real implementation, this would query a practices/accounts table
     const mockResults: CommandResult[] = [
       {
@@ -202,7 +203,7 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
         5
       );
 
-      return searchResults.map((result: any, idx: number) => ({
+      return searchResults.map((result: any,  idx: number) => ({
         id: `trend_${idx}`,
         type: 'insight' as const,
         title: result.title,
@@ -212,13 +213,13 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
         relevance: result.intelligence_score || 0.5
       }));
     } catch (error) {
-      console.error('Error searching trends:', error);
+      logger.error('Error searching trends:', error);
       return [];
     }
   };
 
   // Generate AI insights
-  const generateInsights = async (query: string, existingResults: CommandResult[]): Promise<CommandResult[]> => {
+  const generateInsights = async (query: string,  existingResults: CommandResult[]): Promise<CommandResult[]> => {
     const insights: CommandResult[] = [];
 
     // Analyze query intent
@@ -226,19 +227,19 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
     
     if (lower.includes('opportunity') || lower.includes('potential')) {
       insights.push({
-        id: 'insight_opp',
-        type: 'insight',
-        title: 'AI Insight: Market Opportunity Analysis',
-        description: 'Based on your query, I found 3 high-growth categories with low market penetration in your territory',
-        icon: <Psychology color="warning" />,
-        action: () => console.log('Show opportunity analysis')
+        id: 'insight_opp', 
+        type: 'insight', 
+        title: 'AI Insight: Market Opportunity Analysis', 
+        description: 'Based on your query,  I found 3 high-growth categories with low market penetration in your territory', 
+        icon: <Psychology color="warning" />, 
+        action: () => logger.info('Show opportunity analysis')
       });
     }
 
     if (existingResults.length > 0) {
       const avgGrowth = existingResults
         .filter(r => r.type === 'procedure' && r.data?.yoy_growth_2024_to_2025_percent)
-        .reduce((sum, r) => sum + r.data.yoy_growth_2024_to_2025_percent, 0) / existingResults.length;
+        .reduce((sum,  r) => sum + r.data.yoy_growth_2024_to_2025_percent, 0) / existingResults.length;
 
       if (avgGrowth > 10) {
         insights.push({
@@ -269,39 +270,39 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
 
   // Create action results
   const createPitchDeckAction = (query: string): CommandResult => ({
-    id: 'action_pitch',
-    type: 'action',
-    title: 'Generate Pitch Deck',
-    description: 'Create a customized pitch deck based on market data and your query',
-    icon: <Campaign color="primary" />,
-    action: () => console.log('Generating pitch deck for:', query)
+    id: 'action_pitch', 
+    type: 'action', 
+    title: 'Generate Pitch Deck', 
+    description: 'Create a customized pitch deck based on market data and your query', 
+    icon: <Campaign color="primary" />, 
+    action: () => logger.info('Generating pitch deck for:', query)
   });
 
   const createReportAction = (query: string): CommandResult => ({
-    id: 'action_report',
-    type: 'action',
-    title: 'Generate Market Report',
-    description: 'Create comprehensive market analysis report with charts and insights',
-    icon: <Analytics color="primary" />,
-    action: () => console.log('Generating report for:', query)
+    id: 'action_report', 
+    type: 'action', 
+    title: 'Generate Market Report', 
+    description: 'Create comprehensive market analysis report with charts and insights', 
+    icon: <Analytics color="primary" />, 
+    action: () => logger.info('Generating report for:', query)
   });
 
   const createCampaignAction = (query: string): CommandResult => ({
-    id: 'action_campaign',
-    type: 'action',
-    title: 'Create Marketing Campaign',
-    description: 'Design targeted campaign based on market intelligence',
-    icon: <Campaign color="primary" />,
-    action: () => console.log('Creating campaign for:', query)
+    id: 'action_campaign', 
+    type: 'action', 
+    title: 'Create Marketing Campaign', 
+    description: 'Design targeted campaign based on market intelligence', 
+    icon: <Campaign color="primary" />, 
+    action: () => logger.info('Creating campaign for:', query)
   });
 
   const createAutomationAction = (query: string): CommandResult => ({
-    id: 'action_automation',
-    type: 'action',
-    title: 'Schedule Automation',
-    description: 'Set up automated workflows based on market triggers',
-    icon: <AutoAwesome color="primary" />,
-    action: () => console.log('Creating automation for:', query)
+    id: 'action_automation', 
+    type: 'action', 
+    title: 'Schedule Automation', 
+    description: 'Set up automated workflows based on market triggers', 
+    icon: <AutoAwesome color="primary" />, 
+    action: () => logger.info('Creating automation for:', query)
   });
 
   // Compare products/procedures
@@ -319,7 +320,7 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
       title: `Comparison: ${item1} vs ${item2}`,
       description: 'Side-by-side market analysis and competitive positioning',
       icon: <Analytics color="info" />,
-      action: () => console.log('Showing comparison:', item1, 'vs', item2)
+      action: () => logger.info('Showing comparison:', item1, 'vs', item2)
     }];
   };
 
@@ -368,7 +369,7 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
       setRecentQueries(updated);
       localStorage.setItem('ai_command_recent', JSON.stringify(updated));
     } catch (error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
       setResults([{
         id: 'error',
         type: 'data',
@@ -403,16 +404,16 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
     <Paper
       elevation={6}
       sx={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: 800,
-        mx: 'auto',
+        position: 'relative', 
+        width: '100%', 
+        maxWidth: 800, 
+        mx: 'auto', 
         overflow: 'hidden'
       }}
     >
       {/* Search Input */}
-      <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ p: 3,  borderBottom: 1,  borderColor: 'divider' }}>
+        <Box sx={{ display: 'flex',  alignItems: 'center',  gap: 2 }}>
           <Psychology color="primary" sx={{ fontSize: 32 }} />
           <TextField
             ref={inputRef}
@@ -449,8 +450,8 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
             <Typography variant="caption" color="text.secondary">
               Suggestions:
             </Typography>
-            <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
-              {suggestions.map((suggestion, idx) => (
+            <Stack direction="row" spacing={1} sx={{ mt: 1,  flexWrap: 'wrap' }}>
+              {suggestions.map((suggestion,  idx) => (
                 <Chip
                   key={idx}
                   label={suggestion}
@@ -472,12 +473,12 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
         {results.length > 0 ? (
           <List>
             <AnimatePresence>
-              {results.map((result, idx) => (
+              {results.map((result,  idx) => (
                 <motion.div
                   key={result.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0,  x: -20 }}
+                  animate={{ opacity: 1,  x: 0 }}
+                  exit={{ opacity: 0,  x: 20 }}
                   transition={{ delay: idx * 0.05 }}
                 >
                   <ListItem
@@ -526,11 +527,11 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
         {!query && recentQueries.length > 0 && (
           <Box sx={{ p: 3 }}>
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-              <History fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
+              <History fontSize="small" sx={{ verticalAlign: 'middle',  mr: 1 }} />
               Recent Searches
             </Typography>
             <Stack spacing={1} sx={{ mt: 2 }}>
-              {recentQueries.map((recentQuery, idx) => (
+              {recentQueries.map((recentQuery,  idx) => (
                 <Chip
                   key={idx}
                   label={recentQuery}
@@ -549,11 +550,11 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
 
       {/* Quick Actions */}
       {!query && !loading && (
-        <Box sx={{ p: 3, borderTop: 1, borderColor: 'divider' }}>
+        <Box sx={{ p: 3,  borderTop: 1,  borderColor: 'divider' }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Quick Actions
           </Typography>
-          <Stack direction="row" spacing={1} sx={{ mt: 2, flexWrap: 'wrap' }}>
+          <Stack direction="row" spacing={1} sx={{ mt: 2,  flexWrap: 'wrap' }}>
             <Button
               size="small"
               startIcon={<Lightbulb />}
@@ -590,6 +591,5 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect, onClose }) 
     </Paper>
   );
 };
-
 
 AICommandBar.displayName = 'AICommandBar';export default AICommandBar;

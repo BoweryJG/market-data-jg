@@ -1,5 +1,5 @@
 import { ComponentType, LazyExoticComponent } from 'react';
-import { BaseEntity, SocialLinks, ProcedureMetrics, CompanyMetrics } from './types/common';
+import { SocialLinks, CompanyMetrics } from './types/common';
 
 export interface RouteConfig {
   path: string;

@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -143,13 +145,13 @@ const BATCH_2_MARKET_DATA = {
 };
 
 async function applyBatchResearchData() {
-  console.log('=== APPLYING BATCH 2 REAL MCP RESEARCH DATA ===\n');
+  logger.info('=== APPLYING BATCH 2 REAL MCP RESEARCH DATA ===\n');
   
   let updated = 0;
   let failed = 0;
   
   for (const [procedureName, data] of Object.entries(BATCH_2_MARKET_DATA)) {
-    console.log(`\nUpdating: ${procedureName}`);
+    logger.info(`\nUpdating: ${procedureName}`);
     
     // Calculate projections
     const rate = data.cagr / 100;
@@ -189,30 +191,30 @@ async function applyBatchResearchData() {
         .eq('procedure_name', procedureName);
         
       if (dentalError) {
-        console.log(`  ✗ Failed to update: ${dentalError.message}`);
+        logger.info(`  ✗ Failed to update: ${dentalError.message}`);
         failed++;
       } else {
-        console.log(`  ✓ Updated in dental_procedures`);
-        console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-        console.log(`    CAGR: ${data.cagr}%`);
-        console.log(`    Confidence: ${data.confidence}/10`);
+        logger.info(`  ✓ Updated in dental_procedures`);
+        logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+        logger.info(`    CAGR: ${data.cagr}%`);
+        logger.info(`    Confidence: ${data.confidence}/10`);
         updated++;
       }
     } else {
-      console.log(`  ✓ Updated in aesthetic_procedures`);
-      console.log(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
-      console.log(`    CAGR: ${data.cagr}%`);
-      console.log(`    Confidence: ${data.confidence}/10`);
+      logger.info(`  ✓ Updated in aesthetic_procedures`);
+      logger.info(`    Market: $${data.market_size_2025}M → $${data.market_size_2030}M`);
+      logger.info(`    CAGR: ${data.cagr}%`);
+      logger.info(`    Confidence: ${data.confidence}/10`);
       updated++;
     }
   }
   
-  console.log(`\n\n=== SUMMARY ===`);
-  console.log(`Successfully updated: ${updated} procedures`);
-  console.log(`Failed: ${failed} procedures`);
-  console.log(`\nData Quality:`);
-  console.log(`- 10/10 confidence: Botox, Juvederm, Laser Hair Removal, Dermal Fillers`);
-  console.log(`- 9/10 confidence: CoolSculpting, Microneedling, Chemical Peels, IPL, Kybella, Ultherapy`);
+  logger.info(`\n\n=== SUMMARY ===`);
+  logger.info(`Successfully updated: ${updated} procedures`);
+  logger.info(`Failed: ${failed} procedures`);
+  logger.info(`\nData Quality:`);
+  logger.info(`- 10/10 confidence: Botox, Juvederm, Laser Hair Removal, Dermal Fillers`);
+  logger.info(`- 9/10 confidence: CoolSculpting, Microneedling, Chemical Peels, IPL, Kybella, Ultherapy`);
 }
 
 // Execute

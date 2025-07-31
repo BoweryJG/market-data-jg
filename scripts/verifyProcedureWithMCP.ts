@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 #!/usr/bin/env node
 
 /**
@@ -22,7 +24,7 @@ interface MCPSearchResult {
 
 class ProcedureMCPVerifier {
   async verifyProcedure(procedureName: string, _category: string): Promise<void> {
-    console.log(`\n=== Verifying ${procedureName} using MCP Tools ===\n`);
+    logger.info(`\n=== Verifying ${procedureName} using MCP Tools ===\n`);
 
     // Example searches that would be performed:
     const searches = {
@@ -48,15 +50,15 @@ class ProcedureMCPVerifier {
       }
     };
 
-    console.log('1. Brave Search Queries:');
-    searches.brave.forEach((q, i) => console.log(`   ${i + 1}. ${q}`));
+    logger.info('1. Brave Search Queries:');
+    searches.brave.forEach((q, i) => logger.info(`   ${i + 1}. ${q}`));
 
-    console.log('\n2. Perplexity Deep Research Query:');
-    console.log(`   ${searches.perplexity}`);
+    logger.info('\n2. Perplexity Deep Research Query:');
+    logger.info(`   ${searches.perplexity}`);
 
-    console.log('\n3. Firecrawl Targets:');
-    console.log(`   Query: ${searches.firecrawl.query}`);
-    searches.firecrawl.urls.forEach(url => console.log(`   - ${url}`));
+    logger.info('\n3. Firecrawl Targets:');
+    logger.info(`   Query: ${searches.firecrawl.query}`);
+    searches.firecrawl.urls.forEach(url => logger.info(`   - ${url}`));
 
     // Simulated results structure
     const aggregatedIntelligence = {
@@ -78,8 +80,8 @@ class ProcedureMCPVerifier {
       data_sources: ['Brave Search', 'Perplexity', 'Firecrawl', 'Industry Reports']
     };
 
-    console.log('\n=== Aggregated Intelligence ===');
-    console.log(JSON.stringify(aggregatedIntelligence, null, 2));
+    logger.info('\n=== Aggregated Intelligence ===');
+    logger.info(JSON.stringify(aggregatedIntelligence, null, 2));
 
     // SQL Update that would be executed
     const sqlUpdate = `
@@ -101,33 +103,33 @@ SET
   data_sources_used = ARRAY['${aggregatedIntelligence.data_sources.join("','")}']
 WHERE procedure_name = '${procedureName}';`;
 
-    console.log('\n=== SQL Update Statement ===');
-    console.log(sqlUpdate);
+    logger.info('\n=== SQL Update Statement ===');
+    logger.info(sqlUpdate);
   }
 
   /**
    * Example of how to call MCP tools in production
    */
   async demonstrateMCPCalls(): Promise<void> {
-    console.log('\n=== MCP Tool Call Examples ===\n');
+    logger.info('\n=== MCP Tool Call Examples ===\n');
 
     // Brave Search example
-    console.log('1. Brave Search MCP Call:');
-    console.log(`mcp__brave-search__brave_web_search({
+    logger.info('1. Brave Search MCP Call:');
+    logger.info(`mcp__brave-search__brave_web_search({
   query: "Botox market size forecast 2025-2030",
   count: 10
 })`);
 
     // Perplexity example
-    console.log('\n2. Perplexity Deep Research MCP Call:');
-    console.log(`mcp__perplexity__deep_research({
+    logger.info('\n2. Perplexity Deep Research MCP Call:');
+    logger.info(`mcp__perplexity__deep_research({
   query: "Comprehensive market analysis for Botox aesthetic procedures 2025-2030",
   focus_areas: ["market size", "growth rates", "manufacturers", "regional data"]
 })`);
 
     // Firecrawl example
-    console.log('\n3. Firecrawl Search MCP Call:');
-    console.log(`mcp__firecrawl__firecrawl_search({
+    logger.info('\n3. Firecrawl Search MCP Call:');
+    logger.info(`mcp__firecrawl__firecrawl_search({
   query: "Botox market research report 2025",
   limit: 5,
   scrapeOptions: {
@@ -137,8 +139,8 @@ WHERE procedure_name = '${procedureName}';`;
 })`);
 
     // Puppeteer example
-    console.log('\n4. Puppeteer Navigate MCP Call:');
-    console.log(`mcp__puppeteer__puppeteer_navigate({
+    logger.info('\n4. Puppeteer Navigate MCP Call:');
+    logger.info(`mcp__puppeteer__puppeteer_navigate({
   url: "https://www.allergan.com/investor-relations"
 })`);
   }

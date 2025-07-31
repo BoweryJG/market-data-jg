@@ -51,6 +51,8 @@ import {
 } from '@mui/icons-material';
 import { search as braveSearch } from '../../services/braveSearchService';
 import { procedureEnhancementService, EnhancedProcedureData } from '../../services/procedureEnhancementService';
+import { logger } from '../services/logging/logger';
+
 
 interface ProcedureDetailsModalProps {
   open: boolean;
@@ -65,17 +67,17 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
   </div>
 );
 
 const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
-  open,
-  onClose,
-  procedure,
-  industry,
+  open, 
+  onClose, 
+  procedure, 
+  industry, 
 }) => {
   const [tabValue, setTabValue] = useState(0);
   const [searchResults, setSearchResults] = useState<any>(null);
@@ -124,7 +126,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       
       setEnhancedData(enhanced);
     } catch (err) {
-      console.error('Error fetching enhanced data:', err);
+      logger.error('Error fetching enhanced data:', err);
     } finally {
       setEnhancedLoading(false);
     }
@@ -143,14 +145,14 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       const results = await braveSearch(searchQuery, 10);
       setSearchResults(results);
     } catch (err) {
-      console.error('Error fetching procedure insights:', err);
+      logger.error('Error fetching procedure insights:', err);
       setError('Failed to fetch latest insights. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -198,7 +200,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       setFullReportData(fullReport);
       setShowFullReport(true);
     } catch (err) {
-      console.error('Error generating full report:', err);
+      logger.error('Error generating full report:', err);
       setError('Failed to generate full report. Please try again.');
     } finally {
       setGeneratingReport(false);
@@ -206,7 +208,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
   };
 
   // Helper functions for report generation
-  const generateExecutiveSummary = (proc: any, enhanced: any) => {
+  const generateExecutiveSummary = (proc: any,  enhanced: any) => {
     const industryName = industry ? industry.charAt(0).toUpperCase() + industry.slice(1) : 'Medical';
     return `${proc.name || proc.procedure_name} represents a ${
       proc.yearly_growth_percentage > 10 ? 'high-growth' : 'stable'
@@ -265,7 +267,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
     return evidence;
   };
 
-  const extractCostAnalysis = (searchResults: any, proc: any) => {
+  const extractCostAnalysis = (searchResults: any,  proc: any) => {
     return {
       averageCost: proc.average_cost_usd,
       priceRange: {
@@ -343,7 +345,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
     };
   };
 
-  const generateRecommendations = (proc: any, enhanced: any) => {
+  const generateRecommendations = (proc: any,  enhanced: any) => {
     const recommendations = [];
     
     if (proc.yearly_growth_percentage > 10) {
@@ -382,7 +384,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
     return Array.from(sources);
   };
 
-  const generateRelatedProcedures = (proc: any, ind: string) => {
+  const generateRelatedProcedures = (proc: any,  ind: string) => {
     // This would ideally pull from your database
     return [
       'Related complementary procedures',
@@ -785,7 +787,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
         {showFullReport && fullReportData ? (
           <Box>
             {/* Full Report Header */}
-            <Box sx={{ mb: 3, textAlign: 'center' }}>
+            <Box sx={{ mb: 3,  textAlign: 'center' }}>
               <Button
                 startIcon={<ArrowBackIcon />}
                 onClick={() => setShowFullReport(false)}
@@ -844,7 +846,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 <Grid item xs={12}>
                   <Typography variant="h6" gutterBottom>Market Drivers</Typography>
                   <List dense>
-                    {fullReportData.marketAnalysis.marketDrivers.map((driver: string, index: number) => (
+                    {fullReportData.marketAnalysis.marketDrivers.map((driver: string, _index: number) => (
                       <ListItem key={index}>
                         <ListItemIcon>
                           <TrendingUpIcon sx={{ color: '#06B6D4' }} />
@@ -881,7 +883,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
               {fullReportData.clinicalEvidence.studies.length > 0 && (
                 <Box>
                   <Typography variant="h6" gutterBottom>Recent Studies</Typography>
-                  {fullReportData.clinicalEvidence.studies.map((study: any, index: number) => (
+                  {fullReportData.clinicalEvidence.studies.map((study: any, _index: number) => (
                     <Box key={index} sx={{ mb: 2 }}>
                       <Typography variant="subtitle1" fontWeight="bold">
                         {study.title}
@@ -937,7 +939,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 <Grid item xs={12}>
                   <Typography variant="h6" gutterBottom>Pricing Factors</Typography>
                   <List dense>
-                    {fullReportData.costAnalysis.factors.map((factor: string, index: number) => (
+                    {fullReportData.costAnalysis.factors.map((factor: string, _index: number) => (
                       <ListItem key={index}>
                         <ListItemIcon>
                           <MoneyIcon sx={{ color: '#06B6D4' }} />
@@ -960,7 +962,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
               <Typography variant="h5" gutterBottom sx={{ color: '#06B6D4' }}>
                 Latest Innovations & Technology
               </Typography>
-              {fullReportData.innovations.map((innovation: any, index: number) => (
+              {fullReportData.innovations.map((innovation: any, _index: number) => (
                 <Box key={index} sx={{ mb: 2 }}>
                   <Typography variant="h6">{innovation.title}</Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)', mb: 1 }}>
@@ -984,7 +986,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 Strategic Recommendations
               </Typography>
               <List>
-                {fullReportData.recommendations.map((rec: string, index: number) => (
+                {fullReportData.recommendations.map((rec: string, _index: number) => (
                   <ListItem key={index}>
                     <ListItemIcon>
                       <CheckIcon sx={{ color: '#10B981' }} />
@@ -1009,7 +1011,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 startIcon={<DownloadIcon />}
                 onClick={() => {
                   // Implement PDF download
-                  console.log('Download PDF functionality to be implemented');
+                  logger.info('Download PDF functionality to be implemented');
                 }}
               >
                 Download PDF
@@ -1019,7 +1021,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 startIcon={<ShareIcon />}
                 onClick={() => {
                   // Implement share functionality
-                  console.log('Share functionality to be implemented');
+                  logger.info('Share functionality to be implemented');
                 }}
               >
                 Share Report
@@ -1077,8 +1079,8 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                             Key Benefits
                           </Typography>
                           <List dense>
-                            {enhancedData.benefits.map((benefit, index) => (
-                              <ListItem key={index}>
+                            {enhancedData.benefits.map((benefit, _index) => (
+                              <ListItem key={_index}>
                                 <ListItemIcon>
                                   <CheckIcon sx={{ color: '#10B981', fontSize: 20 }} />
                                 </ListItemIcon>
@@ -1098,8 +1100,8 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                             Ideal Candidates
                           </Typography>
                           <List dense>
-                            {enhancedData.candidatesFor.map((candidate, index) => (
-                              <ListItem key={index}>
+                            {enhancedData.candidatesFor.map((candidate, _index) => (
+                              <ListItem key={_index}>
                                 <ListItemIcon>
                                   <PersonIcon sx={{ color: '#06B6D4', fontSize: 20 }} />
                                 </ListItemIcon>
@@ -1232,7 +1234,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
         <TabPanel value={tabValue} index={1}>
           {loading ? (
             <Box>
-              {[1, 2, 3].map((i) => (
+              {[1,  2,  3].map((i) => (
                 <Box key={i} sx={{ mb: 2 }}>
                   <Skeleton variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
                 </Box>
@@ -1242,7 +1244,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
             <Alert severity="error">{error}</Alert>
           ) : searchResults && searchResults.web && searchResults.web.results ? (
             <List>
-              {searchResults.web.results.map((result: any, index: number) => (
+              {searchResults.web.results.map((result: any, _index: number) => (
                 <Paper key={index} elevation={0} sx={{ 
                   mb: 2, 
                   p: 2, 
@@ -1469,8 +1471,8 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                           Preparation Steps
                         </Typography>
                         <List dense>
-                          {enhancedData.preparationSteps.map((step, index) => (
-                            <ListItem key={index}>
+                          {enhancedData.preparationSteps.map((step, _index) => (
+                            <ListItem key={_index}>
                               <ListItemIcon>
                                 <CheckIcon sx={{ color: '#10B981', fontSize: 20 }} />
                               </ListItemIcon>
@@ -1498,8 +1500,8 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                           Aftercare Instructions
                         </Typography>
                         <List dense>
-                          {enhancedData.aftercare.map((care, index) => (
-                            <ListItem key={index}>
+                          {enhancedData.aftercare.map((care, _index) => (
+                            <ListItem key={_index}>
                               <ListItemIcon>
                                 <CheckIcon sx={{ color: '#06B6D4', fontSize: 20 }} />
                               </ListItemIcon>
@@ -1527,9 +1529,9 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                           Technology & Equipment
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                          {enhancedData.technologyUsed.map((tech, index) => (
+                          {enhancedData.technologyUsed.map((tech, _index) => (
                             <Chip
-                              key={index}
+                              key={_index}
                               icon={<BiotechIcon />}
                               label={tech}
                               sx={{ 

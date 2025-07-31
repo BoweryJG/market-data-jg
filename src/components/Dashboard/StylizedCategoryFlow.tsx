@@ -115,7 +115,8 @@ import {
 } from '@mui/icons-material';
 
 import { supabase } from '../../services/supabaseClient';
-import { braveSearchService } from '../../services/braveSearchService';
+
+import { logger } from '../services/logging/logger';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -366,7 +367,7 @@ const StylizedCategoryFlow: React.FC<{ industry: 'dental' | 'aesthetic' }> = ({ 
 
       setCategories(rootCategories);
     } catch (error) {
-      console.error('Failed to load categories:', error);
+      logger.error('Failed to load categories:', error);
     } finally {
       setLoading(false);
     }
@@ -746,6 +747,5 @@ const StylizedCategoryFlow: React.FC<{ industry: 'dental' | 'aesthetic' }> = ({ 
     </CategoryFlowContainer>
   );
 };
-
 
 StylizedCategoryFlow.displayName = 'StylizedCategoryFlow';export default StylizedCategoryFlow;

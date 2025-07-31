@@ -50,6 +50,8 @@ import {
   Activity,
 } from 'lucide-react';
 import { providerDataService, ProviderLocation, MarketTerritory, ProviderEquipment } from '../../services/providerDataService';
+import { logger } from '../services/logging/logger';
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,7 +59,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(_props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -104,7 +106,7 @@ export default function LocalMarketIntelligence() {
         setSelectedTerritory(data[0].name);
       }
     } catch (error) {
-      console.error('Error loading territories:', error);
+      logger.error('Error loading territories:', error);
     } finally {
       setLoading(false);
     }
@@ -118,7 +120,7 @@ export default function LocalMarketIntelligence() {
       const data = await providerDataService.getProvidersByTerritory(territory.city, territory.state);
       setProviders(data);
     } catch (error) {
-      console.error('Error loading providers:', error);
+      logger.error('Error loading providers:', error);
     }
   };
 
@@ -173,8 +175,8 @@ export default function LocalMarketIntelligence() {
         </Box>
       ) : (
         <>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-            <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
+          <Box sx={{ borderBottom: 1,  borderColor: 'divider',  mb: 3 }}>
+            <Tabs value={activeTab} onChange={(e,  v) => setActiveTab(v)}>
               <Tab label="Territory Overview" />
               <Tab label="Provider Directory" />
               <Tab label="Market Opportunities" />
@@ -336,7 +338,7 @@ export default function LocalMarketIntelligence() {
               {filteredProviders.map((provider) => (
                 <Grid item xs={12} md={6} key={provider.id}>
                   <Card
-                    sx={{ cursor: 'pointer', '&:hover': { boxShadow: 3 } }}
+                    sx={{ cursor: 'pointer',  '&:hover': { boxShadow: 3 } }}
                     onClick={() => handleProviderClick(provider)}
                   >
                     <CardContent>
@@ -385,7 +387,7 @@ export default function LocalMarketIntelligence() {
 
                       {provider.specialties && provider.specialties.length > 0 && (
                         <Box mt={1}>
-                          {provider.specialties.slice(0, 3).map((specialty, idx) => (
+                          {provider.specialties.slice(0, 3).map((specialty,  idx) => (
                             <Chip
                               key={idx}
                               label={specialty}
@@ -428,7 +430,7 @@ export default function LocalMarketIntelligence() {
                         <TableBody>
                           {providers
                             .filter(p => p.growth_potential_score && p.growth_potential_score >= 75)
-                            .sort((a, b) => (b.growth_potential_score || 0) - (a.growth_potential_score || 0))
+                            .sort((a,  b) => (b.growth_potential_score || 0) - (a.growth_potential_score || 0))
                             .slice(0, 5)
                             .map((provider) => (
                               <TableRow
@@ -553,7 +555,7 @@ export default function LocalMarketIntelligence() {
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">Specialties & Services</Typography>
                   <Box display="flex" gap={1} mt={1} flexWrap="wrap">
-                    {selectedProvider.specialties?.map((specialty, idx) => (
+                    {selectedProvider.specialties?.map((specialty,  idx) => (
                       <Chip key={idx} label={specialty} size="small" />
                     ))}
                   </Box>

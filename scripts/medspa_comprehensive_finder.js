@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -186,7 +188,7 @@ async function searchByKeywords(state, keywords) {
   const seenNPIs = new Set();
   
   for (const keyword of keywords) {
-    console.log(`    Searching for "${keyword}"...`);
+    logger.info(`    Searching for "${keyword}"...`);
     let skip = 0;
     let hasMore = true;
     
@@ -221,14 +223,14 @@ async function searchByKeywords(state, keywords) {
           hasMore = false;
         }
       } catch (error) {
-        console.error(`      Error: ${error.message}`);
+        logger.error(`      Error: ${error.message}`);
         hasMore = false;
       }
       
       await sleep(100);
     }
     
-    console.log(`      Found ${allResults.length} total organizations`);
+    logger.info(`      Found ${allResults.length} total organizations`);
   }
   
   return allResults;
@@ -236,7 +238,7 @@ async function searchByKeywords(state, keywords) {
 
 // Find provider-owned businesses
 async function findProviderOwnedBusinesses(state) {
-  console.log(`  Searching for provider-owned aesthetic businesses...`);
+  logger.info(`  Searching for provider-owned aesthetic businesses...`);
   const businesses = [];
   
   // Search for businesses owned by dermatologists and plastic surgeons
@@ -289,35 +291,35 @@ async function findProviderOwnedBusinesses(state) {
     }
   }
   
-  console.log(`    Found ${businesses.length} potential provider-owned medspas`);
+  logger.info(`    Found ${businesses.length} potential provider-owned medspas`);
   return businesses;
 }
 
 // Main execution
 async function main() {
-  console.log('Comprehensive MedSpa Finder - NY & FL');
-  console.log('=====================================\n');
+  logger.info('Comprehensive MedSpa Finder - NY & FL');
+  logger.info('=====================================\n');
   
   const allMedSpas = [];
   const uniqueNPIs = new Set();
   
   for (const state of STATES) {
-    console.log(`\n=== Processing ${state} ===`);
+    logger.info(`\n=== Processing ${state} ===`);
     
     // Strategy 1: Search by primary keywords
-    console.log('\nStrategy 1: Primary MedSpa Keywords');
+    logger.info('\nStrategy 1: Primary MedSpa Keywords');
     const primaryResults = await searchByKeywords(state, MEDSPA_KEYWORDS.primary);
     
     // Strategy 2: Search by secondary keywords
-    console.log('\nStrategy 2: Secondary Keywords');
+    logger.info('\nStrategy 2: Secondary Keywords');
     const secondaryResults = await searchByKeywords(state, MEDSPA_KEYWORDS.secondary.slice(0, 10));
     
     // Strategy 3: Search by service keywords
-    console.log('\nStrategy 3: Service Keywords');
+    logger.info('\nStrategy 3: Service Keywords');
     const serviceResults = await searchByKeywords(state, MEDSPA_KEYWORDS.services.slice(0, 10));
     
     // Strategy 4: Provider-owned businesses
-    console.log('\nStrategy 4: Provider-Owned Businesses');
+    logger.info('\nStrategy 4: Provider-Owned Businesses');
     const providerBusinesses = await findProviderOwnedBusinesses(state);
     
     // Combine all results
@@ -329,7 +331,7 @@ async function main() {
     ];
     
     // Process and score each potential medspa
-    console.log(`\nProcessing ${allStateResults.length} potential medspas...`);
+    logger.info(`\nProcessing ${allStateResults.length} potential medspas...`);
     
     for (const provider of allStateResults) {
       if (!uniqueNPIs.has(provider.number)) {
@@ -345,18 +347,18 @@ async function main() {
     
     // State summary
     const stateMedSpas = allMedSpas.filter(m => m.state === state);
-    console.log(`\n${state} Summary:`);
-    console.log(`  High Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'High').length}`);
-    console.log(`  Medium Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'Medium').length}`);
-    console.log(`  Low Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'Low').length}`);
-    console.log(`  Total: ${stateMedSpas.length}`);
+    logger.info(`\n${state} Summary:`);
+    logger.info(`  High Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'High').length}`);
+    logger.info(`  Medium Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'Medium').length}`);
+    logger.info(`  Low Confidence MedSpas: ${stateMedSpas.filter(m => m.confidenceLevel === 'Low').length}`);
+    logger.info(`  Total: ${stateMedSpas.length}`);
   }
   
   // Sort by confidence score
   allMedSpas.sort((a, b) => b.confidenceScore - a.confidenceScore);
   
   // Save to CSV
-  console.log('\n=== Saving MedSpa Data ===');
+  logger.info('\n=== Saving MedSpa Data ===');
   
   const fields = [
     'npi', 'organizationName', 'doingBusinessAs', 
@@ -374,7 +376,7 @@ async function main() {
     const csv = parse(allMedSpas, { fields });
     const filename = `medspas_comprehensive_NY_FL_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allMedSpas.length} medspas to ${filename}`);
+    logger.info(`Saved ${allMedSpas.length} medspas to ${filename}`);
   }
   
   // Save high-confidence medspas separately
@@ -383,7 +385,7 @@ async function main() {
     const csv = parse(highConfidence, { fields });
     const filename = `medspas_high_confidence_NY_FL_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${highConfidence.length} high-confidence medspas to ${filename}`);
+    logger.info(`Saved ${highConfidence.length} high-confidence medspas to ${filename}`);
   }
   
   // Create a summary report
@@ -421,32 +423,32 @@ async function main() {
     JSON.stringify(summaryData, null, 2)
   );
   
-  console.log('\n=== Final Summary ===');
-  console.log(`Total MedSpas Found: ${allMedSpas.length}`);
-  console.log(`  NY: ${summaryData.byState.NY}`);
-  console.log(`  FL: ${summaryData.byState.FL}`);
-  console.log(`\nBy Confidence Level:`);
-  console.log(`  High: ${summaryData.byConfidence.high}`);
-  console.log(`  Medium: ${summaryData.byConfidence.medium}`);
-  console.log(`  Low: ${summaryData.byConfidence.low}`);
+  logger.info('\n=== Final Summary ===');
+  logger.info(`Total MedSpas Found: ${allMedSpas.length}`);
+  logger.info(`  NY: ${summaryData.byState.NY}`);
+  logger.info(`  FL: ${summaryData.byState.FL}`);
+  logger.info(`\nBy Confidence Level:`);
+  logger.info(`  High: ${summaryData.byConfidence.high}`);
+  logger.info(`  Medium: ${summaryData.byConfidence.medium}`);
+  logger.info(`  Low: ${summaryData.byConfidence.low}`);
   
   // Show top cities
   const topCities = Object.entries(summaryData.topCities)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
   
-  console.log('\nTop 10 Cities:');
+  logger.info('\nTop 10 Cities:');
   topCities.forEach(([city, count]) => {
-    console.log(`  ${city}: ${count}`);
+    logger.info(`  ${city}: ${count}`);
   });
   
-  console.log('\nMedSpa data collection complete!');
-  console.log('\nNext steps for even more comprehensive data:');
-  console.log('1. Scrape Google Maps/Places API for "medical spa" searches');
-  console.log('2. Cross-reference with state business registrations');
-  console.log('3. Scrape Yelp, Groupon, and other directories');
-  console.log('4. Check Instagram/Facebook business pages');
-  console.log('5. Use RealSelf and similar aesthetic procedure directories');
+  logger.info('\nMedSpa data collection complete!');
+  logger.info('\nNext steps for even more comprehensive data:');
+  logger.info('1. Scrape Google Maps/Places API for "medical spa" searches');
+  logger.info('2. Cross-reference with state business registrations');
+  logger.info('3. Scrape Yelp, Groupon, and other directories');
+  logger.info('4. Check Instagram/Facebook business pages');
+  logger.info('5. Use RealSelf and similar aesthetic procedure directories');
 }
 
 // Run the script

@@ -3,6 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 // Removed unused imports: exec and promisify
 
 dotenv.config();
@@ -26,14 +28,14 @@ class AutomatedProcedureEnrichment {
   private startTime = new Date();
   
   async execute() {
-    console.log('=== FULLY AUTOMATED PROCEDURE ENRICHMENT ===\n');
-    console.log('This will run continuously until ALL procedures are enriched.\n');
+    logger.info('=== FULLY AUTOMATED PROCEDURE ENRICHMENT ===\n');
+    logger.info('This will run continuously until ALL procedures are enriched.\n');
     
     // Step 1: Get all procedures needing enrichment
     const procedures = await this.getAllProceduresNeedingEnrichment();
     this.totalProcedures = procedures.length;
     
-    console.log(`Found ${this.totalProcedures} procedures needing enrichment\n`);
+    logger.info(`Found ${this.totalProcedures} procedures needing enrichment\n`);
     
     // Step 2: Create research jobs (10 procedures per batch)
     const batchSize = 10;
@@ -46,7 +48,7 @@ class AutomatedProcedureEnrichment {
       });
     }
     
-    console.log(`Created ${this.jobs.length} research jobs\n`);
+    logger.info(`Created ${this.jobs.length} research jobs\n`);
     
     // Step 3: Process jobs with rate limiting
     await this.processAllJobs();
@@ -94,8 +96,8 @@ class AutomatedProcedureEnrichment {
   private async processAllJobs() {
     // Process jobs sequentially with rate limiting
     for (const job of this.jobs) {
-      console.log(`\n=== Processing Job ${job.id} ===`);
-      console.log(`Procedures: ${job.procedures.map(p => p.name).join(', ')}\n`);
+      logger.info(`\n=== Processing Job ${job.id} ===`);
+      logger.info(`Procedures: ${job.procedures.map(p => p.name).join(', ')}\n`);
       
       job.status = 'processing';
       
@@ -109,16 +111,16 @@ class AutomatedProcedureEnrichment {
         await this.applyResearchResults(job);
         
         this.processedCount += job.procedures.length;
-        console.log(`\nProgress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount / this.totalProcedures * 100)}%)`);
+        logger.info(`\nProgress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount / this.totalProcedures * 100)}%)`);
         
       } catch (error) {
-        console.error(`Job ${job.id} failed:`, error);
+        logger.error(`Job ${job.id} failed:`, error);
         job.status = 'failed';
       }
       
       // Rate limiting: Wait 30 seconds between batches
       if (this.jobs.indexOf(job) < this.jobs.length - 1) {
-        console.log('\nWaiting 30 seconds before next batch...');
+        logger.info('\nWaiting 30 seconds before next batch...');
         await new Promise(resolve => setTimeout(resolve, 30000));
       }
     }
@@ -138,7 +140,7 @@ Procedures: ${procedureList}
 Use data from Grand View Research, Fortune Business Insights, Mordor Intelligence, MarketsandMarkets`;
 
     // Simulate MCP Perplexity call
-    console.log('Researching via Perplexity AI...');
+    logger.info('Researching via Perplexity AI...');
     
     // In real implementation, this would call:
     // const result = await mcp__perplexity__deep_research({ query, focus_areas: [...] });
@@ -194,9 +196,9 @@ Use data from Grand View Research, Fortune Business Insights, Mordor Intelligenc
         .eq('id', proc.id);
         
       if (!error) {
-        console.log(`✓ Updated: ${proc.name}`);
+        logger.info(`✓ Updated: ${proc.name}`);
       } else {
-        console.error(`✗ Failed: ${proc.name}`, error);
+        logger.error(`✗ Failed: ${proc.name}`, error);
       }
     }
   }
@@ -258,9 +260,9 @@ Use data from Grand View Research, Fortune Business Insights, Mordor Intelligenc
     const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/AUTOMATED_ENRICHMENT_COMPLETE_${endTime.toISOString().split('T')[0]}.json`;
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     
-    console.log('\n\n=== ENRICHMENT COMPLETE ===');
-    console.log(JSON.stringify(report.executionSummary, null, 2));
-    console.log(`\nFull report: ${reportPath}`);
+    logger.info('\n\n=== ENRICHMENT COMPLETE ===');
+    logger.info(JSON.stringify(report.executionSummary, null, 2));
+    logger.info(`\nFull report: ${reportPath}`);
   }
 }
 
@@ -270,13 +272,13 @@ if (args.includes('--execute')) {
   const enrichment = new AutomatedProcedureEnrichment();
   enrichment.execute().catch(console.error);
 } else {
-  console.log('Automated Enrichment Script Ready\n');
-  console.log('To run the full automated enrichment:');
-  console.log('  npm run enrich:automated\n');
-  console.log('This will:');
-  console.log('- Research ALL procedures with confidence <= 6');
-  console.log('- Use AI to get real market data');
-  console.log('- Update the database automatically');
-  console.log('- Run continuously until complete (~3-4 hours)');
-  console.log('\nAdd --execute flag to start');
+  logger.info('Automated Enrichment Script Ready\n');
+  logger.info('To run the full automated enrichment:');
+  logger.info('  npm run enrich:automated\n');
+  logger.info('This will:');
+  logger.info('- Research ALL procedures with confidence <= 6');
+  logger.info('- Use AI to get real market data');
+  logger.info('- Update the database automatically');
+  logger.info('- Run continuously until complete (~3-4 hours)');
+  logger.info('\nAdd --execute flag to start');
 }

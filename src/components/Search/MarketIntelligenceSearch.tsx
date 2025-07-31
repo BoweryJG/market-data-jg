@@ -45,8 +45,9 @@ import {
   CalendarToday as DateIcon,
   Language as SourceIcon
 } from '@mui/icons-material';
-import { marketIntelligenceService, MarketInsight, SearchResult, CategorySuggestion } from '../../services/marketIntelligenceService';
+import { marketIntelligenceService, MarketInsight, CategorySuggestion } from '../../services/marketIntelligenceService';
 import { useDebounce } from '../../hooks/useDebounce';
+import { logger } from '../services/logging/logger';
 
 interface MarketIntelligenceSearchProps {
   open: boolean;
@@ -61,16 +62,16 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
   </div>
 );
 
 const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
-  open,
-  onClose,
-  initialIndustry = 'dental',
+  open, 
+  onClose, 
+  initialIndustry = 'dental', 
   onCategoryDiscovered
 }) => {
   const [query, setQuery] = useState('');
@@ -135,7 +136,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
         });
       }
     } catch (err) {
-      console.error('Market intelligence search failed:', err);
+      logger.error('Market intelligence search failed:', err);
       setError('Failed to perform search. Please try again.');
       setMarketInsight(null);
     } finally {
@@ -173,17 +174,17 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
       maxWidth="lg" 
       fullWidth
       PaperProps={{
-        sx: { height: '90vh', display: 'flex', flexDirection: 'column' }
+        sx: { height: '90vh',  display: 'flex',  flexDirection: 'column' }
       }}
     >
       <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        borderBottom: 1,
+        display: 'flex',  
+        justifyContent: 'space-between',  
+        alignItems: 'center', 
+        borderBottom: 1, 
         borderColor: 'divider'
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex',  alignItems: 'center',  gap: 1 }}>
           <AIIcon color="primary" />
           <Typography variant="h6">Market Intelligence Search</Typography>
         </Box>
@@ -192,15 +193,15 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
         </IconButton>
       </DialogTitle>
       
-      <DialogContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 0 }}>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <DialogContent sx={{ flex: 1,  display: 'flex',  flexDirection: 'column',  p: 0 }}>
+        <Box sx={{ p: 2,  borderBottom: 1,  borderColor: 'divider' }}>
           {/* Industry Toggle */}
-          <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+          <Box sx={{ mb: 2,  display: 'flex',  gap: 2,  alignItems: 'center' }}>
             <Typography variant="body2" color="text.secondary">Industry:</Typography>
             <ToggleButtonGroup
               value={industry}
               exclusive
-              onChange={(e, value) => value && setIndustry(value)}
+              onChange={(e,  value) => value && setIndustry(value)}
               size="small"
             >
               <ToggleButton value="dental">Dental</ToggleButton>
@@ -211,7 +212,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             <ToggleButtonGroup
               value={searchType}
               exclusive
-              onChange={(e, value) => value && setSearchType(value)}
+              onChange={(e,  value) => value && setSearchType(value)}
               size="small"
             >
               <ToggleButton value="general">General</ToggleButton>
@@ -226,8 +227,8 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             freeSolo
             options={suggestions}
             value={query}
-            onInputChange={(event, newValue) => setQuery(newValue)}
-            renderInput={(params) => (
+            onInputChange={(_event,  newValue) => setQuery(newValue)}
+            renderInput={(_params) => (
               <TextField
                 {...params}
                 fullWidth
@@ -309,10 +310,10 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
         )}
 
         {marketInsight && (
-          <Box sx={{ flex: 1, overflow: 'hidden' }}>
+          <Box sx={{ flex: 1,  overflow: 'hidden' }}>
             <Tabs 
               value={tabValue} 
-              onChange={(e: React.SyntheticEvent, v: number) => setTabValue(v)}
+              onChange={(e: React.SyntheticEvent,  v: number) => setTabValue(v)}
               sx={{ borderBottom: 1, borderColor: 'divider', px: 2 }}
             >
               <Tab 
@@ -343,7 +344,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             <TabPanel value={tabValue} index={0}>
               <Box sx={{ height: 'calc(90vh - 300px)', overflow: 'auto' }}>
                 <List>
-                  {marketInsight.results.map((result, idx) => (
+                  {marketInsight.results.map((result,  idx) => (
                     <React.Fragment key={idx}>
                       <ListItem 
                         component="a" 
@@ -377,7 +378,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
                                     variant="outlined"
                                   />
                                 )}
-                                {result.tags?.map((tag, i) => (
+                                {result.tags?.map((tag,  i) => (
                                   <Chip 
                                     key={i}
                                     icon={<TagIcon />} 
@@ -418,7 +419,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             <TabPanel value={tabValue} index={1}>
               <Box sx={{ height: 'calc(90vh - 300px)', overflow: 'auto' }}>
                 <Grid container spacing={2}>
-                  {marketInsight.trends.map((trend, idx) => (
+                  {marketInsight.trends.map((trend,  idx) => (
                     <Grid item xs={12} md={6} key={idx}>
                       <Card>
                         <CardContent>
@@ -454,7 +455,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
             <TabPanel value={tabValue} index={2}>
               <Box sx={{ height: 'calc(90vh - 300px)', overflow: 'auto' }}>
                 <Grid container spacing={2}>
-                  {marketInsight.categories.map((category, idx) => (
+                  {marketInsight.categories.map((category,  idx) => (
                     <Grid item xs={12} md={6} key={idx}>
                       <Card>
                         <CardContent>
@@ -488,7 +489,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
                             </Typography>
                           )}
                           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                            {category.relatedTerms.map((term, i) => (
+                            {category.relatedTerms.map((term,  i) => (
                               <Chip 
                                 key={i}
                                 label={term} 
@@ -608,7 +609,7 @@ const MarketIntelligenceSearch: React.FC<MarketIntelligenceSearchProps> = ({
                           {Array.from(new Set(marketInsight.results.map(r => r.source)))
                             .filter(Boolean)
                             .slice(0, 10)
-                            .map((source, idx) => (
+                            .map((source,  idx) => (
                               <Chip 
                                 key={idx}
                                 label={source} 

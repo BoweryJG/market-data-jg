@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require('@supabase/supabase-js');
 
@@ -47,7 +49,7 @@ class StripeHandler {
       
       return subscription;
     } catch (error) {
-      console.error('Subscription creation failed:', error);
+      logger.error('Subscription creation failed:', error);
       throw error;
     }
   }
@@ -96,7 +98,7 @@ class StripeHandler {
       
       return usageRecord;
     } catch (error) {
-      console.error('Usage recording failed:', error);
+      logger.error('Usage recording failed:', error);
       throw error;
     }
   }
@@ -155,7 +157,7 @@ class StripeHandler {
       
       return { hasAccess: true };
     } catch (error) {
-      console.error('Access check failed:', error);
+      logger.error('Access check failed:', error);
       return { hasAccess: false, reason: 'Error checking access' };
     }
   }

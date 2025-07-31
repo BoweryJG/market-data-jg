@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 // Removed unused fs import
 
 dotenv.config();
@@ -25,7 +27,7 @@ class RealMCPEnrichment {
   private highConfidenceCount = 0;
   
   async enrichWithRealMCP() {
-    console.log('=== REAL MCP ENRICHMENT - Using Actual AI Tools ===\n');
+    logger.info('=== REAL MCP ENRICHMENT - Using Actual AI Tools ===\n');
     
     // Get procedures with confidence < 9
     const { data: procedures } = await supabase
@@ -36,14 +38,14 @@ class RealMCPEnrichment {
       .order('procedure_name');
     
     if (!procedures || procedures.length === 0) {
-      console.log('No procedures need enrichment!');
+      logger.info('No procedures need enrichment!');
       return;
     }
     
-    console.log(`Enriching ${procedures.length} procedures with REAL market research...\n`);
+    logger.info(`Enriching ${procedures.length} procedures with REAL market research...\n`);
     
     for (const proc of procedures) {
-      console.log(`\nResearching: ${proc.procedure_name}`);
+      logger.info(`\nResearching: ${proc.procedure_name}`);
       
       try {
         // This is where we would ACTUALLY call MCP tools
@@ -57,22 +59,22 @@ class RealMCPEnrichment {
         await this.updateProcedure(proc, research);
         this.processedCount++;
         
-        console.log(`✓ Updated with confidence ${research.confidence}/10`);
-        console.log(`  Market: $${research.market_size_2025}M → $${research.market_size_2030}M`);
-        console.log(`  CAGR: ${research.cagr}%`);
-        console.log(`  Top manufacturers: ${research.manufacturers.slice(0, 3).join(', ')}`);
+        logger.info(`✓ Updated with confidence ${research.confidence}/10`);
+        logger.info(`  Market: $${research.market_size_2025}M → $${research.market_size_2030}M`);
+        logger.info(`  CAGR: ${research.cagr}%`);
+        logger.info(`  Top manufacturers: ${research.manufacturers.slice(0, 3).join(', ')}`);
         
       } catch (error) {
-        console.error(`✗ Failed to research ${proc.procedure_name}:`, error);
+        logger.error(`✗ Failed to research ${proc.procedure_name}:`, error);
       }
       
       // Rate limiting
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
     
-    console.log(`\n=== Summary ===`);
-    console.log(`Processed: ${this.processedCount} procedures`);
-    console.log(`High confidence (9+): ${this.highConfidenceCount} procedures`);
+    logger.info(`\n=== Summary ===`);
+    logger.info(`Processed: ${this.processedCount} procedures`);
+    logger.info(`High confidence (9+): ${this.highConfidenceCount} procedures`);
   }
   
   private async performRealResearch(procedure: any): Promise<MCPResearchResult> {
@@ -218,20 +220,20 @@ class RealMCPEnrichment {
 }
 
 // Instructions for implementation
-console.log('=== REAL MCP ENRICHMENT IMPLEMENTATION ===\n');
-console.log('To implement this with ACTUAL MCP tools:\n');
-console.log('1. Uncomment the MCP tool calls in performRealResearch()');
-console.log('2. Parse the actual AI responses to extract:');
-console.log('   - Market size numbers from text');
-console.log('   - Growth rates and CAGR');
-console.log('   - Manufacturer names and shares');
-console.log('3. Use multiple sources to validate data');
-console.log('4. Assign confidence based on data quality:');
-console.log('   - 10: Multiple authoritative sources agree');
-console.log('   - 9: Single authoritative source');
-console.log('   - 8: Derived from parent market');
-console.log('   - 7: Industry estimates');
-console.log('\nExample MCP calls shown in code comments');
+logger.info('=== REAL MCP ENRICHMENT IMPLEMENTATION ===\n');
+logger.info('To implement this with ACTUAL MCP tools:\n');
+logger.info('1. Uncomment the MCP tool calls in performRealResearch()');
+logger.info('2. Parse the actual AI responses to extract:');
+logger.info('   - Market size numbers from text');
+logger.info('   - Growth rates and CAGR');
+logger.info('   - Manufacturer names and shares');
+logger.info('3. Use multiple sources to validate data');
+logger.info('4. Assign confidence based on data quality:');
+logger.info('   - 10: Multiple authoritative sources agree');
+logger.info('   - 9: Single authoritative source');
+logger.info('   - 8: Derived from parent market');
+logger.info('   - 7: Industry estimates');
+logger.info('\nExample MCP calls shown in code comments');
 
 // Run example
 const enrichment = new RealMCPEnrichment();

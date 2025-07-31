@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -159,14 +161,14 @@ async function fetchProvidersByTaxonomy(taxonomyCode, state, city = null) {
         
         // Prevent infinite loops
         if (skip > 50000) {
-          console.log('    Reached maximum limit');
+          logger.info('    Reached maximum limit');
           hasMore = false;
         }
       } else {
         hasMore = false;
       }
     } catch (error) {
-      console.error(`    Error: ${error.message}`);
+      logger.error(`    Error: ${error.message}`);
       hasMore = false;
     }
   }
@@ -176,8 +178,8 @@ async function fetchProvidersByTaxonomy(taxonomyCode, state, city = null) {
 
 // Main execution
 async function main() {
-  console.log('Starting comprehensive NPI Registry data collection...');
-  console.log('================================================\n');
+  logger.info('Starting comprehensive NPI Registry data collection...');
+  logger.info('================================================\n');
   
   const allData = {
     dentists: [],
@@ -189,17 +191,17 @@ async function main() {
   
   // Process each location
   for (const location of LOCATIONS) {
-    console.log(`\n=== Processing ${location.state} ===`);
+    logger.info(`\n=== Processing ${location.state} ===`);
     
     // Search by state for each taxonomy
-    console.log(`\nSearching all ${location.state} providers by taxonomy...`);
+    logger.info(`\nSearching all ${location.state} providers by taxonomy...`);
     
     // Dentists
-    console.log('\nDENTISTS:');
+    logger.info('\nDENTISTS:');
     for (const taxonomy of TAXONOMY_CODES.dentists) {
-      console.log(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
+      logger.info(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
       const providers = await fetchProvidersByTaxonomy(taxonomy.code, location.state);
-      console.log(`    Found ${providers.length} providers`);
+      logger.info(`    Found ${providers.length} providers`);
       
       for (const provider of providers) {
         if (!uniqueNPIs.has(provider.number)) {
@@ -210,11 +212,11 @@ async function main() {
     }
     
     // Dermatologists
-    console.log('\nDERMATOLOGISTS:');
+    logger.info('\nDERMATOLOGISTS:');
     for (const taxonomy of TAXONOMY_CODES.dermatologists) {
-      console.log(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
+      logger.info(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
       const providers = await fetchProvidersByTaxonomy(taxonomy.code, location.state);
-      console.log(`    Found ${providers.length} providers`);
+      logger.info(`    Found ${providers.length} providers`);
       
       for (const provider of providers) {
         if (!uniqueNPIs.has(provider.number)) {
@@ -225,11 +227,11 @@ async function main() {
     }
     
     // Plastic Surgeons
-    console.log('\nPLASTIC SURGEONS:');
+    logger.info('\nPLASTIC SURGEONS:');
     for (const taxonomy of TAXONOMY_CODES.plasticSurgeons) {
-      console.log(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
+      logger.info(`  Searching ${taxonomy.desc} (${taxonomy.code})...`);
       const providers = await fetchProvidersByTaxonomy(taxonomy.code, location.state);
-      console.log(`    Found ${providers.length} providers`);
+      logger.info(`    Found ${providers.length} providers`);
       
       for (const provider of providers) {
         if (!uniqueNPIs.has(provider.number)) {
@@ -239,10 +241,10 @@ async function main() {
       }
     }
     
-    console.log(`\nState ${location.state} totals:`);
-    console.log(`  Dentists: ${allData.dentists.filter(p => p.practiceState === location.state).length}`);
-    console.log(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === location.state).length}`);
-    console.log(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`\nState ${location.state} totals:`);
+    logger.info(`  Dentists: ${allData.dentists.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === location.state).length}`);
   }
   
   // Filter to only include providers in our target cities
@@ -264,7 +266,7 @@ async function main() {
   };
   
   // Save to CSV files
-  console.log('\n=== Saving data to CSV files ===');
+  logger.info('\n=== Saving data to CSV files ===');
   
   // Define CSV fields
   const fields = [
@@ -287,7 +289,7 @@ async function main() {
     const csv = parse(filteredData.dentists, { fields });
     const filename = `npi_dentists_comprehensive_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${filteredData.dentists.length} dentists to ${filename}`);
+    logger.info(`  Saved ${filteredData.dentists.length} dentists to ${filename}`);
   }
   
   // Save dermatologists
@@ -295,7 +297,7 @@ async function main() {
     const csv = parse(filteredData.dermatologists, { fields });
     const filename = `npi_dermatologists_comprehensive_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${filteredData.dermatologists.length} dermatologists to ${filename}`);
+    logger.info(`  Saved ${filteredData.dermatologists.length} dermatologists to ${filename}`);
   }
   
   // Save plastic surgeons
@@ -303,7 +305,7 @@ async function main() {
     const csv = parse(filteredData.plasticSurgeons, { fields });
     const filename = `npi_plastic_surgeons_comprehensive_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`  Saved ${filteredData.plasticSurgeons.length} plastic surgeons to ${filename}`);
+    logger.info(`  Saved ${filteredData.plasticSurgeons.length} plastic surgeons to ${filename}`);
   }
   
   // Save combined data
@@ -317,13 +319,13 @@ async function main() {
     const combinedCsv = parse(combinedData, { fields });
     const combinedFilename = `npi_all_providers_comprehensive_${timestamp}.csv`;
     fs.writeFileSync(combinedFilename, combinedCsv);
-    console.log(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
+    logger.info(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
   }
   
   // Summary by city
-  console.log('\n=== Final Summary by City ===');
+  logger.info('\n=== Final Summary by City ===');
   for (const location of LOCATIONS) {
-    console.log(`\n${location.state}:`);
+    logger.info(`\n${location.state}:`);
     for (const city of location.cities) {
       const cityDentists = filteredData.dentists.filter(p => 
         p.practiceCity.toUpperCase() === city.toUpperCase()
@@ -336,19 +338,19 @@ async function main() {
       ).length;
       
       if (cityDentists + cityDerms + cityPlastic > 0) {
-        console.log(`  ${city}: ${cityDentists} dentists, ${cityDerms} dermatologists, ${cityPlastic} plastic surgeons`);
+        logger.info(`  ${city}: ${cityDentists} dentists, ${cityDerms} dermatologists, ${cityPlastic} plastic surgeons`);
       }
     }
   }
   
   // Final totals
-  console.log('\n=== Final Collection Summary ===');
-  console.log(`Total Unique Dentists: ${filteredData.dentists.length}`);
-  console.log(`Total Unique Dermatologists: ${filteredData.dermatologists.length}`);
-  console.log(`Total Unique Plastic Surgeons: ${filteredData.plasticSurgeons.length}`);
-  console.log(`Grand Total: ${combinedData.length} providers`);
+  logger.info('\n=== Final Collection Summary ===');
+  logger.info(`Total Unique Dentists: ${filteredData.dentists.length}`);
+  logger.info(`Total Unique Dermatologists: ${filteredData.dermatologists.length}`);
+  logger.info(`Total Unique Plastic Surgeons: ${filteredData.plasticSurgeons.length}`);
+  logger.info(`Grand Total: ${combinedData.length} providers`);
   
-  console.log('\nData collection complete!');
+  logger.info('\nData collection complete!');
 }
 
 // Run the script

@@ -3,6 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -25,8 +27,8 @@ class MassiveParallelEnrichment {
   private results: any[] = [];
   
   async execute() {
-    console.log('=== MASSIVE PARALLEL ENRICHMENT STARTING ===\n');
-    console.log('Target: All procedures with confidence 8 → 9-10\n');
+    logger.info('=== MASSIVE PARALLEL ENRICHMENT STARTING ===\n');
+    logger.info('Target: All procedures with confidence 8 → 9-10\n');
     
     // Get all confidence 8 procedures
     const { data: aestheticProcs } = await supabase
@@ -47,9 +49,9 @@ class MassiveParallelEnrichment {
     ];
     
     this.totalProcedures = allProcedures.length;
-    console.log(`Found ${this.totalProcedures} procedures to enrich`);
-    console.log(`- Aesthetic: ${aestheticProcs?.length || 0}`);
-    console.log(`- Dental: ${dentalProcs?.length || 0}\n`);
+    logger.info(`Found ${this.totalProcedures} procedures to enrich`);
+    logger.info(`- Aesthetic: ${aestheticProcs?.length || 0}`);
+    logger.info(`- Dental: ${dentalProcs?.length || 0}\n`);
     
     // Process in batches of 20 with parallel execution
     const batchSize = 20;
@@ -59,19 +61,19 @@ class MassiveParallelEnrichment {
       batches.push(allProcedures.slice(i, i + batchSize));
     }
     
-    console.log(`Processing in ${batches.length} batches of ${batchSize}\n`);
+    logger.info(`Processing in ${batches.length} batches of ${batchSize}\n`);
     
     // Execute batches with rate limiting
     for (let i = 0; i < batches.length; i++) {
-      console.log(`\n=== BATCH ${i + 1}/${batches.length} ===`);
-      console.log('Using all MCP tools in parallel...\n');
+      logger.info(`\n=== BATCH ${i + 1}/${batches.length} ===`);
+      logger.info('Using all MCP tools in parallel...\n');
       
       // IMPORTANT: This is where we would call real MCP tools
       // For now, showing the structure
       await this.processBatch(batches[i], i);
       
       if (i < batches.length - 1) {
-        console.log('\nWaiting 30 seconds before next batch...');
+        logger.info('\nWaiting 30 seconds before next batch...');
         await new Promise(resolve => setTimeout(resolve, 30000));
       }
     }
@@ -98,8 +100,8 @@ class MassiveParallelEnrichment {
     // Show distribution
     toolAssignments.forEach(assignment => {
       if (assignment.procedures.length > 0) {
-        console.log(`${assignment.tool}: ${assignment.procedures.length} procedures`);
-        assignment.procedures.forEach(p => console.log(`  - ${p.procedure_name}`));
+        logger.info(`${assignment.tool}: ${assignment.procedures.length} procedures`);
+        assignment.procedures.forEach(p => logger.info(`  - ${p.procedure_name}`));
       }
     });
     
@@ -113,11 +115,11 @@ class MassiveParallelEnrichment {
       if (results[i]) {
         await this.updateProcedure(batch[i], results[i]);
         this.processedCount++;
-        console.log(`✓ ${batch[i].procedure_name}: Updated to confidence ${results[i].confidence}/10`);
+        logger.info(`✓ ${batch[i].procedure_name}: Updated to confidence ${results[i].confidence}/10`);
       }
     }
     
-    console.log(`\nBatch progress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount/this.totalProcedures*100)}%)`);
+    logger.info(`\nBatch progress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount/this.totalProcedures*100)}%)`);
   }
   
   private async enrichProcedure(procedure: ProcedureData) {
@@ -202,29 +204,29 @@ class MassiveParallelEnrichment {
     const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/MASSIVE_ENRICHMENT_REPORT_${new Date().toISOString().split('T')[0]}.json`;
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     
-    console.log('\n\n=== MASSIVE ENRICHMENT COMPLETE ===');
-    console.log(`Enriched: ${this.processedCount} procedures`);
-    console.log(`Duration: ${duration.toFixed(1)} minutes`);
-    console.log(`Report saved: ${reportPath}`);
+    logger.info('\n\n=== MASSIVE ENRICHMENT COMPLETE ===');
+    logger.info(`Enriched: ${this.processedCount} procedures`);
+    logger.info(`Duration: ${duration.toFixed(1)} minutes`);
+    logger.info(`Report saved: ${reportPath}`);
   }
 }
 
 // Execute with command line option
 const args = process.argv.slice(2);
 if (args.includes('--execute')) {
-  console.log('Starting massive parallel enrichment...\n');
+  logger.info('Starting massive parallel enrichment...\n');
   const enrichment = new MassiveParallelEnrichment();
   enrichment.execute().catch(console.error);
 } else {
-  console.log('=== MASSIVE PARALLEL ENRICHMENT PLAN ===\n');
-  console.log('This script will enrich 209 procedures (103 aesthetic + 106 dental)');
-  console.log('using ALL available MCP tools in parallel.\n');
-  console.log('Features:');
-  console.log('- Batch processing (20 procedures per batch)');
-  console.log('- Parallel MCP tool execution');
-  console.log('- Tool rotation to avoid rate limits');
-  console.log('- 30-second delay between batches');
-  console.log('- Comprehensive reporting\n');
-  console.log('Estimated time: 3-4 hours\n');
-  console.log('To execute: npm run enrich:massive -- --execute');
+  logger.info('=== MASSIVE PARALLEL ENRICHMENT PLAN ===\n');
+  logger.info('This script will enrich 209 procedures (103 aesthetic + 106 dental)');
+  logger.info('using ALL available MCP tools in parallel.\n');
+  logger.info('Features:');
+  logger.info('- Batch processing (20 procedures per batch)');
+  logger.info('- Parallel MCP tool execution');
+  logger.info('- Tool rotation to avoid rate limits');
+  logger.info('- 30-second delay between batches');
+  logger.info('- Comprehensive reporting\n');
+  logger.info('Estimated time: 3-4 hours\n');
+  logger.info('To execute: npm run enrich:massive -- --execute');
 }

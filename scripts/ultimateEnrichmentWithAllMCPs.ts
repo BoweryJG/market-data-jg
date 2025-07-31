@@ -3,6 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -29,8 +31,8 @@ class UltimateEnrichment {
   private toolRotation = 0;
   
   async execute() {
-    console.log('=== ULTIMATE ENRICHMENT - ALL MCP TOOLS ===\n');
-    console.log('Using: Perplexity, Brave Search, Firecrawl, Puppeteer, Agent Tool\n');
+    logger.info('=== ULTIMATE ENRICHMENT - ALL MCP TOOLS ===\n');
+    logger.info('Using: Perplexity, Brave Search, Firecrawl, Puppeteer, Agent Tool\n');
     
     // Get ALL procedures
     const { data: allProcedures } = await supabase
@@ -49,20 +51,20 @@ class UltimateEnrichment {
     ];
     
     this.totalProcedures = procedures.length;
-    console.log(`Processing ${this.totalProcedures} procedures with REAL data\n`);
+    logger.info(`Processing ${this.totalProcedures} procedures with REAL data\n`);
     
     // Process in batches of 5 with parallel agents
     const batchSize = 5;
     for (let i = 0; i < procedures.length; i += batchSize) {
       const batch = procedures.slice(i, i + batchSize);
-      console.log(`\n=== Batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(procedures.length/batchSize)} ===`);
+      logger.info(`\n=== Batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(procedures.length/batchSize)} ===`);
       
       // Launch parallel agents for different tools
       await this.processParallelBatch(batch);
       
       // Rate limiting between batches
       if (i + batchSize < procedures.length) {
-        console.log('\nWaiting 20 seconds before next batch...');
+        logger.info('\nWaiting 20 seconds before next batch...');
         await new Promise(resolve => setTimeout(resolve, 20000));
       }
     }
@@ -100,15 +102,15 @@ class UltimateEnrichment {
       if (results[i]) {
         await this.updateProcedure(batch[i], results[i]);
         this.processedCount++;
-        console.log(`✓ ${batch[i].procedure_name}: $${results[i].market_size_2025}M @ ${results[i].cagr}% (Confidence: ${results[i].confidence}/10)`);
+        logger.info(`✓ ${batch[i].procedure_name}: $${results[i].market_size_2025}M @ ${results[i].cagr}% (Confidence: ${results[i].confidence}/10)`);
       }
     }
     
-    console.log(`Progress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount/this.totalProcedures*100)}%)`);
+    logger.info(`Progress: ${this.processedCount}/${this.totalProcedures} (${Math.round(this.processedCount/this.totalProcedures*100)}%)`);
   }
   
   private async researchWithPerplexity(procedure: any): Promise<ResearchResult> {
-    console.log(`  [Perplexity] Researching ${procedure.procedure_name}...`);
+    logger.info(`  [Perplexity] Researching ${procedure.procedure_name}...`);
     
     // ACTUAL MCP CALL
     /*
@@ -132,7 +134,7 @@ class UltimateEnrichment {
   }
   
   private async researchWithBrave(procedure: any): Promise<ResearchResult> {
-    console.log(`  [Brave] Searching for ${procedure.procedure_name}...`);
+    logger.info(`  [Brave] Searching for ${procedure.procedure_name}...`);
     
     // ACTUAL MCP CALLS
     /*
@@ -158,7 +160,7 @@ class UltimateEnrichment {
   }
   
   private async researchWithFirecrawl(procedure: any): Promise<ResearchResult> {
-    console.log(`  [Firecrawl] Scraping data for ${procedure.procedure_name}...`);
+    logger.info(`  [Firecrawl] Scraping data for ${procedure.procedure_name}...`);
     
     // ACTUAL MCP CALL
     /*
@@ -179,7 +181,7 @@ class UltimateEnrichment {
   }
   
   private async researchWithAgent(procedure: any): Promise<ResearchResult> {
-    console.log(`  [Agent] Deep research for ${procedure.procedure_name}...`);
+    logger.info(`  [Agent] Deep research for ${procedure.procedure_name}...`);
     
     // ACTUAL AGENT TOOL CALL
     /*
@@ -280,14 +282,14 @@ class UltimateEnrichment {
     const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/ULTIMATE_ENRICHMENT_${new Date().toISOString().split('T')[0]}.json`;
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     
-    console.log('\n\n=== ULTIMATE ENRICHMENT COMPLETE ===');
-    console.log(`All ${this.totalProcedures} procedures enriched with REAL data`);
-    console.log(`Duration: ${duration.toFixed(1)} minutes`);
-    console.log(`Report: ${reportPath}`);
+    logger.info('\n\n=== ULTIMATE ENRICHMENT COMPLETE ===');
+    logger.info(`All ${this.totalProcedures} procedures enriched with REAL data`);
+    logger.info(`Duration: ${duration.toFixed(1)} minutes`);
+    logger.info(`Report: ${reportPath}`);
   }
 }
 
 // EXECUTE NOW
-console.log('Starting REAL enrichment with ALL MCP tools...\n');
+logger.info('Starting REAL enrichment with ALL MCP tools...\n');
 const enrichment = new UltimateEnrichment();
 enrichment.execute().catch(console.error);

@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -200,14 +202,14 @@ async function fetchStateProvidersByLetter(state, letter, enumType = 'NPI-1') {
         
         // Safety limit per letter
         if (skip > 50000) {
-          console.log(`    Reached limit for letter ${letter}`);
+          logger.info(`    Reached limit for letter ${letter}`);
           hasMore = false;
         }
       } else {
         hasMore = false;
       }
     } catch (error) {
-      console.error(`    Error fetching ${letter}: ${error.message}`);
+      logger.error(`    Error fetching ${letter}: ${error.message}`);
       hasMore = false;
     }
   }
@@ -217,8 +219,8 @@ async function fetchStateProvidersByLetter(state, letter, enumType = 'NPI-1') {
 
 // Main execution
 async function main() {
-  console.log('Statewide NPI Data Collection - NY & FL');
-  console.log('=======================================\n');
+  logger.info('Statewide NPI Data Collection - NY & FL');
+  logger.info('=======================================\n');
   
   const allData = {
     dentists: [],
@@ -233,17 +235,17 @@ async function main() {
   
   // Process each state
   for (const state of STATES) {
-    console.log(`\n=== Processing ${state} (Full State) ===`);
+    logger.info(`\n=== Processing ${state} (Full State) ===`);
     
     // Search by alphabet for comprehensive coverage
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     
     // Search individuals
-    console.log('\nSearching Individual Providers:');
+    logger.info('\nSearching Individual Providers:');
     for (const letter of alphabet) {
-      console.log(`  Searching last names starting with ${letter}...`);
+      logger.info(`  Searching last names starting with ${letter}...`);
       const individuals = await fetchStateProvidersByLetter(state, letter, 'NPI-1');
-      console.log(`    Found ${individuals.length} providers`);
+      logger.info(`    Found ${individuals.length} providers`);
       
       let counts = { dentist: 0, dermatologist: 0, plastic_surgeon: 0, aesthetic_provider: 0 };
       
@@ -275,16 +277,16 @@ async function main() {
         }
       }
       
-      console.log(`    Relevant: ${counts.dentist} dentists, ${counts.dermatologist} dermatologists, ${counts.plastic_surgeon} plastic surgeons, ${counts.aesthetic_provider} aesthetic providers`);
+      logger.info(`    Relevant: ${counts.dentist} dentists, ${counts.dermatologist} dermatologists, ${counts.plastic_surgeon} plastic surgeons, ${counts.aesthetic_provider} aesthetic providers`);
       await sleep(200);
     }
     
     // Search organizations (potential medspas)
-    console.log('\nSearching Organizations (Including MedSpas):');
+    logger.info('\nSearching Organizations (Including MedSpas):');
     for (const letter of alphabet) {
-      console.log(`  Searching organizations starting with ${letter}...`);
+      logger.info(`  Searching organizations starting with ${letter}...`);
       const organizations = await fetchStateProvidersByLetter(state, letter, 'NPI-2');
-      console.log(`    Found ${organizations.length} organizations`);
+      logger.info(`    Found ${organizations.length} organizations`);
       
       let medspaCount = 0;
       let dentalOrgCount = 0;
@@ -310,21 +312,21 @@ async function main() {
         }
       }
       
-      console.log(`    Found ${medspaCount} potential medspas, ${dentalOrgCount} dental organizations`);
+      logger.info(`    Found ${medspaCount} potential medspas, ${dentalOrgCount} dental organizations`);
       await sleep(200);
     }
     
     // State summary
-    console.log(`\n${state} Summary:`);
-    console.log(`  Dentists: ${allData.dentists.filter(p => p.practiceState === state).length}`);
-    console.log(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === state).length}`);
-    console.log(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === state).length}`);
-    console.log(`  Aesthetic Providers: ${allData.aestheticProviders.filter(p => p.practiceState === state).length}`);
-    console.log(`  MedSpas: ${allData.medspas.filter(p => p.practiceState === state).length}`);
+    logger.info(`\n${state} Summary:`);
+    logger.info(`  Dentists: ${allData.dentists.filter(p => p.practiceState === state).length}`);
+    logger.info(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === state).length}`);
+    logger.info(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === state).length}`);
+    logger.info(`  Aesthetic Providers: ${allData.aestheticProviders.filter(p => p.practiceState === state).length}`);
+    logger.info(`  MedSpas: ${allData.medspas.filter(p => p.practiceState === state).length}`);
   }
   
   // Save to CSV files
-  console.log('\n=== Saving Data ===');
+  logger.info('\n=== Saving Data ===');
   
   const fields = [
     'npi', 'enumeration_type', 'firstName', 'lastName', 'middleName', 'credential',
@@ -354,7 +356,7 @@ async function main() {
       const csv = parse(data, { fields });
       const filename = `npi_${name}_NY_FL_statewide_${timestamp}.csv`;
       fs.writeFileSync(filename, csv);
-      console.log(`Saved ${data.length} ${name} to ${filename}`);
+      logger.info(`Saved ${data.length} ${name} to ${filename}`);
     }
   }
   
@@ -371,17 +373,17 @@ async function main() {
     const combinedCsv = parse(combinedData, { fields });
     const combinedFilename = `npi_all_providers_NY_FL_statewide_${timestamp}.csv`;
     fs.writeFileSync(combinedFilename, combinedCsv);
-    console.log(`Saved ${combinedData.length} total providers to ${combinedFilename}`);
+    logger.info(`Saved ${combinedData.length} total providers to ${combinedFilename}`);
   }
   
   // Final summary
-  console.log('\n=== FINAL STATEWIDE SUMMARY ===');
-  console.log(`Total Dentists: ${allData.dentists.length}`);
-  console.log(`Total Dermatologists: ${allData.dermatologists.length}`);
-  console.log(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
-  console.log(`Total Aesthetic Providers: ${allData.aestheticProviders.length}`);
-  console.log(`Total MedSpas: ${allData.medspas.length}`);
-  console.log(`Grand Total: ${combinedData.length} providers`);
+  logger.info('\n=== FINAL STATEWIDE SUMMARY ===');
+  logger.info(`Total Dentists: ${allData.dentists.length}`);
+  logger.info(`Total Dermatologists: ${allData.dermatologists.length}`);
+  logger.info(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
+  logger.info(`Total Aesthetic Providers: ${allData.aestheticProviders.length}`);
+  logger.info(`Total MedSpas: ${allData.medspas.length}`);
+  logger.info(`Grand Total: ${combinedData.length} providers`);
 }
 
 // Run the script

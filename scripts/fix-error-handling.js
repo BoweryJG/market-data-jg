@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 #!/usr/bin/env node
 
 const fs = require('fs');
@@ -31,7 +33,7 @@ function getCorrectImportPath(filePath) {
 }
 
 function fixErrorHandling(filePath) {
-  console.log(`Fixing ${filePath}...`);
+  logger.info(`Fixing ${filePath}...`);
   
   let content = fs.readFileSync(filePath, 'utf8');
   
@@ -58,7 +60,7 @@ function fixErrorHandling(filePath) {
   content = content.replace(/\{\s*error:\s*e\.message\s*\}/g, '{ error: getErrorMessage(e) }');
   
   fs.writeFileSync(filePath, content);
-  console.log(`Fixed ${filePath}`);
+  logger.info(`Fixed ${filePath}`);
 }
 
 // Run fixes
@@ -67,8 +69,8 @@ filesToFix.forEach(file => {
   if (fs.existsSync(fullPath)) {
     fixErrorHandling(fullPath);
   } else {
-    console.warn(`File not found: ${fullPath}`);
+    logger.warn(`File not found: ${fullPath}`);
   }
 });
 
-console.log('Error handling fixes complete!');
+logger.info('Error handling fixes complete!');

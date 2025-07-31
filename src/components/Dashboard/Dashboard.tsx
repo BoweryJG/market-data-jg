@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, ChangeEvent } from 'react';
-import MarketSizeOverview from './MarketSizeOverview';
+
 import ProcedureDetailsModal from './ProcedureDetailsModal';
 import CompanyDetailsModal from './CompanyDetailsModal';
 import { logger } from '../../services/logging/logger';
-import { handleUnknownError, TypedError } from '../../types/errors';
+import { handleUnknownError } from '../../types/errors';
 import { SocialLinks } from '../../types/common';
 import { 
   Container,
@@ -179,7 +179,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
   </div>
@@ -187,7 +187,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
 
 TabPanel.displayName = 'TabPanel';
 
-function a11yProps(index: number) {
+function a11yProps(_index: number) {
   return { id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` };
 }
 
@@ -238,7 +238,7 @@ const Dashboard: React.FC = () => {
       : procedures;
     
     // Sort by name for consistent ordering
-    return [...filtered].sort((a, b) => 
+    return [...filtered].sort((a,  b) => 
       (a.name || a.procedure_name || '').localeCompare(b.name || b.procedure_name || '')
     );
   }, [selectedIndustry, selectedCategory, dentalProcedures, aestheticProcedures]);
@@ -265,8 +265,8 @@ const Dashboard: React.FC = () => {
   }, [selectedIndustry, dentalCategories, aestheticCategories, dentalProcedures, aestheticProcedures]);
   
   // Event handlers
-  const handleIndustryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedIndustry(event.target.checked ? 'aesthetic' : 'dental');
+  const handleIndustryChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedIndustry(_event.target.checked ? 'aesthetic' : 'dental');
     setSelectedCategory(null);
   };
 
@@ -274,21 +274,21 @@ const Dashboard: React.FC = () => {
     setSelectedCategory(categoryId);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown,  newPage: number) => {
     setCurrentPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(_event.target.value, 10));
     setCurrentPage(0);
   };
 
-  const handleCompanyPageChange = (event: unknown, newPage: number) => {
+  const handleCompanyPageChange = (_event: unknown,  newPage: number) => {
     setCurrentCompanyPage(newPage);
   };
 
-  const handleCompanyRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCompaniesRowsPerPage(parseInt(event.target.value, 10));
+  const handleCompanyRowsPerPageChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setCompaniesRowsPerPage(parseInt(_event.target.value, 10));
     setCurrentCompanyPage(0);
   };
 
@@ -482,16 +482,16 @@ const Dashboard: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Box sx={{ 
-        width: '100%',
-        maxWidth: '100vw',
-        overflowX: 'hidden',
+        width: '100%', 
+        maxWidth: '100vw', 
+        overflowX: 'hidden', 
       }}>
-        <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold', mb: 4 }}>
+        <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold',  mb: 4 }}>
           Market Intelligence Dashboard
         </Typography>
 
         {/* Industry Toggle Switch */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+        <Box sx={{ display: 'flex',  justifyContent: 'center',  mb: 4 }}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select Industry</FormLabel>
             <RadioGroup
@@ -515,7 +515,7 @@ const Dashboard: React.FC = () => {
                 <Typography variant="h6" gutterBottom>
                   {selectedIndustry === 'dental' ? 'Dental Procedure Categories' : 'Aesthetic Procedure Categories'}
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                <Box sx={{ display: 'flex',  flexWrap: 'wrap',  gap: 1,  mb: 2 }}>
                   {currentCategories.map((category) => (
                     <Chip 
                       key={category.id}
@@ -565,9 +565,9 @@ const Dashboard: React.FC = () => {
                     </TableHead>
                     <TableBody>
                       {currentProcedures.length > 0 ? (
-                        currentProcedures.map((procedure, index) => (
+                        currentProcedures.map((procedure, _index) => (
                           <TableRow 
-                            key={`${selectedIndustry}-${procedure.id || index}`} 
+                            key={`${selectedIndustry}-${procedure.id || _index}`} 
                             hover
                             onClick={() => {
                               setSelectedProcedure(procedure);
@@ -663,7 +663,7 @@ const Dashboard: React.FC = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {paginatedCompanies.map((company: Company, index: number) => (
+                          {paginatedCompanies.map((company: Company, _index: number) => (
                             <TableRow 
                               key={`${selectedIndustry}-${company.id || index}`} 
                               hover

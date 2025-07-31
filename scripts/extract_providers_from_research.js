@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
@@ -463,7 +465,7 @@ const additionalProviders = [
 ];
 
 async function insertRealProviders() {
-  console.log('🚀 Inserting real provider data from research...\n');
+  logger.info('🚀 Inserting real provider data from research...\n');
   
   const allProviders = [...realProviders, ...additionalProviders];
   let savedCount = 0;
@@ -489,17 +491,17 @@ async function insertRealProviders() {
           });
         
         if (error) {
-          console.error(`❌ Error saving ${provider.practice_name}:`, error.message);
+          logger.error(`❌ Error saving ${provider.practice_name}:`, error.message);
           errorCount++;
         } else {
-          console.log(`✅ Saved: ${provider.practice_name} - ${provider.provider_name}`);
+          logger.info(`✅ Saved: ${provider.practice_name} - ${provider.provider_name}`);
           savedCount++;
         }
       } else {
-        console.log(`⏭️  Skipped (exists): ${provider.practice_name}`);
+        logger.info(`⏭️  Skipped (exists): ${provider.practice_name}`);
       }
     } catch (err) {
-      console.error(`❌ Error with ${provider.practice_name}:`, err.message);
+      logger.error(`❌ Error with ${provider.practice_name}:`, err.message);
       errorCount++;
     }
   }
@@ -509,10 +511,10 @@ async function insertRealProviders() {
     .from('provider_locations')
     .select('*', { count: 'exact', head: true });
   
-  console.log(`\n📊 Summary:`);
-  console.log(`   New providers saved: ${savedCount}`);
-  console.log(`   Errors: ${errorCount}`);
-  console.log(`   Total providers in database: ${count}`);
+  logger.info(`\n📊 Summary:`);
+  logger.info(`   New providers saved: ${savedCount}`);
+  logger.info(`   Errors: ${errorCount}`);
+  logger.info(`   Total providers in database: ${count}`);
 }
 
 // Execute

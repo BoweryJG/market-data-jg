@@ -45,6 +45,8 @@ import {
   CheckCircle as CheckIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
+import { logger } from '../services/logging/logger';
+
 
 interface CompanyDetailsModalProps {
   open: boolean;
@@ -59,17 +61,17 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
   </div>
 );
 
 const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
-  open,
-  onClose,
-  company,
-  industry,
+  open, 
+  onClose, 
+  company, 
+  industry, 
 }) => {
   const [tabValue, setTabValue] = useState(0);
   const [searchResults, setSearchResults] = useState<any>(null);
@@ -103,14 +105,14 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
         results: response.data.results || response.data.web?.results || []
       });
     } catch (err) {
-      console.error('Error fetching company insights:', err);
+      logger.error('Error fetching company insights:', err);
       setError('Failed to fetch latest insights. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -347,7 +349,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
         <TabPanel value={tabValue} index={1}>
           {loading ? (
             <Box>
-              {[1, 2, 3].map((i) => (
+              {[1,  2,  3].map((i) => (
                 <Box key={i} sx={{ mb: 2 }}>
                   <Skeleton variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
                 </Box>
@@ -357,7 +359,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
             <Alert severity="error">{error}</Alert>
           ) : searchResults && searchResults.results ? (
             <List>
-              {searchResults.results.map((result: any, index: number) => (
+              {searchResults.results.map((result: any, _index: number) => (
                 <Paper key={index} elevation={0} sx={{ mb: 2, p: 2, backgroundColor: '#F8FAFC' }}>
                   <ListItem alignItems="flex-start" disablePadding>
                     <ListItemIcon>
@@ -439,7 +441,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
                       Specialties
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {specialties.split(',').map((specialty: string, index: number) => (
+                      {specialties.split(',').map((specialty: string, _index: number) => (
                         <Chip
                           key={index}
                           label={specialty.trim()}
@@ -552,7 +554,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
           color="secondary"
           startIcon={<AIIcon />}
           onClick={() => {
-            console.log('Generate company report for:', companyName);
+            logger.info('Generate company report for:', companyName);
           }}
         >
           Generate Full Report

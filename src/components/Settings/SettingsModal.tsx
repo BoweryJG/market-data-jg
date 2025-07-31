@@ -34,7 +34,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaletteIcon from '@mui/icons-material/Palette';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
-import SecurityIcon from '@mui/icons-material/Security';
+
 import MapIcon from '@mui/icons-material/Map';
 import SyncIcon from '@mui/icons-material/Sync';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -42,6 +42,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useAuth } from '../../auth';
 import { useThemeContext } from '../../context/ThemeContext';
+import { logger } from '../services/logging/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -49,7 +50,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(_props: TabPanelProps) {
   const { children, value, index, ...other } = props;
   return (
     <div
@@ -69,7 +70,7 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ open,  onClose }) => {
   const theme = useTheme();
   const { user } = useAuth();
   const { mode, toggleTheme } = useThemeContext();
@@ -107,17 +108,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
     marketRadius: '50',
   });
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setActiveTab(newValue);
   };
 
-  const handleSettingChange = (setting: string, value: any) => {
+  const handleSettingChange = (setting: string,  value: any) => {
     setSettings(prev => ({ ...prev, [setting]: value }));
   };
 
   const handleSaveSettings = () => {
     // TODO: Implement save to backend
-    console.log('Saving settings:', settings);
+    logger.info('Saving settings:', settings);
     onClose();
   };
 
@@ -335,8 +336,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
                 <Grid item xs={6} key={scheme}>
                   <Card 
                     sx={{ 
-                      cursor: 'pointer',
-                      border: settings.colorScheme === scheme ? 2 : 0,
+                      cursor: 'pointer', 
+                      border: settings.colorScheme === scheme ? 2 : 0, 
                       borderColor: 'primary.main'
                     }}
                     onClick={() => handleSettingChange('colorScheme', scheme)}
@@ -635,6 +636,5 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
     </Dialog>
   );
 };
-
 
 SettingsModal.displayName = 'SettingsModal';export default SettingsModal;

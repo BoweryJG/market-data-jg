@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -11,7 +13,7 @@ class LoggingHandler {
     try {
       await fs.mkdir(this.logDir, { recursive: true });
     } catch (error) {
-      console.error('Failed to create log directory:', error);
+      logger.error('Failed to create log directory:', error);
     }
   }
 
@@ -36,7 +38,7 @@ class LoggingHandler {
       // Append to file
       await fs.appendFile(filePath, formattedEntry);
     } catch (error) {
-      console.error('Failed to write log:', error);
+      logger.error('Failed to write log:', error);
     }
   }
 
@@ -58,7 +60,7 @@ class LoggingHandler {
       // Append to file
       await fs.appendFile(filePath, formattedEntries);
     } catch (error) {
-      console.error('Failed to write batch logs:', error);
+      logger.error('Failed to write batch logs:', error);
     }
   }
 
@@ -106,7 +108,7 @@ class LoggingHandler {
 
       return logs;
     } catch (error) {
-      console.error('Failed to get recent logs:', error);
+      logger.error('Failed to get recent logs:', error);
       return [];
     }
   }
@@ -232,12 +234,12 @@ class LoggingHandler {
           if (fileDate < cutoffDate) {
             const filePath = path.join(this.logDir, file);
             await fs.unlink(filePath);
-            console.log(`Deleted old log file: ${file}`);
+            logger.info(`Deleted old log file: ${file}`);
           }
         }
       }
     } catch (error) {
-      console.error('Failed to cleanup old logs:', error);
+      logger.error('Failed to cleanup old logs:', error);
     }
   }
 }

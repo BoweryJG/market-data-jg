@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
@@ -115,9 +117,9 @@ async function saveProviders(providers) {
         
         if (!error) {
           savedCount++;
-          console.log(`✅ Saved: ${provider.provider_name} - ${provider.city}`);
+          logger.info(`✅ Saved: ${provider.provider_name} - ${provider.city}`);
         } else {
-          console.error(`❌ Error saving ${provider.provider_name}:`, error.message);
+          logger.error(`❌ Error saving ${provider.provider_name}:`, error.message);
         }
       }
     } catch (err) {
@@ -128,7 +130,7 @@ async function saveProviders(providers) {
 
 // Main collection function
 async function collectProviders() {
-  console.log('🚀 Starting smart provider collection with rate limiting...\n');
+  logger.info('🚀 Starting smart provider collection with rate limiting...\n');
   
   let queryIndex = 0;
   const toolRotation = ['serper', 'perplexity', 'firecrawl'];
@@ -139,7 +141,7 @@ async function collectProviders() {
     const query = searchQueries[queryIndex];
     const tool = toolRotation[toolIndex % toolRotation.length];
     
-    console.log(`\n🔍 Query ${queryIndex + 1}/${searchQueries.length}: "${query.query}" using ${tool}`);
+    logger.info(`\n🔍 Query ${queryIndex + 1}/${searchQueries.length}: "${query.query}" using ${tool}`);
     
     try {
       let results = [];
@@ -147,7 +149,7 @@ async function collectProviders() {
       switch (tool) {
         case 'serper':
           // Simulate Serper search
-          console.log(`   Using Serper Google Search...`);
+          logger.info(`   Using Serper Google Search...`);
           // In real implementation, call Serper MCP here
           results = [
             {
@@ -164,7 +166,7 @@ async function collectProviders() {
           
         case 'perplexity':
           // Simulate Perplexity search
-          console.log(`   Using Perplexity AI Search...`);
+          logger.info(`   Using Perplexity AI Search...`);
           // In real implementation, call Perplexity MCP here
           results = [
             {
@@ -179,10 +181,10 @@ async function collectProviders() {
           
         case 'firecrawl':
           // Simulate Firecrawl
-          console.log(`   Using Firecrawl Web Scraper...`);
+          logger.info(`   Using Firecrawl Web Scraper...`);
           // In real implementation, call Firecrawl MCP here
           if (queryIndex < nycProviderSites.length) {
-            console.log(`   Crawling: ${nycProviderSites[queryIndex % nycProviderSites.length]}`);
+            logger.info(`   Crawling: ${nycProviderSites[queryIndex % nycProviderSites.length]}`);
           }
           results = [];
           break;
@@ -193,13 +195,13 @@ async function collectProviders() {
       if (processed.length > 0) {
         totalProviders.push(...processed);
         await saveProviders(processed);
-        console.log(`   ✅ Found ${processed.length} providers`);
+        logger.info(`   ✅ Found ${processed.length} providers`);
       } else {
-        console.log(`   ⚠️  No providers found`);
+        logger.info(`   ⚠️  No providers found`);
       }
       
     } catch (error) {
-      console.error(`   ❌ Error: ${error.message}`);
+      logger.error(`   ❌ Error: ${error.message}`);
     }
     
     // Move to next query/tool
@@ -207,7 +209,7 @@ async function collectProviders() {
     toolIndex++;
     
     // Rate limiting delay
-    console.log(`   ⏳ Waiting 2 seconds before next query...`);
+    logger.info(`   ⏳ Waiting 2 seconds before next query...`);
     await delay(2000);
   }
   
@@ -216,21 +218,21 @@ async function collectProviders() {
     .from('provider_locations')
     .select('*', { count: 'exact', head: true });
   
-  console.log(`\n📊 Collection Summary:`);
-  console.log(`   Total providers found: ${totalProviders.length}`);
-  console.log(`   New providers saved: ${savedCount}`);
-  console.log(`   Total in database: ${count}`);
-  console.log(`   Progress to NYC goal (500): ${((count / 500) * 100).toFixed(1)}%`);
+  logger.info(`\n📊 Collection Summary:`);
+  logger.info(`   Total providers found: ${totalProviders.length}`);
+  logger.info(`   New providers saved: ${savedCount}`);
+  logger.info(`   Total in database: ${count}`);
+  logger.info(`   Progress to NYC goal (500): ${((count / 500) * 100).toFixed(1)}%`);
 }
 
 // Execute with error handling
 collectProviders()
   .then(() => {
-    console.log('\n✅ Smart collection complete!');
+    logger.info('\n✅ Smart collection complete!');
     process.exit(0);
   })
   .catch(error => {
-    console.error('\n❌ Fatal error:', error);
+    logger.error('\n❌ Fatal error:', error);
     process.exit(1);
   });
 

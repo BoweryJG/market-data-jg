@@ -76,13 +76,14 @@ import {
 // Import existing components
 import MarketSizeOverview from './MarketSizeOverview';
 import CategoryInsights from './CategoryInsights';
-import CompetitiveIntelligenceComponent from './CompetitiveIntelligence';
+
 import MarketIntelligenceSearch from '../Search/MarketIntelligenceSearch';
 
 // Import services
 import { supabase } from '../../services/supabaseClient';
-import { marketIntelligenceService, CategorySuggestion } from '../../services/marketIntelligenceService';
+import { CategorySuggestion } from '../../services/marketIntelligenceService';
 import { braveSearchService } from '../../services/braveSearchService';
+import { logger } from '../services/logging/logger';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -166,7 +167,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && (
       <Fade in={value === index} timeout={500}>
@@ -257,7 +258,7 @@ const EnhancedMarketDashboard: React.FC = () => {
         await loadRealTimeInsights();
         
       } catch (error) {
-        console.error('Failed to load enhanced data:', error);
+        logger.error('Failed to load enhanced data:', error);
       } finally {
         setDataLoading(false);
       }
@@ -284,7 +285,7 @@ const EnhancedMarketDashboard: React.FC = () => {
             last_updated: new Date().toISOString(),
           };
         } catch (error) {
-          console.error(`Failed to enhance procedure ${procedure.name}:`, error);
+          logger.error(`Failed to enhance procedure ${procedure.name}:`, error);
           return procedure;
         }
       })
@@ -318,7 +319,7 @@ const EnhancedMarketDashboard: React.FC = () => {
     
     // Base score on number of insights and their relevance
     const baseScore = Math.min(insights.length * 10, 100);
-    const relevanceBonus = insights.reduce((sum, insight) => {
+    const relevanceBonus = insights.reduce((sum,  insight) => {
       return sum + (insight.relevance_score || 0.5) * 20;
     }, 0) / insights.length;
     
@@ -337,7 +338,7 @@ const EnhancedMarketDashboard: React.FC = () => {
             const results = await braveSearchService.search(query, 10);
             return { query, results, timestamp: new Date() };
           } catch (error) {
-            console.error(`Failed to load insights for ${query}:`, error);
+            logger.error(`Failed to load insights for ${query}:`, error);
             return { query, results: [], timestamp: new Date() };
           }
         })
@@ -347,13 +348,13 @@ const EnhancedMarketDashboard: React.FC = () => {
       
       // Update real-time data summary
       setRealTimeData({
-        totalInsights: insights.reduce((sum, i) => sum + i.results.length, 0),
+        totalInsights: insights.reduce((sum,  i) => sum + i.results.length, 0),
         lastUpdated: new Date(),
         trendingTopics: extractTrendingTopics(insights)
       });
       
     } catch (error) {
-      console.error('Failed to load real-time insights:', error);
+      logger.error('Failed to load real-time insights:', error);
     }
   };
 
@@ -385,7 +386,7 @@ const EnhancedMarketDashboard: React.FC = () => {
     const procedures = industry === 'dental' ? dentalProcedures : aestheticProcedures;
     if (!sortConfig.key) return procedures;
 
-    return [...procedures].sort((a, b) => {
+    return [...procedures].sort((a,  b) => {
       const aVal = a[sortConfig.key as keyof EnhancedProcedure];
       const bVal = b[sortConfig.key as keyof EnhancedProcedure];
       
@@ -406,17 +407,17 @@ const EnhancedMarketDashboard: React.FC = () => {
   // Handle new category discoveries
   const handleNewCategoryDiscovered = (category: CategorySuggestion) => {
     setNewCategoriesCount(prev => prev + 1);
-    console.log('New category discovered:', category);
+    logger.info('New category discovered:', category);
   };
 
   // Handle tab change
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setTabValue(newValue);
   };
 
   // Handle industry toggle
-  const handleIndustryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIndustry(event.target.checked ? 'aesthetic' : 'dental');
+  const handleIndustryChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setIndustry(_event.target.checked ? 'aesthetic' : 'dental');
     setSelectedCategoryId(null);
     setSelectedCompanyId(null);
   };
@@ -446,7 +447,7 @@ const EnhancedMarketDashboard: React.FC = () => {
     return (
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
-          {[...Array(6)].map((_, i) => (
+          {[...Array(6)].map((_,  i) => (
             <Grid item xs={12} md={4} key={i}>
               <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 2 }} />
             </Grid>
@@ -556,12 +557,12 @@ const EnhancedMarketDashboard: React.FC = () => {
       {realTimeData?.trendingTopics && (
         <Slide direction="down" in={!!realTimeData} timeout={500}>
           <Box sx={{ mb: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <Box sx={{ display: 'flex',  alignItems: 'center',  gap: 1,  mb: 2 }}>
               <WhatshotIcon color="error" />
               <Typography variant="h6">Trending Now</Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              {realTimeData.trendingTopics.map((topic: string, idx: number) => (
+            <Box sx={{ display: 'flex',  gap: 1,  flexWrap: 'wrap' }}>
+              {realTimeData.trendingTopics.map((topic: string,  idx: number) => (
                 <PulsingChip
                   key={topic}
                   label={topic}
@@ -819,7 +820,7 @@ const EnhancedMarketDashboard: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedProcedures.map((procedure, index) => (
+              {sortedProcedures.map((procedure, _index) => (
                 <TableRow 
                   key={procedure.id}
                   sx={{
@@ -919,7 +920,7 @@ const EnhancedMarketDashboard: React.FC = () => {
                 </Box>
                 
                 <Grid container spacing={2}>
-                  {marketInsights.map((insight, idx) => (
+                  {marketInsights.map((insight,  idx) => (
                     <Grid item xs={12} md={4} key={idx}>
                       <Card sx={{ height: '100%' }}>
                         <CardContent>
@@ -930,7 +931,7 @@ const EnhancedMarketDashboard: React.FC = () => {
                             {insight.results.length} insights found
                           </Typography>
                           <List dense>
-                            {insight.results.slice(0, 3).map((result: any, i: number) => (
+                            {insight.results.slice(0, 3).map((result: any,  i: number) => (
                               <ListItem key={i} sx={{ px: 0 }}>
                                 <ListItemIcon>
                                   <CircleIcon sx={{ fontSize: 8 }} color="primary" />
@@ -1050,6 +1051,5 @@ const EnhancedMarketDashboard: React.FC = () => {
     </Container>
   );
 };
-
 
 EnhancedMarketDashboard.displayName = 'EnhancedMarketDashboard';export default EnhancedMarketDashboard;

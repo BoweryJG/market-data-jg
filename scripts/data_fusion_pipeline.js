@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const csv = require('csv-parser');
 const { parse } = require('json2csv');
@@ -24,7 +26,7 @@ class DataFusionPipeline {
           records.push(row);
         })
         .on('end', () => {
-          console.log(`Loaded ${records.length} records from ${filepath}`);
+          logger.info(`Loaded ${records.length} records from ${filepath}`);
           resolve(records);
         })
         .on('error', reject);
@@ -123,7 +125,7 @@ class DataFusionPipeline {
       processed.add(i);
     }
     
-    console.log(`Found ${this.duplicateGroups.length} duplicate groups`);
+    logger.info(`Found ${this.duplicateGroups.length} duplicate groups`);
   }
   
   // Merge duplicate records
@@ -215,7 +217,7 @@ class DataFusionPipeline {
   
   // Process all loaded data
   async processData() {
-    console.log(`\nProcessing ${this.allRecords.length} total records...`);
+    logger.info(`\nProcessing ${this.allRecords.length} total records...`);
     
     // Find duplicates
     this.findDuplicates();
@@ -240,7 +242,7 @@ class DataFusionPipeline {
       }
     });
     
-    console.log(`Created ${this.fusedRecords.length} fused records`);
+    logger.info(`Created ${this.fusedRecords.length} fused records`);
   }
   
   // Save results
@@ -265,7 +267,7 @@ class DataFusionPipeline {
       const csv = parse(this.fusedRecords, { fields });
       const filename = `fused_healthcare_providers_NY_FL_${timestamp}.csv`;
       fs.writeFileSync(filename, csv);
-      console.log(`\nSaved ${this.fusedRecords.length} fused records to ${filename}`);
+      logger.info(`\nSaved ${this.fusedRecords.length} fused records to ${filename}`);
     }
     
     // Save by category
@@ -280,7 +282,7 @@ class DataFusionPipeline {
       const csv = parse(records, { fields });
       const catFilename = `fused_${category.toLowerCase().replace(/\s+/g, '_')}_${timestamp}.csv`;
       fs.writeFileSync(catFilename, csv);
-      console.log(`Saved ${records.length} ${category} records to ${catFilename}`);
+      logger.info(`Saved ${records.length} ${category} records to ${catFilename}`);
     });
     
     // Generate summary
@@ -318,30 +320,30 @@ class DataFusionPipeline {
       JSON.stringify(summary, null, 2)
     );
     
-    console.log('\n=== Fusion Summary ===');
-    console.log(`Total Input Records: ${summary.totalRecords}`);
-    console.log(`Fused Output Records: ${summary.fusedRecords}`);
-    console.log(`Duplicates Removed: ${summary.duplicatesRemoved}`);
-    console.log(`Records with Multiple Sources: ${summary.withMultipleSources}`);
+    logger.info('\n=== Fusion Summary ===');
+    logger.info(`Total Input Records: ${summary.totalRecords}`);
+    logger.info(`Fused Output Records: ${summary.fusedRecords}`);
+    logger.info(`Duplicates Removed: ${summary.duplicatesRemoved}`);
+    logger.info(`Records with Multiple Sources: ${summary.withMultipleSources}`);
     
-    console.log('\nBy Category:');
+    logger.info('\nBy Category:');
     Object.entries(summary.byCategory)
       .sort((a, b) => b[1] - a[1])
       .forEach(([cat, count]) => {
-        console.log(`  ${cat}: ${count}`);
+        logger.info(`  ${cat}: ${count}`);
       });
     
-    console.log('\nBy State:');
+    logger.info('\nBy State:');
     Object.entries(summary.byState).forEach(([state, count]) => {
-      console.log(`  ${state}: ${count}`);
+      logger.info(`  ${state}: ${count}`);
     });
   }
 }
 
 // Main execution
 async function main() {
-  console.log('Healthcare Provider Data Fusion Pipeline');
-  console.log('=======================================\n');
+  logger.info('Healthcare Provider Data Fusion Pipeline');
+  logger.info('=======================================\n');
   
   const pipeline = new DataFusionPipeline();
   
@@ -365,7 +367,7 @@ async function main() {
       const records = await pipeline.loadCSV(file, source);
       pipeline.allRecords.push(...records);
     } catch (error) {
-      console.log(`Skipping ${file}: ${error.message}`);
+      logger.info(`Skipping ${file}: ${error.message}`);
     }
   }
   
@@ -373,7 +375,7 @@ async function main() {
   await pipeline.processData();
   pipeline.saveResults();
   
-  console.log('\nData fusion complete!');
+  logger.info('\nData fusion complete!');
 }
 
 // Run the pipeline

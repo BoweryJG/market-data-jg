@@ -18,7 +18,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(_props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -113,7 +113,7 @@ const NewsDashboard: React.FC = () => {
   const displayDentalCategories = dentalCategories.length > 0 ? dentalCategories : mockDentalCategories;
   const displayAestheticCategories = aestheticCategories.length > 0 ? aestheticCategories : mockAestheticCategories;
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -134,17 +134,17 @@ const NewsDashboard: React.FC = () => {
   }
 
   return (
-    <Paper sx={{ mb: 4, borderRadius: 2, overflow: 'hidden' }}>
-      <Box sx={{ p: 3, pb: 0 }}>
+    <Paper sx={{ mb: 4,  borderRadius: 2,  overflow: 'hidden' }}>
+      <Box sx={{ p: 3,  pb: 0 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
           Industry News
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          Latest news and updates from the dental and aesthetic industries, categorized by procedure types.
+          Latest news and updates from the dental and aesthetic industries,  categorized by procedure types.
         </Typography>
       </Box>
       
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1,  borderColor: 'divider' }}>
         <Tabs 
           value={tabValue} 
           onChange={handleTabChange} 

@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -189,7 +191,7 @@ async function fetchByPostalCode(postalCode, enumType = 'NPI-1') {
         hasMore = false;
       }
     } catch (error) {
-      console.error(`    Error: ${error.message}`);
+      logger.error(`    Error: ${error.message}`);
       hasMore = false;
     }
   }
@@ -199,8 +201,8 @@ async function fetchByPostalCode(postalCode, enumType = 'NPI-1') {
 
 // Main execution
 async function main() {
-  console.log('NPI Registry Comprehensive Data Collection');
-  console.log('=========================================\n');
+  logger.info('NPI Registry Comprehensive Data Collection');
+  logger.info('=========================================\n');
   
   const allData = {
     dentists: [],
@@ -213,22 +215,22 @@ async function main() {
   
   // Process each location
   for (const location of LOCATIONS) {
-    console.log(`\n=== Processing ${location.state} ===`);
-    console.log(`Searching ${location.postalCodes.length} postal codes...`);
+    logger.info(`\n=== Processing ${location.state} ===`);
+    logger.info(`Searching ${location.postalCodes.length} postal codes...`);
     
     for (let i = 0; i < location.postalCodes.length; i++) {
       const postalCode = location.postalCodes[i];
-      console.log(`\nPostal code ${postalCode} (${i + 1}/${location.postalCodes.length})...`);
+      logger.info(`\nPostal code ${postalCode} (${i + 1}/${location.postalCodes.length})...`);
       
       // Search individuals
-      console.log('  Searching individual providers...');
+      logger.info('  Searching individual providers...');
       const individuals = await fetchByPostalCode(postalCode, 'NPI-1');
-      console.log(`    Found ${individuals.length} individual providers`);
+      logger.info(`    Found ${individuals.length} individual providers`);
       
       // Search organizations
-      console.log('  Searching organizations...');
+      logger.info('  Searching organizations...');
       const organizations = await fetchByPostalCode(postalCode, 'NPI-2');
-      console.log(`    Found ${organizations.length} organizations`);
+      logger.info(`    Found ${organizations.length} organizations`);
       
       // Process all providers
       const allProviders = [...individuals, ...organizations];
@@ -255,21 +257,21 @@ async function main() {
         }
       }
       
-      console.log(`    Relevant: ${counts.dentist} dentists, ${counts.dermatologist} dermatologists, ${counts.plastic_surgeon} plastic surgeons`);
-      console.log(`    Total collected so far: ${totalProcessed}`);
+      logger.info(`    Relevant: ${counts.dentist} dentists, ${counts.dermatologist} dermatologists, ${counts.plastic_surgeon} plastic surgeons`);
+      logger.info(`    Total collected so far: ${totalProcessed}`);
       
       // Rate limiting between postal codes
       await sleep(200);
     }
     
-    console.log(`\n${location.state} Summary:`);
-    console.log(`  Dentists: ${allData.dentists.filter(p => p.practiceState === location.state).length}`);
-    console.log(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === location.state).length}`);
-    console.log(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`\n${location.state} Summary:`);
+    logger.info(`  Dentists: ${allData.dentists.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`  Dermatologists: ${allData.dermatologists.filter(p => p.practiceState === location.state).length}`);
+    logger.info(`  Plastic Surgeons: ${allData.plasticSurgeons.filter(p => p.practiceState === location.state).length}`);
   }
   
   // Save to CSV files
-  console.log('\n=== Saving Data ===');
+  logger.info('\n=== Saving Data ===');
   
   const fields = [
     'npi', 'firstName', 'lastName', 'middleName', 'credential',
@@ -290,7 +292,7 @@ async function main() {
     const csv = parse(allData.dentists, { fields });
     const filename = `npi_dentists_complete_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allData.dentists.length} dentists to ${filename}`);
+    logger.info(`Saved ${allData.dentists.length} dentists to ${filename}`);
   }
   
   // Save dermatologists
@@ -298,7 +300,7 @@ async function main() {
     const csv = parse(allData.dermatologists, { fields });
     const filename = `npi_dermatologists_complete_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allData.dermatologists.length} dermatologists to ${filename}`);
+    logger.info(`Saved ${allData.dermatologists.length} dermatologists to ${filename}`);
   }
   
   // Save plastic surgeons
@@ -306,7 +308,7 @@ async function main() {
     const csv = parse(allData.plasticSurgeons, { fields });
     const filename = `npi_plastic_surgeons_complete_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allData.plasticSurgeons.length} plastic surgeons to ${filename}`);
+    logger.info(`Saved ${allData.plasticSurgeons.length} plastic surgeons to ${filename}`);
   }
   
   // Save combined
@@ -320,18 +322,18 @@ async function main() {
     const combinedCsv = parse(combinedData, { fields });
     const combinedFilename = `npi_all_providers_complete_${timestamp}.csv`;
     fs.writeFileSync(combinedFilename, combinedCsv);
-    console.log(`Saved ${combinedData.length} total providers to ${combinedFilename}`);
+    logger.info(`Saved ${combinedData.length} total providers to ${combinedFilename}`);
   }
   
   // Final summary
-  console.log('\n=== FINAL SUMMARY ===');
-  console.log(`Total Dentists: ${allData.dentists.length}`);
-  console.log(`Total Dermatologists: ${allData.dermatologists.length}`);
-  console.log(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
-  console.log(`Grand Total: ${combinedData.length} providers`);
+  logger.info('\n=== FINAL SUMMARY ===');
+  logger.info(`Total Dentists: ${allData.dentists.length}`);
+  logger.info(`Total Dermatologists: ${allData.dermatologists.length}`);
+  logger.info(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
+  logger.info(`Grand Total: ${combinedData.length} providers`);
   
   // City breakdown
-  console.log('\n=== City Breakdown ===');
+  logger.info('\n=== City Breakdown ===');
   const targetCities = LOCATIONS.flatMap(loc => loc.cities);
   for (const city of targetCities) {
     const cityDentists = allData.dentists.filter(p => 
@@ -345,11 +347,11 @@ async function main() {
     ).length;
     
     if (cityDentists + cityDerms + cityPlastic > 0) {
-      console.log(`${city}: ${cityDentists} dentists, ${cityDerms} dermatologists, ${cityPlastic} plastic surgeons`);
+      logger.info(`${city}: ${cityDentists} dentists, ${cityDerms} dermatologists, ${cityPlastic} plastic surgeons`);
     }
   }
   
-  console.log('\nData collection complete!');
+  logger.info('\nData collection complete!');
 }
 
 // Run the script

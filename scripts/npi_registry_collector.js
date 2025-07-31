@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const https = require('https');
 const { parse } = require('json2csv');
@@ -126,7 +128,7 @@ async function fetchProviders(taxonomyCodes, city, state, specialtyName) {
   const allProviders = [];
   let totalProcessed = 0;
   
-  console.log(`\nFetching ${specialtyName} in ${city}, ${state}...`);
+  logger.info(`\nFetching ${specialtyName} in ${city}, ${state}...`);
   
   // For each taxonomy code, search providers
   for (const taxonomyCode of taxonomyCodes) {
@@ -145,7 +147,7 @@ async function fetchProviders(taxonomyCodes, city, state, specialtyName) {
           skip: skip
         };
         
-        console.log(`  Searching taxonomy ${taxonomyCode} - offset ${skip}...`);
+        logger.info(`  Searching taxonomy ${taxonomyCode} - offset ${skip}...`);
         const response = await makeApiRequest(params);
         
         if (response.results && response.results.length > 0) {
@@ -159,7 +161,7 @@ async function fetchProviders(taxonomyCodes, city, state, specialtyName) {
           const providers = filteredProviders.map(extractProviderData);
           allProviders.push(...providers);
           totalProcessed += providers.length;
-          console.log(`    Found ${providers.length} relevant providers (Total: ${totalProcessed})`);
+          logger.info(`    Found ${providers.length} relevant providers (Total: ${totalProcessed})`);
           
           if (response.results.length < 200) {
             hasMore = false;
@@ -171,20 +173,20 @@ async function fetchProviders(taxonomyCodes, city, state, specialtyName) {
           hasMore = false;
         }
       } catch (error) {
-        console.error(`  Error fetching data: ${error.message}`);
+        logger.error(`  Error fetching data: ${error.message}`);
         hasMore = false;
       }
     }
   }
   
-  console.log(`  Total ${specialtyName} found: ${allProviders.length}`);
+  logger.info(`  Total ${specialtyName} found: ${allProviders.length}`);
   return allProviders;
 }
 
 // Main execution
 async function main() {
-  console.log('Starting NPI Registry data collection...');
-  console.log('==================================\n');
+  logger.info('Starting NPI Registry data collection...');
+  logger.info('==================================\n');
   
   const allData = {
     dentists: [],
@@ -194,7 +196,7 @@ async function main() {
   
   // Collect data for each city and specialty
   for (const location of CITIES) {
-    console.log(`\n=== Processing ${location.city}, ${location.state} ===`);
+    logger.info(`\n=== Processing ${location.city}, ${location.state} ===`);
     
     // Fetch dentists
     const dentists = await fetchProviders(
@@ -225,7 +227,7 @@ async function main() {
   }
   
   // Save to CSV files
-  console.log('\n=== Saving data to CSV files ===');
+  logger.info('\n=== Saving data to CSV files ===');
   
   // Define CSV fields
   const fields = [
@@ -248,7 +250,7 @@ async function main() {
       const csv = parse(data, { fields });
       const filename = `npi_${specialty}_${timestamp}.csv`;
       fs.writeFileSync(filename, csv);
-      console.log(`  Saved ${data.length} ${specialty} to ${filename}`);
+      logger.info(`  Saved ${data.length} ${specialty} to ${filename}`);
     }
   }
   
@@ -264,17 +266,17 @@ async function main() {
     const combinedCsv = parse(combinedData, { fields: combinedFields });
     const combinedFilename = `npi_all_providers_${timestamp}.csv`;
     fs.writeFileSync(combinedFilename, combinedCsv);
-    console.log(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
+    logger.info(`  Saved ${combinedData.length} total providers to ${combinedFilename}`);
   }
   
   // Summary
-  console.log('\n=== Collection Summary ===');
-  console.log(`Total Dentists: ${allData.dentists.length}`);
-  console.log(`Total Dermatologists: ${allData.dermatologists.length}`);
-  console.log(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
-  console.log(`Grand Total: ${combinedData.length} providers`);
+  logger.info('\n=== Collection Summary ===');
+  logger.info(`Total Dentists: ${allData.dentists.length}`);
+  logger.info(`Total Dermatologists: ${allData.dermatologists.length}`);
+  logger.info(`Total Plastic Surgeons: ${allData.plasticSurgeons.length}`);
+  logger.info(`Grand Total: ${combinedData.length} providers`);
   
-  console.log('\nData collection complete!');
+  logger.info('\nData collection complete!');
 }
 
 // Run the script

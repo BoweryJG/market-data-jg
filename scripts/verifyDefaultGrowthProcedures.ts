@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -23,7 +25,7 @@ interface ProcedureEnrichmentData {
 }
 
 async function verifyDefaultGrowthProcedures() {
-  console.log('=== Verifying Procedures with Default 35.5% Growth Rate ===\n');
+  logger.info('=== Verifying Procedures with Default 35.5% Growth Rate ===\n');
   
   // Get procedures with default growth rate
   const { data: procedures, error } = await supabase
@@ -32,13 +34,13 @@ async function verifyDefaultGrowthProcedures() {
     .eq('yearly_growth_percentage', 35.5);
 
   if (error) {
-    console.error('Error fetching procedures:', error);
+    logger.error('Error fetching procedures:', error);
     return;
   }
 
-  console.log(`Found ${procedures?.length || 0} procedures with default growth rate:\n`);
-  procedures?.forEach(p => console.log(`- ${p.procedure_name}`));
-  console.log('\n');
+  logger.info(`Found ${procedures?.length || 0} procedures with default growth rate:\n`);
+  procedures?.forEach(p => logger.info(`- ${p.procedure_name}`));
+  logger.info('\n');
 
   // These procedures need real market research
   const enrichmentData: Record<string, ProcedureEnrichmentData> = {
@@ -147,11 +149,11 @@ async function verifyDefaultGrowthProcedures() {
     const enrichment = enrichmentData[procedure.procedure_name];
     
     if (!enrichment) {
-      console.log(`⚠️  No enrichment data for: ${procedure.procedure_name}`);
+      logger.info(`⚠️  No enrichment data for: ${procedure.procedure_name}`);
       continue;
     }
 
-    console.log(`\nUpdating ${procedure.procedure_name}...`);
+    logger.info(`\nUpdating ${procedure.procedure_name}...`);
     
     const updateData = {
       yearly_growth_percentage: enrichment.cagr_5year,
@@ -175,15 +177,15 @@ async function verifyDefaultGrowthProcedures() {
       .eq('id', procedure.id);
 
     if (updateError) {
-      console.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
+      logger.error(`✗ Error updating ${procedure.procedure_name}:`, updateError);
     } else {
-      console.log(`✓ Successfully updated ${procedure.procedure_name}`);
-      console.log(`  - Growth rate: 35.5% → ${enrichment.cagr_5year}%`);
-      console.log(`  - Confidence: ${enrichment.confidence_score}/10`);
+      logger.info(`✓ Successfully updated ${procedure.procedure_name}`);
+      logger.info(`  - Growth rate: 35.5% → ${enrichment.cagr_5year}%`);
+      logger.info(`  - Confidence: ${enrichment.confidence_score}/10`);
     }
   }
 
-  console.log('\n=== Verification Complete ===\n');
+  logger.info('\n=== Verification Complete ===\n');
   
   // Show summary
   const { count: remaining } = await supabase
@@ -191,7 +193,7 @@ async function verifyDefaultGrowthProcedures() {
     .select('*', { count: 'exact', head: true })
     .eq('yearly_growth_percentage', 35.5);
   
-  console.log(`Procedures with default growth rate remaining: ${remaining || 0}`);
+  logger.info(`Procedures with default growth rate remaining: ${remaining || 0}`);
 }
 
 // Execute

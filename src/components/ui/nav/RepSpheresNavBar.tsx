@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../auth';
@@ -19,7 +20,7 @@ interface RepSpheresNavBarProps {
 }
 
 const RepSpheresNavBar = ({ 
-  customLinks = [],
+  customLinks = [], 
   logoHref = '/'
 }: RepSpheresNavBarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,7 +80,7 @@ const RepSpheresNavBar = ({
     };
   }, [isMobileMenuOpen]);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>,  href: string) => {
     // If it's a hash link, handle smooth scroll
     if (href.startsWith('#')) {
       e.preventDefault();
@@ -181,10 +182,10 @@ const RepSpheresNavBar = ({
 
             {/* Desktop Navigation Links */}
             <nav className="nav-links">
-              {navLinks.map((link, index) => (
+              {navLinks.map((link, _index) => (
                 link.external ? (
                   <a 
-                    key={index} 
+                    key={_index} 
                     href={link.href} 
                     className="nav-link"
                     target="_blank"
@@ -277,10 +278,10 @@ const RepSpheresNavBar = ({
            }}>
         <div className="mobile-menu">
           <nav className="mobile-menu-links">
-            {navLinks.map((link, index) => (
+            {navLinks.map((link, _index) => (
               link.external ? (
                 <a 
-                  key={index}
+                  key={_index}
                   href={link.href} 
                   className="mobile-menu-link"
                   target="_blank"

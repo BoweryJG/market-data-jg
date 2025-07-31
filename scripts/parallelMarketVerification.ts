@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -39,7 +41,7 @@ class ParallelMarketVerificationService {
   private failedVerifications: Map<string, string[]> = new Map();
 
   async performParallelVerification(procedureName: string, category: string): Promise<AggregatedIntelligence> {
-    console.log(`Starting parallel verification for: ${procedureName}`);
+    logger.info(`Starting parallel verification for: ${procedureName}`);
     
     const searchPromises = [
       this.searchBrave(procedureName, category),
@@ -228,11 +230,11 @@ class ParallelMarketVerificationService {
         .order('market_size_2025_usd_millions', { ascending: false });
 
       if (error || !procedures) {
-        console.error(`Error fetching high-priority procedures from ${table}:`, error);
+        logger.error(`Error fetching high-priority procedures from ${table}:`, error);
         continue;
       }
 
-      console.log(`Found ${procedures.length} high-priority procedures in ${table}`);
+      logger.info(`Found ${procedures.length} high-priority procedures in ${table}`);
       
       for (const procedure of procedures) {
         const intelligence = await this.performParallelVerification(
@@ -285,18 +287,18 @@ class ParallelMarketVerificationService {
       .eq('id', procedureId);
 
     if (error) {
-      console.error(`Error updating procedure intelligence:`, error);
+      logger.error(`Error updating procedure intelligence:`, error);
     } else {
-      console.log(`Updated intelligence for procedure ID ${procedureId}`);
+      logger.info(`Updated intelligence for procedure ID ${procedureId}`);
     }
   }
 
   generateFailureReport(): void {
     if (this.failedVerifications.size > 0) {
-      console.log('\n=== Failed Verifications Report ===');
+      logger.info('\n=== Failed Verifications Report ===');
       this.failedVerifications.forEach((errors, procedure) => {
-        console.log(`\n${procedure}:`);
-        errors.forEach(error => console.log(`  - ${error}`));
+        logger.info(`\n${procedure}:`);
+        errors.forEach(error => logger.info(`  - ${error}`));
       });
     }
   }

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Grid, CircularProgress } from '@mui/material';
+import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { FeaturedProcedures } from '../components/procedures/FeaturedProcedures';
 import { CategoriesList } from '../components/procedures/CategoriesList';
 import { Category, Procedure } from '../types';
 import { supabase } from '../services/supabaseClient';
+import { logger } from '../services/logging/logger';
 
 const HomePage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -38,7 +39,7 @@ const HomePage: React.FC = () => {
         setCategories(categoriesData || []);
         setFeaturedProcedures(proceduresData || []);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        logger.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }

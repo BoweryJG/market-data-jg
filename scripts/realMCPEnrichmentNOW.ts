@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 // Removed unused fs import
 
 dotenv.config();
@@ -30,8 +32,8 @@ class RealMCPEnrichment {
   private failedProcedures: string[] = [];
   
   async execute() {
-    console.log('=== REAL MCP ENRICHMENT STARTING ===\n');
-    console.log('Using ACTUAL Perplexity, Brave Search, Firecrawl, and Agent Tools\n');
+    logger.info('=== REAL MCP ENRICHMENT STARTING ===\n');
+    logger.info('Using ACTUAL Perplexity, Brave Search, Firecrawl, and Agent Tools\n');
     
     // Get procedures with low confidence
     const { data: aestheticProcs } = await supabase
@@ -54,12 +56,12 @@ class RealMCPEnrichment {
     ];
     
     this.totalProcedures = procedures.length;
-    console.log(`Processing ${this.totalProcedures} lowest confidence procedures\n`);
+    logger.info(`Processing ${this.totalProcedures} lowest confidence procedures\n`);
     
     // Process ONE AT A TIME to start
     for (const procedure of procedures) {
-      console.log(`\n=== Researching: ${procedure.procedure_name} ===`);
-      console.log(`Current confidence: ${procedure.market_confidence_score || 0}/10`);
+      logger.info(`\n=== Researching: ${procedure.procedure_name} ===`);
+      logger.info(`Current confidence: ${procedure.market_confidence_score || 0}/10`);
       
       try {
         // Start with Perplexity
@@ -68,19 +70,19 @@ class RealMCPEnrichment {
         if (result) {
           await this.updateProcedure(procedure, result);
           this.successCount++;
-          console.log(`✓ Updated with confidence ${result.confidence}/10`);
+          logger.info(`✓ Updated with confidence ${result.confidence}/10`);
         }
       } catch (error) {
-        console.error(`✗ Failed: ${error}`);
+        logger.error(`✗ Failed: ${error}`);
         this.failedProcedures.push(procedure.procedure_name);
       }
       
       this.processedCount++;
-      console.log(`Progress: ${this.processedCount}/${this.totalProcedures}`);
+      logger.info(`Progress: ${this.processedCount}/${this.totalProcedures}`);
       
       // Wait between requests
       if (this.processedCount < this.totalProcedures) {
-        console.log('Waiting 10 seconds...');
+        logger.info('Waiting 10 seconds...');
         await new Promise(resolve => setTimeout(resolve, 10000));
       }
     }
@@ -89,7 +91,7 @@ class RealMCPEnrichment {
   }
   
   private async researchWithPerplexity(procedure: any): Promise<ResearchResult | null> {
-    console.log('Using Perplexity Deep Research...');
+    logger.info('Using Perplexity Deep Research...');
     
     // THIS IS WHERE WE USE THE REAL TOOL
     const query = `Comprehensive market analysis for "${procedure.procedure_name}" medical/aesthetic procedure 2025-2030. I need:
@@ -102,7 +104,7 @@ Please use authoritative sources like Grand View Research, Fortune Business Insi
 
     try {
       // We'll simulate the call for now but this is where the real call would go
-      console.log(`Query: ${query.substring(0, 100)}...`);
+      logger.info(`Query: ${query.substring(0, 100)}...`);
       
       // UNCOMMENT THIS FOR REAL USAGE:
       // const result = await mcp__perplexity__deep_research({
@@ -123,7 +125,7 @@ Please use authoritative sources like Grand View Research, Fortune Business Insi
       };
       
     } catch (error) {
-      console.error('Perplexity research failed:', error);
+      logger.error('Perplexity research failed:', error);
       return null;
     }
   }
@@ -172,11 +174,11 @@ Please use authoritative sources like Grand View Research, Fortune Business Insi
   private async generateReport() {
     const duration = (new Date().getTime() - this.startTime.getTime()) / 1000 / 60;
     
-    console.log('\n\n=== ENRICHMENT COMPLETE ===');
-    console.log(`Duration: ${duration.toFixed(1)} minutes`);
-    console.log(`Successful: ${this.successCount}/${this.totalProcedures}`);
+    logger.info('\n\n=== ENRICHMENT COMPLETE ===');
+    logger.info(`Duration: ${duration.toFixed(1)} minutes`);
+    logger.info(`Successful: ${this.successCount}/${this.totalProcedures}`);
     if (this.failedProcedures.length > 0) {
-      console.log(`Failed procedures: ${this.failedProcedures.join(', ')}`);
+      logger.info(`Failed procedures: ${this.failedProcedures.join(', ')}`);
     }
   }
 }

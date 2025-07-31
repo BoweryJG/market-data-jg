@@ -152,7 +152,7 @@ const TerritoryMap: React.FC = () => {
   );
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', p: 3 }}>
+    <Box sx={{ height: '100%',  display: 'flex',  flexDirection: 'column',  p: 3 }}>
       {/* Header Stats */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} md={6} lg={3}>
@@ -215,11 +215,11 @@ const TerritoryMap: React.FC = () => {
       </Grid>
 
       {/* Controls */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+      <Box sx={{ display: 'flex',  justifyContent: 'space-between',  mb: 2 }}>
         <ToggleButtonGroup
           value={viewMode}
           exclusive
-          onChange={(_, value) => value && setViewMode(value)}
+          onChange={(_,  value) => value && setViewMode(value)}
         >
           <ToggleButton value="map">
             <MapIcon sx={{ mr: 1 }} /> Map View
@@ -287,12 +287,12 @@ const TerritoryMap: React.FC = () => {
               </Typography>
 
               {/* Plot Accounts */}
-              {filteredAccounts.map((account, index) => (
+              {filteredAccounts.map((account, _index) => (
                 <motion.div
                   key={account.id}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: _index * 0.1 }}
                   style={{
                     position: 'absolute',
                     left: `${20 + (account.location.lng + 80.3) * 500}%`,
@@ -397,7 +397,7 @@ const TerritoryMap: React.FC = () => {
             </Box>
           </Box>
         ) : (
-          <Box sx={{ p: 2, height: '100%', overflow: 'auto' }}>
+          <Box sx={{ p: 2,  height: '100%',  overflow: 'auto' }}>
             <Stack spacing={2}>
               {filteredAccounts.map((account) => (
                 <Card key={account.id} sx={{ cursor: 'pointer' }}>

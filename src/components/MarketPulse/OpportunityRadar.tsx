@@ -48,9 +48,9 @@ interface OpportunityRadarProps {
 }
 
 const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
-  marketData,
-  onOpportunityClick,
-  radius = 50,
+  marketData, 
+  onOpportunityClick, 
+  radius = 50, 
   isAnimating
 }) => {
   const theme = useTheme();
@@ -161,14 +161,14 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
     }
   };
 
-  const calculateDistance = (lat: number, lng: number) => {
+  const calculateDistance = (lat: number,  lng: number) => {
     // Simplified distance calculation for demo
     const dx = lat - centerLocation.lat;
     const dy = lng - centerLocation.lng;
     return Math.sqrt(dx * dx + dy * dy) * 69; // Convert to approximate miles
   };
 
-  const calculatePosition = (lat: number, lng: number, containerSize: number) => {
+  const calculatePosition = (lat: number,  lng: number,  containerSize: number) => {
     const distance = calculateDistance(lat, lng);
     const angle = Math.atan2(lng - centerLocation.lng, lat - centerLocation.lat);
     const scaledDistance = (distance / radarRadius) * (containerSize / 2 - 50);
@@ -190,14 +190,14 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
   const containerSize = isMobile ? 300 : isTablet ? 400 : 500;
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+    <Box sx={{ position: 'relative',  width: '100%',  height: '100%' }}>
       {/* Mobile Controls */}
       <Stack 
         direction="row" 
         spacing={2} 
         sx={{ 
-          mb: 2,
-          justifyContent: 'center',
+          mb: 2, 
+          justifyContent: 'center', 
           flexWrap: 'wrap'
         }}
       >
@@ -225,7 +225,7 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
           </Typography>
           <Slider
             value={radarRadius}
-            onChange={(_: Event, value: number | number[]) => setRadarRadius(value as number)}
+            onChange={(_: Event,  value: number | number[]) => setRadarRadius(value as number)}
             min={10}
             max={100}
             size="small"
@@ -249,9 +249,9 @@ const OpportunityRadar: React.FC<OpportunityRadarProps> = ({
           style={{ position: 'absolute', top: 0, left: 0 }}
         >
           {/* Radar rings */}
-          {[1, 0.75, 0.5, 0.25].map((scale, index) => (
+          {[1, 0.75, 0.5, 0.25].map((scale, _index) => (
             <circle
-              key={index}
+              key={_index}
               cx={containerSize / 2}
               cy={containerSize / 2}
               r={(containerSize / 2 - 20) * scale * zoomLevel}

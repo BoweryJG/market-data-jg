@@ -2,6 +2,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -10,7 +12,7 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function getConfidence7Procedures() {
-  console.log('=== PROCEDURES WITH CONFIDENCE SCORE 7 ===\n');
+  logger.info('=== PROCEDURES WITH CONFIDENCE SCORE 7 ===\n');
   
   const { data: aesthetic, error: aestheticError } = await supabase
     .from('aesthetic_procedures')
@@ -19,17 +21,17 @@ async function getConfidence7Procedures() {
     .order('procedure_name');
     
   if (aestheticError) {
-    console.error('Error:', aestheticError);
+    logger.error('Error:', aestheticError);
     return;
   }
   
-  console.log(`Found ${aesthetic?.length || 0} aesthetic procedures with confidence 7:\n`);
+  logger.info(`Found ${aesthetic?.length || 0} aesthetic procedures with confidence 7:\n`);
   
   aesthetic?.forEach((p, i) => {
-    console.log(`${i + 1}. ${p.procedure_name}`);
-    console.log(`   Category: ${p.category}`);
-    console.log(`   Current Market Size: $${p.market_size_2025_usd_millions}M`);
-    console.log('');
+    logger.info(`${i + 1}. ${p.procedure_name}`);
+    logger.info(`   Category: ${p.category}`);
+    logger.info(`   Current Market Size: $${p.market_size_2025_usd_millions}M`);
+    logger.info('');
   });
 }
 

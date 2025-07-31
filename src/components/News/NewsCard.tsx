@@ -10,6 +10,8 @@ import {
   Skeleton
 } from '@mui/material';
 import { format, parseISO } from 'date-fns';
+import { logger } from '../services/logging/logger';
+
 
 interface NewsCardProps {
   id?: number;
@@ -61,7 +63,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
   const handleCardClick = (e: React.MouseEvent) => {
     if (!isValidUrl(url)) {
       e.preventDefault();
-      console.log('Invalid or missing URL');
+      logger.info('Invalid or missing URL');
     }
   };
 

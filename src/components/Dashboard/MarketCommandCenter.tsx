@@ -49,81 +49,12 @@ import {
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import Close from '@mui/icons-material/Close';
-import {
-  TrendingUp,
-  TrendingDown,
-  Search,
-  FilterList,
-  LocationOn,
-  AttachMoney,
-  Speed,
-  Business,
-  MedicalServices,
-  Analytics,
-  FlashOn,
-  Visibility,
-  Star,
-  LocalHospital,
-  AccountBalance,
-  Timer,
-  EmojiEvents,
-  RadioButtonChecked,
-  Circle,
-  FiberManualRecord,
-  MonetizationOn,
-  PinDrop,
-  // Category icons - comprehensive set
-  Build,
-  Straighten,
-  Nature,
-  Hub,
-  Architecture,
-  AutoAwesome,
-  Computer,
-  Shield,
-  Face,
-  Accessibility,
-  Grain,
-  Colorize,
-  Healing,
-  Brush,
-  Category,
-  Spa,
-  FitnessCenter,
-  Psychology,
-  Engineering,
-  // Enhanced medical & aesthetic icons
-  Biotech,
-  Science,
-  Vaccines,
-  Medication,
-  SelfImprovement,
-  FaceRetouchingNatural,
-  HealthAndSafety,
-  MonitorHeart,
-  VisibilityOff,
-  CameraAlt,
-  Palette,
-  Bathtub,
-  WbSunny,
-  Waves,
-  Diamond,
-  AutoFixHigh,
-  Flare,
-  MedicalInformation,
-  LocalPharmacy,
-  Mood,
-  SentimentVerySatisfied,
-  // Icons for compact mode
-  FilterAlt,
-  SwapHoriz,
-  ArrowDropDown,
-  AllInclusive,
-} from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '../../services/supabaseClient';
+import { TrendingUp, TrendingDown, Search, FilterList, LocationOn, AttachMoney, Speed, Business, MedicalServices, Analytics, FlashOn, Visibility, Star, LocalHospital, AccountBalance, Timer, EmojiEvents, RadioButtonChecked, Circle, FiberManualRecord, MonetizationOn, PinDrop, Straighten, Nature, Hub, Architecture, AutoAwesome, Computer, Shield, Face, Accessibility, Grain, Colorize, Healing, Brush, Category, Spa, FitnessCenter, Psychology, Engineering, Science, Vaccines, Medication, SelfImprovement, FaceRetouchingNatural, HealthAndSafety, MonitorHeart, VisibilityOff, CameraAlt, Palette, Bathtub, WbSunny, Waves, Diamond, AutoFixHigh, Flare, MedicalInformation, LocalPharmacy, Mood, SentimentVerySatisfied, SwapHoriz, ArrowDropDown, AllInclusive,  } from '@mui/icons-material';
+import { motion } from 'framer-motion';
+
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import { getCategoryIconConfig } from './CategoryIcons';
+import { logger } from '../services/logging/logger';
 
 // Luxury automotive-style gauge component with physics-based needle and chrome rim - v2.0 ENHANCED
 const CockpitGauge: React.FC<{
@@ -135,7 +66,7 @@ const CockpitGauge: React.FC<{
   size?: number;
   isLive?: boolean;
   industry?: 'dental' | 'aesthetic' | 'all';
-}> = ({ value, max, label, unit, color, size = 140, isLive = false, industry = 'all' }) => {
+}> = ({ value,  max,  label,  unit,  color,  size = 140,  isLive = false,  industry = 'all' }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(-90); // Start at leftmost position
@@ -163,22 +94,22 @@ const CockpitGauge: React.FC<{
                 // Include company market cap for comprehensive dental market size
                 const dentalProcedures = data.procedures
                   .filter(p => p.industry === 'dental')
-                  .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+                  .reduce((sum,  p) => sum + (p.market_size_2025_usd_millions || 0), 0);
                 const dentalCompanies = data.companies
                   .filter(c => c.industry === 'dental')
-                  .reduce((sum, c) => sum + (c.market_cap || 0), 0);
+                  .reduce((sum,  c) => sum + (c.market_cap || 0), 0);
                 industrySpecificValue = dentalProcedures + (dentalCompanies / 1000); // Convert to millions
               } else if (industry === 'aesthetic') {
                 const aestheticProcedures = data.procedures
                   .filter(p => p.industry === 'aesthetic')
-                  .reduce((sum, p) => sum + (p.market_size_2025_usd_millions || 0), 0);
+                  .reduce((sum,  p) => sum + (p.market_size_2025_usd_millions || 0), 0);
                 const aestheticCompanies = data.companies
                   .filter(c => c.industry === 'aesthetic')
-                  .reduce((sum, c) => sum + (c.market_cap || 0), 0);
+                  .reduce((sum,  c) => sum + (c.market_cap || 0), 0);
                 industrySpecificValue = aestheticProcedures + (aestheticCompanies / 1000);
               } else {
                 // Total market including territories and analytics
-                const territoryValue = data.territories?.reduce((sum, t) => sum + (t.market_value || 0), 0) || 0;
+                const territoryValue = data.territories?.reduce((sum,  t) => sum + (t.market_value || 0), 0) || 0;
                 industrySpecificValue = data.marketMetrics.totalMarketSize + territoryValue;
               }
               break;
@@ -209,7 +140,7 @@ const CockpitGauge: React.FC<{
                 industrySpecificValue = totalWeight > 0 ? weightedGrowth / totalWeight : 0;
               } else {
                 // Include territory growth data
-                const territoryGrowth = data.territories?.reduce((sum, t) => sum + (t.growth_rate || 0), 0) || 0;
+                const territoryGrowth = data.territories?.reduce((sum,  t) => sum + (t.growth_rate || 0), 0) || 0;
                 const territoryCount = data.territories?.length || 1;
                 industrySpecificValue = (data.marketMetrics.averageGrowth + (territoryGrowth / territoryCount)) / 2;
               }
@@ -242,10 +173,10 @@ const CockpitGauge: React.FC<{
           // Validate and set live value with bounds checking
           if (industrySpecificValue >= 0 && industrySpecificValue !== liveValue) {
             setLiveValue(Math.min(industrySpecificValue, max * 1.5)); // Allow 50% over max for dynamic scaling
-            console.log(`🔄 Live update for ${label} (${industry}): ${industrySpecificValue.toLocaleString()}`);
+            logger.info(`🔄 Live update for ${label} (${industry}): ${industrySpecificValue.toLocaleString()}`);
           }
         } catch (error) {
-          console.error(`❌ Failed to fetch live gauge data for ${label}:`, error);
+          logger.error(`❌ Failed to fetch live gauge data for ${label}:`, error);
           // Keep current value on error
           setLiveValue(value);
         }
@@ -313,7 +244,7 @@ const CockpitGauge: React.FC<{
     setIsHovered(false);
   };
 
-  const handleMouseMove = (event: React.MouseEvent) => {
+  const handleMouseMove = (_event: React.MouseEvent) => {
     // Disabled mouse tracking to prevent erratic needle movement
     // Needle will only move based on value changes and animations
     return;
@@ -566,7 +497,7 @@ const CockpitGauge: React.FC<{
         />
         
         {/* Tick marks for luxury automotive feel */}
-        {Array.from({ length: 9 }, (_, i) => {
+        {Array.from({ length: 9 },  (_,  i) => {
           const tickAngle = (-90 + (i * 22.5)) * (Math.PI / 180);
           const innerRadius = size / 2 - 25;
           const outerRadius = size / 2 - (i % 2 === 0 ? 35 : 30);
@@ -807,7 +738,7 @@ const CockpitGauge: React.FC<{
 };
 
 // Territory data component with premium styling
-const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }> = ({ territories, onClick }) => {
+const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }> = ({ territories,  onClick }) => {
   const theme = useTheme();
   
   return (
@@ -906,8 +837,8 @@ const TerritoryPremiumData: React.FC<{ territories: any[]; onClick: () => void }
           </Typography>
         </Box>
         
-        {territories.map((territory, index) => (
-          <Box key={index} sx={{ mb: 2, p: 1, background: alpha(theme.palette.background.paper, 0.5), borderRadius: 1 }}>
+        {territories.map((territory, _index) => (
+          <Box key={_index} sx={{ mb: 2, p: 1, background: alpha(theme.palette.background.paper, 0.5), borderRadius: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                 {territory.name}
@@ -1014,7 +945,7 @@ const MarketCommandCenter: React.FC = () => {
   const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
-      console.log('🚀 Loading comprehensive market data...');
+      logger.info('🚀 Loading comprehensive market data...');
       
       // Get comprehensive market data
       const comprehensiveData = await comprehensiveDataService.getComprehensiveMarketData();
@@ -1022,14 +953,14 @@ const MarketCommandCenter: React.FC = () => {
 
       // Discover all tables if in discovery mode
       if (dataDiscoveryMode) {
-        console.log('🔍 Discovering all database tables...');
+        logger.info('🔍 Discovering all database tables...');
         const tables = await comprehensiveDataService.discoverAllTables();
         setDiscoveredTables(tables);
-        console.log(`✅ Discovered ${tables.length} tables`);
+        logger.info(`✅ Discovered ${tables.length} tables`);
       }
 
     } catch (error) {
-      console.error('Error fetching comprehensive data:', error);
+      logger.error('Error fetching comprehensive data:', error);
     } finally {
       setLoading(false);
     }
@@ -1040,7 +971,7 @@ const MarketCommandCenter: React.FC = () => {
     
     // Test specific tables for debugging
     comprehensiveDataService.testSpecificTables().then(result => {
-      console.log('🧪 Table test result:', result);
+      logger.info('🧪 Table test result:', result);
     });
   }, []); // Only run once on mount
 
@@ -1081,10 +1012,9 @@ const MarketCommandCenter: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-
   // Get market metrics from comprehensive data with fallback to demo data
   const marketMetrics = useMemo(() => {
-    console.log('🔍 MarketMetrics Debug:', { 
+    logger.info('🔍 MarketMetrics Debug:', { 
       hasMarketData: !!marketData, 
       proceduresLength: marketData?.procedures?.length || 0,
       marketDataStructure: marketData ? Object.keys(marketData) : 'null',
@@ -1095,7 +1025,7 @@ const MarketCommandCenter: React.FC = () => {
     if (!marketData || !marketData.procedures || marketData.procedures.length === 0) {
       // Only log warning if loading is complete but no data found
       if (marketData !== null && marketData?.procedures?.length === 0) {
-        console.log('⚠️ Using fallback demo data - no procedures found');
+        logger.info('⚠️ Using fallback demo data - no procedures found');
       }
       // Return demo data when database is unavailable
       return {
@@ -1108,7 +1038,7 @@ const MarketCommandCenter: React.FC = () => {
     }
 
     const averageCost = marketData.procedures.length > 0
-      ? marketData.procedures.reduce((sum, p) => sum + (p.average_cost_usd || 0), 0) / marketData.procedures.length
+      ? marketData.procedures.reduce((sum,  p) => sum + (p.average_cost_usd || 0), 0) / marketData.procedures.length
       : 0;
 
     return {
@@ -1198,7 +1128,7 @@ const MarketCommandCenter: React.FC = () => {
       return hasValidData && matchesSearch && matchesIndustry && matchesCategory;
     });
 
-    filtered.sort((a, b) => {
+    filtered.sort((a,  b) => {
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];
       
@@ -1230,7 +1160,7 @@ const MarketCommandCenter: React.FC = () => {
         
         return matchesSearch && matchesIndustry;
       })
-      .sort((a, b) => {
+      .sort((a,  b) => {
         const aVal = a[sortConfig.key as keyof typeof a] || 0;
         const bVal = b[sortConfig.key as keyof typeof b] || 0;
         
@@ -1297,7 +1227,7 @@ const MarketCommandCenter: React.FC = () => {
     return 'standard';
   }, []);
 
-  const getTierStyling = useCallback((tier: string, industry: string) => {
+  const getTierStyling = useCallback((tier: string,  industry: string) => {
     const isAesthetic = industry === 'aesthetic';
     
     const tierStyles = {
@@ -1750,8 +1680,8 @@ const MarketCommandCenter: React.FC = () => {
                       
                       // Debug only once to avoid spam
                       if (procedureCount === 0 && marketData.procedures.length > 0 && category.name === 'Imaging') {
-                        console.log('🔍 CATEGORY MATCHING ANALYSIS:');
-                        console.log('Looking for:', category.name, 'ID:', category.id, 'Parent ID:', category.parent_id);
+                        logger.info('🔍 CATEGORY MATCHING ANALYSIS:');
+                        logger.info('Looking for:', category.name, 'ID:', category.id, 'Parent ID:', category.parent_id);
                         
                         // Check if any procedures match this category
                         const matchingProcedures = marketData.procedures.filter(p => 
@@ -1759,17 +1689,17 @@ const MarketCommandCenter: React.FC = () => {
                           p.category === category.name ||
                           (p.hierarchy_category && p.hierarchy_category.id === category.id)
                         );
-                        console.log('Procedures directly matching this category:', matchingProcedures.length);
+                        logger.info('Procedures directly matching this category:', matchingProcedures.length);
                         
                         // Check if procedures are linked to parent category instead
                         const parentMatches = marketData.procedures.filter(p => 
                           p.category_hierarchy_id === category.parent_id
                         );
-                        console.log('Procedures matching parent category ID', category.parent_id + ':', parentMatches.length);
+                        logger.info('Procedures matching parent category ID', category.parent_id + ':', parentMatches.length);
                         
                         // Show unique category_hierarchy_ids in procedures
                         const uniqueCategoryIds = [...new Set(marketData.procedures.map(p => p.category_hierarchy_id))];
-                        console.log('All unique category_hierarchy_ids in procedures:', uniqueCategoryIds.sort((a, b) => a - b));
+                        logger.info('All unique category_hierarchy_ids in procedures:',  uniqueCategoryIds.sort((a,  b) => a - b));
                       }
                       
                       return (
@@ -2001,7 +1931,6 @@ const MarketCommandCenter: React.FC = () => {
         </Box>
       </Card>
 
-
       {/* Procedures/Companies table */}
       <TableContainer 
         component={Paper} 
@@ -2154,7 +2083,7 @@ const MarketCommandCenter: React.FC = () => {
           </TableHead>
           <TableBody>
             {viewMode === 'procedures' ? (
-              filteredProcedures.map((procedure, index) => {
+              filteredProcedures.map((procedure, _index) => {
                 const tier = getProcedureTier(procedure);
                 const tierStyle = getTierStyling(tier, procedure.industry);
                 
@@ -2163,10 +2092,10 @@ const MarketCommandCenter: React.FC = () => {
                   key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
                   hover
                   onClick={() => {
-                    console.log('Procedure clicked:', procedure);
+                    logger.info('Procedure clicked:', procedure);
                     setSelectedProcedure(procedure);
                     setProcedureModalOpen(true);
-                    console.log('Modal state set - selectedProcedure:', procedure, 'modalOpen:', true);
+                    logger.info('Modal state set - selectedProcedure:', procedure, 'modalOpen:', true);
                   }}
                   sx={{
                     cursor: 'pointer',
@@ -2380,9 +2309,9 @@ const MarketCommandCenter: React.FC = () => {
                 );
               })
             ) : (
-              filteredCompanies.map((company, index) => (
+              filteredCompanies.map((company, _index) => (
                 <TableRow
-                  key={`company-${company.id || index}-${company.name || company.company_name || 'unknown'}`}
+                  key={`company-${company.id || _index}-${company.name || company.company_name || 'unknown'}`}
                   hover
                   onClick={() => {
                     setSelectedCompany(company);
@@ -2583,6 +2512,5 @@ const MarketCommandCenter: React.FC = () => {
     </Box>
   );
 };
-
 
 MarketCommandCenter.displayName = 'MarketCommandCenter';export default MarketCommandCenter;

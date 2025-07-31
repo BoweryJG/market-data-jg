@@ -19,6 +19,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '../../hooks/useSubscription';
+import { logger } from '../services/logging/logger';
+
 
 const BlurredContent = styled(Box)(({ theme }) => ({
   filter: 'blur(8px)',
@@ -71,7 +73,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
       // Refresh the page or component
       window.location.reload();
     } catch (error) {
-      console.error('Purchase failed:', error);
+      logger.error('Purchase failed:', error);
     }
   };
 
@@ -146,7 +148,7 @@ export const PremiumFeatureExample: React.FC = () => {
     await trackUsage('aiQueries');
     
     // Perform the AI query
-    console.log('Performing AI query...');
+    logger.info('Performing AI query...');
   };
 
   return (

@@ -27,6 +27,8 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import MapIcon from '@mui/icons-material/Map';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { MagicLinkAuthService } from '../../services/magicLinkAuth';
+import { logger } from '../services/logging/logger';
+
 
 interface ContentOption {
   type: 'market_report' | 'provider_intel' | 'territory_insights' | 'cpt_analysis';
@@ -177,7 +179,7 @@ export const PremiumContentGenerator: React.FC = () => {
       setTimeout(() => setSuccess(false), 5000);
       
     } catch (err) {
-      console.error('Error generating content:', err);
+      logger.error('Error generating content:', err);
       setError('Failed to generate content. Please try again.');
     } finally {
       setLoading(false);

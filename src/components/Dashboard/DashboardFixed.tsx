@@ -33,12 +33,13 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import PublicIcon from '@mui/icons-material/Public';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import { supabase } from '../../services/supabaseClient';
 import { DentalCategory, AestheticCategory, CategoryHierarchy } from '../../types';
 import CategoryHierarchyView from './CategoryHierarchyView';
 import MarketSizeOverview, { formatMarketSize } from './MarketSizeOverview';
 import ProcedureDetailsModal from './ProcedureDetailsModal';
+import { logger } from '../services/logging/logger';
 
 const Dashboard: React.FC = () => {
   // State for procedures and companies
@@ -133,7 +134,7 @@ const Dashboard: React.FC = () => {
         .order('display_order', { ascending: true });
       
       if (hierarchyError) throw hierarchyError;
-      console.log('Category hierarchy response:', { 
+      logger.info('Category hierarchy response:', { 
         count: hierarchyData?.length || 0, 
         data: hierarchyData 
       });
@@ -166,7 +167,7 @@ const Dashboard: React.FC = () => {
       setAestheticCategories(aestheticCats);
       
     } catch (err: any) {
-      console.error('Categories fetch error:', err);
+      logger.error('Categories fetch error:', err);
       setError(`Failed to load categories: ${err.message}`);
     } finally {
       setCategoriesLoading(false);
@@ -204,24 +205,24 @@ const Dashboard: React.FC = () => {
       setError(null);
       try {
         // Try multiple possible table names with detailed error logging
-        console.log('Attempting to fetch dental procedures...');
+        logger.info('Attempting to fetch dental procedures...');
         let dentalResponse = await supabase.from('dental_procedures').select('*');
         if (dentalResponse.error) {
-          console.log('Error with dental_procedures table, trying v_dental_procedures view...');
+          logger.info('Error with dental_procedures table, trying v_dental_procedures view...');
           dentalResponse = await supabase.from('v_dental_procedures').select('*');
           if (dentalResponse.error) {
-            console.log('Error with v_dental_procedures view, trying all_procedures with filtering...');
+            logger.info('Error with v_dental_procedures view, trying all_procedures with filtering...');
             dentalResponse = await supabase.from('all_procedures').select('*').eq('industry', 'dental');
           }
         }
         
-        console.log('Attempting to fetch aesthetic procedures...');
+        logger.info('Attempting to fetch aesthetic procedures...');
         let aestheticResponse = await supabase.from('aesthetic_procedures').select('*');
         if (aestheticResponse.error) {
-          console.log('Error with aesthetic_procedures table, trying v_aesthetic_procedures view...');
+          logger.info('Error with aesthetic_procedures table, trying v_aesthetic_procedures view...');
           aestheticResponse = await supabase.from('aesthetic_procedures_view').select('*');
           if (aestheticResponse.error) {
-            console.log('Error with aesthetic_procedures_view, trying all_procedures with filtering...');
+            logger.info('Error with aesthetic_procedures_view, trying all_procedures with filtering...');
             aestheticResponse = await supabase.from('all_procedures').select('*').eq('industry', 'aesthetic');
           }
         }
@@ -229,8 +230,8 @@ const Dashboard: React.FC = () => {
         if (dentalResponse.error) throw new Error(`Dental procedures: ${dentalResponse.error.message}`);
         if (aestheticResponse.error) throw new Error(`Aesthetic procedures: ${aestheticResponse.error.message}`);
         
-        console.log('Dental data:', dentalResponse.data);
-        console.log('Aesthetic data:', aestheticResponse.data);
+        logger.info('Dental data:', dentalResponse.data);
+        logger.info('Aesthetic data:', aestheticResponse.data);
         
         const dentalProcs = (dentalResponse.data || []).map(proc => ({
           ...proc,
@@ -253,8 +254,8 @@ const Dashboard: React.FC = () => {
           body_areas_applicable: proc.body_areas_applicable || proc.body_area || ''
         }));
         
-        console.log(`Loaded ${dentalProcs.length} dental procedures`);
-        console.log(`Loaded ${aestheticProcs.length} aesthetic procedures`);
+        logger.info(`Loaded ${dentalProcs.length} dental procedures`);
+        logger.info(`Loaded ${aestheticProcs.length} aesthetic procedures`);
         
         setDentalProcedures(dentalProcs);
         setAestheticProcedures(aestheticProcs);
@@ -263,7 +264,7 @@ const Dashboard: React.FC = () => {
         await fetchCompanies();
         await fetchCategories();
       } catch (e: any) {
-        console.error('Error fetching data:', e);
+        logger.error('Error fetching data:', e);
         setError(`Failed to load procedures: ${e.message}`);
       } finally {
         setLoading(false);
@@ -282,59 +283,59 @@ const Dashboard: React.FC = () => {
   };
 
   // Pagination handlers for procedures
-  const handleDentalChangePage = (_: unknown, newPage: number) => {
+  const handleDentalChangePage = (_: unknown,  newPage: number) => {
     setDentalPage(newPage);
   };
 
-  const handleDentalChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalRowsPerPage(parseInt(_event.target.value, 10));
     setDentalPage(0);
   };
 
-  const handleAestheticChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticChangePage = (_: unknown,  newPage: number) => {
     setAestheticPage(newPage);
   };
 
-  const handleAestheticChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticPage(0);
   };
 
   // Pagination handlers for companies
-  const handleDentalCompanyChangePage = (_: unknown, newPage: number) => {
+  const handleDentalCompanyChangePage = (_: unknown,  newPage: number) => {
     setDentalCompanyPage(newPage);
   };
 
-  const handleDentalCompanyChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalCompanyRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalCompanyChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalCompanyRowsPerPage(parseInt(_event.target.value, 10));
     setDentalCompanyPage(0);
   };
 
-  const handleAestheticCompanyChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticCompanyChangePage = (_: unknown,  newPage: number) => {
     setAestheticCompanyPage(newPage);
   };
 
-  const handleAestheticCompanyChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticCompanyRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticCompanyChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticCompanyRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticCompanyPage(0);
   };
 
   // Pagination handlers for categories
-  const handleDentalCategoryChangePage = (_: unknown, newPage: number) => {
+  const handleDentalCategoryChangePage = (_: unknown,  newPage: number) => {
     setDentalCategoryPage(newPage);
   };
 
-  const handleDentalCategoryChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDentalCategoryRowsPerPage(parseInt(event.target.value, 10));
+  const handleDentalCategoryChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setDentalCategoryRowsPerPage(parseInt(_event.target.value, 10));
     setDentalCategoryPage(0);
   };
 
-  const handleAestheticCategoryChangePage = (_: unknown, newPage: number) => {
+  const handleAestheticCategoryChangePage = (_: unknown,  newPage: number) => {
     setAestheticCategoryPage(newPage);
   };
 
-  const handleAestheticCategoryChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAestheticCategoryRowsPerPage(parseInt(event.target.value, 10));
+  const handleAestheticCategoryChangeRowsPerPage = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setAestheticCategoryRowsPerPage(parseInt(_event.target.value, 10));
     setAestheticCategoryPage(0);
   };
 
@@ -350,7 +351,7 @@ const Dashboard: React.FC = () => {
   };
 
   // Safe rendering function for any field
-  const safeRender = (value: any, isPercent = false, decimalPlaces = 1) => {
+  const safeRender = (value: any,  isPercent = false,  decimalPlaces = 1) => {
     if (value === null || value === undefined || value === '') return '-';
     if (isPercent) {
       const numValue = parseFloat(String(value));
@@ -364,7 +365,7 @@ const Dashboard: React.FC = () => {
     industry: 'dental' | 'aesthetic';
   }
 
-  const ProcedureCard: React.FC<ProcedureCardProps> = ({ procedure, industry }) => (
+  const ProcedureCard: React.FC<ProcedureCardProps> = ({ procedure,  industry }) => (
     <Card variant="outlined" sx={{ mb: 2 }}>
       <CardContent>
         <Typography variant="subtitle1" fontWeight="bold">
@@ -426,7 +427,7 @@ const Dashboard: React.FC = () => {
   );
 
   // Calculate category distributions for visualization
-  const calculateCategoryDistribution = (procedures: any[], categories: any[]) => {
+  const calculateCategoryDistribution = (procedures: any[],  categories: any[]) => {
     // Create a map to count procedures by category
     const categoryMap = new Map<number, { count: number, name: string, marketSize: number }>();
     
@@ -453,7 +454,7 @@ const Dashboard: React.FC = () => {
     
     // Convert to array and sort by count (descending)
     return Array.from(categoryMap.values())
-      .sort((a, b) => b.count - a.count)
+      .sort((a,  b) => b.count - a.count)
       .map(item => ({
         ...item,
         marketSizeFormatted: item.marketSize ? `$${item.marketSize}M` : 'N/A'
@@ -509,15 +510,15 @@ const Dashboard: React.FC = () => {
   function getComparator<Key extends keyof any>(
     order: Order,
     orderBy: Key,
-  ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
+  ): (a: { [key in Key]: number | string },  b: { [key in Key]: number | string }) => number {
     return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
+      ? (a,  b) => descendingComparator(a, b, orderBy)
+      : (a,  b) => -descendingComparator(a, b, orderBy);
   }
 
-  function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
+  function stableSort<T>(array: readonly T[],  comparator: (a: T,  b: T) => number) {
+    const stabilizedThis = array.map((el, _index) => [el, _index] as [T, number]);
+    stabilizedThis.sort((a,  b) => {
       const order = comparator(a[0], b[0]);
       if (order !== 0) {
         return order;
@@ -602,7 +603,7 @@ const Dashboard: React.FC = () => {
   }
   
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 8 }}>
+    <Container maxWidth="xl" sx={{ mt: 4,  mb: 8 }}>
       {/* Procedure Details Modal */}
       <ProcedureDetailsModal
         open={detailsModalOpen}
@@ -820,8 +821,8 @@ const Dashboard: React.FC = () => {
                           <Typography 
                             variant="body2" 
                             sx={{ 
-                              cursor: 'pointer',
-                              '&:hover': { textDecoration: 'underline', color: 'primary.main' } 
+                              cursor: 'pointer', 
+                              '&:hover': { textDecoration: 'underline',  color: 'primary.main' } 
                             }}
                             onClick={() => {
                               setSelectedProcedure(proc);
@@ -984,6 +985,5 @@ const Dashboard: React.FC = () => {
     </Container>
   );
 };
-
 
 Dashboard.displayName = 'Dashboard';export default Dashboard;

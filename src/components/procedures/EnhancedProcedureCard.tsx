@@ -30,9 +30,9 @@ interface EnhancedProcedureCardProps {
 }
 
 export const EnhancedProcedureCard: React.FC<EnhancedProcedureCardProps> = ({
-  procedure,
-  onClick,
-  showProjections = false,
+  procedure, 
+  onClick, 
+  showProjections = false, 
 }) => {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -178,9 +178,9 @@ export const EnhancedProcedureCard: React.FC<EnhancedProcedureCardProps> = ({
                   Key Manufacturers
                 </Typography>
                 <Box mt={1}>
-                  {procedure.top_3_device_manufacturers.map((manufacturer, index) => (
+                  {procedure.top_3_device_manufacturers.map((manufacturer, _index) => (
                     <Chip
-                      key={index}
+                      key={_index}
                       label={manufacturer}
                       size="small"
                       variant="outlined"

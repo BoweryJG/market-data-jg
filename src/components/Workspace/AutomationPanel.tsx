@@ -48,6 +48,8 @@ import {
   Speed
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { logger } from '../services/logging/logger';
+
 
 interface Automation {
   id: string;
@@ -327,22 +329,22 @@ const AutomationPanel: React.FC = () => {
         <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
           <Chip 
             label="New Product Launch" 
-            onClick={() => console.log('Create from template')}
+            onClick={() => logger.info('Create from template')}
             icon={<AutoAwesome />}
           />
           <Chip 
             label="Win-Back Campaign" 
-            onClick={() => console.log('Create from template')}
+            onClick={() => logger.info('Create from template')}
             icon={<Campaign />}
           />
           <Chip 
             label="Seasonal Promotion" 
-            onClick={() => console.log('Create from template')}
+            onClick={() => logger.info('Create from template')}
             icon={<Timer />}
           />
           <Chip 
             label="Competition Alert" 
-            onClick={() => console.log('Create from template')}
+            onClick={() => logger.info('Create from template')}
             icon={<Warning />}
           />
         </Stack>

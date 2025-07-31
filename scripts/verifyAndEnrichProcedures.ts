@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -55,7 +57,7 @@ class ProcedureVerificationService {
   private unverifiableProcedures: string[] = [];
 
   async verifyAndEnrichProcedures(tableType: 'aesthetic' | 'dental'): Promise<void> {
-    console.log(`Starting verification for ${tableType} procedures...`);
+    logger.info(`Starting verification for ${tableType} procedures...`);
     
     // Get all procedures from the table
     const { data: procedures, error } = await supabase
@@ -64,11 +66,11 @@ class ProcedureVerificationService {
       .order('market_size_2025_usd_millions', { ascending: false });
 
     if (error || !procedures) {
-      console.error('Error fetching procedures:', error);
+      logger.error('Error fetching procedures:', error);
       return;
     }
 
-    console.log(`Found ${procedures.length} ${tableType} procedures to verify`);
+    logger.info(`Found ${procedures.length} ${tableType} procedures to verify`);
 
     // Process in batches of 10
     const batchSize = 10;
@@ -76,7 +78,7 @@ class ProcedureVerificationService {
 
     for (let i = 0; i < procedures.length; i += batchSize) {
       const batch = procedures.slice(i, i + batchSize);
-      console.log(`Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(procedures.length / batchSize)}`);
+      logger.info(`Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(procedures.length / batchSize)}`);
       
       const batchResults = await this.processBatch(batch, tableType);
       results.push(...batchResults);
@@ -98,7 +100,7 @@ class ProcedureVerificationService {
   }
 
   private async verifyProcedure(procedure: ProcedureData, tableType: string): Promise<VerificationResult> {
-    console.log(`Verifying: ${procedure.procedure_name}`);
+    logger.info(`Verifying: ${procedure.procedure_name}`);
     
     const searchQueries = [
       `"${procedure.procedure_name}" market size forecast 2025-2030`,
@@ -164,9 +166,9 @@ class ProcedureVerificationService {
         .eq('id', result.procedureId);
 
       if (error) {
-        console.error(`Error updating procedure ${result.procedureName}:`, error);
+        logger.error(`Error updating procedure ${result.procedureName}:`, error);
       } else {
-        console.log(`Updated ${result.procedureName} with verification data`);
+        logger.info(`Updated ${result.procedureName} with verification data`);
       }
     }
   }
@@ -186,11 +188,11 @@ class ProcedureVerificationService {
     const reportPath = `/Users/jasonsmacbookpro2022/Desktop/market-data-jg/verification_report_${tableType}_${new Date().toISOString().split('T')[0]}.json`;
     
     // In real implementation, write this to file
-    console.log('Verification Report:', JSON.stringify(report, null, 2));
+    logger.info('Verification Report:', JSON.stringify(report, null, 2));
     
     if (this.unverifiableProcedures.length > 0) {
-      console.log('\nProcedures that could not be verified:');
-      this.unverifiableProcedures.forEach(proc => console.log(`- ${proc}`));
+      logger.info('\nProcedures that could not be verified:');
+      this.unverifiableProcedures.forEach(proc => logger.info(`- ${proc}`));
     }
   }
 }
@@ -205,7 +207,7 @@ async function main() {
   // Verify dental procedures
   await verificationService.verifyAndEnrichProcedures('dental');
   
-  console.log('Verification process completed!');
+  logger.info('Verification process completed!');
 }
 
 // Run if called directly

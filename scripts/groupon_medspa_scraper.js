@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const { parse } = require('json2csv');
@@ -149,13 +151,13 @@ function calculateConfidence(deal) {
 
 // Scrape Groupon for a location
 async function scrapeGrouponLocation(browser, location) {
-  console.log(`\nScraping ${location.city}, ${location.state}...`);
+  logger.info(`\nScraping ${location.city}, ${location.state}...`);
   const deals = [];
   
   for (const category of SEARCH_CATEGORIES) {
     try {
       const url = `https://www.groupon.com/${location.searchQuery}/${category}`;
-      console.log(`  Checking category: ${category}`);
+      logger.info(`  Checking category: ${category}`);
       
       const page = await browser.newPage();
       await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
@@ -186,14 +188,14 @@ async function scrapeGrouponLocation(browser, location) {
               extractedDeals.push(deal);
             }
           } catch (e) {
-            console.error('Error extracting deal:', e);
+            logger.error('Error extracting deal:', e);
           }
         });
         
         return extractedDeals;
       });
       
-      console.log(`    Found ${pageDeals.length} deals`);
+      logger.info(`    Found ${pageDeals.length} deals`);
       
       // Process each deal
       pageDeals.forEach(deal => {
@@ -210,18 +212,18 @@ async function scrapeGrouponLocation(browser, location) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
     } catch (error) {
-      console.error(`  Error scraping ${category}:`, error.message);
+      logger.error(`  Error scraping ${category}:`, error.message);
     }
   }
   
-  console.log(`  Total qualifying medspas found: ${deals.length}`);
+  logger.info(`  Total qualifying medspas found: ${deals.length}`);
   return deals;
 }
 
 // Main execution
 async function main() {
-  console.log('Groupon MedSpa Scraper');
-  console.log('======================\n');
+  logger.info('Groupon MedSpa Scraper');
+  logger.info('======================\n');
   
   const browser = await puppeteer.launch({
     headless: true,
@@ -250,7 +252,7 @@ async function main() {
     }
     
   } catch (error) {
-    console.error('Scraping error:', error);
+    logger.error('Scraping error:', error);
   } finally {
     await browser.close();
   }
@@ -259,7 +261,7 @@ async function main() {
   allMedSpas.sort((a, b) => b.confidenceScore - a.confidenceScore);
   
   // Save results
-  console.log('\n=== Saving Results ===');
+  logger.info('\n=== Saving Results ===');
   
   const timestamp = new Date().toISOString().split('T')[0];
   
@@ -280,7 +282,7 @@ async function main() {
     const csv = parse(allMedSpas, { fields });
     const filename = `groupon_medspas_NY_FL_${timestamp}.csv`;
     fs.writeFileSync(filename, csv);
-    console.log(`Saved ${allMedSpas.length} medspas to ${filename}`);
+    logger.info(`Saved ${allMedSpas.length} medspas to ${filename}`);
     
     // Save high confidence separately
     const highConfidence = allMedSpas.filter(m => m.confidenceScore >= 70);
@@ -288,7 +290,7 @@ async function main() {
       const csvHigh = parse(highConfidence, { fields });
       const filenameHigh = `groupon_medspas_high_confidence_${timestamp}.csv`;
       fs.writeFileSync(filenameHigh, csvHigh);
-      console.log(`Saved ${highConfidence.length} high-confidence medspas to ${filenameHigh}`);
+      logger.info(`Saved ${highConfidence.length} high-confidence medspas to ${filenameHigh}`);
     }
     
     // Save JSON for analysis
@@ -299,8 +301,8 @@ async function main() {
   }
   
   // Summary statistics
-  console.log('\n=== Summary ===');
-  console.log(`Total MedSpas Found: ${allMedSpas.length}`);
+  logger.info('\n=== Summary ===');
+  logger.info(`Total MedSpas Found: ${allMedSpas.length}`);
   
   // By state
   const byState = {};
@@ -308,16 +310,16 @@ async function main() {
     byState[m.state] = (byState[m.state] || 0) + 1;
   });
   
-  console.log('\nBy State:');
+  logger.info('\nBy State:');
   Object.entries(byState).forEach(([state, count]) => {
-    console.log(`  ${state}: ${count}`);
+    logger.info(`  ${state}: ${count}`);
   });
   
   // By confidence
-  console.log('\nBy Confidence:');
-  console.log(`  High (70+): ${allMedSpas.filter(m => m.confidenceScore >= 70).length}`);
-  console.log(`  Medium (50-69): ${allMedSpas.filter(m => m.confidenceScore >= 50 && m.confidenceScore < 70).length}`);
-  console.log(`  Low (30-49): ${allMedSpas.filter(m => m.confidenceScore < 50).length}`);
+  logger.info('\nBy Confidence:');
+  logger.info(`  High (70+): ${allMedSpas.filter(m => m.confidenceScore >= 70).length}`);
+  logger.info(`  Medium (50-69): ${allMedSpas.filter(m => m.confidenceScore >= 50 && m.confidenceScore < 70).length}`);
+  logger.info(`  Low (30-49): ${allMedSpas.filter(m => m.confidenceScore < 50).length}`);
   
   // Top services
   const serviceCounts = {};
@@ -328,15 +330,15 @@ async function main() {
     });
   });
   
-  console.log('\nTop Services Offered:');
+  logger.info('\nTop Services Offered:');
   Object.entries(serviceCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .forEach(([service, count]) => {
-      console.log(`  ${service}: ${count}`);
+      logger.info(`  ${service}: ${count}`);
     });
   
-  console.log('\nGroupon scraping complete!');
+  logger.info('\nGroupon scraping complete!');
 }
 
 // Run the scraper

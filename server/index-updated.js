@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -57,9 +59,9 @@ setInterval(() => {
 }, 24 * 60 * 60 * 1000);
 
 // Log server startup
-console.log('Starting news proxy service with enhanced security...');
-console.log('Environment:', process.env.NODE_ENV || 'development');
-console.log('Port:', port);
+logger.info('Starting news proxy service with enhanced security...');
+logger.info('Environment:', process.env.NODE_ENV || 'development');
+logger.info('Port:', port);
 
 // Apply auth rate limiting to auth routes
 app.use('/api/auth', authLimiter);
@@ -100,11 +102,11 @@ app.get('/api/news/procedure-category/:categoryId', async (req, res) => {
     const BRAVE_API_KEY = process.env.BRAVE_API_KEY;
     
     if (!BRAVE_API_KEY) {
-      console.error('BRAVE_API_KEY is not configured');
+      logger.error('BRAVE_API_KEY is not configured');
       return res.status(500).json({ error: 'News service not configured' });
     }
     
-    console.log(`Fetching news for category ${categoryId} with query: ${query}`);
+    logger.info(`Fetching news for category ${categoryId} with query: ${query}`);
     
     const response = await axios.get('https://api.search.brave.com/res/v1/news/search', {
       params: {
@@ -139,9 +141,9 @@ app.get('/api/news/procedure-category/:categoryId', async (req, res) => {
     
     res.json(transformedData);
   } catch (error) {
-    console.error('Error fetching news:', error.message);
+    logger.error('Error fetching news:', error.message);
     if (error.response) {
-      console.error('API Response:', error.response.status, error.response.data);
+      logger.error('API Response:', error.response.status, error.response.data);
     }
     res.status(500).json({ 
       error: 'Failed to fetch news', 
@@ -170,7 +172,7 @@ app.get('/api/news/top-by-procedure-categories', async (req, res) => {
         });
         return response.data;
       } catch (error) {
-        console.error(`Failed to fetch news for category ${categoryId}:`, error.message);
+        logger.error(`Failed to fetch news for category ${categoryId}:`, error.message);
         return [];
       }
     });
@@ -188,7 +190,7 @@ app.get('/api/news/top-by-procedure-categories', async (req, res) => {
     
     res.json(topNews);
   } catch (error) {
-    console.error('Error fetching top news:', error.message);
+    logger.error('Error fetching top news:', error.message);
     res.status(500).json({ 
       error: 'Failed to fetch top news',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
@@ -211,7 +213,7 @@ app.get('/api/news', async (req, res) => {
     const BRAVE_API_KEY = process.env.BRAVE_API_KEY;
     
     if (!BRAVE_API_KEY) {
-      console.error('BRAVE_API_KEY is not configured');
+      logger.error('BRAVE_API_KEY is not configured');
       return res.status(500).json({ error: 'News service not configured' });
     }
     
@@ -247,7 +249,7 @@ app.get('/api/news', async (req, res) => {
     
     res.json(transformedData);
   } catch (error) {
-    console.error('Error fetching generic news:', error.message);
+    logger.error('Error fetching generic news:', error.message);
     res.status(500).json({ 
       error: 'Failed to fetch news',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
@@ -259,5 +261,5 @@ app.get('/api/news', async (req, res) => {
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`News proxy service running on port ${port} with enhanced security`);
+  logger.info(`News proxy service running on port ${port} with enhanced security`);
 });

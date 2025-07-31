@@ -1,7 +1,7 @@
 import { supabase } from './supabaseClient';
 import { braveSearchService, BraveSearchResult } from './braveSearchService';
 import { logger } from './logging/logger';
-import { CacheEntry, SearchResult } from '../types/common';
+import { CacheEntry } from '../types/common';
 
 export interface GalaxyProcedure {
   id: string;

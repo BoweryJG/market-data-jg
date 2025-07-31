@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const readline = require('readline');
 const { Transform } = require('stream');
@@ -32,13 +34,13 @@ async function processLargeCSV(inputPath, outputPath, processRow) {
       processedCount++;
       
       if (processedCount % 1000 === 0) {
-        console.log(`Processed ${processedCount} rows...`);
+        logger.info(`Processed ${processedCount} rows...`);
       }
     }
   }
   
   writeStream.end();
-  console.log(`Total processed: ${processedCount} rows`);
+  logger.info(`Total processed: ${processedCount} rows`);
 }
 
 function parseCsvLine(line) {
@@ -80,7 +82,7 @@ if (require.main === module) {
   const outputFile = process.argv[3];
   
   if (!inputFile || !outputFile) {
-    console.log('Usage: node process-data-streaming.js <input.csv> <output.csv>');
+    logger.info('Usage: node process-data-streaming.js <input.csv> <output.csv>');
     process.exit(1);
   }
   

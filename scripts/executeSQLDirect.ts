@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import { Client } from 'pg';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -10,7 +12,7 @@ async function executeWithSupabaseAdmin() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || '';
   
   if (!supabaseServiceKey) {
-    console.log('No service key found, trying direct connection...');
+    logger.info('No service key found, trying direct connection...');
     return false;
   }
   
@@ -25,10 +27,10 @@ async function executeWithSupabaseAdmin() {
     // Test if we can access the table
     const { error } = await supabase.from('aesthetic_procedures').select('id').limit(1);
     if (error) throw error;
-    console.log('✓ Connected to Supabase');
+    logger.info('✓ Connected to Supabase');
     return true;
   } catch (error) {
-    console.error('Supabase admin method failed:', error);
+    logger.error('Supabase admin method failed:', error);
     return false;
   }
 }
@@ -40,7 +42,7 @@ async function executeWithDirectConnection() {
   const match = supabaseUrl.match(/https:\/\/([^.]+)\.supabase\.co/);
   
   if (!match) {
-    console.error('Could not parse Supabase URL');
+    logger.error('Could not parse Supabase URL');
     return false;
   }
   
@@ -49,8 +51,8 @@ async function executeWithDirectConnection() {
   const dbPassword = process.env.DATABASE_PASSWORD || process.env.POSTGRES_PASSWORD || '';
   
   if (!dbPassword) {
-    console.log('No database password found in environment variables');
-    console.log('Please set DATABASE_PASSWORD or POSTGRES_PASSWORD');
+    logger.info('No database password found in environment variables');
+    logger.info('Please set DATABASE_PASSWORD or POSTGRES_PASSWORD');
     return false;
   }
   
@@ -63,7 +65,7 @@ async function executeWithDirectConnection() {
   
   try {
     await client.connect();
-    console.log('✓ Connected directly to PostgreSQL');
+    logger.info('✓ Connected directly to PostgreSQL');
     
     // Execute the migration
     const migrationSQL = `
@@ -81,7 +83,7 @@ async function executeWithDirectConnection() {
     `;
     
     await client.query(migrationSQL);
-    console.log('✓ Migration executed successfully!');
+    logger.info('✓ Migration executed successfully!');
     
     // Verify columns were added
     const checkQuery = `
@@ -93,13 +95,13 @@ async function executeWithDirectConnection() {
     `;
     
     const result = await client.query(checkQuery);
-    console.log('\nAdded columns:');
-    result.rows.forEach(row => console.log(`  - ${row.column_name}`));
+    logger.info('\nAdded columns:');
+    result.rows.forEach(row => logger.info(`  - ${row.column_name}`));
     
     await client.end();
     return true;
   } catch (error) {
-    console.error('Direct connection failed:', error);
+    logger.error('Direct connection failed:', error);
     await client.end();
     return false;
   }
@@ -111,20 +113,20 @@ function generateConnectionInstructions() {
   const match = supabaseUrl.match(/https:\/\/([^.]+)\.supabase\.co/);
   const projectRef = match ? match[1] : 'YOUR_PROJECT_REF';
   
-  console.log('\n=== Manual Connection Instructions ===\n');
-  console.log('1. Get your database password from Supabase dashboard:');
-  console.log('   - Go to Settings > Database');
-  console.log('   - Copy the password\n');
+  logger.info('\n=== Manual Connection Instructions ===\n');
+  logger.info('1. Get your database password from Supabase dashboard:');
+  logger.info('   - Go to Settings > Database');
+  logger.info('   - Copy the password\n');
   
-  console.log('2. Connect using psql or any PostgreSQL client:');
-  console.log(`   Host: db.${projectRef}.supabase.co`);
-  console.log('   Port: 5432');
-  console.log('   Database: postgres');
-  console.log('   User: postgres');
-  console.log('   Password: [from step 1]\n');
+  logger.info('2. Connect using psql or any PostgreSQL client:');
+  logger.info(`   Host: db.${projectRef}.supabase.co`);
+  logger.info('   Port: 5432');
+  logger.info('   Database: postgres');
+  logger.info('   User: postgres');
+  logger.info('   Password: [from step 1]\n');
   
-  console.log('3. Run this SQL:');
-  console.log(`
+  logger.info('3. Run this SQL:');
+  logger.info(`
 ALTER TABLE aesthetic_procedures 
 ADD COLUMN IF NOT EXISTS realself_worth_it_rating INTEGER CHECK (realself_worth_it_rating >= 0 AND realself_worth_it_rating <= 100),
 ADD COLUMN IF NOT EXISTS realself_total_reviews INTEGER CHECK (realself_total_reviews >= 0),
@@ -139,7 +141,7 @@ CREATE INDEX IF NOT EXISTS idx_aesthetic_realself_reviews ON aesthetic_procedure
 
 // Main execution
 async function main() {
-  console.log('Attempting to add RealSelf columns to database...\n');
+  logger.info('Attempting to add RealSelf columns to database...\n');
   
   // Try Supabase admin first
   const adminSuccess = await executeWithSupabaseAdmin();

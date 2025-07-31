@@ -12,24 +12,20 @@ import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import InsightsIcon from '@mui/icons-material/Insights';
-import PodcastsIcon from '@mui/icons-material/Podcasts';
-import LoginIcon from '@mui/icons-material/Login';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import MemoryIcon from '@mui/icons-material/Memory';
+
 import { useOrbContext, useColorMode } from './OrbContextProvider';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Stack from '@mui/material/Stack';
+
 import Divider from '@mui/material/Divider';
 import GlobalAuthModal from '../components/Auth/GlobalAuthModal';
 import LogoutModal from '../components/Auth/LogoutModal';
 import { useAuth } from '../auth';
 import { useAuthModal } from '../hooks/useAuthModal';
-import DashboardSelector from '../components/Navigation/DashboardSelector';
+
 import SettingsModal from '../components/Settings/SettingsModal';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -51,7 +47,6 @@ const moreMenuItems = [
   { label: 'Careers', href: 'https://repspheres.com/careers' },
   { label: 'Legal', href: 'https://repspheres.com/legal' }
 ];
-
 
 interface NavBarProps {
   onSalesModeToggle?: () => void;
@@ -93,16 +88,16 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
   );
   
   // Handle drawer toggle
-  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent<Element> | React.MouseEvent) => {
-    if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
+  const toggleDrawer = (open: boolean) => (_event: React.KeyboardEvent<Element> | React.MouseEvent) => {
+    if (_event.type === 'keydown' && ((_event as React.KeyboardEvent).key === 'Tab' || (_event as React.KeyboardEvent).key === 'Shift')) {
       return;
     }
     setDrawerOpen(open);
   };
 
   // Handle more menu
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchorEl(event.currentTarget);
+  const handleMenuOpen = (_event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(_event.currentTarget);
   };
 
   const handleMenuClose = () => {
@@ -254,8 +249,8 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
       
       {/* More Menu Items */}
       <List>
-        {moreMenuItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ mb: 0.5 }}>
+        {moreMenuItems.map((item, _index) => (
+          <ListItem key={_index} disablePadding sx={{ mb: 0.5 }}>
             <ListItemButton
               component="a"
               href={item.href}
@@ -615,9 +610,9 @@ export default function NavBar({ onSalesModeToggle }: NavBarProps) {
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', my: 1 }} />
 
             {/* More Menu Items */}
-            {moreMenuItems.map((item, index) => (
+            {moreMenuItems.map((item, _index) => (
               <MenuItem 
-                key={index} 
+                key={_index} 
                 component="a"
                 href={item.href}
                 onClick={handleMenuClose}

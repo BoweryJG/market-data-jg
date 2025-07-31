@@ -7,30 +7,30 @@ interface DataRippleProps {
   y: number;
 }
 
-const DataRipple: React.FC<DataRippleProps> = ({ x, y }) => {
+const DataRipple: React.FC<DataRippleProps> = ({ x,  y }) => {
   const theme = useTheme();
 
   return (
     <motion.div
-      initial={{ scale: 0, opacity: 1 }}
-      animate={{ scale: 3, opacity: 0 }}
+      initial={{ scale: 0,  opacity: 1 }}
+      animate={{ scale: 3,  opacity: 0 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 2, ease: 'easeOut' }}
+      transition={{ duration: 2,  ease: 'easeOut' }}
       style={{
-        position: 'absolute',
-        left: x,
-        top: y,
-        width: 100,
-        height: 100,
-        marginLeft: -50,
-        marginTop: -50,
+        position: 'absolute', 
+        left: x, 
+        top: y, 
+        width: 100, 
+        height: 100, 
+        marginLeft: -50, 
+        marginTop: -50, 
         pointerEvents: 'none'
       }}
     >
       {/* Multiple ripple rings */}
-      {[0, 0.3, 0.6].map((delay, index) => (
+      {[0,  0.3,  0.6].map((delay, _index) => (
         <motion.div
-          key={index}
+          key={_index}
           initial={{ scale: 0, opacity: 0.8 }}
           animate={{ scale: 1, opacity: 0 }}
           transition={{ 
@@ -65,7 +65,7 @@ const DataRipple: React.FC<DataRippleProps> = ({ x, y }) => {
       />
 
       {/* Data particles */}
-      {Array.from({ length: 8 }).map((_, i) => {
+      {Array.from({ length: 8 }).map((_,  i) => {
         const angle = (i / 8) * Math.PI * 2;
         const distance = 50;
         

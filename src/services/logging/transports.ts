@@ -1,4 +1,6 @@
 import { LogLevel, LogEntry, LogTransport } from './types';
+import { logger } from '../services/logging/logger';
+
 
 export class ConsoleTransport implements LogTransport {
   private colors = {
@@ -33,24 +35,24 @@ export class ConsoleTransport implements LogTransport {
       case LogLevel.DEBUG:
       case LogLevel.INFO:
         if (entry.data) {
-          console.log(prefix, entry.message, entry.data);
+          logger.info(prefix, entry.message, entry.data);
         } else {
-          console.log(prefix, entry.message);
+          logger.info(prefix, entry.message);
         }
         break;
       case LogLevel.WARN:
         if (entry.data) {
-          console.warn(prefix, entry.message, entry.data);
+          logger.warn(prefix, entry.message, entry.data);
         } else {
-          console.warn(prefix, entry.message);
+          logger.warn(prefix, entry.message);
         }
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
         if (entry.data) {
-          console.error(prefix, entry.message, entry.data);
+          logger.error(prefix, entry.message, entry.data);
         } else {
-          console.error(prefix, entry.message);
+          logger.error(prefix, entry.message);
         }
         break;
     }

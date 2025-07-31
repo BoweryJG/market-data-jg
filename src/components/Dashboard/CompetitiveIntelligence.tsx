@@ -41,6 +41,8 @@ import {
 } from '@mui/icons-material';
 import { marketIntelligenceService, CompetitiveIntelligence } from '../../services/marketIntelligenceService';
 import { supabase } from '../../services/supabaseClient';
+import { logger } from '../services/logging/logger';
+
 
 interface CompetitiveIntelligenceProps {
   industry: 'dental' | 'aesthetic';
@@ -61,8 +63,8 @@ interface Company {
 }
 
 const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> = ({
-  industry,
-  companyId,
+  industry, 
+  companyId, 
   onCompanySelect
 }) => {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -95,7 +97,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
           }
         }
       } catch (error) {
-        console.error('Failed to load companies:', error);
+        logger.error('Failed to load companies:', error);
         setError('Failed to load companies');
       } finally {
         setLoadingCompanies(false);
@@ -116,7 +118,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
       );
       setIntelligence(intel);
     } catch (error) {
-      console.error('Failed to fetch competitive intelligence:', error);
+      logger.error('Failed to fetch competitive intelligence:', error);
       setError('Failed to fetch competitive intelligence');
     } finally {
       setLoading(false);
@@ -160,7 +162,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
   return (
     <Card>
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Box sx={{ display: 'flex',  alignItems: 'center',  mb: 3 }}>
           <BusinessIcon sx={{ mr: 1 }} color="primary" />
           <Typography variant="h6">
             Competitive Intelligence - {industry === 'dental' ? 'Dental' : 'Aesthetic'} Industry
@@ -172,8 +174,8 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
           options={companies}
           getOptionLabel={(option) => option.name}
           value={selectedCompany}
-          onChange={(event, newValue) => handleCompanySelect(newValue)}
-          renderInput={(params) => (
+          onChange={(_event,  newValue) => handleCompanySelect(newValue)}
+          renderInput={(_params) => (
             <TextField
               {...params}
               label="Select a company to analyze"
@@ -275,7 +277,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
                 </Typography>
                 <List dense>
                   {intelligence.insights.recentNews.length > 0 ? (
-                    intelligence.insights.recentNews.map((news, idx) => (
+                    intelligence.insights.recentNews.map((news,  idx) => (
                       <ListItem 
                         key={idx}
                         component="a"
@@ -312,7 +314,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
                 </Typography>
                 <List dense>
                   {intelligence.insights.productLaunches.length > 0 ? (
-                    intelligence.insights.productLaunches.map((launch, idx) => (
+                    intelligence.insights.productLaunches.map((launch,  idx) => (
                       <ListItem 
                         key={idx}
                         component="a"
@@ -348,8 +350,8 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
                   Innovations & Technology
                 </Typography>
                 {intelligence.insights.innovations.length > 0 ? (
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {intelligence.insights.innovations.map((innovation, idx) => (
+                  <Box sx={{ display: 'flex',  gap: 1,  flexWrap: 'wrap' }}>
+                    {intelligence.insights.innovations.map((innovation,  idx) => (
                       <Chip
                         key={idx}
                         label={innovation}

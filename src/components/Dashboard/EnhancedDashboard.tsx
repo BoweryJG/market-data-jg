@@ -54,10 +54,11 @@ import MarketIntelligenceSearch from '../Search/MarketIntelligenceSearch';
 
 // Import services
 import { supabase } from '../../services/supabaseClient';
-import { marketIntelligenceService, CategorySuggestion } from '../../services/marketIntelligenceService';
+import { CategorySuggestion } from '../../services/marketIntelligenceService';
 
 // Import the original Dashboard for procedure/company tables
 import OriginalDashboard from './Dashboard';
+import { logger } from '../services/logging/logger';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,7 +66,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value,  index }) => (
   <div role="tabpanel" hidden={value !== index}>
     {value === index && <Box sx={{ p: { xs: 2, md: 3 } }}>{children}</Box>}
   </div>
@@ -105,7 +106,7 @@ const EnhancedDashboard: React.FC = () => {
         setDentalProcedures(dentalData || []);
         setAestheticProcedures(aestheticData || []);
       } catch (error) {
-        console.error('Failed to load procedures:', error);
+        logger.error('Failed to load procedures:', error);
       } finally {
         setDataLoading(false);
       }
@@ -119,17 +120,17 @@ const EnhancedDashboard: React.FC = () => {
     setNewCategoriesCount(prev => prev + 1);
     
     // Optionally store in database or local state
-    console.log('New category discovered:', category);
+    logger.info('New category discovered:', category);
   };
 
   // Handle tab change
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent,  newValue: number) => {
     setTabValue(newValue);
   };
 
   // Handle industry toggle
-  const handleIndustryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIndustry(event.target.checked ? 'aesthetic' : 'dental');
+  const handleIndustryChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    setIndustry(_event.target.checked ? 'aesthetic' : 'dental');
     setSelectedCategoryId(null);
     setSelectedCompanyId(null);
   };
@@ -142,7 +143,7 @@ const EnhancedDashboard: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4,  mb: 4 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold' }}>
@@ -154,11 +155,11 @@ const EnhancedDashboard: React.FC = () => {
         
         {/* Industry Toggle and Actions */}
         <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          gap: 2, 
-          mt: 3,
+          display: 'flex',  
+          justifyContent: 'center',  
+          alignItems: 'center',  
+          gap: 2,  
+          mt: 3, 
           flexWrap: 'wrap'
         }}>
           <FormControlLabel
@@ -170,7 +171,7 @@ const EnhancedDashboard: React.FC = () => {
               />
             }
             label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ display: 'flex',  alignItems: 'center',  gap: 1 }}>
                 <Typography>Dental</Typography>
                 <Typography color="text.secondary">/</Typography>
                 <Typography>Aesthetic</Typography>
@@ -433,6 +434,5 @@ const EnhancedDashboard: React.FC = () => {
     </Container>
   );
 };
-
 
 EnhancedDashboard.displayName = 'EnhancedDashboard';export default EnhancedDashboard;

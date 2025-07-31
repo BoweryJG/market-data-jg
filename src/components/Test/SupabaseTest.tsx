@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
-import { supabase } from '../../services/supabaseClient';
+
 import { ProceduresService } from '../../services/proceduresService';
+import { logger } from '../services/logging/logger';
 
 const SupabaseTest: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState<string>('Testing...');
@@ -12,7 +13,7 @@ const SupabaseTest: React.FC = () => {
     
     try {
       // Test 1: Use new procedures service
-      console.log('🔍 Testing procedures service connection...');
+      logger.info('🔍 Testing procedures service connection...');
       const serviceTest = await ProceduresService.testConnection();
       
       // Test 2: Get actual data using the service
@@ -21,8 +22,8 @@ const SupabaseTest: React.FC = () => {
         ProceduresService.getAllAestheticProcedures(),
       ]);
 
-      console.log('🦷 Dental procedures from service:', dentalProcedures);
-      console.log('💄 Aesthetic procedures from service:', aestheticProcedures);
+      logger.info('🦷 Dental procedures from service:', dentalProcedures);
+      logger.info('💄 Aesthetic procedures from service:', aestheticProcedures);
 
       setTestResults({
         dental: { 
@@ -45,7 +46,7 @@ const SupabaseTest: React.FC = () => {
       }
 
     } catch (error) {
-      console.error('❌ Connection test failed:', error);
+      logger.error('❌ Connection test failed:', error);
       setConnectionStatus(`Test failed: ${error}`);
     }
   };
@@ -79,6 +80,5 @@ const SupabaseTest: React.FC = () => {
     </Box>
   );
 };
-
 
 SupabaseTest.displayName = 'SupabaseTest';export default SupabaseTest;

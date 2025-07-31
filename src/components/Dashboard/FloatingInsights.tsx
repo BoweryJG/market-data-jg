@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, IconButton, Chip, useTheme, alpha } from '@mui/material';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TipsAndUpdates, 
   AutoAwesome, 
@@ -28,14 +28,14 @@ interface FloatingInsightsProps {
   onDismiss?: (id: string) => void;
 }
 
-const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights, onDismiss }) => {
+const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights,  onDismiss }) => {
   const theme = useTheme();
   const [visibleInsights, setVisibleInsights] = useState<Insight[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
     // Stagger the appearance of insights
-    insights.forEach((insight, index) => {
+    insights.forEach((insight, _index) => {
       setTimeout(() => {
         setVisibleInsights(prev => [...prev, insight]);
       }, index * 200);
@@ -104,34 +104,34 @@ const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights, onDismiss
     >
       <AnimatePresence>
         {visibleInsights
-          .sort((a, b) => getPriority(a.priority).order - getPriority(b.priority).order)
-          .map((insight, index) => {
+          .sort((a,  b) => getPriority(a.priority).order - getPriority(b.priority).order)
+          .map((insight, _index) => {
             const { pulse } = getPriority(insight.priority);
             const color = getColor(insight.type);
             
             return (
               <motion.div
                 key={insight.id}
-                initial={{ x: 100, opacity: 0, scale: 0.8 }}
+                initial={{ x: 100,  opacity: 0,  scale: 0.8 }}
                 animate={{ 
-                  x: 0, 
-                  opacity: 1, 
-                  scale: hoveredId === insight.id ? 1.05 : 1,
+                  x: 0,  
+                  opacity: 1,  
+                  scale: hoveredId === insight.id ? 1.05 : 1, 
                   transition: {
-                    type: 'spring',
-                    stiffness: 300,
-                    damping: 25,
+                    type: 'spring', 
+                    stiffness: 300, 
+                    damping: 25, 
                   }
                 }}
                 exit={{ 
-                  x: 100, 
-                  opacity: 0, 
-                  scale: 0.8,
+                  x: 100,  
+                  opacity: 0,  
+                  scale: 0.8, 
                   transition: { duration: 0.2 }
                 }}
                 style={{ 
-                  marginBottom: 16,
-                  pointerEvents: 'all',
+                  marginBottom: 16, 
+                  pointerEvents: 'all', 
                 }}
                 onHoverStart={() => setHoveredId(insight.id)}
                 onHoverEnd={() => setHoveredId(null)}
@@ -354,6 +354,5 @@ const FloatingInsights: React.FC<FloatingInsightsProps> = ({ insights, onDismiss
     </Box>
   );
 };
-
 
 FloatingInsights.displayName = 'FloatingInsights';export default FloatingInsights;

@@ -84,7 +84,8 @@ import {
 } from '@mui/icons-material';
 
 import { supabase } from '../../services/supabaseClient';
-import { braveSearchService } from '../../services/braveSearchService';
+
+import { logger } from '../services/logging/logger';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -266,7 +267,7 @@ const CompactSalesDashboard: React.FC = () => {
       setCategories(enhancedCategories);
       setProcedures(enhancedProcedures);
     } catch (error) {
-      console.error('Failed to load data:', error);
+      logger.error('Failed to load data:', error);
     } finally {
       setLoading(false);
     }
@@ -845,6 +846,5 @@ const CompactSalesDashboard: React.FC = () => {
     </Container>
   );
 };
-
 
 CompactSalesDashboard.displayName = 'CompactSalesDashboard';export default CompactSalesDashboard;

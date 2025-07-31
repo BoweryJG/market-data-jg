@@ -22,14 +22,14 @@ interface CategorySphereProps {
     color: string;
   };
   isSelected: boolean;
-  onClick: (categoryId: string, event: React.MouseEvent) => void;
+  onClick: (categoryId: string, _event: React.MouseEvent) => void;
   delay: number;
 }
 
 const CategorySphere: React.FC<CategorySphereProps> = ({ 
-  category, 
-  isSelected, 
-  onClick, 
+  category,  
+  isSelected,  
+  onClick,  
   delay 
 }) => {
   const theme = useTheme();

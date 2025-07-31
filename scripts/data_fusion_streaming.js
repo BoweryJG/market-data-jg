@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const fs = require('fs');
 const csv = require('csv-parser');
 const { parse } = require('json2csv');
@@ -15,7 +17,7 @@ class StreamingDataFusion {
     const timestamp = new Date().toISOString().split('T')[0];
     const outputFile = `fused_dental_practices_NY_FL_${timestamp}.csv`;
     
-    console.log('Processing dentist data...');
+    logger.info('Processing dentist data...');
     
     // Headers for output
     const headers = [
@@ -60,13 +62,13 @@ class StreamingDataFusion {
             this.processedCount++;
             
             if (this.processedCount % 1000 === 0) {
-              console.log(`Processed ${this.processedCount} dentists...`);
+              logger.info(`Processed ${this.processedCount} dentists...`);
             }
           }
         })
         .on('end', () => {
-          console.log(`\nCompleted! Processed ${this.processedCount} NY/FL dentists`);
-          console.log(`Output saved to: ${outputFile}`);
+          logger.info(`\nCompleted! Processed ${this.processedCount} NY/FL dentists`);
+          logger.info(`Output saved to: ${outputFile}`);
           
           // Generate summary
           const summary = {
@@ -92,16 +94,16 @@ class StreamingDataFusion {
 
 // Run
 async function main() {
-  console.log('Streaming Data Fusion - Dentist Data');
-  console.log('====================================\n');
+  logger.info('Streaming Data Fusion - Dentist Data');
+  logger.info('====================================\n');
   
   const fusion = new StreamingDataFusion();
   
   try {
     await fusion.processDentistsOnly();
-    console.log('\n✅ Processing complete!');
+    logger.info('\n✅ Processing complete!');
   } catch (error) {
-    console.error('Error:', error);
+    logger.error('Error:', error);
   }
 }
 

@@ -19,7 +19,7 @@ import {
   useMediaQuery,
   SwipeableDrawer
 } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import {
   Close,
   AttachMoney,
@@ -421,6 +421,5 @@ const MetricCalculator: React.FC<MetricCalculatorProps> = ({
     </Paper>
   );
 };
-
 
 MetricCalculator.displayName = 'MetricCalculator';export default MetricCalculator;

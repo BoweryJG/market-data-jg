@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { logger } from '@/services/logging/logger';
+
 
 dotenv.config();
 
@@ -119,7 +121,7 @@ const mockRealSelfData: Record<string, RealSelfData> = {
 };
 
 async function updateRealSelfData() {
-  console.log('Starting RealSelf data update...\n');
+  logger.info('Starting RealSelf data update...\n');
   
   let successCount = 0;
   let errorCount = 0;
@@ -141,28 +143,28 @@ async function updateRealSelfData() {
           .eq('procedure_name', mapping.db_name);
         
         if (error) {
-          console.error(`Error updating ${mapping.db_name}:`, error);
+          logger.error(`Error updating ${mapping.db_name}:`, error);
           errorCount++;
         } else {
-          console.log(`✓ Updated ${mapping.db_name} - ${realSelfData.worth_it_rating}% Worth It (${realSelfData.total_reviews} reviews)`);
+          logger.info(`✓ Updated ${mapping.db_name} - ${realSelfData.worth_it_rating}% Worth It (${realSelfData.total_reviews} reviews)`);
           successCount++;
         }
       } catch (err) {
-        console.error(`Failed to update ${mapping.db_name}:`, err);
+        logger.error(`Failed to update ${mapping.db_name}:`, err);
         errorCount++;
       }
     } else {
-      console.log(`⚠️  No RealSelf data found for ${mapping.db_name}`);
+      logger.info(`⚠️  No RealSelf data found for ${mapping.db_name}`);
     }
     
     // Add small delay to avoid rate limiting
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   
-  console.log(`\n=== Update Complete ===`);
-  console.log(`Successfully updated: ${successCount} procedures`);
-  console.log(`Errors: ${errorCount}`);
-  console.log(`Total procedures with RealSelf mapping: ${procedureMappings.length}`);
+  logger.info(`\n=== Update Complete ===`);
+  logger.info(`Successfully updated: ${successCount} procedures`);
+  logger.info(`Errors: ${errorCount}`);
+  logger.info(`Total procedures with RealSelf mapping: ${procedureMappings.length}`);
   
   // Show summary of top-rated procedures
   const { data: topRated, error } = await supabase
@@ -173,9 +175,9 @@ async function updateRealSelfData() {
     .limit(10);
   
   if (topRated && topRated.length > 0) {
-    console.log('\n=== Top 10 Highest Rated Procedures ===');
+    logger.info('\n=== Top 10 Highest Rated Procedures ===');
     topRated.forEach((proc, index) => {
-      console.log(`${index + 1}. ${proc.procedure_name}: ${proc.realself_worth_it_rating}% Worth It (${proc.realself_total_reviews} reviews)`);
+      logger.info(`${index + 1}. ${proc.procedure_name}: ${proc.realself_worth_it_rating}% Worth It (${proc.realself_total_reviews} reviews)`);
     });
   }
 }

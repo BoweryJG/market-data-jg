@@ -1,3 +1,5 @@
+import { logger } from '@/services/logging/logger';
+
 const puppeteer = require('puppeteer');
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
@@ -8,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Clear existing fake data first
 async function clearFakeData() {
-  console.log('🧹 Clearing fake/generated data...');
+  logger.info('🧹 Clearing fake/generated data...');
   
   const { error } = await supabase
     .from('provider_locations')
@@ -16,15 +18,15 @@ async function clearFakeData() {
     .eq('data_source', 'generated');
     
   if (error) {
-    console.error('Error clearing fake data:', error);
+    logger.error('Error clearing fake data:', error);
   } else {
-    console.log('✅ Fake data cleared');
+    logger.info('✅ Fake data cleared');
   }
 }
 
 // Scrape Zocdoc for real providers
 async function scrapeZocdocProviders() {
-  console.log('🔍 Starting Zocdoc scraping...');
+  logger.info('🔍 Starting Zocdoc scraping...');
   
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -54,7 +56,7 @@ async function scrapeZocdocProviders() {
     for (const specialty of specialties) {
       try {
         const url = `https://www.zocdoc.com/${specialty}s/${neighborhood}-new-york-ny`;
-        console.log(`📍 Scraping ${specialty}s in ${neighborhood}...`);
+        logger.info(`📍 Scraping ${specialty}s in ${neighborhood}...`);
         
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
         await page.waitForSelector('body', { timeout: 3000 }).catch(() => {});
@@ -92,7 +94,7 @@ async function scrapeZocdocProviders() {
                 results.push(provider);
               }
             } catch (e) {
-              console.error('Error parsing provider:', e);
+              logger.error('Error parsing provider:', e);
             }
           });
           
@@ -116,10 +118,10 @@ async function scrapeZocdocProviders() {
         }));
         
         allProviders = [...allProviders, ...enrichedProviders];
-        console.log(`✅ Found ${providers.length} ${specialty}s in ${neighborhood}`);
+        logger.info(`✅ Found ${providers.length} ${specialty}s in ${neighborhood}`);
         
       } catch (error) {
-        console.error(`Error scraping ${specialty} in ${neighborhood}:`, error.message);
+        logger.error(`Error scraping ${specialty} in ${neighborhood}:`, error.message);
       }
     }
   }
@@ -157,7 +159,7 @@ function getProceduresForSpecialty(specialty) {
 
 // Scrape Google Maps for additional data
 async function scrapeGoogleMaps() {
-  console.log('🗺️ Searching Google Maps for providers...');
+  logger.info('🗺️ Searching Google Maps for providers...');
   
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -208,10 +210,10 @@ async function scrapeGoogleMaps() {
       });
       
       providers.push(...results);
-      console.log(`✅ Found ${results.length} providers for "${search}"`);
+      logger.info(`✅ Found ${results.length} providers for "${search}"`);
       
     } catch (error) {
-      console.error(`Error searching "${search}":`, error.message);
+      logger.error(`Error searching "${search}":`, error.message);
     }
   }
   
@@ -221,7 +223,7 @@ async function scrapeGoogleMaps() {
 
 // Scrape RealSelf for aesthetic providers
 async function scrapeRealSelf() {
-  console.log('💉 Scraping RealSelf for aesthetic providers...');
+  logger.info('💉 Scraping RealSelf for aesthetic providers...');
   
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -267,10 +269,10 @@ async function scrapeRealSelf() {
     });
     
     providers.push(...results);
-    console.log(`✅ Found ${results.length} aesthetic providers on RealSelf`);
+    logger.info(`✅ Found ${results.length} aesthetic providers on RealSelf`);
     
   } catch (error) {
-    console.error('Error scraping RealSelf:', error.message);
+    logger.error('Error scraping RealSelf:', error.message);
   }
   
   await browser.close();
@@ -279,7 +281,7 @@ async function scrapeRealSelf() {
 
 // Save providers to database
 async function saveProviders(providers) {
-  console.log(`💾 Saving ${providers.length} providers to database...`);
+  logger.info(`💾 Saving ${providers.length} providers to database...`);
   
   let savedCount = 0;
   let errorCount = 0;
@@ -309,7 +311,7 @@ async function saveProviders(providers) {
           .insert(provider);
         
         if (error) {
-          console.error(`Error saving ${provider.provider_name}:`, error.message);
+          logger.error(`Error saving ${provider.provider_name}:`, error.message);
           errorCount++;
         } else {
           savedCount++;
@@ -320,12 +322,12 @@ async function saveProviders(providers) {
     }
   }
   
-  console.log(`✅ Saved ${savedCount} new providers (${errorCount} errors)`);
+  logger.info(`✅ Saved ${savedCount} new providers (${errorCount} errors)`);
 }
 
 // Main execution
 async function main() {
-  console.log('🚀 Starting comprehensive provider data collection...\n');
+  logger.info('🚀 Starting comprehensive provider data collection...\n');
   
   // Clear fake data
   await clearFakeData();
@@ -350,8 +352,8 @@ async function main() {
     .from('provider_locations')
     .select('*', { count: 'exact', head: true });
   
-  console.log(`\n📊 Final provider count: ${count}`);
-  console.log('✅ Data collection complete!');
+  logger.info(`\n📊 Final provider count: ${count}`);
+  logger.info('✅ Data collection complete!');
 }
 
 // Run the scraper
