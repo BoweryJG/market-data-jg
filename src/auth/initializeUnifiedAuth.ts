@@ -8,14 +8,19 @@ export const initializeUnifiedAuth = () => {
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Missing required environment variables for unified auth:', {
       hasUrl: !!supabaseUrl,
-      hasKey: !!supabaseAnonKey
+      hasKey: !!supabaseAnonKey,
+      env: import.meta.env
     });
-    // Don't throw error, just skip initialization
+    // Don't initialize if missing, but don't break the app
     return;
   }
 
-  initializeSupabase({
-    supabaseUrl,
-    supabaseAnonKey
-  });
+  try {
+    initializeSupabase({
+      supabaseUrl,
+      supabaseAnonKey
+    });
+  } catch (error) {
+    console.error('Failed to initialize unified auth:', error);
+  }
 };

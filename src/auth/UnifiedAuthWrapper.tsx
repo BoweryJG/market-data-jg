@@ -6,6 +6,15 @@ interface UnifiedAuthWrapperProps {
 }
 
 export const UnifiedAuthWrapper: React.FC<UnifiedAuthWrapperProps> = ({ children }) => {
+  // Check if Supabase is configured
+  const hasSupabaseConfig = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
+  
+  // If no Supabase config, render children without auth provider
+  if (!hasSupabaseConfig) {
+    console.warn('UnifiedAuthWrapper: Supabase not configured, rendering without auth');
+    return <>{children}</>;
+  }
+  
   // UnifiedAuthProvider uses the global supabase instance internally
   return (
     <UnifiedAuthProvider>
