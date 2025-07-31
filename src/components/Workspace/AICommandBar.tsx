@@ -17,7 +17,8 @@ import {
   Stack,
   Button,
   Tooltip,
-  Alert
+  Alert,
+  LinearProgress
 } from '@mui/material';
 import {
   Search,
@@ -32,10 +33,13 @@ import {
   Send,
   Clear,
   History,
-  Lightbulb
+  Lightbulb,
+  Timer
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as braveSearchService from '../../services/braveSearchService';
+import { useAgentTimeLimit, useRepXTier } from '../../unified-auth';
+import { RepXTier, TIER_NAMES } from '../../unified-auth/src/constants';
 
 import { supabase } from '../../services/supabaseClient';
 import { logger } from '../../services/logging/logger';
@@ -62,7 +66,16 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose })
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recentQueries, setRecentQueries] = useState<string[]>([]);
+  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
+  const [timeUsed, setTimeUsed] = useState(0);
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const [queriesCount, setQueriesCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Unified auth hooks
+  const { tier } = useRepXTier();
+  const { timeLimit, isUnlimited } = useAgentTimeLimit();
 
   // Load recent queries from localStorage
   useEffect(() => {
@@ -70,10 +83,47 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose })
     if (saved) {
       setRecentQueries(JSON.parse(saved));
     }
+    
+    // Start session timer on mount
+    setSessionStartTime(Date.now());
   }, []);
+  
+  // Update timer every second
+  useEffect(() => {
+    if (sessionStartTime && !isUnlimited && !sessionExpired) {
+      timerRef.current = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+        setTimeUsed(elapsed);
+        
+        if (elapsed >= timeLimit) {
+          setSessionExpired(true);
+          clearInterval(timerRef.current!);
+        }
+      }, 1000);
+      
+      return () => {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+      };
+    }
+  }, [sessionStartTime, timeLimit, isUnlimited, sessionExpired]);
+  
+  const formatTime = (seconds: number) => {
+    if (seconds < 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+  
+  const getRemainingTime = () => {
+    if (isUnlimited) return null;
+    return Math.max(0, timeLimit - timeUsed);
+  };
 
   // Natural language query parser
   const parseQuery = async (input: string) => {
+    if (sessionExpired) return [];
     const lower = input.toLowerCase();
     const queryResults: CommandResult[] = [];
 
@@ -357,7 +407,10 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose })
 
   // Handle search
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!query.trim() || sessionExpired) return;
+    
+    // Increment query count
+    setQueriesCount(prev => prev + 1);
 
     setLoading(true);
     try {
@@ -411,6 +464,64 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose })
         overflow: 'hidden'
       }}
     >
+      {/* Timer Display */}
+      {!isUnlimited && sessionStartTime && (
+        <Box sx={{ 
+          p: 1, 
+          borderBottom: 1, 
+          borderColor: 'divider',
+          backgroundColor: sessionExpired ? 'error.main' : getRemainingTime()! < 60 ? 'warning.main' : 'background.paper',
+          color: sessionExpired ? 'error.contrastText' : getRemainingTime()! < 60 ? 'warning.contrastText' : 'text.primary'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Timer sx={{ fontSize: '1.2rem' }} />
+              <Typography variant="body2" fontWeight="medium">
+                {formatTime(getRemainingTime()!)} remaining
+              </Typography>
+              <Chip 
+                label={TIER_NAMES[tier]} 
+                size="small" 
+                sx={{ ml: 1 }}
+              />
+            </Box>
+            {getRemainingTime()! < 300 && getRemainingTime()! > 0 && (
+              <LinearProgress 
+                variant="determinate" 
+                value={(getRemainingTime()! / timeLimit) * 100}
+                sx={{ 
+                  width: 100, 
+                  height: 4,
+                  backgroundColor: 'rgba(255,255,255,0.3)',
+                  '& .MuiLinearProgress-bar': {
+                    backgroundColor: getRemainingTime()! < 60 ? 'error.light' : 'warning.light'
+                  }
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+      )}
+      
+      {/* Session Expired Alert */}
+      {sessionExpired && (
+        <Alert 
+          severity="warning" 
+          sx={{ m: 2 }}
+          action={
+            <Button 
+              size="small" 
+              color="inherit"
+              onClick={() => window.location.href = '/account'}
+            >
+              Upgrade
+            </Button>
+          }
+        >
+          Your {TIER_NAMES[tier]} AI session has ended ({queriesCount} queries used). Upgrade for longer sessions.
+        </Alert>
+      )}
+
       {/* Search Input */}
       <Box sx={{ p: 3,  borderBottom: 1,  borderColor: 'divider' }}>
         <Box sx={{ display: 'flex',  alignItems: 'center',  gap: 2 }}>
@@ -434,7 +545,7 @@ const AICommandBar: React.FC<AICommandBarProps> = ({ onResultSelect,  onClose })
                   <IconButton 
                     color="primary" 
                     onClick={handleSearch}
-                    disabled={!query.trim() || loading}
+                    disabled={!query.trim() || loading || sessionExpired}
                   >
                     {loading ? <CircularProgress size={24} /> : <Send />}
                   </IconButton>
