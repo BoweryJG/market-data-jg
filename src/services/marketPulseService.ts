@@ -116,7 +116,7 @@ class MarketPulseService {
         },
         timestamp: new Date().toISOString()
       };
-    } catch (error) {
+    } catch {
       // Return mock data as fallback
       return this.getMockMarketData();
     }
@@ -146,16 +146,8 @@ class MarketPulseService {
     };
   }
 
-  calculateConvergenceIndex(marketData: MarketData): number {
+  calculateConvergenceIndex(_marketData: MarketData): number {
     // Calculate overlap between dental and aesthetic procedures
-    const dentalProcedures = marketData?.procedures?.filter((p: ProcedureData) => 
-      p.industry === 'dental' || p.industry === 'both'
-    ) || [];
-    
-    const aestheticProcedures = marketData?.procedures?.filter((p: ProcedureData) => 
-      p.industry === 'aesthetic' || p.industry === 'both'
-    ) || [];
-
     const convergenceProcedures = [
       'Smile Makeover',
       'Veneers',
@@ -181,7 +173,6 @@ class MarketPulseService {
 
   calculateOpportunityGap(marketData: MarketData): OpportunityGap {
     const floridaData = (marketData as any)?.floridaData;
-    const dentalShortage = floridaData?.dental?.dental_workforce?.shortage_vs_national_percent || 14.1;
     const providerDensity = floridaData?.dental?.dental_workforce?.dentists_per_100k_population || 51.88;
     const nationalAvg = floridaData?.dental?.dental_workforce?.national_avg_per_100k || 60.4;
 
@@ -227,7 +218,7 @@ class MarketPulseService {
     const baseRPM = totalRevenue / totalTime;
     
     // Apply market factors
-    const marketGrowth = marketData?.averageGrowthRate || 10;
+    const marketGrowth = _marketData?.averageGrowthRate || 10;
     const demandMultiplier = 1 + (marketGrowth / 100);
     
     return Math.round(baseRPM * demandMultiplier);
@@ -241,7 +232,7 @@ class MarketPulseService {
     const avgDentalSpend = 1200;
     const avgAestheticSpend = 2800;
     
-    const migrationRevenue = annualMigration * (avgDentalSpend + avgAestheticSpend * 0.3);
+    const migrationRevenue = annualMigration * (avgDentalSpend + avgAestheticSpend * 0.3) * avgSpendIncrease;
     const impact = Math.round((migrationRevenue / 1000000) / 10); // Percentage impact
     
     return {
@@ -252,7 +243,7 @@ class MarketPulseService {
     };
   }
 
-  private calculateProviderExpansionRate(marketData: MarketData): number {
+  private calculateProviderExpansionRate(_marketData: MarketData): number {
     // Simplified calculation based on DSO growth and new practices
     const dsoGrowth = 8.5; // Annual DSO expansion rate
     const independentGrowth = 2.3; // Independent practice growth
@@ -260,7 +251,7 @@ class MarketPulseService {
     return weightedGrowth;
   }
 
-  private calculateTechAdoptionRate(marketData: MarketData): number {
+  private calculateTechAdoptionRate(_marketData: MarketData): number {
     // Technology adoption indicators
     const digitalAdoption = 65; // % practices with digital systems
     const aiAdoption = 15; // % using AI tools
@@ -269,7 +260,7 @@ class MarketPulseService {
     return (digitalAdoption + aiAdoption * 2 + telehealthAdoption) / 4;
   }
 
-  private getFloridaMetrics(industry: string) {
+  private getFloridaMetrics(_industry: string) {
     return {
       dental: this.floridaData.dental.market_data,
       aesthetic: this.floridaData.aesthetic.market_data

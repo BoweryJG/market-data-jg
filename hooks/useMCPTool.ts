@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { SearchResult } from '../src/types/common';
 
 interface MCPSearchResult {
   title: string;
