@@ -136,7 +136,7 @@ export async function handleCrossDomainRedirect(supabaseClient: any): Promise<bo
  * Setup cross-domain auth message listener with Supabase client
  */
 export function setupCrossDomainAuthListener(supabaseClient: any) {
-  window.addEventListener('message',  async (_event) => {
+  window.addEventListener('message',  async (event) => {
     // Validate origin
     if (!isValidRepSpheresUrl(event.origin)) {
       return;

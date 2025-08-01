@@ -106,7 +106,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories,  selected
               }}
               transition={{ 
                 duration: 1.5, 
-                delay: index * 0.05,
+                delay: _index * 0.05,
                 ease: 'easeInOut'
               }}
             />

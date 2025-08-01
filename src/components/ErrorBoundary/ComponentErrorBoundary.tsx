@@ -190,7 +190,7 @@ export function withComponentErrorBoundary<P extends object>(
 ) {
   const WrappedComponent = (_props: P) => (
     <ComponentErrorBoundary {...errorBoundaryProps}>
-      <Component {...props} />
+      <Component {..._props} />
     </ComponentErrorBoundary>
   );
 

@@ -72,7 +72,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children,  value, _index,  ...other }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children,  value, index,  ...other }) => {
   return (
     <div
       role="tabpanel"
@@ -327,7 +327,7 @@ const AestheticTools: React.FC = () => {
                     View Profile
                   </Button>
                 </ListItem>
-                {index < influencers.length - 1 && <Divider />}
+                {_index < influencers.length - 1 && <Divider />}
               </React.Fragment>
             ))}
           </List>

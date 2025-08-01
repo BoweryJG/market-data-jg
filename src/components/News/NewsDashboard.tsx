@@ -19,7 +19,7 @@ interface TabPanelProps {
 }
 
 function TabPanel(_props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = _props;
 
   return (
     <div
