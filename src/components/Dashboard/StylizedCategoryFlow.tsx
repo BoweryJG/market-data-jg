@@ -117,6 +117,7 @@ import {
 import { supabase } from '../../services/supabaseClient';
 
 import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -367,7 +368,7 @@ const StylizedCategoryFlow: React.FC<{ industry: 'dental' | 'aesthetic' }> = ({ 
 
       setCategories(rootCategories);
     } catch (error) {
-      logger.error('Failed to load categories:', error);
+      logger.error('Failed to load categories:', errorToLogData(error));
     } finally {
       setLoading(false);
     }

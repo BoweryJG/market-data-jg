@@ -51,6 +51,7 @@ import {
 } from 'lucide-react';
 import { providerDataService, ProviderLocation, MarketTerritory, ProviderEquipment } from '../../services/providerDataService';
 import { logger } from '../../services/logging/logger';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface TabPanelProps {
@@ -106,7 +107,7 @@ export default function LocalMarketIntelligence() {
         setSelectedTerritory(data[0].name);
       }
     } catch (error) {
-      logger.error('Error loading territories:', error);
+      logger.error('Error loading territories:', errorToLogData(error));
     } finally {
       setLoading(false);
     }
@@ -120,7 +121,7 @@ export default function LocalMarketIntelligence() {
       const data = await providerDataService.getProvidersByTerritory(territory.city, territory.state);
       setProviders(data);
     } catch (error) {
-      logger.error('Error loading providers:', error);
+      logger.error('Error loading providers:', errorToLogData(error));
     }
   };
 

@@ -239,7 +239,7 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
                   </TableCell>
                   <TableCell>{procedure.category}</TableCell>
                   <TableCell>
-                    {index < 5 ? (
+                    {_index < 5 ? (
                       <Typography variant="body2">
                         ${procedure.price}
                       </Typography>
@@ -250,7 +250,7 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    {index < 5 ? (
+                    {_index < 5 ? (
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <TrendingUp color="success" fontSize="small" />
                         <Typography variant="body2" color="success.main">
@@ -264,7 +264,7 @@ export const PublicMarketDashboard: React.FC<PublicMarketDashboardProps> = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    {index < 5 ? (
+                    {_index < 5 ? (
                       <Typography variant="body2">
                         {procedure.volume}
                       </Typography>

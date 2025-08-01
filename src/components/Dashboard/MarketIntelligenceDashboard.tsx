@@ -37,6 +37,7 @@ import { supabase } from '../../services/supabaseClient';
 import { EnhancedProcedure, formatMarketSize, getMaturityColor } from '../../types/marketIntelligence';
 import EnhancedProcedureCard from '../procedures/EnhancedProcedureCard';
 import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface MarketIntelligenceDashboardProps {
@@ -138,7 +139,7 @@ export const MarketIntelligenceDashboard: React.FC<MarketIntelligenceDashboardPr
 
       setProcedures(allProcedures);
     } catch (error) {
-      logger.error('Error fetching procedures:', error);
+      logger.error('Error fetching procedures:', errorToLogData(error));
     } finally {
       setLoading(false);
     }

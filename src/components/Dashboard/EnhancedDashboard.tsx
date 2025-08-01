@@ -59,6 +59,7 @@ import { CategorySuggestion } from '../../services/marketIntelligenceService';
 // Import the original Dashboard for procedure/company tables
 import OriginalDashboard from './Dashboard';
 import { logger } from '../../services/logging/logger';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -106,7 +107,7 @@ const EnhancedDashboard: React.FC = () => {
         setDentalProcedures(dentalData || []);
         setAestheticProcedures(aestheticData || []);
       } catch (error) {
-        logger.error('Failed to load procedures:', error);
+        logger.error('Failed to load procedures:', errorToLogData(error));
       } finally {
         setDataLoading(false);
       }
@@ -120,7 +121,7 @@ const EnhancedDashboard: React.FC = () => {
     setNewCategoriesCount(prev => prev + 1);
     
     // Optionally store in database or local state
-    logger.info('New category discovered:', category);
+    logger.info('New category discovered:', toLogData({ category }));
   };
 
   // Handle tab change

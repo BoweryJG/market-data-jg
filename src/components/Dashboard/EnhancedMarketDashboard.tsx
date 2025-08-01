@@ -84,6 +84,7 @@ import { supabase } from '../../services/supabaseClient';
 import { CategorySuggestion } from '../../services/marketIntelligenceService';
 import { braveSearchService } from '../../services/braveSearchService';
 import { logger } from '../../services/logging/logger';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -258,7 +259,7 @@ const EnhancedMarketDashboard: React.FC = () => {
         await loadRealTimeInsights();
         
       } catch (error) {
-        logger.error('Failed to load enhanced data:', error);
+        logger.error('Failed to load enhanced data:', errorToLogData(error));
       } finally {
         setDataLoading(false);
       }
@@ -285,7 +286,7 @@ const EnhancedMarketDashboard: React.FC = () => {
             last_updated: new Date().toISOString(),
           };
         } catch (error) {
-          logger.error(`Failed to enhance procedure ${procedure.name}:`, error);
+          logger.error(`Failed to enhance procedure ${procedure.name}:`, errorToLogData(error));
           return procedure;
         }
       })
@@ -338,7 +339,7 @@ const EnhancedMarketDashboard: React.FC = () => {
             const results = await braveSearchService.search(query, 10);
             return { query, results, timestamp: new Date() };
           } catch (error) {
-            logger.error(`Failed to load insights for ${query}:`, error);
+            logger.error(`Failed to load insights for ${query}:`, errorToLogData(error));
             return { query, results: [], timestamp: new Date() };
           }
         })
@@ -354,7 +355,7 @@ const EnhancedMarketDashboard: React.FC = () => {
       });
       
     } catch (error) {
-      logger.error('Failed to load real-time insights:', error);
+      logger.error('Failed to load real-time insights:', errorToLogData(error));
     }
   };
 
@@ -407,7 +408,7 @@ const EnhancedMarketDashboard: React.FC = () => {
   // Handle new category discoveries
   const handleNewCategoryDiscovered = (category: CategorySuggestion) => {
     setNewCategoriesCount(prev => prev + 1);
-    logger.info('New category discovered:', category);
+    logger.info('New category discovered:', toLogData({ category }));
   };
 
   // Handle tab change

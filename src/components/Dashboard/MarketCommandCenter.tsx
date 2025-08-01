@@ -55,6 +55,7 @@ import { motion } from 'framer-motion';
 import { comprehensiveDataService, ComprehensiveMarketData, TableInfo } from '../../services/comprehensiveDataService';
 import { getCategoryIconConfig } from './CategoryIcons';
 import { logger } from '../../services/logging/logger';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 
 // Luxury automotive-style gauge component with physics-based needle and chrome rim - v2.0 ENHANCED
 const CockpitGauge: React.FC<{
@@ -176,7 +177,7 @@ const CockpitGauge: React.FC<{
             logger.info(`🔄 Live update for ${label} (${industry}): ${industrySpecificValue.toLocaleString()}`);
           }
         } catch (error) {
-          logger.error(`❌ Failed to fetch live gauge data for ${label}:`, error);
+          logger.error(`❌ Failed to fetch live gauge data for ${label}:`, errorToLogData(error));
           // Keep current value on error
           setLiveValue(value);
         }
@@ -960,7 +961,7 @@ const MarketCommandCenter: React.FC = () => {
       }
 
     } catch (error) {
-      logger.error('Error fetching comprehensive data:', error);
+      logger.error('Error fetching comprehensive data:', errorToLogData(error));
     } finally {
       setLoading(false);
     }
@@ -1681,7 +1682,7 @@ const MarketCommandCenter: React.FC = () => {
                       // Debug only once to avoid spam
                       if (procedureCount === 0 && marketData.procedures.length > 0 && category.name === 'Imaging') {
                         logger.info('🔍 CATEGORY MATCHING ANALYSIS:');
-                        logger.info('Looking for:', category.name, 'ID:', category.id, 'Parent ID:', category.parent_id);
+                        logger.info('Looking for:', toLogData({ name: category.name, id: category.id, parentId: category.parent_id }));
                         
                         // Check if any procedures match this category
                         const matchingProcedures = marketData.procedures.filter(p => 
@@ -1689,17 +1690,17 @@ const MarketCommandCenter: React.FC = () => {
                           p.category === category.name ||
                           (p.hierarchy_category && p.hierarchy_category.id === category.id)
                         );
-                        logger.info('Procedures directly matching this category:', matchingProcedures.length);
+                        logger.info('Procedures directly matching this category:', toLogData({ count: matchingProcedures.length }));
                         
                         // Check if procedures are linked to parent category instead
                         const parentMatches = marketData.procedures.filter(p => 
                           p.category_hierarchy_id === category.parent_id
                         );
-                        logger.info('Procedures matching parent category ID', category.parent_id + ':', parentMatches.length);
+                        logger.info('Procedures matching parent category ID', toLogData({ parentId: category.parent_id, count: parentMatches.length }));
                         
                         // Show unique category_hierarchy_ids in procedures
                         const uniqueCategoryIds = [...new Set(marketData.procedures.map(p => p.category_hierarchy_id))];
-                        logger.info('All unique category_hierarchy_ids in procedures:',  uniqueCategoryIds.sort((a,  b) => a - b));
+                        logger.info('All unique category_hierarchy_ids in procedures:', toLogData({ ids: uniqueCategoryIds.sort((a,  b) => a - b) }));
                       }
                       
                       return (
@@ -1810,7 +1811,7 @@ const MarketCommandCenter: React.FC = () => {
                     color="primary"
                     variant="dot"
                   >
-                    <FilterAlt sx={{ fontSize: 20 }} />
+                    <FilterList sx={{ fontSize: 20 }} />
                   </Badge>
                 </IconButton>
               </Tooltip>
@@ -2089,13 +2090,13 @@ const MarketCommandCenter: React.FC = () => {
                 
                 return (
                 <TableRow
-                  key={`procedure-${procedure.id || index}-${procedure.procedure_name || 'unknown'}`}
+                  key={`procedure-${procedure.id || _index}-${procedure.procedure_name || 'unknown'}`}
                   hover
                   onClick={() => {
                     logger.info('Procedure clicked:', procedure);
                     setSelectedProcedure(procedure);
                     setProcedureModalOpen(true);
-                    logger.info('Modal state set - selectedProcedure:', procedure, 'modalOpen:', true);
+                    logger.info('Modal state set - selectedProcedure:', toLogData({ procedure, modalOpen: true }));
                   }}
                   sx={{
                     cursor: 'pointer',

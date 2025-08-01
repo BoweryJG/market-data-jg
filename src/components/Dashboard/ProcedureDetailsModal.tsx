@@ -52,6 +52,7 @@ import {
 import { search as braveSearch } from '../../services/braveSearchService';
 import { procedureEnhancementService, EnhancedProcedureData } from '../../services/procedureEnhancementService';
 import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface ProcedureDetailsModalProps {
@@ -126,7 +127,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       
       setEnhancedData(enhanced);
     } catch (err) {
-      logger.error('Error fetching enhanced data:', err);
+      logger.error('Error fetching enhanced data:', errorToLogData(err));
     } finally {
       setEnhancedLoading(false);
     }
@@ -145,7 +146,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       const results = await braveSearch(searchQuery, 10);
       setSearchResults(results);
     } catch (err) {
-      logger.error('Error fetching procedure insights:', err);
+      logger.error('Error fetching procedure insights:', errorToLogData(err));
       setError('Failed to fetch latest insights. Please try again.');
     } finally {
       setLoading(false);
@@ -200,7 +201,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
       setFullReportData(fullReport);
       setShowFullReport(true);
     } catch (err) {
-      logger.error('Error generating full report:', err);
+      logger.error('Error generating full report:', errorToLogData(err));
       setError('Failed to generate full report. Please try again.');
     } finally {
       setGeneratingReport(false);
@@ -847,7 +848,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                   <Typography variant="h6" gutterBottom>Market Drivers</Typography>
                   <List dense>
                     {fullReportData.marketAnalysis.marketDrivers.map((driver: string, _index: number) => (
-                      <ListItem key={index}>
+                      <ListItem key={_index}>
                         <ListItemIcon>
                           <TrendingUpIcon sx={{ color: '#06B6D4' }} />
                         </ListItemIcon>
@@ -884,7 +885,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 <Box>
                   <Typography variant="h6" gutterBottom>Recent Studies</Typography>
                   {fullReportData.clinicalEvidence.studies.map((study: any, _index: number) => (
-                    <Box key={index} sx={{ mb: 2 }}>
+                    <Box key={_index} sx={{ mb: 2 }}>
                       <Typography variant="subtitle1" fontWeight="bold">
                         {study.title}
                       </Typography>
@@ -940,7 +941,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                   <Typography variant="h6" gutterBottom>Pricing Factors</Typography>
                   <List dense>
                     {fullReportData.costAnalysis.factors.map((factor: string, _index: number) => (
-                      <ListItem key={index}>
+                      <ListItem key={_index}>
                         <ListItemIcon>
                           <MoneyIcon sx={{ color: '#06B6D4' }} />
                         </ListItemIcon>
@@ -963,7 +964,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
                 Latest Innovations & Technology
               </Typography>
               {fullReportData.innovations.map((innovation: any, _index: number) => (
-                <Box key={index} sx={{ mb: 2 }}>
+                <Box key={_index} sx={{ mb: 2 }}>
                   <Typography variant="h6">{innovation.title}</Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)', mb: 1 }}>
                     {innovation.description}
@@ -987,7 +988,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
               </Typography>
               <List>
                 {fullReportData.recommendations.map((rec: string, _index: number) => (
-                  <ListItem key={index}>
+                  <ListItem key={_index}>
                     <ListItemIcon>
                       <CheckIcon sx={{ color: '#10B981' }} />
                     </ListItemIcon>
@@ -1245,7 +1246,7 @@ const ProcedureDetailsModal: React.FC<ProcedureDetailsModalProps> = ({
           ) : searchResults && searchResults.web && searchResults.web.results ? (
             <List>
               {searchResults.web.results.map((result: any, _index: number) => (
-                <Paper key={index} elevation={0} sx={{ 
+                <Paper key={_index} elevation={0} sx={{ 
                   mb: 2, 
                   p: 2, 
                   backgroundColor: 'rgba(30, 41, 59, 0.8)', 

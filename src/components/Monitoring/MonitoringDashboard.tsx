@@ -38,7 +38,7 @@ import {
 } from '@mui/icons-material';
 import { logger, LogLevel, LogEntry } from '../../services/logging/logger';
 import { apiInterceptor, RequestMetrics } from '../../services/api/interceptor';
-import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface HealthStatus {
@@ -91,7 +91,7 @@ export const MonitoringDashboard: React.FC = () => {
       const data = await response.json();
       setHealthStatus(data);
     } catch (error) {
-      logger.error('Failed to load health status:', error);
+      logger.error('Failed to load health status:', errorToLogData(error));
     }
   };
 
