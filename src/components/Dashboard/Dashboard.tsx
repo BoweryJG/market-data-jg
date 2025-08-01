@@ -5,6 +5,7 @@ import CompanyDetailsModal from './CompanyDetailsModal';
 import { logger } from '../../services/logging/logger';
 import { handleUnknownError } from '../../types/errors';
 import { SocialLinks } from '../../types/common';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 import { 
   Container,
   Grid,
@@ -301,7 +302,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Dental companies response received', { count: dentalData?.length || 0, hasError: !!dentalError });
+      logger.debug('Dental companies response received', toLogData({ count: dentalData?.length || 0, hasError: !!dentalError }));
       
       if (dentalError) throw dentalError;
       setDentalCompanies(dentalData || []);
@@ -311,13 +312,13 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Aesthetic companies response received', { count: aestheticData?.length || 0, hasError: !!aestheticError });
+      logger.debug('Aesthetic companies response received', toLogData({ count: aestheticData?.length || 0, hasError: !!aestheticError }));
       
       if (aestheticError) throw aestheticError;
       setAestheticCompanies(aestheticData || []);
     } catch (err: unknown) {
       const error = handleUnknownError(err);
-      logger.error('Companies fetch error', { error: getErrorMessage(err) });
+      logger.error('Companies fetch error', errorToLogData(err));
       setError(`Failed to load companies: ${getErrorMessage(err)}`);
     } finally {
       setCompaniesLoading(false);
@@ -333,7 +334,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Dental categories response received', { count: dentalCatData?.length || 0, hasError: !!dentalCatError });
+      logger.debug('Dental categories response received', toLogData({ count: dentalCatData?.length || 0, hasError: !!dentalCatError }));
       
       if (dentalCatError) throw dentalCatError;
       setDentalCategories(dentalCatData || []);
@@ -343,13 +344,13 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Aesthetic categories response received', { count: aestheticCatData?.length || 0, hasError: !!aestheticCatError });
+      logger.debug('Aesthetic categories response received', toLogData({ count: aestheticCatData?.length || 0, hasError: !!aestheticCatError }));
       
       if (aestheticCatError) throw aestheticCatError;
       setAestheticCategories(aestheticCatData || []);
     } catch (err: unknown) {
       const error = handleUnknownError(err);
-      logger.error('Categories fetch error', { error: getErrorMessage(err) });
+      logger.error('Categories fetch error', errorToLogData(err));
       setError(`Failed to load categories: ${getErrorMessage(err)}`);
     } finally {
       setCategoriesLoading(false);
@@ -365,7 +366,7 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Dental procedures response received', { count: dentalData?.length || 0, hasError: !!dentalError });
+      logger.debug('Dental procedures response received', toLogData({ count: dentalData?.length || 0, hasError: !!dentalError }));
       
       if (dentalError) throw dentalError;
       setDentalProcedures(dentalData || []);
@@ -375,13 +376,13 @@ const Dashboard: React.FC = () => {
         .select('*')
         .order('name', { ascending: true });
       
-      logger.debug('Aesthetic procedures response received', { count: aestheticData?.length || 0, hasError: !!aestheticError });
+      logger.debug('Aesthetic procedures response received', toLogData({ count: aestheticData?.length || 0, hasError: !!aestheticError }));
       
       if (aestheticError) throw aestheticError;
       setAestheticProcedures(aestheticData || []);
     } catch (err: unknown) {
       const error = handleUnknownError(err);
-      logger.error('Procedures fetch error', { error: getErrorMessage(err) });
+      logger.error('Procedures fetch error', errorToLogData(err));
       setError(`Failed to load procedures: ${getErrorMessage(err)}`);
     } finally {
       setProceduresLoading(false);
@@ -392,23 +393,23 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        logger.debug('Starting data fetch');
+        logger.debug('Starting data fetch', undefined);
         await Promise.all([
           fetchProcedures(),
           fetchCategories(),
           fetchCompanies()
         ]);
-        logger.info('Data fetch completed', {
+        logger.info('Data fetch completed', toLogData({
           dentalProcedures: dentalProcedures.length,
           aestheticProcedures: aestheticProcedures.length,
           dentalCategories: dentalCategories.length,
           aestheticCategories: aestheticCategories.length,
           dentalCompanies: dentalCompanies.length,
           aestheticCompanies: aestheticCompanies.length
-        });
+        }));
       } catch (err: unknown) {
       const error = handleUnknownError(err);
-        logger.error('Data fetch error', { error: getErrorMessage(err) });
+        logger.error('Data fetch error', errorToLogData(err));
         setError(`Failed to load data: ${getErrorMessage(err)}`);
       }
     };

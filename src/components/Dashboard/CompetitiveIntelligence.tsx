@@ -42,6 +42,7 @@ import {
 import { marketIntelligenceService, CompetitiveIntelligence } from '../../services/marketIntelligenceService';
 import { supabase } from '../../services/supabaseClient';
 import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface CompetitiveIntelligenceProps {
@@ -97,7 +98,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
           }
         }
       } catch (error) {
-        logger.error('Failed to load companies:', { error });
+        logger.error('Failed to load companies:', errorToLogData(error));
         setError('Failed to load companies');
       } finally {
         setLoadingCompanies(false);
@@ -118,7 +119,7 @@ const CompetitiveIntelligenceComponent: React.FC<CompetitiveIntelligenceProps> =
       );
       setIntelligence(intel);
     } catch (error) {
-      logger.error('Failed to fetch competitive intelligence:', { error });
+      logger.error('Failed to fetch competitive intelligence:', errorToLogData(error));
       setError('Failed to fetch competitive intelligence');
     } finally {
       setLoading(false);

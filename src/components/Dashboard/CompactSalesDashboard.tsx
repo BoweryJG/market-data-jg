@@ -86,6 +86,7 @@ import {
 import { supabase } from '../../services/supabaseClient';
 
 import { logger } from '../../services/logging/logger';
+import { errorToLogData } from '../../utils/loggerHelpers';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -267,7 +268,7 @@ const CompactSalesDashboard: React.FC = () => {
       setCategories(enhancedCategories);
       setProcedures(enhancedProcedures);
     } catch (error) {
-      logger.error('Failed to load data:', { error });
+      logger.error('Failed to load data:', errorToLogData(error));
     } finally {
       setLoading(false);
     }

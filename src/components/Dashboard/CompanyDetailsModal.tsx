@@ -46,6 +46,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { logger } from '../../services/logging/logger';
+import { toLogData, errorToLogData } from '../../utils/loggerHelpers';
 
 
 interface CompanyDetailsModalProps {
@@ -105,7 +106,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
         results: response.data.results || response.data.web?.results || []
       });
     } catch (err) {
-      logger.error('Error fetching company insights:', { error: err });
+      logger.error('Error fetching company insights:', errorToLogData(err));
       setError('Failed to fetch latest insights. Please try again.');
     } finally {
       setLoading(false);
@@ -554,7 +555,7 @@ const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({
           color="secondary"
           startIcon={<AIIcon />}
           onClick={() => {
-            logger.info('Generate company report for:', companyName);
+            logger.info('Generate company report for:', toLogData({ companyName }));
           }}
         >
           Generate Full Report
