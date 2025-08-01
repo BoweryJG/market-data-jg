@@ -92,10 +92,7 @@ const MarketPulseEngine: React.FC<MarketPulseEngineProps> = ({
     const loadData = async () => {
       setLoading(true);
       try {
-        const data = await marketPulseService.getMarketPulseData({
-          state: selectedState,
-          year: timeRange
-        });
+        const data = await marketPulseService.getMarketPulseData();
         setMarketData(data);
         
         // Calculate market pulse rate based on growth velocity

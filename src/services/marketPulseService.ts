@@ -16,11 +16,6 @@ interface MarketData {
   [key: string]: unknown;
 }
 
-interface MarketPulseQuery {
-  state?: string;
-  year?: number;
-  industry?: 'dental' | 'aesthetic' | 'both';
-}
 
 interface MarketVelocity {
   score: number;
@@ -89,7 +84,7 @@ class MarketPulseService {
     }
   };
 
-  async getMarketPulseData(query: MarketPulseQuery) {
+  async getMarketPulseData() {
     try {
       // Fetch procedure data
       const { data: procedures, error } = await supabase
@@ -104,7 +99,7 @@ class MarketPulseService {
       const avgGrowthRate = procedures?.reduce((sum, p) => sum + (p.yearly_growth_percentage || 0), 0) / (procedures?.length || 1);
 
       // Get Florida-specific data
-      const floridaMetrics = this.getFloridaMetrics(query.industry || 'both');
+      const floridaMetrics = this.getFloridaMetrics();
 
       return {
         procedures,
@@ -124,8 +119,8 @@ class MarketPulseService {
 
   calculateMarketVelocity(marketData: MarketData): MarketVelocity {
     const growthRate = marketData?.averageGrowthRate || 5;
-    const providerExpansion = this.calculateProviderExpansionRate(marketData);
-    const technologyAdoption = this.calculateTechAdoptionRate(marketData);
+    const providerExpansion = this.calculateProviderExpansionRate();
+    const technologyAdoption = this.calculateTechAdoptionRate();
 
     const score = Math.round(
       (growthRate * 3) + 
@@ -156,15 +151,15 @@ class MarketPulseService {
       'Facial Aesthetics'
     ];
 
-    const convergenceCount = marketData?.procedures?.filter((p: ProcedureData) => 
+    const convergenceCount = _marketData?.procedures?.filter((p: ProcedureData) => 
       convergenceProcedures.some(cp => p.procedure_name?.toLowerCase().includes(cp.toLowerCase()))
     ).length || 0;
 
-    const totalProcedures = marketData?.procedures?.length || 1;
+    const totalProcedures = _marketData?.procedures?.length || 1;
     const convergenceRatio = (convergenceCount / totalProcedures) * 100;
 
     // Factor in market growth of convergence procedures
-    const convergenceGrowth = marketData?.procedures
+    const convergenceGrowth = _marketData?.procedures
       ?.filter((p: ProcedureData) => convergenceProcedures.some(cp => p.procedure_name?.toLowerCase().includes(cp.toLowerCase())))
       ?.reduce((sum: number, p: ProcedureData) => sum + (p.yearly_growth_percentage || 0), 0) / convergenceCount || 0;
 
@@ -224,7 +219,7 @@ class MarketPulseService {
     return Math.round(baseRPM * demandMultiplier);
   }
 
-  calculateFloridaEffect(_marketData: MarketData): FloridaEffect {
+  calculateFloridaEffect(): FloridaEffect {
     const avgSpendIncrease = 1.4; // Retirees spend 40% more
     
     // Calculate migration impact
@@ -243,7 +238,7 @@ class MarketPulseService {
     };
   }
 
-  private calculateProviderExpansionRate(_marketData: MarketData): number {
+  private calculateProviderExpansionRate(): number {
     // Simplified calculation based on DSO growth and new practices
     const dsoGrowth = 8.5; // Annual DSO expansion rate
     const independentGrowth = 2.3; // Independent practice growth
@@ -251,7 +246,7 @@ class MarketPulseService {
     return weightedGrowth;
   }
 
-  private calculateTechAdoptionRate(_marketData: MarketData): number {
+  private calculateTechAdoptionRate(): number {
     // Technology adoption indicators
     const digitalAdoption = 65; // % practices with digital systems
     const aiAdoption = 15; // % using AI tools
@@ -260,7 +255,7 @@ class MarketPulseService {
     return (digitalAdoption + aiAdoption * 2 + telehealthAdoption) / 4;
   }
 
-  private getFloridaMetrics(_industry: string) {
+  private getFloridaMetrics() {
     return {
       dental: this.floridaData.dental.market_data,
       aesthetic: this.floridaData.aesthetic.market_data
@@ -273,7 +268,7 @@ class MarketPulseService {
       metrics: {
         totalMarketSize: 207000, // $207B combined
         averageGrowthRate: 8.5,
-        floridaData: this.getFloridaMetrics('both'),
+        floridaData: this.getFloridaMetrics(),
         providerDensity: 60
       },
       timestamp: new Date().toISOString()
