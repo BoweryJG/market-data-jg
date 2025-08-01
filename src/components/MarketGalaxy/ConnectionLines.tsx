@@ -90,7 +90,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ categories,  selected
           (from.id === selectedCategory || to.id === selectedCategory);
 
         return (
-          <motion.g key={index}>
+          <motion.g key={_index}>
             {/* Connection path */}
             <motion.path
               d={`M ${fromX} ${fromY} Q ${midX} ${midY - curve} ${toX} ${toY}`}
